@@ -1,5 +1,4 @@
 // app/page.tsx  (or page.jsx/tsx)
-import { getAllPosts } from '@/lib/graph_queries/getFullposts';
 import PostsList from './components/PostsList';
 import React from 'react';
 import ViewsPosts from './components/ViewsPosts';
@@ -24,9 +23,7 @@ export async function generateStaticParams() {
   return json.data.posts.nodes.map((post) => ({ slug: post.slug }));
 }
 
-
 const Page = async () => {
-
 return (
   <div className="flex w-full flex-col gap-8 px-4 py-10 md:flex-row">           
     <section className="w-full md:w-4/5 lg:w-3/1" >

@@ -22,13 +22,21 @@ const DEFAULT_LINKS= [
   
 ]
 
+export const metadata = {
+  title: "My Awesome Blog – Deep Dives & Tutorials",
+  description: "Up-to-date tutorials, deep technical deep dives and thought pieces on web development, React, Next.js, and more.",
+  keywords: ["blog", "next.js", "react", "web development", "tutorials"],
+};
+
+
+
 interface RootLayoutProps {
   children: ReactNode
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const {favicon} = await getLogo();
-    const posts = await getAllPosts();
+  const posts = await getAllPosts();
 
   return (
     <html lang="en">

@@ -154,12 +154,12 @@
 // }
 
 // src/app/[slug]/page.tsx
-// src/app/[slug]/page.tsx
+
+
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
-import puppeteer from "puppeteer";
+import { load } from "cheerio";
 import type { Post } from "@/lib/types";
-import InfinitePostFeed from "./components/InfinitePostFeed";
 import InfinitePostFeedClientWrapper from "./components/InfinitePostFeedClientWrapper";
 
 export const dynamicParams = false;
@@ -170,36 +170,40 @@ export interface TOCItem {
   level: number;
 }
 
-/** Runs on the server – safe to import Puppeteer */
-async function extractHeadings(html: string): Promise<{
+/** Runs on the server – safe to import Puppeteer */ 
+
+export async function extractHeadings(html: string): Promise<{
   updatedHtml: string;
   toc: TOCItem[];
 }> {
-  const browser = await puppeteer.launch({ headless: true });
-  const page = await browser.newPage();
-  await page.setContent(html, { waitUntil: "networkidle0" });
-  const result = await page.evaluate(() => {
-    const toc: TOCItem[] = [];
-    document
-      .querySelectorAll("h2, h3, h4, h5, h6")
-      .forEach((el) => {
-        const level = parseInt(el.tagName[1], 10);
-        const text = el.textContent!.trim();
-        const id = text
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^\w-]+/g, "");
-        el.id = id;
-        toc.push({ text, id, level });
-      });
-    // Return the *body* HTML so client .dangerouslySetInnerHTML works
-    return {
-      updatedHtml: document.body.innerHTML,
-      toc,
-    };
+  // Load the HTML into Cheerio
+  const $ = load(html);
+
+  const toc: TOCItem[] = [];
+
+  // Find all heading tags, generate IDs, and build TOC
+  $("h2, h3, h4, h5, h6").each((_, el) => {
+    const $el = $(el);
+    const tag   = el.tagName.toLowerCase();        // e.g. "h2"
+    const level = parseInt(tag.charAt(1), 10);     // heading level
+    const text  = $el.text().trim();
+
+    // generate or reuse ID
+    const id =
+      $el.attr("id") ||
+      text
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^\w-]+/g, "");
+
+    $el.attr("id", id);
+    toc.push({ text, id, level });
   });
-  await browser.close();
-  return result;
+
+  // Get back the updated <body> HTML for dangerouslySetInnerHTML
+  const updatedHtml = $("body").html() ?? $.root().html() ?? "";
+
+  return { updatedHtml, toc };
 }
 
 export default async function PostPage({
@@ -208,14 +212,14 @@ export default async function PostPage({
   params: { slug: string };
 }) {
   const { slug } = await params;
-    console.log("Loading slug:", slug); // Should match the URL in the browser!
-
+ 
   const post: Post | null = await getPostBySlug(slug);
   if (!post) return notFound();
-
-  // Pre-process the one "initial" post
   const { updatedHtml, toc } = await extractHeadings(post.content);
 
+  // http://boilerplate.local/wp-json/hpv/v1/log-view/:postId
+ 
+  
   return (
     <InfinitePostFeedClientWrapper initialPost={{ ...post, updatedHtml, toc }} />
   );

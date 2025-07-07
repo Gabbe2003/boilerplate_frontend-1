@@ -1,8 +1,5 @@
-// lib/scrapeAssets.ts
-
 "use server"
-
-import * as cheerio from 'cheerio';
+import { load } from "cheerio";
 
 export interface Asset {
   sourceUrl: string;
@@ -24,7 +21,7 @@ export async function getLogo(): Promise<SiteAssets> {
       return { favicon: null, logo: null };
     }
     const html = await res.text();
-    const $ = cheerio.load(html);
+    const $ = load(html);
     const base = new URL(`https://${DEFAULT_URL}`);
 
     // find favicon

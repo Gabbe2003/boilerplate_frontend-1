@@ -1,3 +1,4 @@
+import { TOCItem } from "./extractHeadings";
 
 
 
@@ -29,11 +30,17 @@ export interface MediaDetails {
 }
 
 export interface MediaItemNode {
-  id: string;
+  id?: string;
   altText?: string;
   sourceUrl: string;
   mimeType?: string;
   mediaDetails?: MediaDetails;
+}
+
+export interface PostWithTOC extends Post {
+  updatedHtml: string;
+  toc: TOCItem[];
+  featuredImage?: { node: MediaItemNode };
 }
 
 /** --- Author / User --- */

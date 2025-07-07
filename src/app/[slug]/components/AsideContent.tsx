@@ -16,7 +16,7 @@ export default function TocCard({ toc }: { toc: TocItem[] }) {
   const [open, setOpen] = useState(true);
 
   return (
-      <Card variant="ghost" className="overflow-hidden gap-2 border-none shadow-none bg-gray-100">
+      <Card className="overflow-hidden gap-2 border-none shadow-none bg-gray-100">
       <CardHeader className="flex items-center justify-between px-6">
         <h2 className="text-lg font-semibold">Innehållsförteckning</h2>
         <Button variant="outline" size="sm" onClick={() => setOpen(o => !o)} className='cursor-pointer'>

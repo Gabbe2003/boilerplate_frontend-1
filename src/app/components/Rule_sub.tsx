@@ -1,6 +1,7 @@
 import * as React from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { useAppContext } from "@/store/AppContext";
 
 declare global {
   interface Window {
@@ -121,6 +122,7 @@ export default function PopupModal({
   const [visible, setVisible] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const [internalOpen, setInternalOpen] = React.useState(false);
+  const { logo } = useAppContext();
 
   // trigger modal after 10 sec if not already submitted
   React.useEffect(() => {
@@ -241,15 +243,20 @@ export default function PopupModal({
             : "scale-95 opacity-0"
         }`}
       >
-        <div className="flex w-auto items-center justify-center rounded-t-lg bg-[#EDE5DF] md:w-2/3 md:rounded-none md:rounded-r-lg">
-          <Image
-            src="/images/finanstid_logo.png"
-            alt="Finanstid Promo"
-            width={300}
-            height={100}
-            className="h-20 max-h-40 w-auto object-contain md:h-auto"
-          />
-        </div>
+      <div className="flex w-full md:w-1/2 items-center justify-center bg-[#EDE5DF] p-6 md:p-8">
+  {logo?.sourceUrl ? (
+    <Image
+      src={logo.sourceUrl}
+      alt={logo.altText || "Logo"}
+      width={400}
+      height={200}
+      className="w-full rounded max-w-[300px] md:max-w-[360px] h-auto object-contain"
+      priority
+    />
+  ) : (
+    <span className="text-lg font-bold">Logo</span>
+  )}
+</div>
 
         <div className="flex w-full flex-col justify-center p-6 md:w-2/3">
           <button

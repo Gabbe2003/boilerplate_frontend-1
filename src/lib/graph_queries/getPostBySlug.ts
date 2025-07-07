@@ -1,8 +1,7 @@
-import { GraphQLError, Post } from "../types";
+import { GraphQLError, Post } from '../types';
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
-import FEATURED_IMAGE from '../../../public/next.svg'
-
+import FEATURED_IMAGE from '../../../public/next.svg';
 
 // Fetch a single post by slug
 export async function getPostBySlug(slug: string): Promise<Post | null> {
@@ -42,10 +41,10 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     }
   `;
 
-try {
+  try {
     const res = await fetch(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, variables: { slug } }),
       next: { revalidate: 60 },
     });
@@ -53,19 +52,19 @@ try {
       data?: { postBy?: Post };
       errors?: GraphQLError;
     };
- 
+
     const post = json.data?.postBy ?? null;
     if (post && post.featuredImage?.node.sourceUrl) {
-      if (post.featuredImage.node.sourceUrl.includes("fallback")) {
+      if (post.featuredImage.node.sourceUrl.includes('fallback')) {
         post.featuredImage.node.sourceUrl = FEATURED_IMAGE;
         post.featuredImage.node.altText =
-          post.featuredImage.node.altText || "Default featured image";
+          post.featuredImage.node.altText || 'Default featured image';
       }
     }
 
     return post;
   } catch (error) {
-    console.error("Failed to fetch post:", error);
+    console.error('Failed to fetch post:', error);
     return null;
   }
 }

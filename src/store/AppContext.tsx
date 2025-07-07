@@ -43,7 +43,7 @@ export interface AppProviderProps {
   logo?: Logo | null;
 }
 
-export  const AppProvider: React.FC<AppProviderProps> =  ({
+export const AppProvider: React.FC<AppProviderProps> = ({
   children,
   links = DEFAULT_LINKS,
   logo = null,
@@ -56,14 +56,12 @@ export  const AppProvider: React.FC<AppProviderProps> =  ({
         logo,
         searchBarHeader,
         setSearchBarHeader,
-        
       }}
     >
       {children}
     </AppContext.Provider>
   );
 };
-
 
 export function useAppContext(): AppContextType {
   const context = useContext(AppContext);

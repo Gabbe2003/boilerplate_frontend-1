@@ -28,7 +28,7 @@ export default function Footer() {
               alt={logo.altText || 'Logo'}
               width={150}
               height={100}
-              style={{backgroundColor: 'white'}}
+              style={{ backgroundColor: 'white' }}
             />
           ) : (
             <span className="font-bold">{host}</span>
@@ -45,9 +45,7 @@ export default function Footer() {
                     <Link
                       href={href}
                       className={`text-sm font-medium ${
-                        isActive
-                          ? 'text-yellow-400'
-                          : 'hover:text-gray-300'
+                        isActive ? 'text-yellow-400' : 'hover:text-gray-300'
                       }`}
                     >
                       {title}
@@ -68,4 +66,3 @@ export default function Footer() {
     </footer>
   );
 }
-

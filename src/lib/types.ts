@@ -1,10 +1,9 @@
-
 export type PostItem = {
   id: number;
   title: string;
   slug: string;
   link: string;
-  src: string; 
+  src: string;
   featured_image: string;
   publish_date: string;
   author_name: string;
@@ -102,11 +101,11 @@ export interface Post {
   status?: string;
   isSticky?: boolean;
 
-  title: string;    // rendered title
-  excerpt: string;  // rendered excerpt
-  content: string;  // rendered content
+  title: string; // rendered title
+  excerpt: string; // rendered excerpt
+  content: string; // rendered content
 
-  date: string;     // published date
+  date: string; // published date
   modified?: string;
 
   commentCount?: number;
@@ -140,8 +139,7 @@ export interface GraphQLError {
   extensions?: Record<string, unknown>;
 }
 
-
 export interface Logo {
   sourceUrl: string;
-  altText?: string | null; 
+  altText?: string | null;
 }

@@ -40,7 +40,9 @@ export default function TocCard({ toc }: { toc: TocItem[] }) {
       <CardContent className="p-0">
         <div
           className={`origin-top transform transition-all duration-500 ease-in-out ${
-            open ? 'scale-y-100 opacity-100 max-h-80' : 'scale-y-0 opacity-0 max-h-0'
+            open
+              ? 'scale-y-100 opacity-100 max-h-80'
+              : 'scale-y-0 opacity-0 max-h-0'
           }`}
         >
           <ScrollArea className="max-h-80 overflow-y-auto">

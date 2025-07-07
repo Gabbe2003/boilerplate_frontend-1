@@ -7,15 +7,11 @@ import Footer from './components/Footer';
 import '@/styles/globals.css';
 
 const DEFAULT_LINKS = [
-  { title: 'Home', href: '/' },
   { title: 'About', href: '/about' },
-  { title: 'Privacy', href: '/privacy' },
-  { title: 'Contact', href: '/contact' },
   { title: 'Links', href: '/links' },
-  { title: 'FAQ', href: '/faq' },
+  { title: 'Contact', href: '/contact' },
+  { title: 'Privacy', href: '/privacy' },
   { title: 'Terms', href: '/terms' },
-  { title: 'Author', href: '/author' },
-  { title: 'Search', href: '/search' },
   { title: 'Archive', href: '/archive' },
 ];
 

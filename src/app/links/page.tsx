@@ -131,15 +131,17 @@ const LinkPurchasePage = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`w-full bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold transition ${
-              isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
-            }`}
-          >
-            {isSubmitting ? 'Submitting...' : 'Submit Request'}
-          </button>
+         <button
+  type="submit"
+  disabled={isSubmitting}
+  className={`w-full bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold transition ${
+    isSubmitting
+      ? 'opacity-50 cursor-not-allowed'
+      : 'hover:bg-blue-700 cursor-pointer'
+  }`}
+>
+  {isSubmitting ? 'Submitting...' : 'Submit Request'}
+</button>
         </form>
       </section>
     </div>

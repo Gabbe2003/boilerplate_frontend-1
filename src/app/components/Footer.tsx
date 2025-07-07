@@ -61,8 +61,8 @@ export default function Footer() {
       <Separator className="border border-gray-700 mt-3" />
 
       <div className="container mx-auto px-4 text-center text-sm text-gray-400 py-2">
-        &copy; {new Date().getFullYear()} Company Name. All rights reserved.
-      </div>
+  &copy; {new Date().getFullYear()} {process.env.NEXT_PUBLIC_HOSTNAME}. All rights reserved.
+</div>
     </footer>
   );
 }

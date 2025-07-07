@@ -1,7 +1,4 @@
 
-
-
-
 export type PostItem = {
   id: number;
   title: string;
@@ -146,5 +143,5 @@ export interface GraphQLError {
 
 export interface Logo {
   sourceUrl: string;
-  altText?: string;
+  altText?: string | null; 
 }

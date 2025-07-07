@@ -1,8 +1,8 @@
 // next.config.ts
 import type { NextConfig } from 'next';
 
-const protocol: 'http' | 'https' =
-  process.env.NODE_ENV === 'development' ? 'https' : 'https';
+const protocol: 'http' | 'http' =
+  process.env.NODE_ENV === 'development' ? 'http' : 'http';
 
 // HERE: ensure hostname is a string
 const hostname: string = process.env.HOSTNAME ?? 'boiler.local';

@@ -26,7 +26,7 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const {favicon, logo} = await getLogo();
+  const {favicon} = await getLogo();
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">

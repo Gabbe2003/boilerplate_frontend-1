@@ -2,7 +2,7 @@
 import { usePathname } from "next/navigation"
 
 
-export default function notFound({}) {
+export default function NotFound({}) {
   const path = usePathname()
   return (
     <div className="flex h-screen items-center justify-center">

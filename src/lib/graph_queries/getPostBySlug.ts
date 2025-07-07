@@ -1,44 +1,7 @@
-import { GraphQLError } from "../types";
+import { GraphQLError, Post } from "../types";
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 import FEATURED_IMAGE from '../../../public/next.svg'
-
-
-// Define types for posts and logo
-export type Post = {
-  id: string;
-  title: string;
-  content: string;
-  excerpt?: string;
-  slug: string;
-  date: string;
-  modified?: string;
-  featuredImage?: {
-    node: {
-      sourceUrl: string;
-      altText?: string;
-    };
-  };
-  author?: {
-    node: {
-      name: string;
-      url?: string;
-    };
-  };
-  categories?: {
-    nodes: { name: string }[];
-  };
-  tags?: {
-    nodes: { name: string }[];
-  };
-};
-
-export type Logo = {
-  sourceUrl: string;
-  altText?: string;
-};
-
-// Ensure the env var is defined
 
 
 // Fetch a single post by slug

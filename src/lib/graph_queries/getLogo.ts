@@ -1,4 +1,7 @@
 // lib/scrapeAssets.ts
+
+"use server"
+
 import * as cheerio from 'cheerio';
 
 export interface Asset {

@@ -5,6 +5,7 @@ import { getLogo } from '@/lib/graph_queries/getLogo'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import '@/styles/globals.css'
+import { getAllPosts } from '@/lib/graph_queries/getFullposts'
 
 
 
@@ -26,11 +27,13 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const {favicon, logo} = await getLogo();
+  const {favicon} = await getLogo();
+    const posts = await getAllPosts();
+
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">
-        <AppProvider links={DEFAULT_LINKS} logo={favicon}>
+        <AppProvider links={DEFAULT_LINKS} logo={favicon} posts={posts}>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

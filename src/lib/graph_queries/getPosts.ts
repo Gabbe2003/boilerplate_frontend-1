@@ -3,7 +3,7 @@ const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 import { GraphQLError, Post } from '@/lib/types';
 
 
-export async function getPosts(): Promise<Post[]> {
+export default async function getPosts(): Promise<Post[]> {
   const query = `
     {
       posts(first: 100) {

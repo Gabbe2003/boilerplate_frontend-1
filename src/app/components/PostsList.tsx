@@ -4,13 +4,10 @@ import Link from 'next/link';
 import { useAppContext } from '@/store/AppContext';
 import type { Post } from '@/lib/types';
 
-interface PostsListProps {
-  posts: Post[];
-}
 
 
-export default function PostsList({ posts } : PostsListProps) {
-  const { searchBarHeader } = useAppContext();
+export default function PostsList() {
+  const { searchBarHeader, posts } = useAppContext();
 const term = searchBarHeader.trim().toLowerCase();
 const filtered = term
   ? posts.filter(p =>

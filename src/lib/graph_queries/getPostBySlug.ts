@@ -1,3 +1,5 @@
+
+"use server"
 import { GraphQLError } from "../types";
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;

@@ -8,7 +8,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from 'react';
-import type { Logo } from '@/lib/types';
+import type { Logo, Post } from '@/lib/types';
 
 export interface LinkItem {
   title: string;
@@ -26,6 +26,7 @@ export const DEFAULT_LINKS: LinkItem[] = [
 export interface AppContextType {
   links: LinkItem[];
   logo: Logo | null;
+  posts: Post[];
   searchBarHeader: string;
   setSearchBarHeader: Dispatch<SetStateAction<string>>;
 }
@@ -33,6 +34,7 @@ export interface AppContextType {
 export const AppContext = createContext<AppContextType>({
   links: DEFAULT_LINKS,
   logo: null,
+  posts: [],
   searchBarHeader: '',
   setSearchBarHeader: () => {},
 });
@@ -41,12 +43,14 @@ export interface AppProviderProps {
   children: ReactNode;
   links?: LinkItem[];
   logo?: Logo | null;
+  posts: Post[];
 }
 
 export  const AppProvider: React.FC<AppProviderProps> =  ({
   children,
   links = DEFAULT_LINKS,
   logo = null,
+  posts
 }) => {
   const [searchBarHeader, setSearchBarHeader] = useState('');
   return (
@@ -56,6 +60,7 @@ export  const AppProvider: React.FC<AppProviderProps> =  ({
         logo,
         searchBarHeader,
         setSearchBarHeader,
+        posts
         
       }}
     >

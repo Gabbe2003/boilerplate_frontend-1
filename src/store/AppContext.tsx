@@ -15,14 +15,14 @@ export interface LinkItem {
   href: string;
 }
 
-export const DEFAULT_LINKS: LinkItem[] = [
-  { title: 'Home', href: '/' },
+export const DEFAULT_LINKS = [
   { title: 'About', href: '/about' },
-  { title: 'Blog', href: '/blog' },
+  { title: 'Links', href: '/links' },
   { title: 'Contact', href: '/contact' },
-  { title: 'FAQ', href: '/faq' },
-  { title: 'Terms', href: '/terms' },
-];
+  { title: 'Privacy', href: '/privacy' },
+  { title: 'Archive', href: '/archive' },
+  
+]
 export interface AppContextType {
   links: LinkItem[];
   logo: Logo | null;

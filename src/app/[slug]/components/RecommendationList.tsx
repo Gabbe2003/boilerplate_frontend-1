@@ -20,10 +20,10 @@ export default function RecommendationList({ currentSlug }: RecommendationListPr
 
   const recommendations: Post[] = useMemo(() => {
     const total = filtered.length;
-    if (total <= 10) return filtered;
-    const maxStart = total - 10;
+    if (total <= 5) return filtered;
+    const maxStart = total - 5;
     const start = Math.floor(Math.random() * (maxStart + 1));
-    return filtered.slice(start, start + 10);
+    return filtered.slice(start, start + 5);
   }, [filtered]);
 
   return (
@@ -50,3 +50,6 @@ export default function RecommendationList({ currentSlug }: RecommendationListPr
     </CardContent>
   );
 }
+
+
+//Sidebar items

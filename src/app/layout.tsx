@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 import type { ReactNode } from 'react'
-import { AppProvider } from '@/store/AppContext'
+import { AppProvider, DEFAULT_LINKS } from '@/store/AppContext'
 import { getLogo } from '@/lib/graph_queries/getLogo'
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -9,15 +9,6 @@ import { getAllPosts } from '@/lib/graph_queries/getFullposts'
 
 
 
-const DEFAULT_LINKS = [
-  { title: 'About', href: '/about' },
-  { title: 'Links', href: '/links' },
-  { title: 'Contact', href: '/contact' },
-  { title: 'Privacy', href: '/privacy' },
-  { title: 'Terms', href: '/terms' },
-  { title: 'Archive', href: '/archive' },
-  
-]
 
 export const metadata = {
   title: "My Awesome Blog – Deep Dives & Tutorials",

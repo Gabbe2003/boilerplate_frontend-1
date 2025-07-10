@@ -5,7 +5,7 @@ import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
 import getPosts from "@/lib/graph_queries/getPosts";
 import type { Post } from "@/lib/types";
 import type { TOCItem } from "../page";
-import AsideContent from "./AsideContent";
+import AsideContent from "./SideBar";
 import dynamic from "next/dynamic";
 const RecommendationList = dynamic(() => import("./RecommendationList"), { ssr: false });
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -126,3 +126,5 @@ export default function InfinitePostFeed({
     </div>
   );
 }
+
+// Render post with infinte scroll

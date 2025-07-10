@@ -1,4 +1,3 @@
-// src/app/[slug]/components/InfinitePostFeed.tsx
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -9,9 +8,16 @@ import type { TOCItem } from "../page";
 import AsideContent from "./AsideContent";
 import dynamic from "next/dynamic";
 const RecommendationList = dynamic(() => import("./RecommendationList"), { ssr: false });
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { load } from "cheerio";
 import Image from "next/image";
+import { Button } from '@/components/ui/button';
+import { Breadcrumb, BreadcrumbItem } from '@/components/ui/breadcrumb';
+import Link from 'next/link';
+import Instagram from "@/app/components/icons/instagram";
+import Twitter from "@/app/components/icons/twitter";
+import Facebook from "@/app/components/icons/facebook";
+import Linkedin from "@/app/components/icons/linkedin";
 
 interface PostWithTOC extends Post {
   updatedHtml: string;
@@ -23,7 +29,6 @@ export default function InfinitePostFeed({
 }: {
   initialPost: PostWithTOC;
 }) {
-  // ----- STATE -----
   const [rendered, setRendered] = useState<PostWithTOC[]>([initialPost]);
   const [queue, setQueue] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -31,35 +36,22 @@ export default function InfinitePostFeed({
   const articleRefs = useRef<(HTMLElement | null)[]>([]);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  
+  const extractHeadingsClient = useCallback((html: string): { updatedHtml: string; toc: TOCItem[] } => {
+    const $ = load(html);
+    const toc: TOCItem[] = [];
 
- const extractHeadingsClient = useCallback(
-    (html: string): { updatedHtml: string; toc: TOCItem[] } => {
-      const $ = load(html);
-      const toc: TOCItem[] = [];
+    $("h2, h3, h4, h5, h6").each((_, el) => {
+      const $el = $(el);
+      const tag = el.tagName.toLowerCase();
+      const level = parseInt(tag.charAt(1), 10);
+      const text = $el.text().trim();
+      const id = $el.attr("id") || text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
+      $el.attr("id", id);
+      toc.push({ text, id, level });
+    });
 
-      $("h2, h3, h4, h5, h6").each((_, el) => {
-        const $el = $(el);
-        const tag = el.tagName.toLowerCase();
-        const level = parseInt(tag.charAt(1), 10);
-        const text = $el.text().trim();
-
-        const id =
-          $el.attr("id") ||
-          text
-            .toLowerCase()
-            .replace(/\s+/g, "-")
-            .replace(/[^\w-]+/g, "");
-
-        $el.attr("id", id);
-        toc.push({ text, id, level });
-      });
-
-      const updatedHtml = $.root().html()!;
-      return { updatedHtml, toc };
-    },
-    [] // no deps → stable reference
-  );
+    return { updatedHtml: $.root().html()!, toc };
+  }, []);
 
   useEffect(() => {
     if (queue.length === 0 || loading) return;
@@ -71,17 +63,10 @@ export default function InfinitePostFeed({
 
       const nextSlug = queue[0];
       const post = nextSlug ? await getPostBySlug(nextSlug) : null;
-      console.log(post?.id);
-
-      // We make the view function call
 
       if (post) {
         const { updatedHtml, toc } = extractHeadingsClient(post.content);
-        setRendered((prev) =>
-          prev.some((p) => p.slug === post.slug)
-            ? prev
-            : [...prev, { ...post, updatedHtml, toc }]
-        );
+        setRendered((prev) => prev.some((p) => p.slug === post.slug) ? prev : [...prev, { ...post, updatedHtml, toc }]);
       }
       setQueue((q) => q.slice(1));
       setLoading(false);
@@ -91,107 +76,51 @@ export default function InfinitePostFeed({
     if (sentinel) observer.observe(sentinel);
     return () => observer.disconnect();
   }, [queue, loading, extractHeadingsClient]);
-  
+
   useEffect(() => {
     getPosts().then((posts) => {
       const uniqueSlugs = Array.from(new Set(posts.map((p) => p.slug)));
       setQueue(uniqueSlugs.filter((s) => s !== initialPost.slug));
-
     });
   }, [initialPost.slug]);
 
-  // ----- TRACK ACTIVE ARTICLE IN VIEW -----
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const refs = articleRefs.current;
-    if (!refs.length) return;
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const index = Number(entry.target.getAttribute("data-index"));
-          if (entry.isIntersecting && !isNaN(index)) {
-
-            // Update URL and meta only if not already there
-            const slug = rendered[index]?.slug;
-            if (slug && window.location.pathname !== `/${slug}`) {
-              window.history.replaceState(null, rendered[index].title, `/${slug}`);
-            }
-            document.title = rendered[index].title;
-            document
-              .querySelector("meta[name=description]")
-              ?.setAttribute("content", rendered[index].excerpt || "");
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: "0px 0px 10% 0px",
-        threshold: 0,
-      }
-    );
-
-    refs.forEach((ref) => {
-      if (ref) obs.observe(ref);
-    });
-
-    return () => obs.disconnect();
-  }, [rendered]);
-
-  // ----- RENDER -----
   return (
     <div className="space-y-16 max-w-7xl mx-auto py-12 px-4 mb-10">
       {rendered.map((post, i) => (
-        <div
-          key={post.slug}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
-          data-index={i}
-          ref={el => (articleRefs.current[i] = el)}
-        >
-          {/* Main article */}
+        <div key={post.slug} className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start" data-index={i} ref={el => (articleRefs.current[i] = el)}>
           <article className="lg:col-span-2 space-y-6">
-            <h1 className="text-3xl md:text-4xl font-bold text-center">
-              {post.title}
-            </h1>
-            {post.featuredImage?.node.sourceUrl && (
-              <Image
-                src={post.featuredImage.node.sourceUrl}
-                alt={post.featuredImage.node.altText || ""}
-                className="rounded-lg shadow-sm w-full mt-4"
-                  width={750}
-                  height={500}
-                priority
-              />
-            )}
-            <section
-              className={`
-                prose prose-lg max-w-none
-                [&_a]:text-blue-600 [&_a:hover]:underline
-                [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8
-                [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-6
-                [&_h4]:text-lg [&_h4]:font-medium [&_h4]:mt-5
-                [&_h5]:text-base [&_h5]:font-medium [&_h5]:mt-4
-                [&_h6]:text-sm [&_h6]:font-medium [&_h6]:mt-3
-              `}
-              dangerouslySetInnerHTML={{ __html: post.updatedHtml }}
-            />
-          </article>
-          {/* Aside for this post */}
-          <aside className="space-y-8">
-            <div className="hidden lg:block">
-              <AsideContent toc={post.toc} />
+            <h1 className="text-3xl md:text-4xl font-bold text-start">{post.title}</h1>
+
+            <div className="flex flex-wrap items-center justify-between gap-y-2 text-sm text-muted-foreground mb-3">
+              <Breadcrumb>
+                <BreadcrumbItem><Link href="/" className="text-blue-700">{process.env.NEXT_PUBLIC_HOSTNAME || 'Home'}</Link><span className="mx-1">/</span></BreadcrumbItem>
+                <BreadcrumbItem>{post.title}</BreadcrumbItem>
+              </Breadcrumb>
+              <span>Published: <time dateTime={post.date}>{new Date(post.date).toLocaleDateString()}</time></span>
             </div>
-            <Card className="border-none shadow-none p-0 gap-0">
-              <CardHeader className="p-0 mt-3">
-                <h3 className="text-xl font-bold">Läs mer</h3>
-              </CardHeader>
-              <RecommendationList currentSlug={post.slug} />
-            </Card>
+
+            <div className="flex items-center justify-between mt-2">
+              <span className="text-sm">By <strong>{post.author?.node.name || 'Redaktionen'}</strong></span>
+              <div className="flex gap-2">
+                <Button variant="ghost" size="iconSmall"><Instagram className="w-6 h-6" /></Button>
+                <Button variant="ghost" size="iconSmall"><Twitter className="w-6 h-6" /></Button>
+                <Button variant="ghost" size="iconSmall"><Facebook className="w-6 h-6" /></Button>
+                <Button variant="ghost" size="iconSmall"><Linkedin className="w-6 h-6" /></Button>
+              </div>
+            </div>
+
+            {post.featuredImage?.node.sourceUrl && (
+              <Image src={post.featuredImage.node.sourceUrl} alt={post.featuredImage.node.altText || ""} className="rounded-lg shadow-sm w-full mt-4" width={750} height={500} priority />
+            )}
+
+            <section className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: post.updatedHtml }} />
+          </article>
+          <aside className="space-y-8">
+            <div className="hidden lg:block"><AsideContent toc={post.toc} /></div>
+            <Card className="border-none shadow-none"><CardHeader className="p-0"><h3 className="text-xl font-bold">Läs mer</h3></CardHeader><RecommendationList currentSlug={post.slug} /></Card>
           </aside>
         </div>
       ))}
-
-      {/* Infinite scroll sentinel */}
       <div ref={sentinelRef} style={{ height: 1 }} />
       {loading && <p className="text-center">Laddar fler...</p>}
     </div>

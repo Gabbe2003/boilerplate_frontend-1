@@ -28,7 +28,7 @@ export default function Footer() {
               alt={logo.altText || 'Logo'}
               width={150}
               height={100}
-              style={{backgroundColor: 'white'}}
+              style={{ backgroundColor: 'white' }}
             />
           ) : (
             <span className="font-bold">{host}</span>
@@ -45,9 +45,7 @@ export default function Footer() {
                     <Link
                       href={href}
                       className={`text-sm font-medium ${
-                        isActive
-                          ? 'text-yellow-400'
-                          : 'hover:text-gray-300'
+                        isActive ? 'text-yellow-400' : 'hover:text-gray-300'
                       }`}
                     >
                       {title}
@@ -63,9 +61,8 @@ export default function Footer() {
       <Separator className="border border-gray-700 mt-3" />
 
       <div className="container mx-auto px-4 text-center text-sm text-gray-400 py-2">
-        &copy; {new Date().getFullYear()} Company Name. All rights reserved.
-      </div>
+  &copy; {new Date().getFullYear()} {process.env.NEXT_PUBLIC_HOSTNAME}. All rights reserved.
+</div>
     </footer>
   );
 }
-

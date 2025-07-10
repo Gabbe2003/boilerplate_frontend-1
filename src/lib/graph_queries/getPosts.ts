@@ -1,7 +1,5 @@
-
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 import { GraphQLError, Post } from '@/lib/types';
-
 
 export default async function getPosts(): Promise<Post[]> {
   const query = `
@@ -29,7 +27,10 @@ export default async function getPosts(): Promise<Post[]> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),
     });
-    const json = (await res.json()) as { data?: { posts?: { nodes: Post[] } }; errors?: GraphQLError };
+    const json = (await res.json()) as {
+      data?: { posts?: { nodes: Post[] } };
+      errors?: GraphQLError;
+    };
     return json.data?.posts?.nodes ?? [];
   } catch (error) {
     console.error('Failed to fetch posts:', error);

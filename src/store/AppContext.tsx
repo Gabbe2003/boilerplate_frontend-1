@@ -46,7 +46,7 @@ export interface AppProviderProps {
   posts: Post[];
 }
 
-export  const AppProvider: React.FC<AppProviderProps> =  ({
+export const AppProvider: React.FC<AppProviderProps> = ({
   children,
   links = DEFAULT_LINKS,
   logo = null,
@@ -68,7 +68,6 @@ export  const AppProvider: React.FC<AppProviderProps> =  ({
     </AppContext.Provider>
   );
 };
-
 
 export function useAppContext(): AppContextType {
   const context = useContext(AppContext);

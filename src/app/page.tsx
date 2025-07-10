@@ -3,11 +3,10 @@ import PostsList from './components/PostsList';
 import React from 'react';
 import ViewsPosts from './components/ViewsPosts';
 
-
 export async function generateStaticParams() {
   const res = await fetch(process.env.WP_GRAPHQL_URL!, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       query: `
         query {
@@ -19,7 +18,9 @@ export async function generateStaticParams() {
     }),
   });
 
-  const json = await res.json() as { data: { posts: { nodes: Array<{slug:string}> }}};
+  const json = (await res.json()) as {
+    data: { posts: { nodes: Array<{ slug: string }> } };
+  };
   return json.data.posts.nodes.map((post) => ({ slug: post.slug }));
 }
 

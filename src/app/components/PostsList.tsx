@@ -15,11 +15,7 @@ const filtered = term
   : posts;
 
   if (filtered.length === 0) {
-    return (
-      <p className="text-center text-gray-500">
-        No posts found
-      </p>
-    );
+    return <p className="text-center text-gray-500">No posts found</p>;
   }
 
   return (
@@ -38,8 +34,8 @@ const filtered = term
               <Image
                 src={post.featuredImage.node.sourceUrl}
                 alt={post.featuredImage.node.altText || post.title}
-                width={1200}                      /* ↑ larger intrinsic size */
-                height={700}                      /* ↑ larger intrinsic size */
+                width={1200} /* ↑ larger intrinsic size */
+                height={700} /* ↑ larger intrinsic size */
                 className="w-full h-90 object-cover rounded-xl mb-6" /* ↑ taller */
                 priority={index < 3}
               />

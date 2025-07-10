@@ -9,15 +9,12 @@ import { getAllPosts } from '@/lib/graph_queries/getFullposts'
 
 
 
-const DEFAULT_LINKS= [
-  { title: 'Home', href: '/' },
+const DEFAULT_LINKS = [
   { title: 'About', href: '/about' },
-  { title: 'Privacy', href: '/privacy' },
+  { title: 'Links', href: '/links' },
   { title: 'Contact', href: '/contact' },
-  { title: 'FAQ', href: '/faq' },
+  { title: 'Privacy', href: '/privacy' },
   { title: 'Terms', href: '/terms' },
-  { title: 'Author', href: '/author' },
-  { title: 'Search', href: '/search' },
   { title: 'Archive', href: '/archive' },
   
 ]
@@ -31,7 +28,7 @@ export const metadata = {
 
 
 interface RootLayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
@@ -48,5 +45,5 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         </AppProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-"use server"
+'use server';
 
-import { Post,GraphQLError } from '@/lib/types';
-import FEATURED_IMAGE from '../../../public/next.svg'
+import { Post, GraphQLError } from '@/lib/types';
+import FEATURED_IMAGE from '../../../public/next.svg';
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 export async function getAllPosts({
@@ -15,7 +15,7 @@ export async function getAllPosts({
   last?: number;
   before?: string;
 } = {}): Promise<Post[]> {
-  const query =  `
+  const query = `
   query AllPostsFull(
   $first:  Int
   $after:  String
@@ -115,13 +115,15 @@ fragment PostFull on Post {
     
   `;
 
-  
   try {
     console.log(GRAPHQL_URL);
     const res = await fetch(GRAPHQL_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query, variables: { first, after, last, before } }),
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query,
+        variables: { first, after, last, before },
+      }),
     });
 
     const json = (await res.json()) as {
@@ -130,7 +132,7 @@ fragment PostFull on Post {
     };
 
     if (json.errors) {
-      console.error("getAllPosts errors:", json.errors);
+      console.error('getAllPosts errors:', json.errors);
       return [];
     }
 
@@ -139,18 +141,16 @@ fragment PostFull on Post {
     // now scan for any “fallback” URLs and replace them
     const posts = rawPosts.map((post) => {
       const imgNode = post.featuredImage?.node;
-      if (imgNode?.sourceUrl?.includes("fallback")) {
+      if (imgNode?.sourceUrl?.includes('fallback')) {
         imgNode.sourceUrl = FEATURED_IMAGE;
-        imgNode.altText = imgNode.altText || "Default featured image";
+        imgNode.altText = imgNode.altText || 'Default featured image';
       }
       return post;
     });
 
     return posts;
   } catch (error) {
-    console.error("getAllPosts failed:", error);
+    console.error('getAllPosts failed:', error);
     return [];
   }
 }
-
-

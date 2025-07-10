@@ -21,12 +21,12 @@ export async function getViews(  period: "week" | "month" ): Promise<Array<{
   try {
     const res = await fetch(`${VIEWS_ENDPOINT}=${period}`);
     if (!res.ok) {
-      console.error("[getViews] non-OK response:", await res.text());
+      console.error('[getViews] non-OK response:', await res.text());
       return [];
     }
     const data = await res.json();
     if (!Array.isArray(data)) {
-      console.error("[getViews] payload is not an array:", data);
+      console.error('[getViews] payload is not an array:', data);
       return [];
     }
    const raw = data as RawView[];
@@ -39,7 +39,7 @@ export async function getViews(  period: "week" | "month" ): Promise<Array<{
       author_name: post.author_name,
     }));
   } catch (err) {
-    console.error("[getViews] fetch failed:", err);
+    console.error('[getViews] fetch failed:', err);
     return [];
   }
 }

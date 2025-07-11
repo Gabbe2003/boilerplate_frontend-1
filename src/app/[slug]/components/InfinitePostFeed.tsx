@@ -141,7 +141,9 @@ export default function InfinitePostFeed({
                   {stripHtml(post.excerpt)}
                 </p>
               )}
-              <div className="flex items-center justify-between mt-2 mb-1">
+
+
+              <div className="flex items-center justify-between mt-5 mb-1">
                 <span className="text-sm flex items-center gap-2">
                   {post.author?.node.avatar?.url ? (
                     <Image
@@ -164,96 +166,114 @@ export default function InfinitePostFeed({
                   )}
                   By <strong>{post.author?.node.name || 'Admin'}</strong>
                 </span>
-                <div className="flex items-center gap-2">
-                  {/* Share (copy link/share API) */}
-                  <Button
-                    variant="ghost"
-                    className="h-10 min-w-[64px] flex items-center justify-center bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-md px-4 transition-colors duration-150 text-base hover:cursor-pointer"
-                    aria-label="Share Link"
-                    onClick={async () => {
-                      if (typeof window !== "undefined" && navigator.share) {
-                        try {
-                          await navigator.share({
-                            title: post.title,
-                            text: postExcerpt || post.title,
-                            url: postUrl,
-                          });
-                        } catch (e) {
-                          console.log("User cancelled and sharing failed", e);
-                        }
-                      } else if (typeof window !== "undefined" && navigator.clipboard) {
-                        await navigator.clipboard.writeText(postUrl);
-                        alert("Link Copied!");
-                      }
-                    }}
-                  >
-                    Share
-                  </Button>
 
-                  {/* Facebook */}
-                  <Button
-                    variant="ghost"
-                    size="iconSmall"
-                    className="h-10 w-10 flex items-center justify-center p-0"
-                    asChild
-                    aria-label="Dela på Facebook"
-                  >
-                    <a
-                      href={getShareUrl('facebook', { url: postUrl, title: post.title })}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Facebook className="w-6 h-6 align-middle" />
-                    </a>
-                  </Button>
-                  {/* Twitter/X */}
-                  <Button
-                    variant="ghost"
-                    size="iconSmall"
-                    className="h-10 w-10 flex items-center justify-center p-0"
-                    asChild
-                    aria-label="Dela på X"
-                  >
-                    <a
-                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(`${post.title}\n\n${postExcerpt}`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Twitter className="w-6 h-6 align-middle" />
-                    </a>
-                  </Button>
-                  {/* Linkedin */}
-                  <Button
-                    variant="ghost"
-                    size="iconSmall"
-                    className="h-10 w-10 flex items-center justify-center p-0"
-                    asChild
-                    aria-label="Dela på LinkedIn"
-                  >
-                    <a
-                      href={getShareUrl('linkedin', { url: postUrl, title: post.title })}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <Linkedin className="w-6 h-6 align-middle" />
-                    </a>
-                  </Button>
-                  {/* Email */}
-                  <Button
-                    variant="ghost"
-                    size="iconSmall"
-                    className="h-10 w-10 flex items-center justify-center p-0"
-                    asChild
-                    aria-label="Dela via e-post"
-                  >
-                    <a
-                      href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(`${post.title}\n\n${postExcerpt}\n\n${postUrl}`)}`}
-                    >
-                      <Email className="w-6 h-6 align-middle" />
-                    </a>
-                  </Button>
-                </div>
+
+
+               
+  <div className="inline-flex items-center gap-1 px-3 py-2 bg-white border border-neutral-200 rounded-xs">
+  {/* Share (copy link/share API) */}
+  <Button
+    variant="ghost"
+    className="h-9 min-w-[52px] flex items-center justify-center text-neutral-700 font-medium rounded-xs px-3 transition-colors duration-150 text-mx border border-transparent hover:bg-neutral-100"
+    aria-label="Share Link"
+    onClick={async () => {
+      if (typeof window !== "undefined" && navigator.share) {
+        try {
+          await navigator.share({
+            title: post.title,
+            text: postExcerpt || post.title,
+            url: postUrl,
+          });
+        } catch (e) {
+          console.log("User cancelled and sharing failed", e);
+        }
+      } else if (typeof window !== "undefined" && navigator.clipboard) {
+        await navigator.clipboard.writeText(postUrl);
+        alert("Link Copied!");
+      }
+    }}
+  >
+    Share
+  </Button>
+
+  {/* Facebook */}
+  <Button
+    variant="ghost"
+    size="iconSmall"
+    className="h-9 w-9 flex items-center justify-center p-0 rounded-xs border border-transparent hover:bg-neutral-100 transition-colors"
+    asChild
+    aria-label="Dela på Facebook"
+  >
+    <a
+      href={getShareUrl('facebook', { url: postUrl, title: post.title })}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Facebook className="w-5 h-5 text-neutral-500" />
+    </a>
+  </Button>
+
+  {/* Twitter/X */}
+  <Button
+    variant="ghost"
+    size="iconSmall"
+    className="h-9 w-9 flex items-center justify-center p-0 rounded-xs border border-transparent hover:bg-neutral-100 transition-colors"
+    asChild
+    aria-label="Dela på X"
+  >
+    <a
+      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(`${post.title}\n\n${postExcerpt}`)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Twitter className="w-5 h-5 text-neutral-500" />
+    </a>
+  </Button>
+
+  {/* Linkedin */}
+  <Button
+    variant="ghost"
+    size="iconSmall"
+    className="h-9 w-9 flex items-center justify-center p-0 rounded-xs border border-transparent hover:bg-neutral-100 transition-colors"
+    asChild
+    aria-label="Dela på LinkedIn"
+  >
+    <a
+      href={getShareUrl('linkedin', { url: postUrl, title: post.title })}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <Linkedin className="w-5 h-5 text-neutral-500" />
+    </a>
+  </Button>
+
+  {/* Email */}
+  <Button
+    variant="ghost"
+    size="iconSmall"
+    className="h-9 w-9 flex items-center justify-center p-0 rounded-xs border border-transparent hover:bg-neutral-100 transition-colors"
+    asChild
+    aria-label="Dela via e-post"
+  >
+    <a
+      href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(`${post.title}\n\n${postExcerpt}\n\n${postUrl}`)}`}
+    >
+      <Email className="w-5 h-5 text-neutral-500" />
+    </a>
+  </Button>
+</div>
+
+
+
+
+
+                
               </div>
+
+
+
+
+
             </div>
 
             {/* Featured Image */}

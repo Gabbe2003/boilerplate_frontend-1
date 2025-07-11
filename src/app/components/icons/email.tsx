@@ -10,7 +10,7 @@ interface EmailProps {
 const Email: React.FC<EmailProps> = ({
   className,
   color = 'currentColor',
-  width = 24,
+  width = 28,
   style,
 }) => {
   const aspectRatio = 24 / 24;

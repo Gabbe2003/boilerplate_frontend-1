@@ -28,3 +28,7 @@ export default function RecommendationList({ currentSlug, children }: Recommenda
 
   return <>{children(recommendations)}</>;
 }
+
+
+
+//fix later, add the pouplar posts

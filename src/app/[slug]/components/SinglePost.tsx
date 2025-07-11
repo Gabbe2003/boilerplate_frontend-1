@@ -32,6 +32,37 @@ export default function InfinitePostFeed({
   const aboveImageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [aboveImageHeights, setAboveImageHeights] = useState<number[]>([]);
 
+
+
+useEffect(() => {
+  function handleScroll() {
+    const articles = articleRefs.current;
+    for (let i = 0; i < articles.length; i++) {
+      const ref = articles[i];
+      if (!ref) continue;
+      const rect = ref.getBoundingClientRect();
+      // You can tweak the threshold, e.g., 80 is when near the top
+      if (rect.top >= 0 && rect.top < 80) {
+        // Update title and URL
+        document.title = rendered[i]?.title || document.title;
+        window.history.replaceState(null, rendered[i]?.title || "", `/news/${rendered[i]?.slug}`);
+        // Update meta description if you want
+        const meta = document.querySelector('meta[name="description"]');
+        if (meta && rendered[i]?.excerpt) {
+          meta.setAttribute("content", stripHtml(rendered[i].excerpt));
+        }
+        break; // Only update for the first match
+      }
+    }
+  }
+
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  // Call once for initial mount
+  handleScroll();
+  return () => window.removeEventListener("scroll", handleScroll);
+}, [rendered]);
+
+
   useEffect(() => {
     setAboveImageHeights(
       rendered.map((_, idx) => aboveImageRefs.current[idx]?.offsetHeight ?? 0)

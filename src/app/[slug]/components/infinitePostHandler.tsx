@@ -7,6 +7,7 @@ import type { TOCItem } from "../page";
 
 // Helper: Extract headings and TOC from HTML
 const extractHeadingsClient = (html: string): { updatedHtml: string; toc: TOCItem[] } => {
+  
   const $ = load(html);
   const toc: TOCItem[] = [];
   $("h2, h3, h4, h5, h6").each((_, el) => {

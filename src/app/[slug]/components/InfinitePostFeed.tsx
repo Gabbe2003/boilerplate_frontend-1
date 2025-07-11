@@ -8,20 +8,43 @@ import type { TOCItem } from "../page";
 import AsideContent from "./SideBar";
 import dynamic from "next/dynamic";
 const RecommendationList = dynamic(() => import("./RecommendationList"), { ssr: false });
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import { load } from "cheerio";
 import Image from "next/image";
 import { Button } from '@/components/ui/button';
 import { Breadcrumb, BreadcrumbItem } from '@/components/ui/breadcrumb';
 import Link from 'next/link';
-import Instagram from "@/app/components/icons/instagram";
 import Twitter from "@/app/components/icons/twitter";
 import Facebook from "@/app/components/icons/facebook";
 import Linkedin from "@/app/components/icons/linkedin";
+import Email from "@/app/components/icons/email";
 
 interface PostWithTOC extends Post {
   updatedHtml: string;
   toc: TOCItem[];
+}
+
+// Share URL generator
+function getShareUrl(
+  platform: "twitter" | "facebook" | "linkedin",
+  { url, title }: { url: string; title: string }
+) {
+  switch (platform) {
+    case "twitter":
+      return `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
+    case "facebook":
+      return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
+    case "linkedin":
+      return `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
+    default:
+      return url;
+  }
+}
+
+// Utility: strip HTML tags for excerpts
+function stripHtml(html: string) {
+  if (!html) return "";
+  return html.replace(/<[^>]+>/g, '');
 }
 
 export default function InfinitePostFeed({
@@ -36,6 +59,18 @@ export default function InfinitePostFeed({
   const articleRefs = useRef<(HTMLElement | null)[]>([]);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
+  // TOC dynamic alignment refs
+  const aboveImageRef = useRef<HTMLDivElement>(null);
+  const [aboveImageHeight, setAboveImageHeight] = useState(0);
+
+  // Runs after every render
+  useEffect(() => {
+    if (aboveImageRef.current) {
+      setAboveImageHeight(aboveImageRef.current.offsetHeight);
+    }
+  }, [rendered]);
+
+  // For infinite scroll loading
   const extractHeadingsClient = useCallback((html: string): { updatedHtml: string; toc: TOCItem[] } => {
     const $ = load(html);
     const toc: TOCItem[] = [];
@@ -85,46 +120,200 @@ export default function InfinitePostFeed({
   }, [initialPost.slug]);
 
   return (
-    <div className="space-y-16 max-w-7xl mx-auto py-12 px-4 mb-10">
-      {rendered.map((post, i) => (
-        <div key={post.slug} className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start" data-index={i} ref={el => (articleRefs.current[i] = el)}>
-          <article className="lg:col-span-2 space-y-6">
-            <h1 className="text-3xl md:text-4xl font-bold text-start">{post.title}</h1>
+  <div className="space-y-16 max-w-7xl mx-auto py-12 px-4 mb-10">
+    {rendered.map((post, i) => {
+      const postUrl = `${process.env.NEXT_PUBLIC_SHARENAME || "https://yoursite.com"}/news/${post.slug}`;
+      const postExcerpt = stripHtml(post.excerpt);
 
-            <div className="flex flex-wrap items-center justify-between gap-y-2 text-sm text-muted-foreground mb-3">
-              <Breadcrumb>
-                <BreadcrumbItem><Link href="/" className="text-blue-700">{process.env.NEXT_PUBLIC_HOSTNAME || 'Home'}</Link><span className="mx-1">/</span></BreadcrumbItem>
-                <BreadcrumbItem>{post.title}</BreadcrumbItem>
-              </Breadcrumb>
-              <span>Published: <time dateTime={post.date}>{new Date(post.date).toLocaleDateString()}</time></span>
-            </div>
+      return (
+        <div
+          key={post.slug}
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
+          data-index={i}
+          ref={el => (articleRefs.current[i] = el)}
+        >
+          <article className="lg:col-span-2 flex flex-col">
+            {/* Title, Excerpt, Author+Share */}
+            <div ref={i === 0 ? aboveImageRef : null} className="mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-start mb-1">{post.title}</h1>
+              {post.excerpt && (
+                <p className="text-lg text-muted-foreground leading-snug mb-1">
+                  {stripHtml(post.excerpt)}
+                </p>
+              )}
+              <div className="flex items-center justify-between mt-2 mb-1">
+                <span className="text-sm flex items-center gap-2">
+                  {post.author?.node.avatar?.url ? (
+                    <Image
+                      src={post.author.node.avatar.url}
+                      alt={post.author.node.name || "Author"}
+                      width={28}
+                      height={28}
+                      className="rounded-full object-cover border border-gray-200"
+                    />
+                  ) : (
+                    <span
+                      className="inline-flex items-center justify-center rounded-full bg-gray-300 text-gray-600 font-semibold border border-gray-200"
+                      style={{ width: 28, height: 28, fontSize: "1rem", userSelect: "none" }}
+                      aria-label="Author initial"
+                    >
+                      {post.author?.node.name
+                        ? post.author.node.name[0].toUpperCase()
+                        : "A"}
+                    </span>
+                  )}
+                  By <strong>{post.author?.node.name || 'Admin'}</strong>
+                </span>
+                <div className="flex items-center gap-2">
+                  {/* Share (copy link/share API) */}
+                  <Button
+                    variant="ghost"
+                    className="h-10 min-w-[64px] flex items-center justify-center bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-md px-4 transition-colors duration-150 text-base hover:cursor-pointer"
+                    aria-label="Share Link"
+                    onClick={async () => {
+                      if (typeof window !== "undefined" && navigator.share) {
+                        try {
+                          await navigator.share({
+                            title: post.title,
+                            text: postExcerpt || post.title,
+                            url: postUrl,
+                          });
+                        } catch (e) {
+                          console.log("User cancelled and sharing failed", e);
+                        }
+                      } else if (typeof window !== "undefined" && navigator.clipboard) {
+                        await navigator.clipboard.writeText(postUrl);
+                        alert("Link Copied!");
+                      }
+                    }}
+                  >
+                    Share
+                  </Button>
 
-            <div className="flex items-center justify-between mt-2">
-              <span className="text-sm">By <strong>{post.author?.node.name || 'Redaktionen'}</strong></span>
-              <div className="flex gap-2">
-                <Button variant="ghost" size="iconSmall"><Instagram className="w-6 h-6" /></Button>
-                <Button variant="ghost" size="iconSmall"><Twitter className="w-6 h-6" /></Button>
-                <Button variant="ghost" size="iconSmall"><Facebook className="w-6 h-6" /></Button>
-                <Button variant="ghost" size="iconSmall"><Linkedin className="w-6 h-6" /></Button>
+                  {/* Facebook */}
+                  <Button
+                    variant="ghost"
+                    size="iconSmall"
+                    className="h-10 w-10 flex items-center justify-center p-0"
+                    asChild
+                    aria-label="Dela på Facebook"
+                  >
+                    <a
+                      href={getShareUrl('facebook', { url: postUrl, title: post.title })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Facebook className="w-6 h-6 align-middle" />
+                    </a>
+                  </Button>
+                  {/* Twitter/X */}
+                  <Button
+                    variant="ghost"
+                    size="iconSmall"
+                    className="h-10 w-10 flex items-center justify-center p-0"
+                    asChild
+                    aria-label="Dela på X"
+                  >
+                    <a
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(`${post.title}\n\n${postExcerpt}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Twitter className="w-6 h-6 align-middle" />
+                    </a>
+                  </Button>
+                  {/* Linkedin */}
+                  <Button
+                    variant="ghost"
+                    size="iconSmall"
+                    className="h-10 w-10 flex items-center justify-center p-0"
+                    asChild
+                    aria-label="Dela på LinkedIn"
+                  >
+                    <a
+                      href={getShareUrl('linkedin', { url: postUrl, title: post.title })}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Linkedin className="w-6 h-6 align-middle" />
+                    </a>
+                  </Button>
+                  {/* Email */}
+                  <Button
+                    variant="ghost"
+                    size="iconSmall"
+                    className="h-10 w-10 flex items-center justify-center p-0"
+                    asChild
+                    aria-label="Dela via e-post"
+                  >
+                    <a
+                      href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(`${post.title}\n\n${postExcerpt}\n\n${postUrl}`)}`}
+                    >
+                      <Email className="w-6 h-6 align-middle" />
+                    </a>
+                  </Button>
+                </div>
               </div>
             </div>
 
+            {/* Featured Image */}
             {post.featuredImage?.node.sourceUrl && (
-              <Image src={post.featuredImage.node.sourceUrl} alt={post.featuredImage.node.altText || ""} className="rounded-lg shadow-sm w-full mt-4" width={750} height={500} priority />
+              <Image
+                src={post.featuredImage.node.sourceUrl}
+                alt={post.featuredImage.node.altText || ""}
+                className="rounded-sm shadow-sm w-full mb-6"
+                width={750}
+                height={500}
+                priority
+              />
             )}
 
-            <section className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: post.updatedHtml }} />
+            {/* Breadcrumbs + Published Date Row */}
+            <div className="flex flex-wrap items-center justify-between gap-y-2 text-sm text-muted-foreground my-3">
+              <Breadcrumb>
+                <BreadcrumbItem>
+                  <Link href="/" className="text-blue-700">
+                    {process.env.NEXT_PUBLIC_HOSTNAME || 'Home'}
+                  </Link>
+                  <span className="mx-1">/</span>
+                </BreadcrumbItem>
+                <BreadcrumbItem>{post.title}</BreadcrumbItem>
+              </Breadcrumb>
+              <span>
+                Published: <time dateTime={post.date}>{new Date(post.date).toLocaleDateString()}</time>
+              </span>
+            </div>
+
+            {/* Post Content */}
+            <section className="max-w-none" dangerouslySetInnerHTML={{ __html: post.updatedHtml }} />
           </article>
+
           <aside className="space-y-8">
-            <div className="hidden lg:block"><AsideContent toc={post.toc} /></div>
-            <Card className="border-none shadow-none"><CardHeader className="p-0"><h3 className="text-xl font-bold">Läs mer</h3></CardHeader><RecommendationList currentSlug={post.slug} /></Card>
+            {/* Spacer to align TOC with the featured image */}
+            <div
+              style={{ height: i === 0 ? aboveImageHeight : 0, minHeight: 0 }}
+              className="hidden lg:block"
+              aria-hidden="true"
+            />
+            {/* TOC */}
+            <div className="hidden lg:block">
+              <div className="bg-gray-50 rounded-lg shadow p-4">
+                <AsideContent toc={post.toc} />
+              </div>
+            </div>
+            {/* Recommendations */}
+            <Card className="border-none shadow-none">
+              <CardHeader className="p-0">
+                <h3 className="text-xl font-bold">Read more</h3>
+              </CardHeader>
+              <RecommendationList currentSlug={post.slug} />
+            </Card>
           </aside>
         </div>
-      ))}
-      <div ref={sentinelRef} style={{ height: 1 }} />
-      {loading && <p className="text-center">Laddar fler...</p>}
-    </div>
-  );
-}
-
-// Render post with infinte scroll
+      );
+    })}
+    <div ref={sentinelRef} style={{ height: 1 }} />
+    {loading && <p className="text-center">Downloading more...</p>}
+  </div>
+);
+};

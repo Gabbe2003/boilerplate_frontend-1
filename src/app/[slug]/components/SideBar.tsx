@@ -18,7 +18,7 @@ export default function TocCard({ toc }: { toc: TocItem[] }) {
   return (
       <Card className="overflow-hidden gap-2 border-none shadow-none bg-gray-100">
       <CardHeader className="flex items-center justify-between px-6">
-        <h2 className="text-lg font-semibold">Table of Content</h2>
+        <nav className="text-lg font-semibold">Table of Content</nav>
         <Button variant="outline" size="sm" onClick={() => setOpen(o => !o)} className='cursor-pointer'>
           {open ? 'Hide' : 'Show'}
         </Button>

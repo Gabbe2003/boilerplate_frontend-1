@@ -1,11 +1,18 @@
-// next.config.ts
 import type { NextConfig } from 'next';
 
-const protocol: 'http' | 'http' =
-  process.env.NODE_ENV === 'development' ? 'http' : 'http';
+const protocol: 'http' | 'https' =
+  process.env.NODE_ENV === 'development' ? 'http' : 'https';
 
-// HERE: ensure hostname is a string
-const hostname: string = process.env.HOSTNAME ?? 'boiler.local';
+// Extract hostname from NEXT_PUBLIC_SHARENAME
+let shareHost = 'boiler.local';
+if (process.env.NEXT_PUBLIC_SHARENAME) {
+  try {
+    const url = new URL(process.env.NEXT_PUBLIC_SHARENAME);
+    shareHost = url.hostname;
+  } catch {
+    shareHost = process.env.NEXT_PUBLIC_SHARENAME;
+  }
+}
 
 const nextConfig: NextConfig = {
   env: {
@@ -16,7 +23,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol,
-        hostname,
+        hostname: shareHost,
+      },
+      {
+        protocol: 'https',
+        hostname: 'secure.gravatar.com', // Allow author avatars from Gravatar
       },
     ],
   },

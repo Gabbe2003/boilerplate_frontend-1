@@ -5,7 +5,7 @@ import FEATURED_IMAGE from '../../../public/next.svg';
 
 // Fetch a single post by slug
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-  const query = `
+   const query = `
     query GetPostBySlug($slug: String!) {
       postBy(slug: $slug) {
         id
@@ -25,6 +25,9 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
           node {
             name
             url
+            avatar {
+              url
+            }
           }
         }
         categories {

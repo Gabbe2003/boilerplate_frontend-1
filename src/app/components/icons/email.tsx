@@ -13,7 +13,7 @@ const Email: React.FC<EmailProps> = ({
   width = 28,
   style,
 }) => {
-  const aspectRatio = 24 / 24;
+  const aspectRatio = 28 / 28;
   const height = width * aspectRatio;
 
   return (

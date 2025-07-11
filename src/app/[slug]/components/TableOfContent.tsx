@@ -1,4 +1,3 @@
-// components/toc-card.tsx
 'use client';
 
 import { useState } from 'react';
@@ -16,13 +15,19 @@ export default function TocCard({ toc }: { toc: TocItem[] }) {
   const [open, setOpen] = useState(true);
 
   return (
-      <Card className="overflow-hidden gap-2 border-none shadow-none bg-gray-100">
+    <Card className="overflow-hidden gap-2 border-none shadow-none bg-gray-100 rounded-sm">
       <CardHeader className="flex items-center justify-between px-6">
         <nav className="text-lg font-semibold">Table of Content</nav>
-        <Button variant="outline" size="sm" onClick={() => setOpen(o => !o)} className='cursor-pointer'>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setOpen(o => !o)}
+          className="cursor-pointer"
+        >
           {open ? 'Hide' : 'Show'}
         </Button>
       </CardHeader>
+
       <CardContent className="p-0">
         <ScrollArea
           className={`transition-[max-height] duration-300 ease-in-out ${
@@ -30,11 +35,9 @@ export default function TocCard({ toc }: { toc: TocItem[] }) {
           } overflow-hidden`}
         >
           {!!toc.length && (
-            <ul className="space-y-2 px-6 list-disc  text-black">
+            <ul className="space-y-2 px-6 list-disc text-black">
               {toc.map(item => (
-                <li
-                  key={item.id}
-                >
+                <li key={item.id}>
                   <a
                     href={`#${item.id}`}
                     className="flex gap-2 text-primary hover:underline"
@@ -50,6 +53,3 @@ export default function TocCard({ toc }: { toc: TocItem[] }) {
     </Card>
   );
 }
-
-
-//Sidebar

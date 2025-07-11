@@ -10,6 +10,12 @@ export type PostItem = {
   categories: string[];
 };
 
+export interface TOCItem {
+  id: string;
+  text: string;
+  level: number;
+}
+
 export interface MediaDetailsSize {
   name: string;
   sourceUrl: string;

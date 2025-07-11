@@ -59,7 +59,7 @@ export default function PostMain({
   post: Post & { updatedHtml: string; toc: TOCItem[] };
   postUrl: string;
   postExcerpt: string;
-  aboveImageRef?: React.RefObject<HTMLDivElement>;
+aboveImageRef?: React.Ref<HTMLDivElement>;
 }) {
   return (
     <article className="lg:col-span-2 flex flex-col">

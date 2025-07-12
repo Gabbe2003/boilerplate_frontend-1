@@ -6,7 +6,7 @@ import Link from "next/link";
 import AdCard from "./adcard";
 import { ADS } from "./adsSideBar";
 import { ArrowRight } from "lucide-react";
-import ImageWithFallback from "./ImageWithFallback";
+import Image from "next/image";
 
 const RecommendationList = dynamic(() => import("./RecommendationList"), { ssr: false });
 
@@ -43,7 +43,7 @@ export default function PostRecommendations({ currentSlug }: { currentSlug: stri
                       >
                         {post.featuredImage?.node.sourceUrl && (
                           <div className="relative w-full aspect-[6/3] overflow-hidden rounded-t">
-                            <ImageWithFallback
+                            <Image
                               src={post.featuredImage.node.sourceUrl}
                               alt={post.title}
                               fill

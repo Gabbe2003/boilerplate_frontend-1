@@ -23,7 +23,7 @@ export default function RecommendationList({ currentSlug, children }: Recommenda
     if (total <= 5) return filtered;
     const maxStart = total - 5;
     const start = Math.floor(Math.random() * (maxStart + 1));
-    return filtered.slice(start, start + 5);
+    return filtered.slice(start, start + 6);
   }, [filtered]);
 
   return <>{children(recommendations)}</>;

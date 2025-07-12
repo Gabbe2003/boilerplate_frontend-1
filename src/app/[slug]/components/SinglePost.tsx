@@ -5,8 +5,9 @@ import type { Post } from "@/lib/types";
 import type { TOCItem } from "../page";
 import { useInfinitePosts } from "./infinitePostHandler";
 import PostMain from "./ArticleWithContent";
-import PostRecommendations from "./ReadMorePosts";
+import PostRecommendations from "./sideBar";
 import PostTOC from "./TOCContent";
+import EndOfPageRecommendations from "./EndOfPageRecommendations";
 
 interface PostWithTOC extends Post {
   updatedHtml: string;
@@ -91,17 +92,22 @@ function handleScroll() {
 
         return (
           <div
-            key={post.slug}
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
-            data-index={i}
-            ref={el => { articleRefs.current[i] = el; }}
-          >
-            <PostMain
-              post={post}
-              postUrl={postUrl}
-              postExcerpt={postExcerpt}
-  aboveImageRef={el => { aboveImageRefs.current[i] = el; }} // <-- callback ref
-            />
+      key={post.slug}
+      className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
+      data-index={i}
+      ref={el => { articleRefs.current[i] = el; }}
+    >
+      <div className="col-span-1 lg:col-span-2 flex flex-col gap-8">
+        <PostMain
+          post={post}
+          postUrl={postUrl}
+          postExcerpt={postExcerpt}
+          aboveImageRef={el => { aboveImageRefs.current[i] = el; }}
+        />
+
+        {/* --- END OF PAGE RECOMMENDATIONS --- */}
+        <EndOfPageRecommendations currentSlug={post.slug} />
+      </div>
 
             <aside className="space-y-8">
               {/* Spacer to align TOC with the featured image */}

@@ -12,7 +12,6 @@ declare global {
 type PopupModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  children?: React.ReactNode;
   onSubmit?: () => void;
 };
 
@@ -21,108 +20,15 @@ const MODAL_DISMISS_KEY = 'modalDismissedAt';
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
 function recently(key: string) {
-  const ts = localStorage.getItem(key);
+  const ts = typeof window !== 'undefined' ? localStorage.getItem(key) : null;
   return ts ? Date.now() - new Date(ts).getTime() < ONE_DAY : false;
 }
 
-
-// HTML from Rule.io
-const RULEMAILER_HTML = `
-  <style>
-    .grecaptcha-badge { display: none; }
-    .rulemailer-subscriber-form {
-      font-family: 'Inter', sans-serif;
-      width: 100%;
-      max-width: 312px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .rulemailer-subscriber-form label {
-      display: inline-block;
-      font-weight: 700;
-      margin-bottom: 8px;
-      color: #3F4752;
-      font-size: 14px;
-      text-align: left;
-    }
-    .rulemailer-subscriber-form input {
-      margin-bottom: 24px;
-      padding: 9px 12px;
-      width: 100%;
-      border: 1px solid #E7E9EE;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-    .rulemailer-subscriber-form input:focus {
-      outline: none;
-      border-color: #3A36DB;
-    }
-    .rulemailer-subscriber-form button {
-      width: 100%;
-      margin-top: 12px;
-      background: #FFA94D;
-      color: #fff;
-      padding: 10px;
-      height: 40px;
-      border-radius: 10px;
-      border: 2px solid #333;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 700;
-    }
-    .rulemailer-subscriber-form button:hover { background: #FF871E; }
-    .rulemailer-subscriber-form button:active { background: #E66A00; }
-    .rulemailer-email-check { display: none !important; }
-    .rulemailer-header h2 {
-      font-size: 20px;
-      font-weight: 700;
-      color: #333;
-      margin-bottom: 12px;
-    }
-    .rulemailer-header p {
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 8px;
-    }
-    .rulemailer-disclaimer {
-      font-size: 12px;
-      color: #999;
-      margin-top: 16px;
-    }
-  </style>
-
-  <div class="rulemailer-subscriber-form">
-    <div style="margin-bottom: 16px;"></div>
-
-    <div class="rulemailer-header">
-      <h2>DAILY NEWS IN YOUR INBOX!</h2>
-      <p>
-       Recive daily news with the most recent news<br />
-      </p>
-    </div>
-
-    <form id="rule-optin-form" action="https://app.rule.io/subscriber-form/subscriber" method="POST">
-      <input type="hidden" value="174903" name="tags[]" />
-      <input type="hidden" name="token" value="9fb5fa63-18b29eb-911ef2e-e8be117-5f1b203-8c4" />
-      <input id="rule_email" type="email" placeholder="ex: info@gmail.se" name="rule_email" required />
-      <label class="rulemailer-email-check">Are you a machine?</label>
-      <input type="checkbox" name="email_field" class="rulemailer-email-check" value="1" tabindex="-1" autocomplete="off" />
-      <input type="hidden" name="language" value="111" />
-      <div id="recaptcha"></div>
-      <button type="submit">Submit</button>
-    </form>
-
-    <p class="rulemailer-disclaimer">
-      By submitting my email, I hereby consent to receive daily updates with the latest news, as well as promotional emails from advertising partners.
-    </p>
-  </div>
-`;
 export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProps) {
-  const containerRef = React.useRef<HTMLDivElement>(null);
   const modalRef = React.useRef<HTMLDivElement>(null);
   const [visible, setVisible] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [email, setEmail] = React.useState('');
   const [internalOpen, setInternalOpen] = React.useState(false);
   const { logo } = useAppContext();
 
@@ -153,34 +59,12 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
   }, []);
 
   React.useEffect(() => {
-    if (!(isOpen || internalOpen)) return;
-
-    const container = containerRef.current;
-
     window.setRuleSubmitSuccess = () => {
       setIsSubmitted(true);
-      if (typeof onSubmit === 'function') onSubmit();
+      onSubmit?.();
       localStorage.setItem(MODAL_SUBMIT_KEY, new Date().toISOString());
-      console.log('Submission stored:', localStorage.getItem(MODAL_SUBMIT_KEY));
     };
-
-    const script = document.createElement('script');
-    script.src =
-      'https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit';
-    script.async = true;
-    script.defer = true;
-
-    const inlineScript = document.createElement('script');
-    inlineScript.innerHTML = `...`; // keep your original reCAPTCHA script logic
-
-    container?.appendChild(script);
-    container?.appendChild(inlineScript);
-
-    return () => {
-      container?.querySelectorAll('script').forEach((s) => s.remove());
-      delete window.setRuleSubmitSuccess;
-    };
-  }, [isOpen, internalOpen, onSubmit]);
+  }, [onSubmit]);
 
   const closeModal = () => {
     onClose();
@@ -193,6 +77,49 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
       closeModal();
     }
   };
+
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  try {
+    const res = await fetch('/api/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+
+
+    if (!res.ok) {
+  const errorData = await res.json();
+  if (errorData.issues) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    alert("Validation errors:\n" + errorData.issues.map((issue: any) => issue.message).join('\n'));
+  } else {
+    alert(`Subscription failed: ${errorData.message}`);
+  }
+}
+
+
+    if (res.ok) {
+      window.setRuleSubmitSuccess?.();
+    } else {
+      const errorData = await res.json();
+      // Log all data for debugging
+      console.error('[Frontend] Subscription failed:', errorData);
+      // Show more details in alert (or in your UI as you wish)
+      alert(
+        `Subscription failed (${errorData.path || 'unknown path'}):\n` +
+        `Message: ${errorData.message || 'Unknown error'}\n` +
+        (errorData.details ? `Details: ${JSON.stringify(errorData.details, null, 2)}` : '') +
+        (errorData.email ? `\nEmail: ${errorData.email}` : '') +
+        (errorData.rulePayload ? `\nPayload: ${JSON.stringify(errorData.rulePayload, null, 2)}` : '')
+      );
+    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    console.error('[Frontend] Network or unexpected error:', err);
+    alert(`Network or unexpected error: ${err.message || err}`);
+  }
+};
 
   if (!visible) return null;
 
@@ -213,7 +140,7 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
           {logo?.sourceUrl ? (
             <Image
               src={logo.sourceUrl}
-              alt={logo.altText || 'Logo'}
+              alt={logo.altText ?? 'Logo'}
               width={400}
               height={200}
               className="w-full rounded max-w-[300px] md:max-w-[360px] h-auto object-contain"
@@ -223,13 +150,12 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
             <span className="text-lg font-bold">Logo</span>
           )}
         </div>
-
         <div className="flex w-full flex-col justify-center p-6 md:w-2/3">
           <button
             onClick={closeModal}
             className="text-gray-500 absolute right-4 top-4 z-10 rounded-full p-1 hover:text-black"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5 cursor-pointer" />
           </button>
           {isSubmitted ? (
             <div className="text-center">
@@ -237,11 +163,30 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
                 Thank you for subscribing
               </h2>
               <p className="text-gray-600 text-sm">
-                You will now recive daily news in your email, if you dont find our emails, always check spam or contact us
+                You will now receive daily news in your email. If you don’t find our emails, check spam or contact us.
               </p>
             </div>
           ) : (
-            <div ref={containerRef} dangerouslySetInnerHTML={{ __html: RULEMAILER_HTML }} />
+            <form onSubmit={handleSubmit} className="rulemailer-subscriber-form">
+              <h2 className="rulemailer-header text-xl font-bold mb-2">DAILY NEWS IN YOUR INBOX!</h2>
+              <p className="rulemailer-header text-sm font-semibold mb-4">
+                Receive daily news with the most recent updates.
+              </p>
+              <input
+                id="rule_email"
+                type="email"
+                placeholder="ex: info@gmail.se"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="mb-6 p-2 w-full border rounded"
+              />
+              <div id="recaptcha"></div>
+              <button type="submit" className="w-full bg-[#FFA94D] text-white p-2 rounded cursor-pointer">Submit</button>
+              <p className="mt-4 text-xs text-gray-500">
+                By submitting my email, I consent to receive daily updates and promotional emails.
+              </p>
+            </form>
           )}
         </div>
       </div>

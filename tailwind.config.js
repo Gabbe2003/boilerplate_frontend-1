@@ -1,3 +1,5 @@
+import twAnimateCss from 'tw-animate-css';
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
@@ -16,6 +18,8 @@ module.exports = {
         border: 'var(--color-border)',
         ring: 'var(--color-ring)',
         input: 'var(--color-input)',
+        magenta: '#FFFF00', 
+
       },
       borderRadius: {
         sm: 'var(--radius-sm)',
@@ -25,5 +29,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tw-animate-css')],
+  plugins: [twAnimateCss],
 };

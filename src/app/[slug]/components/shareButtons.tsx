@@ -34,7 +34,7 @@ export default function ShareButtons({
       {/* Native share/copy */}
       <Button
         variant="ghost"
-        className="h-9 min-w-[52px] flex items-center justify-center text-neutral-700 font-medium rounded-xs px-3 transition-colors duration-150 text-mx border border-transparent hover:bg-neutral-100"
+        className="h-9 min-w-[52px] flex items-center justify-center text-neutral-700 font-medium rounded-xs px-3 cursor-pointer transition-colors duration-150 text-mx border border-transparent hover:bg-neutral-100"
         aria-label="Share Link"
         onClick={async () => {
           if (typeof window !== "undefined" && navigator.share) {

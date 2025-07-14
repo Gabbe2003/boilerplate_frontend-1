@@ -22,7 +22,6 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol,
         hostname: shareHost,
       },
       {

@@ -1,12 +1,12 @@
 "use server"
 import { load } from "cheerio";
 
-export interface Asset {
+interface Asset {
   sourceUrl: string;
   altText?: string | null;
 }
 
-export interface SiteAssets {
+interface SiteAssets {
   favicon: Asset | null;
   logo: Asset | null;
 }

@@ -2,14 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
 import getPosts from "@/lib/graph_queries/getPosts";
 import { load } from "cheerio";
-import type { Post } from "@/lib/types";
-import type { TOCItem } from "../page";
+import type { ITOCItem, Post } from "@/lib/types";
 
 // Helper: Extract headings and TOC from HTML
-const extractHeadingsClient = (html: string): { updatedHtml: string; toc: TOCItem[] } => {
+const extractHeadingsClient = (html: string): { updatedHtml: string; toc: ITOCItem[] } => {
   
   const $ = load(html);
-  const toc: TOCItem[] = [];
+  const toc: ITOCItem[] = [];
   $("h2, h3, h4, h5, h6").each((_, el) => {
     const $el = $(el);
     const tag = el.tagName.toLowerCase();
@@ -22,8 +21,8 @@ const extractHeadingsClient = (html: string): { updatedHtml: string; toc: TOCIte
   return { updatedHtml: $.root().html()!, toc };
 };
 
-export function useInfinitePosts(initialPost: Post & { updatedHtml: string; toc: TOCItem[] }) {
-  const [rendered, setRendered] = useState<(Post & { updatedHtml: string; toc: TOCItem[] })[]>([initialPost]);
+export function useInfinitePosts(initialPost: Post & { updatedHtml: string; toc: ITOCItem[] }) {
+  const [rendered, setRendered] = useState<(Post & { updatedHtml: string; toc: ITOCItem[] })[]>([initialPost]);
   const [queue, setQueue] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 

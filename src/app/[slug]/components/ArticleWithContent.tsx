@@ -1,8 +1,8 @@
+
 import Image from "next/image";
 import { Breadcrumb, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import type { Post } from "@/lib/types";
-import type { TOCItem } from "../page";
+import type { AuthorNode, Post, ITOCItem} from "@/lib/types";
 import ShareButtons from "./shareButtons";
 
 // Utility: strip HTML tags for excerpts
@@ -10,18 +10,6 @@ function stripHtml(html: string) {
   if (!html) return "";
   return html.replace(/<[^>]+>/g, "");
 }
-
-type AuthorNode = {
-  id: string;
-  name: string;
-  slug?: string;
-  uri?: string;
-  avatar?: {
-    url: string;
-    width?: number;
-    height?: number;
-  };
-};
 
 // AuthorInfo: used only in this file
 function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
@@ -55,17 +43,22 @@ export default function PostMain({
   postUrl,
   postExcerpt,
   aboveImageRef,
+  index
 }: {
-  post: Post & { updatedHtml: string; toc: TOCItem[] };
+  post: Post & { updatedHtml: string; toc: ITOCItem[] };
   postUrl: string;
   postExcerpt: string;
-aboveImageRef?: React.Ref<HTMLDivElement>;
+  aboveImageRef?: React.Ref<HTMLDivElement>;
+  index: number
 }) {
   return (
     <article className="lg:col-span-2 flex flex-col">
       {/* Title, Excerpt, Author+Share */}
       <div ref={aboveImageRef ?? undefined} className="mb-2">
-        <h1 className="text-3xl md:text-4xl font-bold text-start mb-1">{post.title}</h1>
+        {index === 0 ? 
+          <h1 className="text-3xl md:text-4xl font-bold text-start mb-1">{post.title}</h1> :
+          <h2 className="text-3xl md:text-4xl font-bold text-start mb-1">{post.title}</h2>
+        }
         {post.excerpt && (
           <p className="text-lg text-muted-foreground leading-snug mb-1">
             {stripHtml(post.excerpt)}

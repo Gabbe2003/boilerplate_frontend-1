@@ -1,13 +1,8 @@
+import { ISocial_Media_Props } from '@/lib/types';
 import React from 'react';
 
-interface TwitterProps {
-  className?: string;
-  color?: string;
-  width?: number;
-  style?: React.CSSProperties;
-}
-
-const Twitter: React.FC<TwitterProps> = ({
+ 
+const Twitter: React.FC<ISocial_Media_Props> = ({
   className,
   color = 'currentColor',
   width = 24,

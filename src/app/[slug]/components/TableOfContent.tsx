@@ -4,14 +4,9 @@ import { useState } from 'react';
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-export interface TocItem {
-  id: string;
-  text: string;
-  level: number;
-}
-
-export default function TocCard({ toc }: { toc: TocItem[] }) {
+import { ITOCItem } from '@/lib/types';
+ 
+export default function TocCard({ toc }: { toc: ITOCItem[] }) {
   const [open, setOpen] = useState(true);
 
   return (

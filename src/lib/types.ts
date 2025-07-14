@@ -1,16 +1,14 @@
-export type PostItem = {
-  id: number;
-  title: string;
-  slug: string;
-  link: string;
-  src: string;
-  featured_image: string;
-  publish_date: string;
-  author_name: string;
-  categories: string[];
-};
+ 
 
-export interface TOCItem {
+
+ 
+export interface ISocial_Media_Props {
+  className?: string;
+  color?: string;
+  width?: number;
+  style?: React.CSSProperties;
+}
+export interface ITOCItem {
   id: string;
   text: string;
   level: number;
@@ -40,7 +38,7 @@ export interface MediaItemNode {
 
 export interface PostWithTOC extends Post {
   updatedHtml: string;
-  toc: TOCItem[];
+  toc: ITOCItem[];
   featuredImage?: { node: MediaItemNode };
 }
 

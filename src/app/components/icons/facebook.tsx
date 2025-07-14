@@ -1,13 +1,8 @@
+import { ISocial_Media_Props } from '@/lib/types';
 import React from 'react';
+ 
 
-interface FacebookProps {
-  className?: string;
-  color?: string;
-  width?: number;
-  style?: React.CSSProperties;
-}
-
-const Facebook: React.FC<FacebookProps> = ({
+const Facebook: React.FC<ISocial_Media_Props> = ({
   className,
   color = 'currentColor',
   width = 24,

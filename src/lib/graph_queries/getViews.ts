@@ -1,6 +1,6 @@
 // lib/getViews.ts
 "use server"
-const VIEWS_ENDPOINT = process.env.VIEWS_ENDPOINT!;
+const VIEW_POPULAR_POSTS = process.env.VIEW_POPULAR_POSTS!;
 
 interface RawView {
   id: string | number;
@@ -19,7 +19,8 @@ export async function getViews(  period: "week" | "month" ): Promise<Array<{
   author_name: string;
 }>> {
   try {
-    const res = await fetch(`${VIEWS_ENDPOINT}=${period}`);
+    console.log(VIEW_POPULAR_POSTS);
+    const res = await fetch(`${VIEW_POPULAR_POSTS}=${period}`);
     if (!res.ok) {
       console.error('[getViews] non-OK response:', await res.text());
       return [];

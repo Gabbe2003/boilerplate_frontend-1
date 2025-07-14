@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { z } from 'zod';
-
 
 const PurchaseFormSchema = z.object({
   name: z.string()
@@ -33,6 +32,8 @@ export default function LinkPurchasePage() {
   const [status, setStatus] = useState<'success' | 'error' | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
+
+  document.title = `${process.env.NEXT_PUBLIC_HOSTNAME} | Links`; 
 
   // Controlled input handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

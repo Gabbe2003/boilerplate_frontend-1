@@ -1,4 +1,8 @@
-import React from 'react'
+ 
+
+export const metadata = {
+  title: `${process.env.HOSTNAME} | Privacy`
+}
 
 const PrivacyPage = () => {
   return (
@@ -7,7 +11,7 @@ const PrivacyPage = () => {
 
       <section className="space-y-6 text-lg leading-relaxed text-gray-800">
         <p>
-          At <strong>{process.env.HOSTNAME}</strong>, your privacy is important to us. We are fully committed to protecting your personal information and ensuring that your experience with our platform is both safe and secure.
+          At <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, your privacy is important to us. We are fully committed to protecting your personal information and ensuring that your experience with our platform is both safe and secure.
         </p>
 
         <p>
@@ -27,7 +31,7 @@ const PrivacyPage = () => {
         </p>
 
         <p>
-          By using <strong>{process.env.HOSTNAME}</strong>, you agree to the practices described in this privacy policy. We encourage you to reach out to us if you have any questions or concerns regarding your data or how it is handled.
+          By using <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, you agree to the practices described in this privacy policy. We encourage you to reach out to us if you have any questions or concerns regarding your data or how it is handled.
         </p>
       </section>
     </div>

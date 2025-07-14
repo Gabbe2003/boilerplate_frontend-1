@@ -4,7 +4,7 @@ const protocol: 'http' | 'https' =
   process.env.NODE_ENV === 'development' ? 'http' : 'https';
 
 // Extract hostname from NEXT_PUBLIC_SHARENAME
-let shareHost = 'boiler.local';
+let shareHost = 'boilerplate.local';
 if (process.env.NEXT_PUBLIC_SHARENAME) {
   try {
     const url = new URL(process.env.NEXT_PUBLIC_SHARENAME);

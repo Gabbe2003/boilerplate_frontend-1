@@ -9,12 +9,14 @@ import { getAllPosts } from '@/lib/graph_queries/getFullposts'
 
 
 
+export async function generateMetadata() {
+  return {
+    title: process.env.HOSTNAME || 'Default Title',
+    description: "Up-to-date tutorials, deep technical deep dives and thought pieces on web development, React, Next.js, and more.",
+    keywords: ["blog", "next.js", "react", "web development", "tutorials"],
+  };
+}
 
-export const metadata = {
-  title: "My Awesome Blog – Deep Dives & Tutorials",
-  description: "Up-to-date tutorials, deep technical deep dives and thought pieces on web development, React, Next.js, and more.",
-  keywords: ["blog", "next.js", "react", "web development", "tutorials"],
-};
 
 
 

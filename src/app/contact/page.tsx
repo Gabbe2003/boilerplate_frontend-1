@@ -1,11 +1,15 @@
 'use client'
 
-import React from 'react'
+import { useEffect } from "react"
 
 const ContactPage = () => {
   const host = process.env.NEXT_PUBLIC_HOSTNAME
   const contactEmail = `info@${host?.replace(/^https?:\/\//, '')}`
-
+ useEffect(() => {
+    if (host) {
+      document.title = `${host} | Contact`
+    }
+  }, [host])
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
       <h1 className="text-4xl font-bold mb-6 text-center">Get in Touch</h1>

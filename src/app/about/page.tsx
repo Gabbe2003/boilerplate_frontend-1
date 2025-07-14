@@ -1,4 +1,9 @@
-import React from 'react'
+
+
+export const metadata = {
+  title: `${process.env.HOSTNAME} | About`
+}
+
 
 const AboutPage = () => {
   return (
@@ -7,11 +12,11 @@ const AboutPage = () => {
 
       <section className="space-y-6 text-lg leading-relaxed text-gray-800">
         <p>
-          Welcome to <strong>{process.env.HOSTNAME}</strong>, a digital destination for timely, factual, and insightful reporting. Our team is driven by a shared passion for delivering high-quality news and analysis that keeps our audience informed, engaged, and ahead of the curve.
+          Welcome to <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, a digital destination for timely, factual, and insightful reporting. Our team is driven by a shared passion for delivering high-quality news and analysis that keeps our audience informed, engaged, and ahead of the curve.
         </p>
 
         <p>
-          We believe in the power of journalism to shape understanding and promote clarity in a rapidly evolving world. At <strong>{process.env.HOSTNAME}</strong>, we prioritize accuracy, integrity, and relevance in everything we publish—whether it’s breaking stories, in-depth reports, or feature coverage.
+          We believe in the power of journalism to shape understanding and promote clarity in a rapidly evolving world. At <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, we prioritize accuracy, integrity, and relevance in everything we publish—whether it’s breaking stories, in-depth reports, or feature coverage.
         </p>
 
         <p>
@@ -27,7 +32,7 @@ const AboutPage = () => {
         </p>
 
         <p>
-          At <strong>{process.env.HOSTNAME}</strong>, we view knowledge as empowerment—and we are here to support our readers with the information they need to stay informed and confident in their understanding of the world around them.
+          At <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, we view knowledge as empowerment—and we are here to support our readers with the information they need to stay informed and confident in their understanding of the world around them.
         </p>
       </section>
     </div>

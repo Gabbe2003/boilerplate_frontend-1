@@ -18,8 +18,6 @@ export async function generateMetadata() {
 }
 
 
-
-
 interface RootLayoutProps {
   children: ReactNode;
 }
@@ -33,18 +31,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       <body className="flex flex-col min-h-screen">
         <AppProvider links={DEFAULT_LINKS} logo={favicon} posts={posts}>
           <Header />
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
+            <main className="flex-1">{children}</main>
           <Footer />
-          {/* <main className="flex-1">{children}</main> */}
         </AppProvider>
       </body>
     </html>

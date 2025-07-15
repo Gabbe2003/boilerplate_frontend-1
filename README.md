@@ -46,3 +46,18 @@ Dynamic loading here; src\lib\graph_queries\getPostBySlug.ts; do we need revalid
 6. We are importing
 import Link from 'next/link'; 6 times
 import Image from 'next/image'; 5 times
+
+
+
+
+
+
+
+
+
+
+VIKTIGT: 
+C:\Users\Gabriel\Desktop\frontEndPlate\boilerplate_frontend\src\app\contact\page.tsx
+C:\Users\Gabriel\Desktop\frontEndPlate\boilerplate_frontend\src\app\advertisement\page.tsx                      
+
+kontaktsidan ha en Rule API call med formulär istället för det här. samma sak gäller för Links, bättre formulär och text

@@ -58,6 +58,7 @@ import Image from 'next/image'; 5 times
 
 VIKTIGT: 
 C:\Users\Gabriel\Desktop\frontEndPlate\boilerplate_frontend\src\app\contact\page.tsx
-C:\Users\Gabriel\Desktop\frontEndPlate\boilerplate_frontend\src\app\advertisement\page.tsx                      
-
+C:\Users\Gabriel\Desktop\frontEndPlate\boilerplate_frontend\src\app\advertisement\page.tsx                      Klart
+Fixa header & footer responsiv 
 kontaktsidan ha en Rule API call med formulär istället för det här. samma sak gäller för Links, bättre formulär och text
+ 

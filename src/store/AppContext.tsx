@@ -24,8 +24,8 @@ export const DEFAULT_LINKS = [
     href: '/about', 
   },
   { title: 'Contact', href: '/contact' },
-  { title: 'Privacy policy', href: '/privacy' },
   { title: 'Advertisement', href: '/advertisement' },
+  { title: 'Privacy policy', href: '/privacy' },
   { title: 'Social Media', href: '#footer' }, 
   { title: 'Archive', href: '/archive' },
 ];

@@ -9,61 +9,50 @@ export async function POST(req: NextRequest) {
     console.log('[API] Raw submission:', body)
 
     // Helper: sanitize + limit
-    const sanitize = (str: string | undefined | null, maxLen = 1000) =>
-      (str ?? '').replace(/[<>]/g, '').trim().slice(0, maxLen)
+    const sanitize = (str: string, maxLen = 1000) =>
+      (str || '').replace(/[<>]/g, '').trim().slice(0, maxLen)
 
     // Sanitize inputs
     const safeName = sanitize(name, 100)
     const safeEmail = sanitize(email, 100)
     const safeMessage = sanitize(message, 1000)
 
-    // Validate presence (only name & email required)
-    if (!safeName || !safeEmail) {
-      return new Response(
-        JSON.stringify({ message: 'Missing required fields' }),
-        { status: 400 }
-      )
+    // Validate presence
+    if (!safeName || !safeEmail || !safeMessage) {
+      return new Response(JSON.stringify({ message: 'Missing required fields' }), { status: 400 })
     }
 
     // Validate email
     if (!validator.isEmail(safeEmail)) {
-      return new Response(
-        JSON.stringify({ message: 'Invalid email address' }),
-        { status: 400 }
-      )
+      return new Response(JSON.stringify({ message: 'Invalid email' }), { status: 400 })
     }
 
-    // Build Rule.io payload
-    const plainText = `New message from ${safeName} (${safeEmail})\n\nMessage: ${safeMessage}`
-    const htmlText = `<p><strong>New message from ${safeName} (${safeEmail})</strong></p><p>Message: ${safeMessage}</p>`
-
-    const recipients = (process.env.FORM_RECEIVER_EMAILS || '')
+    // Get the first valid recipient from env (only ONE!)
+    const recipientEmail = (process.env.FORM_RECEIVER_EMAILS || '')
       .split(',')
       .map(email => email.trim())
-      .filter(Boolean)
-      .map(email => ({ name: 'Form Receiver', email }))
+      .find(email => validator.isEmail(email))
 
-    // For Edge runtime, use btoa if Buffer is not available
-    const base64Encode = (input: string) => {
-      if (typeof Buffer !== 'undefined') {
-        return Buffer.from(input).toString('base64')
-      }
-      // @ts-ignore
-      return btoa(unescape(encodeURIComponent(input)))
+    if (!recipientEmail) {
+      return new Response(JSON.stringify({ message: 'No valid recipient email' }), { status: 500 })
     }
+
+    // Build Rule.io payload (use "to" field)
+    const plainText = `New ad inquiry from ${safeName} (${safeEmail})\n\nMessage: ${safeMessage}`
+    const htmlText = `<p><strong>New ad inquiry from ${safeName} (${safeEmail})</strong></p><p>Message:</p><p>${safeMessage}</p>`
 
     const payload = {
       transaction_type: 'email',
-      transaction_name: 'Form Submission',
-      subject: `New Form Submission from ${process.env.HOSTNAME}`,
+      transaction_name: 'Ad Inquiry',
+      subject: `New Ad Inquiry from ${process.env.HOSTNAME || 'Website'}`,
       from: {
-        name: process.env.HOSTNAME,
-        email: process.env.RULE_FROM_EMAIL,
+        name: process.env.HOSTNAME || 'Website',
+        email: process.env.RULE_FROM_EMAIL || 'noreply@rule.se',
       },
-      to: recipients,
+      to: { email: recipientEmail }, // <-- CORRECT FIELD
       content: {
-        plain: base64Encode(plainText),
-        html: base64Encode(htmlText),
+        plain: Buffer.from(plainText).toString('base64'),
+        html: Buffer.from(htmlText).toString('base64'),
       },
     }
 
@@ -83,30 +72,18 @@ export async function POST(req: NextRequest) {
       result = await response.json()
     } catch (err) {
       console.error('[API] Failed to parse Rule.io response:', err)
-      return new Response(
-        JSON.stringify({ message: 'Invalid response from Rule.io' }),
-        { status: 500 }
-      )
+      return new Response(JSON.stringify({ message: 'Invalid response from Rule.io' }), { status: 500 })
     }
 
     if (!response.ok) {
-      console.error('[Rule.io Error]', { status: response.status, result })
-      return new Response(
-        JSON.stringify({ message: 'Failed to send email via Rule.io' }),
-        { status: 500 }
-      )
+      console.error('[Rule.io Error]', JSON.stringify(result, null, 2))
+      return new Response(JSON.stringify({ message: 'Failed to send email via Rule.io', details: result }), { status: 500 })
     }
 
     console.log('[API] Email sent successfully via Rule.io')
-    return new Response(
-      JSON.stringify({ message: 'Email sent successfully via Rule.io' }),
-      { status: 200 }
-    )
+    return new Response(JSON.stringify({ message: 'Email sent successfully via Rule.io' }), { status: 200 })
   } catch (err) {
     console.error('[API] Unexpected server error:', err)
-    return new Response(
-      JSON.stringify({ message: 'Internal Server Error' }),
-      { status: 500 }
-    )
+    return new Response(JSON.stringify({ message: 'Internal Server Error' }), { status: 500 })
   }
 }

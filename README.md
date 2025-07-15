@@ -3,11 +3,13 @@ Check later:
 
 1. ASK TOMORROW: How do we plan our navigation categories, tags, nested dropdonw?
 2. ASK TOMORROW: ASk the user for sign up and accept cookies.
-3. different caching options, many places need fix
+3. We should have the fallback image in the boilerplate, as of now we may not get the image for example mostViews in month. 
+4. different caching options, many places need fix. We need to determine which parts of the page is really important and need frech data also we need to centrlize the revalidate time if possible. 
+
 Functions:
 
 1. Render all author, create a page and a query to display the author - Kerlos
-2. Dont forget to implement the view post logic to fire a call to the backend; src\app[slug]\components\InfinitePostFeed.tsx - Kerlos (Done) just check it if everything is correct once the endpoint is correct.
+2. Dont forget to implement the view post logic to fire a call to the backend; src\app[slug]\components\InfinitePostFeed.tsx - Kerlos (Done) 
 3. Moving from "use server" to server-only - Kerlos (Done)
 4. Use ZOD for security for the Link purchase - Kerlos (Done)
 5. Have fallback on all the API calls - Kerlos (Done)
@@ -32,6 +34,7 @@ SEO:
 Components:
 
 1. Get Pouplar post - Kerlos http://boilerplate.local/wp-json/hpv/v1/top-posts?popular (Display it at the start of the page, like a carosel). 
+http://boilerplate.local/wp-json/hpv/v1/top-posts?popular(Little bit strange how the response data, same post not the heights?)
 
 Optimizations:
 
@@ -43,6 +46,7 @@ Dynamic loading here; src\lib\graph_queries\getPostBySlug.ts; do we need revalid
 
 4. React-vertualized - Kerlos (Done), not a bad choice and can be used in listing when the scrollbehavior doesnt fuck the design
 5. Delay Search request by 1 sec - Gabbe
+
 6. We are importing
 import Link from 'next/link'; 6 times
 import Image from 'next/image'; 5 times

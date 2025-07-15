@@ -110,6 +110,8 @@ export interface Post {
   uri?: string;
   status?: string;
   isSticky?: boolean;
+  author_name: string; 
+
 
   title: string; // rendered title
   excerpt: string; // rendered excerpt

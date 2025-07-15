@@ -8,7 +8,7 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
    const query = `
     query GetPostBySlug($slug: String!) {
       postBy(slug: $slug) {
-        id
+        databaseId
         title
         content
         excerpt

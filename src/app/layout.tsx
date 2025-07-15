@@ -23,7 +23,7 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const {favicon} = await getLogo();
+  const { favicon } = await getLogo();
   const posts = await getAllPosts();
 
   return (

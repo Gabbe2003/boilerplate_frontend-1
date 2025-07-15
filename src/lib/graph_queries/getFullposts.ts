@@ -137,17 +137,20 @@ fragment PostFull on Post {
     }
 
     const rawPosts = json.data?.posts?.nodes ?? [];
-
-    // now scan for any “fallback” URLs and replace them
     const posts = rawPosts.map((post) => {
-      const imgNode = post.featuredImage?.node;
-      if (imgNode?.sourceUrl?.includes('fallback')) {
-        imgNode.sourceUrl = FEATURED_IMAGE;
-        imgNode.altText = imgNode.altText || 'Default featured image';
+      if (!post.featuredImage?.node?.sourceUrl) {
+        post.featuredImage = {
+          node: {
+            sourceUrl: FEATURED_IMAGE,
+            altText: 'Default featured image'
+          }
+        };
+      } else if (post.featuredImage.node.sourceUrl.includes('fallback')) {
+        post.featuredImage.node.sourceUrl = FEATURED_IMAGE;
+        post.featuredImage.node.altText = post.featuredImage.node.altText || 'Default featured image';
       }
       return post;
     });
-
     return posts;
   } catch (error) {
     console.error('getAllPosts failed:', error);

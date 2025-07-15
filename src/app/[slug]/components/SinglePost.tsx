@@ -7,7 +7,6 @@ import PostMain from "./ArticleWithContent";
 import PostRecommendations from "./sideBar";
 import PostTOC from "./TOCContent";
 import EndOfPageRecommendations from "./EndOfPageRecommendations";
-import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";
  
 
 // Utility: strip HTML tags for excerpts
@@ -16,17 +15,14 @@ function stripHtml(html: string) {
   return html.replace(/<[^>]+>/g, "");
 }
 
-export default function InfinitePostFeed({initialPost,}: { initialPost: PostWithTOC; }) {
-  
+export default function InfinitePostFeed({ initialPost }: { initialPost: PostWithTOC; }) {
   const { rendered, loading, sentinelRef } = useInfinitePosts(initialPost);
  
   const articleRefs = useRef<(HTMLElement | null)[]>([]);
   const aboveImageRefs = useRef<Array<HTMLDivElement | null>>([]);
   const [aboveImageHeights, setAboveImageHeights] = useState<number[]>([]);
 
-  useEffect(() => {
-    update_viewed_post(rendered?.id); 
-  }, [])
+ 
 
   useEffect(() => {
     function handleScroll() {

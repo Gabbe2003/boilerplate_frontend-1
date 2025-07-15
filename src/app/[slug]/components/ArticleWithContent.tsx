@@ -4,6 +4,8 @@ import { Breadcrumb, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import type { AuthorNode, Post, ITOCItem} from "@/lib/types";
 import ShareButtons from "./shareButtons";
+import { useEffect } from "react";
+import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";
 
 // Utility: strip HTML tags for excerpts
 function stripHtml(html: string) {
@@ -37,20 +39,24 @@ function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   );
 }
 
-
 export default function PostMain({
-  post,
-  postUrl,
-  postExcerpt,
-  aboveImageRef,
-  index
-}: {
-  post: Post & { updatedHtml: string; toc: ITOCItem[] };
-  postUrl: string;
-  postExcerpt: string;
-  aboveImageRef?: React.Ref<HTMLDivElement>;
-  index: number
-}) {
+    post,
+    postUrl,
+    postExcerpt,
+    aboveImageRef,
+    index
+  }: {
+    post: Post & { updatedHtml: string; toc: ITOCItem[] };
+    postUrl: string;
+    postExcerpt: string;
+    aboveImageRef?: React.Ref<HTMLDivElement>;
+    index: number
+  }) {
+
+  useEffect(() => {
+    update_viewed_post(post.databaseId); 
+  }, [index])
+
   return (
     <article className="lg:col-span-2 flex flex-col">
       {/* Title, Excerpt, Author+Share */}

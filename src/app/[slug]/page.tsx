@@ -52,10 +52,7 @@ export default async function PostPage({
  
   const post: Post | null = await getPostBySlug(slug);
   if (!post) return notFound();
-  const { updatedHtml, toc } = await extractHeadings(post.content);
-
-  // http://boilerplate.local/wp-json/hpv/v1/log-view/:postId
- 
+  const { updatedHtml, toc } = await extractHeadings(post.content); 
   
   return (
     <InfinitePostFeedClientWrapper initialPost={{ ...post, updatedHtml, toc }} />

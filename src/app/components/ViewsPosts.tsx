@@ -14,12 +14,13 @@ export default function ViewedPosts() {
 
   useEffect(() => {
     setLoading(true);
+    
     getViews(period)
-      .then((data) => {
+    .then((data) => {
         setPosts(data);
       })
-      .catch((e) => console.error('Fetch error:', e))
-      .finally(() => setLoading(false));
+    .catch((e) => console.error('Fetch error:', e))
+    .finally(() => setLoading(false));
   }, [period]);
 
   return (
@@ -81,7 +82,7 @@ export default function ViewedPosts() {
         <ul className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
           {posts.map((post) => {
             const formattedDate = new Date(
-              post.publish_date,
+              post.date,
             ).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
@@ -92,8 +93,8 @@ export default function ViewedPosts() {
               <li key={post.id} className="rounded-2xl">
                 <Link href={post?.slug}>
                   <div className="relative overflow-hidden rounded-tl-2xl rounded-tr-2xl rounded-br-2xl">
-                    <Image
-                      src={post.featuredImage}
+                   <Image
+                      src={post.featuredImage || ''}
                       width={300}
                       height={200}
                       alt={post.title}

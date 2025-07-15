@@ -27,8 +27,8 @@ export default function Footer() {
       title: "Newsletter",
       onClick: () => setIsModalOpen(true),
     },
-    { type: "link", title: "Work with us", href: "/about" },
-    { type: "link", title: "Sitemap", href: "/privacy" },
+    { type: "link", title: "Work with us", href: "/work" },
+    { type: "link", title: "Sitemap", href: "/sitemap" },
   ];
 
   return (

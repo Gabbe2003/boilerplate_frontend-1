@@ -1,14 +1,30 @@
 
-Check later:
+Fix the carosel, make a component that accept children and return a component. 
+stripHTML, getFeaturedImageUrl. then go to the caching erros. 
 
-1. ASK TOMORROW: How do we plan our navigation categories, tags, nested dropdonw?
-2. ASK TOMORROW: ASk the user for sign up and accept cookies.
-3. We should have the fallback image in the boilerplate, as of now we may not get the image for example mostViews in month. 
+Build a better type for posts. 
+
+Check later:
+Right  now when we scroll down the posts the viewed function is being triggered? is it correct
+1. ASK TOMORROW: How do we plan our navigation categories, tags, nested dropdonw? (Still unsure if we are going to implemenet it)
+2. ASK TOMORROW: ASk the user for sign up and accept cookies. There is no need the ads can run without consent also itss just addprofit that required it (Done)
+
 4. different caching options, many places need fix. We need to determine which parts of the page is really important and need frech data also we need to centrlize the revalidate time if possible. 
+ 
+
+1. Considere using dynamic loading, priority and moving from one rendering strategy to another. - Kerlos
+2. Also Also runtime = edge can increase performance - Kerlos
+3. Reduce api calls, make a better planning for the api calls. And check the caching options - Kerlos
+remember that fetch("local/:id") they are cached
+Dynamic loading here; src\lib\graph_queries\getPostBySlug.ts; do we need revalidate there, and maybe cache options
+
+
+When we are in the slug we there is so many calls 
+is it better to use a function over an useeffect. also is it normal for the same function to be called twice. 
 
 Functions:
 
-1. Render all author, create a page and a query to display the author - Kerlos
+1. Render all author, create a page and a query to display the author - Kerlos (Done)  
 2. Dont forget to implement the view post logic to fire a call to the backend; src\app[slug]\components\InfinitePostFeed.tsx - Kerlos (Done) 
 3. Moving from "use server" to server-only - Kerlos (Done)
 4. Use ZOD for security for the Link purchase - Kerlos (Done)
@@ -25,7 +41,7 @@ Consitency:
 
 SEO:
 
-1. Render Meta data - Kerlos (Done) Its done we 
+1. Render Meta data - Kerlos (Done) 
 2. Render only the first post title with H1, the rest should be H2 - Kerlos (Done)
 3. Sitemap - Gabbe
 4. robot.txt - Gabbe
@@ -38,15 +54,7 @@ http://boilerplate.local/wp-json/hpv/v1/top-posts?popular(Little bit strange how
 
 Optimizations:
 
-1. Considere using dynamic loading, priority and moving from one rendering strategy to another. - Kerlos
-2. Also Also runtime = edge can increase performance - Kerlos
-3. Reduce api calls, make a better planning for the api calls. And check the caching options - Kerlos
-remember that fetch("local/:id") they are cached
-Dynamic loading here; src\lib\graph_queries\getPostBySlug.ts; do we need revalidate there, and maybe cache options
 
 4. React-vertualized - Kerlos (Done), not a bad choice and can be used in listing when the scrollbehavior doesnt fuck the design
-5. Delay Search request by 1 sec - Gabbe
 
-6. We are importing
-import Link from 'next/link'; 6 times
-import Image from 'next/image'; 5 times
+5. Delay Search request by 1 sec - Gabbe

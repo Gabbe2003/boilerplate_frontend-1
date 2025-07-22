@@ -3,11 +3,13 @@ import type { ReactNode } from 'react'
 import { AppProvider, DEFAULT_LINKS } from '@/store/AppContext'
 import { getLogo } from '@/lib/graph_queries/getLogo'
 import Header from './components/Header'
-import Footer from './components/Footer'
+import dynamic from 'next/dynamic'
 import '@/styles/globals.css'
 import { getAllPosts } from '@/lib/graph_queries/getFullposts'
 
-
+const Footer = dynamic(() => import('./components/Footer'), {
+  loading: () => <div className="w-full h-24 bg-gray-100" /> // Optional skeleton
+})
 
 export async function generateMetadata() {
   return {
@@ -16,7 +18,6 @@ export async function generateMetadata() {
     keywords: ["blog", "next.js", "react", "web development", "tutorials"],
   };
 }
-
 
 interface RootLayoutProps {
   children: ReactNode;

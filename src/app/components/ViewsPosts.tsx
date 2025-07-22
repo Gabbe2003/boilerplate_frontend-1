@@ -2,23 +2,32 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import type { Post } from '@/lib/types';
 import { getViews } from '@/lib/graph_queries/getViews';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+type ViewsPost = {
+  id: number;
+  title: string;
+  slug: string;
+  featured_image: string;
+  date: string;
+  author_name: string;
+};
+
 
 export default function ViewedPosts() {
   const [period, setPeriod] = useState<'week' | 'month'>('week');
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<ViewsPost[]>([]);
   const [loading, setLoading] = useState(false);
+  
 
   useEffect(() => {
     setLoading(true);
-    
     getViews(period)
     .then((data) => {
-        setPosts(data);
-      })
+      setPosts(data);
+    })
+      
     .catch((e) => console.error('Fetch error:', e))
     .finally(() => setLoading(false));
   }, [period]);
@@ -94,7 +103,7 @@ export default function ViewedPosts() {
                 <Link href={post?.slug}>
                   <div className="relative overflow-hidden rounded-tl-2xl rounded-tr-2xl rounded-br-2xl">
                    <Image
-                      src={post.featuredImage || ''}
+                      src={post.featured_image || ''}
                       width={300}
                       height={200}
                       alt={post.title}

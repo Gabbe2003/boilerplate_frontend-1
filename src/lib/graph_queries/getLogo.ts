@@ -16,7 +16,8 @@ const DEFAULT_URL = process.env.HOSTNAME!;
 export async function getLogo(): Promise<SiteAssets> {
   try {
     const url = `http://${DEFAULT_URL}`;
-    const res = await fetch(url, { cache: 'no-store' });
+    const res = await fetch(url);
+    // const res = await loggedFetch(url, {context: 'getLogo'});
 
     if (!res.ok) {
       return { favicon: null, logo: null };

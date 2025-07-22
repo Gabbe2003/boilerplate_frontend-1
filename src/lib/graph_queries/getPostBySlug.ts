@@ -51,17 +51,27 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       body: JSON.stringify({ query, variables: { slug } }),
       next: { revalidate: 60 },
     });
+
+// const res = await loggedFetch(GRAPHQL_URL, {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ query, variables: { slug } }),
+//       next: { revalidate: 60 },
+//       context: 'getPostBySlug',
+//     });
+
+
     const json = (await res.json()) as {
       data?: { postBy?: Post };
       errors?: GraphQLError;
     };
 
     const post = json.data?.postBy ?? null;
-    if (post && post.featuredImage?.node.sourceUrl) {
-      if (post.featuredImage.node.sourceUrl.includes('fallback')) {
-        post.featuredImage.node.sourceUrl = FEATURED_IMAGE;
-        post.featuredImage.node.altText =
-          post.featuredImage.node.altText || 'Default featured image';
+    if (post && post.featured_image?.node.sourceUrl) {
+      if (post.featured_image.node.sourceUrl.includes('fallback')) {
+        post.featured_image.node.sourceUrl = FEATURED_IMAGE;
+        post.featured_image.node.altText =
+          post.featured_image.node.altText || 'Default featured image';
       }
     }
 

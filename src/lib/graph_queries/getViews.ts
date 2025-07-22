@@ -3,37 +3,51 @@
 const VIEW_POPULAR_PERIOD_POST = process.env.VIEW_POPULAR_PERIOD_POST!;
 import FEATURED_IMAGE from '../../../public/next.svg';
 
+interface FeaturedImageObject {
+  node?: {
+    sourceUrl?: string;
+  };
+}
+
 interface RawView {
   id: string | number;
   title: string;
   slug: string;
-  featured_image: string;
-  publish_date: string;
+  featured_image: string | FeaturedImageObject | null | undefined;
+  date: string;
   author_name: string;
 }
-export async function getViews(  period: "week" | "month" ): Promise<Array<{
+
+export async function getViews(
+  period: "week" | "month"
+): Promise<
+  Array<{
     id: number;
     title: string;
     slug: string;
-    featuredImage: string;
+    featured_image: string;
     date: string;
     author_name: string;
-  }>> {
+  }>
+> {
   try {
-      console.log(`${VIEW_POPULAR_PERIOD_POST}=${period}`);
-      const res = await fetch(`${VIEW_POPULAR_PERIOD_POST}=${period}`);
-      if (!res.ok) {
-        console.error('[getViews] non-OK response:', await res.text());
-        return [];
-      }
-      const data = await res.json();
-      if (!Array.isArray(data)) {
-        console.error('[getViews] payload is not an array:', data);
-        return [];
-      }
+    const res = await fetch(`${VIEW_POPULAR_PERIOD_POST}=${period}`);
+
+    // const res = await loggedFetch(`${VIEW_POPULAR_PERIOD_POST}=${period}`, {context: 'getViews'});
+
+
+    if (!res.ok) {
+      console.error('[getViews] non-OK response:', await res.text());
+      return [];
+    }
+    const data = await res.json();
+    if (!Array.isArray(data)) {
+      console.error('[getViews] payload is not an array:', data);
+      return [];
+    }
     const raw = data as RawView[];
-    
-    function getFeaturedImageUrl(featured_image: unknown): string {
+
+    function getFeaturedImageUrl(featured_image: string | FeaturedImageObject | null | undefined): string {
       if (typeof featured_image === 'string' && featured_image) {
         return featured_image;
       }
@@ -41,23 +55,23 @@ export async function getViews(  period: "week" | "month" ): Promise<Array<{
         featured_image &&
         typeof featured_image === 'object' &&
         'node' in featured_image &&
-        typeof (featured_image as any).node?.sourceUrl === 'string' &&
-        (featured_image as any).node.sourceUrl
+        typeof featured_image.node?.sourceUrl === 'string' &&
+        featured_image.node.sourceUrl
       ) {
-        return (featured_image as any).node.sourceUrl;
+        return featured_image.node.sourceUrl;
       }
-      // If no valid image found, return fallback
-      return FEATURED_IMAGE;
+      // Fallback
+      return FEATURED_IMAGE as unknown as string;
     }
 
-  return raw.map((post) => ({
-    id: Number(post.id),
-    title: post.title.trim(),
-    slug: post.slug,
-    featuredImage: getFeaturedImageUrl(post.featured_image),
-    date: post.publish_date,
-    author_name: post.author_name,
-  }));
+    return raw.map((post) => ({
+      id: Number(post.id),
+      title: post.title.trim(),
+      slug: post.slug,
+      featured_image: getFeaturedImageUrl(post.featured_image),
+      date: post.date,
+      author_name: post.author_name,
+    }));
 
   } catch (err) {
     console.error('[getViews] fetch failed:', err);

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+
 import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
 import { load } from "cheerio";
 import type { ITOCItem, Post } from "@/lib/types";
@@ -6,10 +6,7 @@ import InfinitePostFeedClientWrapper from "./components/InfinitePostFeedClientWr
 
 export const dynamicParams = false;
 
-
-/** Runs on the server – safe to import Puppeteer */ 
-
-export async function extractHeadings(html: string): Promise<{
+async function extractHeadings(html: string): Promise<{
   updatedHtml: string;
   toc: ITOCItem[];
 }> {
@@ -46,15 +43,19 @@ $("h2, h3, h4, h5, h6").each((_, el) => {
 export default async function PostPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>; // <-- now a Promise!
 }) {
-  const { slug } = await params;
- 
+ try {
+   const { slug } = await params; // <-- await it
   const post: Post | null = await getPostBySlug(slug);
-  if (!post) return notFound();
-  const { updatedHtml, toc } = await extractHeadings(post.content); 
-  
+  if (!post) return  // fix the 404 error handling later 
+  const { updatedHtml, toc } = await extractHeadings(post.content);
+
   return (
     <InfinitePostFeedClientWrapper initialPost={{ ...post, updatedHtml, toc }} />
   );
+ } catch (e) {
+    console.error('Error in PostPage:', e);
+    return <div>Sorry, something went wrong.</div>;
+  }
 }

@@ -12,8 +12,7 @@ export default function Footer() {
   const { logo, links } = useAppContext();
   const currentYear = new Date().getFullYear();
 
-  // Demo: render links in three columns
-  const repeatedLinks = [1, 2, 3].map(i => links);
+  const repeatedLinks = [1, 2, 3].map(() => links);
 
   return (
     <footer className="w-full border-t border-gray-200 bg-gray-100">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 const PurchaseFormSchema = z.object({
@@ -33,8 +33,9 @@ export default function LinkPurchasePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [globalError, setGlobalError] = useState<string | null>(null);
 
-  document.title = `${process.env.NEXT_PUBLIC_HOSTNAME} | Links`; 
-
+  useEffect(() => {
+    document.title = `${process.env.NEXT_PUBLIC_HOSTNAME} | Links`;
+  }, []);
   // Controlled input handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({
@@ -84,6 +85,7 @@ export default function LinkPurchasePage() {
         setGlobalError('Submission failed. Please try again.');
       }
     } catch (err) {
+      console.error(err);
       setStatus('error');
       setGlobalError('Network error. Please try again.');
     } finally {

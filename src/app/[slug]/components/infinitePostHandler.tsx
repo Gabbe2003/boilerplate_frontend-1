@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
-import getPosts from "@/lib/graph_queries/getPosts";
+import { getPosts } from "@/lib/graph_queries/getPosts";
 import { load } from "cheerio";
 import type { ITOCItem, Post } from "@/lib/types";
 

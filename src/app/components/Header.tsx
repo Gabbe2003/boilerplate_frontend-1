@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, Search as SearchIcon } from 'lucide-react';
+import { ChevronDown, MenuIcon, Search as SearchIcon } from 'lucide-react';
 import { useAppContext } from '@/store/AppContext';
 import { useState } from "react";
 import {
@@ -66,16 +66,11 @@ export default function Header() {
             {/* Mobile Dropdown */}
             <div className="sm:hidden">
               <DropdownMenu open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="p-2">
-                    <span
-                      className={`hamburger${mobileMenuOpen ? ' open' : ''}`}
-                      aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-                    >
-                      <span className="hamburger-bar"></span>
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost">
+                      <MenuIcon className="h-6 w-6" />
+                    </Button>
+                  </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
                   className="w-screen max-w-none left-0 rounded-none p-4 bg-white shadow-lg border animate-fadeInDown"

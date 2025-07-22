@@ -4,6 +4,8 @@ import React from 'react';
 import ViewsPosts from './components/ViewsPosts';
 import PopularPost from './components/PopularPost';
 
+export const revaldiate = 3000; // Revalidate every 5 minutes 
+
 export async function generateStaticParams() {
   const res = await fetch(process.env.WP_GRAPHQL_URL!, {
     method: 'POST',

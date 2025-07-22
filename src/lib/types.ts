@@ -122,7 +122,7 @@ export interface Post {
 
   commentCount?: number;
 
-  featuredImage?: {
+  featured_image?: {
     node: MediaItemNode;
   };
 

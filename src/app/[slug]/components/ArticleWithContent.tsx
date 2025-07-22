@@ -13,7 +13,6 @@ function stripHtml(html: string) {
   return html.replace(/<[^>]+>/g, "");
 }
 
-// AuthorInfo: used only in this file
 function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   if (!author) return null;
 
@@ -39,6 +38,8 @@ function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   );
 }
 
+
+
 export default function PostMain({
     post,
     postUrl,
@@ -52,9 +53,9 @@ export default function PostMain({
     aboveImageRef?: React.Ref<HTMLDivElement>;
     index: number
   }) {
-
+ 
   useEffect(() => {
-    update_viewed_post(post.databaseId); 
+    update_viewed_post(String(post.databaseId)); 
   }, [index])
 
   return (
@@ -74,17 +75,20 @@ export default function PostMain({
         <div className="flex items-center justify-between mt-5 mb-1">
           <span className="text-sm flex items-center gap-2">
             <AuthorInfo author={post.author} />
-            By <strong>{post.author?.node.name || "Admin"}</strong>
+            By    
+            <Link href={`/author/${post.author?.node.name || "admin"}`} className="text-blue-700">
+              <strong>{post.author?.node.name || "Admin"}</strong>
+            </Link>
           </span>
           <ShareButtons postUrl={postUrl} postTitle={post.title} postExcerpt={postExcerpt} />
         </div>
       </div>
 
       {/* Featured Image */}
-      {post.featuredImage?.node.sourceUrl && (
+      {post.featured_image?.node.sourceUrl && (
         <Image
-          src={post.featuredImage.node.sourceUrl}
-          alt={post.featuredImage.node.altText || ""}
+          src={post.featured_image.node.sourceUrl}
+          alt={post.featured_image.node.altText || ""}
           className="rounded-sm shadow-sm w-full mb-6"
           width={750}
           height={500}
@@ -104,7 +108,7 @@ export default function PostMain({
           <BreadcrumbItem>{post.title}</BreadcrumbItem>
         </Breadcrumb>
         <span>
-          Published: <time dateTime={post.date}>{new Date(post.date).toLocaleDateString()}</time>
+          Published: <time dateTime={post.date}>{new Date(post.date).toISOString().slice(0, 10)}</time>
         </span>
       </div>
 
@@ -113,6 +117,15 @@ export default function PostMain({
         className="max-w-none"
         dangerouslySetInnerHTML={{ __html: post.updatedHtml }}
       />
+      <div className="flex items-center justify-between mt-5 mb-1">
+        <span className="text-sm flex items-center gap-2">
+          <AuthorInfo author={post.author} />
+          By
+          <Link href={`/author/${post.author?.node.name || "admin"}`} className="text-blue-700">
+            <strong>{post.author?.node.name || "Admin"}</strong>
+          </Link>
+        </span>
+      </div>
     </article>
   );
 }

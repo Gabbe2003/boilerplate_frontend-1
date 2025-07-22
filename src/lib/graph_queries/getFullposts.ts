@@ -116,7 +116,6 @@ fragment PostFull on Post {
   `;
 
   try {
-    console.log(GRAPHQL_URL);
     const res = await fetch(GRAPHQL_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -125,6 +124,16 @@ fragment PostFull on Post {
         variables: { first, after, last, before },
       }),
     });
+
+    //  const res = await loggedFetch(GRAPHQL_URL, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     query,
+    //     variables: { first, after, last, before },
+    //   }),
+    //   context: 'getAllPosts',
+    // });
 
     const json = (await res.json()) as {
       data?: { posts?: { nodes: Post[] } };

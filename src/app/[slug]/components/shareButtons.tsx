@@ -20,7 +20,7 @@ function getShareUrl(
   }
 }
 
-export default function ShareButtons({
+export function ShareButtons({
   postUrl,
   postTitle,
   postExcerpt,

@@ -2,7 +2,8 @@
 import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
 import { load } from "cheerio";
 import type { ITOCItem, Post } from "@/lib/types";
-import InfinitePostFeedClientWrapper from "./components/InfinitePostFeedClientWrapper";
+import { SinglePost } from "./components/SinglePost";
+import NotFound from "../NotFound";
 
 export const dynamicParams = false;
 
@@ -40,22 +41,40 @@ $("h2, h3, h4, h5, h6").each((_, el) => {
   return { updatedHtml, toc };
 }
 
-export default async function PostPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>; // <-- now a Promise!
-}) {
- try {
-   const { slug } = await params; // <-- await it
+
+export async function generateMetadata({ params }: {params: Promise<{ slug: string }>}) {
+  const { slug } = await params;  
   const post: Post | null = await getPostBySlug(slug);
-  if (!post) return  // fix the 404 error handling later 
+  if (!post) {
+    return {
+      title: `Not found - ${process.env.HOSTNAME }`,
+      description: "Sorry, this post was not found.",
+    };
+  }
+  // Optionally, extract plain text from excerpt/content for meta description
+  const description = post.excerpt
+    ? post.excerpt.replace(/<[^>]+>/g, "").trim()
+    : "";
+
+  return {
+    title: post.title,
+    description: description,
+  };
+}
+
+
+export default async function Page({params}: {params: Promise<{ slug: string }>}) {
+ try {
+   const { slug } = await params;  
+  const post: Post | null = await getPostBySlug(slug);
+  if (!post) return   
   const { updatedHtml, toc } = await extractHeadings(post.content);
 
   return (
-    <InfinitePostFeedClientWrapper initialPost={{ ...post, updatedHtml, toc }} />
+    <SinglePost initialPost={{ ...post, updatedHtml, toc }} />
   );
  } catch (e) {
     console.error('Error in PostPage:', e);
-    return <div>Sorry, something went wrong.</div>;
+    return <NotFound />
   }
 }

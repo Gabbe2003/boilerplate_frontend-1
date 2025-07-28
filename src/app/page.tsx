@@ -1,10 +1,10 @@
 // app/page.tsx  (or page.jsx/tsx)
 import PostsList from './components/PostsList';
 import React from 'react';
-import ViewsPosts from './components/ViewsPosts';
 import PopularPost from './components/PopularPost';
+import ViewedPosts from './components/ViewsPosts';
 
-export const revaldiate = 3000; // Revalidate every 5 minutes 
+export const revalidate = 3000; 
 
 export async function generateStaticParams() {
   const res = await fetch(process.env.WP_GRAPHQL_URL!, {
@@ -36,7 +36,7 @@ return (
         <PostsList />
       </section>
       <aside className="w-full md:w-1/5 lg:w-1/2 shrink-0" >
-        <ViewsPosts />
+        <ViewedPosts />
       </aside>
     </div>
   </>

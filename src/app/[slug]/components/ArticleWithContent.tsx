@@ -3,15 +3,11 @@ import Image from "next/image";
 import { Breadcrumb, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import type { AuthorNode, Post, ITOCItem} from "@/lib/types";
-import ShareButtons from "./shareButtons";
+import { ShareButtons } from "./shareButtons";
 import { useEffect } from "react";
 import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";
+import { stripHtml } from "@/lib/helper_functions/strip_html";
 
-// Utility: strip HTML tags for excerpts
-function stripHtml(html: string) {
-  if (!html) return "";
-  return html.replace(/<[^>]+>/g, "");
-}
 
 function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   if (!author) return null;
@@ -40,7 +36,7 @@ function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
 
 
 
-export default function PostMain({
+export function ArticleWithContent({
     post,
     postUrl,
     postExcerpt,
@@ -85,10 +81,10 @@ export default function PostMain({
       </div>
 
       {/* Featured Image */}
-      {post.featured_image?.node.sourceUrl && (
+      {post.featuredImage?.node.sourceUrl && (
         <Image
-          src={post.featured_image.node.sourceUrl}
-          alt={post.featured_image.node.altText || ""}
+          src={post.featuredImage.node.sourceUrl}
+          alt={post.featuredImage.node.altText || ""}
           className="rounded-sm shadow-sm w-full mb-6"
           width={750}
           height={500}

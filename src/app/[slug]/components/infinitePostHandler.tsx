@@ -34,6 +34,7 @@ export function useInfinitePosts(initialPost: Post & { updatedHtml: string; toc:
       const uniqueSlugs = Array.from(new Set(posts.map((p) => p.slug)));
       setQueue(uniqueSlugs.filter((s) => s !== initialPost.slug));
     });
+    
   }, [initialPost.slug]);
 
   // Infinite scroll observer

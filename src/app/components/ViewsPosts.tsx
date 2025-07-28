@@ -1,36 +1,28 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { getViews } from '@/lib/graph_queries/getViews';
+import useSWR from 'swr';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-type ViewsPost = {
-  id: number;
-  title: string;
-  slug: string;
-  featured_image: string;
-  date: string;
-  author_name: string;
-};
+import { getViews } from '@/lib/graph_queries/getViews';
 
+// type ViewsPost = {
+//   id: number;
+//   title: string;
+//   slug: string;
+//   featuredImage: string;
+//   date: string;
+//   author_name: string;
+// };
+
+const fetcher = (period: 'week' | 'month') => getViews(period);
 
 export default function ViewedPosts() {
-  const [period, setPeriod] = useState<'week' | 'month'>('week');
-  const [posts, setPosts] = useState<ViewsPost[]>([]);
-  const [loading, setLoading] = useState(false);
-  
+  const [period, setPeriod] = React.useState<'week' | 'month'>('week');
 
-  useEffect(() => {
-    setLoading(true);
-    getViews(period)
-    .then((data) => {
-      setPosts(data);
-    })
-      
-    .catch((e) => console.error('Fetch error:', e))
-    .finally(() => setLoading(false));
-  }, [period]);
+  // SWR automatically caches per period
+  const { data: posts = [], isLoading, error } = useSWR(period, fetcher);
 
   return (
     <div>
@@ -50,8 +42,9 @@ export default function ViewedPosts() {
           </Button>
         ))}
       </div>
+
       {/* loading & empty states */}
-      {loading && (
+      {isLoading && (
         <div className="mx-auto w-full max-w-sm rounded-md p-4">
           <div className="flex animate-pulse space-x-4">
             <div className="size-10 rounded-full bg-gray-200"></div>
@@ -68,31 +61,16 @@ export default function ViewedPosts() {
           </div>
         </div>
       )}
-      {!loading && posts.length === 0 && (
-        <div className="mx-auto w-full max-w-sm rounded-md p-4">
-          <div className="flex animate-pulse space-x-4">
-            <div className="size-10 rounded-full bg-gray-200"></div>
-            <div className="flex-1 space-y-6 py-1">
-              <div className="h-2 rounded bg-gray-200"></div>
-              <div className="space-y-3">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="col-span-2 h-2 rounded bg-gray-200"></div>
-                  <div className="col-span-1 h-2 rounded bg-gray-200"></div>
-                </div>
-                <div className="h-2 rounded bg-gray-200"></div>
-              </div>
-            </div>
-          </div>
-        </div>
+      {error && <div>Failed to load posts!</div>}
+      {!isLoading && posts.length === 0 && !error && (
+        <div>There is no fun posts to read!</div>
       )}
 
       {/* list */}
-      {!loading && posts.length > 0 && (
+      {!isLoading && posts.length > 0 && (
         <ul className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
           {posts.map((post) => {
-            const formattedDate = new Date(
-              post.date,
-            ).toLocaleDateString('en-US', {
+            const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
@@ -102,8 +80,8 @@ export default function ViewedPosts() {
               <li key={post.id} className="rounded-2xl">
                 <Link href={post?.slug}>
                   <div className="relative overflow-hidden rounded-tl-2xl rounded-tr-2xl rounded-br-2xl">
-                   <Image
-                      src={post.featured_image || ''}
+                    <Image
+                      src={post.featuredImage || ''}
                       width={300}
                       height={200}
                       alt={post.title}

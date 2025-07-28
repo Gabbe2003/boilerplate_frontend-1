@@ -23,7 +23,7 @@ import PopupModal from './Rule_sub';
 
 export default function Header() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
-  const { logo, links, searchBarHeader, setSearchBarHeader } = useAppContext();
+  const { logo, links, searchBarHeader, setSearchBarHeader, tagline } = useAppContext(); 
   const pathname = usePathname();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,21 +31,26 @@ export default function Header() {
   return (
     <>
       <header className="themed-section sticky top-0 z-50 w-full border-b bg-white">
-        <div className="px-4 sm:px-4 md:px-6 lg:px-8 flex items-center justify-between ">
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            {logo?.sourceUrl ? (
-              <Image
-                src={logo.sourceUrl}
-                alt={logo.altText || "Logo"}
-                width={80}
-                height={80}
-                className="rounded object-cover bg-white"
-              />
-            ) : (
-              <span className="font-bold text-gray-900">{host}</span>
+        <div className="w-[90%] mx-auto flex items-center justify-between">
+          {/* Logo & Tagline */}
+          <div className="flex flex-col items-start">
+            <Link href="/" className="flex-shrink-0">
+              {logo?.sourceUrl ? (
+                <Image
+                  src={logo.sourceUrl}
+                  alt={logo.altText || "Logo"}
+                  width={80}
+                  height={80}
+                  className="rounded object-cover bg-white"
+                />
+              ) : (
+                <span className="font-bold text-gray-900">{host}</span>
+              )}
+            </Link>
+            {tagline && (
+              <span className="mt-1 text-sm text-gray-500">{tagline}</span>
             )}
-          </Link>
+          </div>
 
           {/* Desktop Search */}
           <div className="hidden sm:block flex-grow max-w-xs mx-4">
@@ -92,7 +97,7 @@ export default function Header() {
                       }}
                       className="bg-yellow-400 text-black font-semibold hover:bg-yellow-500 shadow-md transition-all w-full text-left py-2 mt-2 animate-fadeInDown"
                     >
-                      Subscribe
+                      Newsletter
                     </Button>
                   </DropdownMenuItem>
 
@@ -117,7 +122,7 @@ export default function Header() {
             <div className="hidden sm:flex sm:items-center sm:gap-4">
               <NavigationMenu>
                 <NavigationMenuList className="flex items-center gap-4">
-                  {links.slice(0, 3).map(({ title, href }) => {
+                  {links.slice(0, 4).map(({ title, href }) => {
                     const isActive = pathname === href;
                     return (
                       <NavigationMenuItem key={href}>
@@ -163,7 +168,7 @@ export default function Header() {
                       onClick={() => setIsModalOpen(true)}
                       className="bg-yellow-400 text-black font-semibold hover:bg-yellow-500 shadow-md transition-all"
                     >
-                      Subscribe
+                      Newsletter
                     </Button>
                   </NavigationMenuItem>
                 </NavigationMenuList>

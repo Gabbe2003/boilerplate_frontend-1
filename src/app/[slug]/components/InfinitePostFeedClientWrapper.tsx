@@ -1,10 +1,9 @@
 // src/app/[slug]/components/InfinitePostFeedClientWrapper.tsx
-"use client";
 import { PostWithTOC } from "@/lib/types";
-import InfinitePostFeed from "./SinglePost";
+import { SinglePost } from "./SinglePost";
 
-export default function InfinitePostFeedClientWrapper({
+export function InfinitePostFeedClientWrapper({
   initialPost,
 }: { initialPost: PostWithTOC }) {
-  return <InfinitePostFeed initialPost={initialPost} />;
+  return <SinglePost initialPost={initialPost} />;
 }

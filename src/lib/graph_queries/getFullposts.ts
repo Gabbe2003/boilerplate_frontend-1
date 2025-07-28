@@ -1,7 +1,8 @@
 'use server';
 
 import { Post, GraphQLError } from '@/lib/types';
-import FEATURED_IMAGE from '../../../public/next.svg';
+import { loggedFetch } from '../logged-fetch';
+import { normalizeImages } from '../helper_functions/featured_image';
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 export async function getAllPosts({
@@ -116,24 +117,28 @@ fragment PostFull on Post {
   `;
 
   try {
-    const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query,
-        variables: { first, after, last, before },
-      }),
-    });
-
-    //  const res = await loggedFetch(GRAPHQL_URL, {
+    // const res = await fetch(GRAPHQL_URL, {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify({
     //     query,
     //     variables: { first, after, last, before },
     //   }),
-    //   context: 'getAllPosts',
+    //  next: { revalidate: 300}, // We should adjust based on the script in make
+    //   cache: 'force-cache',
     // });
+
+     const res = await loggedFetch(GRAPHQL_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query,
+        variables: { first, after, last, before },
+      }),
+      context: 'getAllPosts',
+      next: { revalidate: 300}, 
+      cache: 'force-cache',
+    });
 
     const json = (await res.json()) as {
       data?: { posts?: { nodes: Post[] } };
@@ -146,21 +151,16 @@ fragment PostFull on Post {
     }
 
     const rawPosts = json.data?.posts?.nodes ?? [];
-    const posts = rawPosts.map((post) => {
-      if (!post.featuredImage?.node?.sourceUrl) {
-        post.featuredImage = {
-          node: {
-            sourceUrl: FEATURED_IMAGE,
-            altText: 'Default featured image'
-          }
-        };
-      } else if (post.featuredImage.node.sourceUrl.includes('fallback')) {
-        post.featuredImage.node.sourceUrl = FEATURED_IMAGE;
-        post.featuredImage.node.altText = post.featuredImage.node.altText || 'Default featured image';
-      }
-      return post;
-    });
+    const posts = normalizeImages(rawPosts);
+    const firstAuthorSlug = posts[0].author?.node?.slug;
+
+    if (firstAuthorSlug) { 
+      await fetch(`${process.env.NEXT_PUBLIC_SHARENAME}/api/update_author_cache/${firstAuthorSlug}`, { method: "POST" });
+    }
+    // Revalidate the author cache for the first post's author
+    
     return posts;
+
   } catch (error) {
     console.error('getAllPosts failed:', error);
     return [];

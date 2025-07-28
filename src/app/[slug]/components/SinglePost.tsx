@@ -1,120 +1,122 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+
+import { useRef, useEffect, useCallback } from "react";
 import type { PostWithTOC } from "@/lib/types";
 import { useInfinitePosts } from "./infinitePostHandler";
-import PostMain from "./ArticleWithContent";
-import PostRecommendations from "./sideBar";
-import PostTOC from "./TOCContent";
-import EndOfPageRecommendations from "./EndOfPageRecommendations";
+import { ArticleWithContent } from "./ArticleWithContent";
+import { Sidebar } from "./sideBar";
+import { PostTOC } from "./TOCContent";
+import dynamic from "next/dynamic";
+import { stripHtml } from "@/lib/helper_functions/strip_html";
+ 
+const EndOfPageRecommendations = dynamic(() => import("./EndOfPageRecommendations"), { ssr: false });
  
 
-// Utility: strip HTML tags for excerpts
-function stripHtml(html: string) {
-  if (!html) return "";
-  return html.replace(/<[^>]+>/g, "");
-}
-
-export default function InfinitePostFeed({ initialPost }: { initialPost: PostWithTOC; }) {
+export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
   const { rendered, loading, sentinelRef } = useInfinitePosts(initialPost);
- 
-  const articleRefs = useRef<(HTMLElement | null)[]>([]);
-  const aboveImageRefs = useRef<Array<HTMLDivElement | null>>([]);
-  const [aboveImageHeights, setAboveImageHeights] = useState<number[]>([]);
+  const articleRefs = useRef<Array<HTMLElement | null>>([]);
 
- 
+  // Memoized callback to avoid ref churn
+  const setArticleRef = useCallback(
+    (idx: number) => (el: HTMLElement | null) => {
+      articleRefs.current[idx] = el;
+    },
+    []
+  );
 
+  // Only run scroll handler logic if more than one post
   useEffect(() => {
-    function handleScroll() {
-      const articles = articleRefs.current;
-      let activeIdx = 0;
-      let minTop = Infinity;
+    if (rendered.length === 0) return;
 
-      for (let i = 0; i < articles.length; i++) {
-        const ref = articles[i];
-        if (!ref) continue;
-        const rect = ref.getBoundingClientRect();
+    let lastScrollY = window.scrollY;
+    document.title = rendered[0]?.title || document.title;
 
-         if (rect.top >= 0 && rect.top < minTop) {
-          activeIdx = i;
-          minTop = rect.top;
-        }
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const dir = scrollY > lastScrollY ? "down" : "up";
+          lastScrollY = scrollY;
+          const articles = articleRefs.current;
+          const threshold = 80;
+
+          if (dir === "down") {
+            for (let i = 0; i < articles.length; i++) {
+              const ref = articles[i];
+              if (!ref) continue;
+              const rect = ref.getBoundingClientRect();
+              if (rect.top >= 0 && rect.top < threshold) {
+                updateMeta(i);
+                break;
+              }
+            }
+          } else {
+            for (let i = articles.length - 2; i >= 0; i--) {
+              const ref = articles[i];
+              if (!ref) continue;
+              const rect = ref.getBoundingClientRect();
+              if (rect.bottom <= window.innerHeight && rect.bottom > window.innerHeight - threshold) {
+                updateMeta(i);
+                break;
+              }
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
+    };
 
-       if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
-        activeIdx = articles.length - 1;
-      }
-
-      const post = rendered[activeIdx];
-      if (post) {
-        document.title = post.title || document.title;
-        window.history.replaceState(null, post.title || "", `/${post.slug}`);
-        const meta = document.querySelector('meta[name="description"]');
-        if (meta && post.excerpt) {
-          meta.setAttribute("content", stripHtml(post.excerpt));
-        }
+    function updateMeta(i: number) {
+      if (!rendered[i]) return;
+      document.title = rendered[i].title || document.title;
+      window.history.replaceState(null, rendered[i].title || "", `/${rendered[i].slug}`);
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta && rendered[i].excerpt) {
+        meta.setAttribute("content", stripHtml(rendered[i].excerpt));
       }
     }
 
-    
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    setTimeout(handleScroll, 100); // For initial load
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [rendered]);
-
-
-  useEffect(() => {
-    
-    setAboveImageHeights(
-      rendered.map((_, idx) => aboveImageRefs.current[idx]?.offsetHeight ?? 0)
-    ); 
-    
-  }, [rendered]);
+  }, [rendered.length]);
 
   return (
     <div className="space-y-16 max-w-7xl mx-auto py-12 px-4 mb-10">
-        {rendered.map((post, i) => {
-          const postUrl = `${process.env.NEXT_PUBLIC_SHARENAME || "https://yoursite.com"}/news/${post.slug}`;
-          const postExcerpt = stripHtml(post.excerpt);
+      {rendered.map((post, i) => {
+        const postUrl = `${process.env.NEXT_PUBLIC_SHARENAME || "https://yoursite.com"}/${post.slug}`;
+        const postExcerpt = stripHtml(post.excerpt);
 
-          return (
-            <div
-              key={post.slug}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
-              data-index={i}
-              ref={el => { articleRefs.current[i] = el; }}
-            >
-              <div className="col-span-1 lg:col-span-2 flex flex-col gap-8">
-                <PostMain
-                  post={post}
-                  postUrl={postUrl}
-                  postExcerpt={postExcerpt}
-                  aboveImageRef={el => { aboveImageRefs.current[i] = el; }}
-                  index={i}
-                />
-
-                {/* --- END OF PAGE RECOMMENDATIONS --- */}
-                <EndOfPageRecommendations currentSlug={post.slug} />
-              </div>
-
-              <aside className="space-y-8">
-                {/* Spacer to align TOC with the featured image */}
-                <div
-                  style={{ height: aboveImageHeights[i], minHeight: 0 }}
-                  className="hidden lg:block "
-                  aria-hidden="true"
-                />
-                {/* TOC */}
-                <PostTOC toc={post.toc} />
-
-                {/* Recommendations */}
-                <PostRecommendations currentSlug={post.slug} />
-
-              </aside>
+        return (
+          <div
+            key={post.slug}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
+            data-index={i}
+            ref={setArticleRef(i)}
+          >
+            <div className="col-span-1 lg:col-span-2 flex flex-col gap-8">
+              <ArticleWithContent
+                post={post}
+                postUrl={postUrl}
+                postExcerpt={postExcerpt}
+                index={i}
+              />
+              <EndOfPageRecommendations currentSlug={post.slug} />
             </div>
-          );
-        })}
-        <div ref={sentinelRef} style={{ height: 1 }} />
+
+            <aside className="space-y-8">
+              <div style={{ height: 200, minHeight: 0 }} className="hidden lg:block" aria-hidden="true" />
+              <PostTOC toc={post.toc} />
+              <Sidebar currentSlug={post.slug} />
+            </aside>
+          </div>
+        );
+      })}
+      <div ref={sentinelRef} style={{ height: 1 }} />
       {loading && <p className="text-center">Downloading more...</p>}
     </div>
   );

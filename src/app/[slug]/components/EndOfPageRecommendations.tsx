@@ -1,3 +1,4 @@
+"use client"
 import dynamic from "next/dynamic";
 import { Card, CardContent } from "@/components/ui/card";
 import clsx from "clsx";
@@ -38,10 +39,10 @@ export default function EndOfPageRecommendations({ currentSlug }: { currentSlug:
                           href={`/${post.slug}`}
                           className="group flex flex-col h-full overflow-hidden border border-neutral-200 bg-[#fafafa] shadow hover:shadow-lg transition-all hover:border-blue-300 relative focus-visible:ring-2 focus-visible:ring-blue-300 rounded"
                         >
-                          {post.featured_image?.node.sourceUrl && (
+                          {post.featuredImage?.node.sourceUrl && (
                             <div className="relative w-full aspect-[6/3] overflow-hidden rounded-t">
                               <Image
-                                src={post.featured_image.node.sourceUrl}
+                                src={post.featuredImage.node.sourceUrl}
                                 alt={post.title}
                                 fill
                                 className="object-cover transition-transform duration-300 group-hover:scale-105"

@@ -55,6 +55,11 @@ export interface AuthorNode {
   slug?: string;
   uri?: string;
   avatar?: AuthorAvatar;
+  description?: string;
+  featuredImage?: string; 
+  posts: {
+    node: Post[];
+  };
 }
 
 /** --- Terms (categories, tags) --- */
@@ -122,7 +127,7 @@ export interface Post {
 
   commentCount?: number;
 
-  featured_image?: {
+  featuredImage?: {
     node: MediaItemNode;
   };
 

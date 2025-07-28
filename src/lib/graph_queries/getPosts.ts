@@ -1,5 +1,9 @@
+"use server"
+
+
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 import { GraphQLError, Post } from '@/lib/types';
+import { loggedFetch } from '../logged-fetch';
 
 export async function getPosts(): Promise<Post[]> {
   
@@ -24,19 +28,20 @@ export async function getPosts(): Promise<Post[]> {
 
   try {
     
-    const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query }),
-    });
+    // const res = await fetch(GRAPHQL_URL, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ query }),
+    //   next: { revalidate: 604800 }, 
+    // });
 
 
-//  const res = await loggedFetch(GRAPHQL_URL, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ query }),
-//       context: 'getPosts',
-//     });
+   const res = await loggedFetch(GRAPHQL_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+        context: 'getPosts',
+      });
 
     const json = (await res.json()) as {
       data?: { posts?: { nodes: Post[] } };

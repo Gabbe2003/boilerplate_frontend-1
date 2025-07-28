@@ -1,7 +1,7 @@
 // AdCard.tsx
 import { Ad } from "./adsSideBar";
 
-export default function AdCard({ ad }: { ad: Ad }) {
+export function AdCard({ ad }: { ad: Ad }) {
   if (ad.script) {
     return (
       <div className="w-full rounded-lg border bg-white shadow flex flex-col items-stretch overflow-hidden ad-responsive">

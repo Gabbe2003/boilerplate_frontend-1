@@ -2,6 +2,8 @@
 "use server"
 const VIEW_POPULAR_PERIOD_POST = process.env.VIEW_POPULAR_PERIOD_POST!;
 import FEATURED_IMAGE from '../../../public/next.svg';
+import { normalizeFlatImages } from '../helper_functions/featured_image';
+import { loggedFetch } from '../logged-fetch';
 
 interface FeaturedImageObject {
   node?: {
@@ -13,7 +15,7 @@ interface RawView {
   id: string | number;
   title: string;
   slug: string;
-  featured_image: string | FeaturedImageObject | null | undefined;
+  featuredImage: string | FeaturedImageObject | null | undefined;
   date: string;
   author_name: string;
 }
@@ -25,53 +27,44 @@ export async function getViews(
     id: number;
     title: string;
     slug: string;
-    featured_image: string;
+    featuredImage: string;
     date: string;
     author_name: string;
   }>
 > {
   try {
-    const res = await fetch(`${VIEW_POPULAR_PERIOD_POST}=${period}`);
-
-    // const res = await loggedFetch(`${VIEW_POPULAR_PERIOD_POST}=${period}`, {context: 'getViews'});
-
+    // const res = await fetch(`${VIEW_POPULAR_PERIOD_POST}=${period}`, { cache: 'force-cache', next: { revalidate: 3600 } });
+    const res = await loggedFetch(`${VIEW_POPULAR_PERIOD_POST}=${period}`, {context: 'getViews'});
 
     if (!res.ok) {
       console.error('[getViews] non-OK response:', await res.text());
       return [];
     }
-    const data = await res.json();
+   
+      const data = await res.json();
     if (!Array.isArray(data)) {
       console.error('[getViews] payload is not an array:', data);
       return [];
     }
     const raw = data as RawView[];
 
-    function getFeaturedImageUrl(featured_image: string | FeaturedImageObject | null | undefined): string {
-      if (typeof featured_image === 'string' && featured_image) {
-        return featured_image;
-      }
-      if (
-        featured_image &&
-        typeof featured_image === 'object' &&
-        'node' in featured_image &&
-        typeof featured_image.node?.sourceUrl === 'string' &&
-        featured_image.node.sourceUrl
-      ) {
-        return featured_image.node.sourceUrl;
-      }
-      // Fallback
-      return FEATURED_IMAGE as unknown as string;
-    }
+    // Normalize all images FIRST
+    const normalized = normalizeFlatImages(raw);
 
-    return raw.map((post) => ({
+    // Map as you need (if you want to trim title, ensure ids are numbers, etc)
+    return normalized.map((post) => ({
       id: Number(post.id),
-      title: post.title.trim(),
+      title: post.title?.trim() ?? '',
       slug: post.slug,
-      featured_image: getFeaturedImageUrl(post.featured_image),
-      date: post.date,
+      featuredImage: typeof post.featuredImage === "string"
+        ? post.featuredImage
+        : typeof post.featuredImage?.node?.sourceUrl === "string"
+          ? post.featuredImage.node.sourceUrl
+          : FEATURED_IMAGE,
+            date: post.date,
       author_name: post.author_name,
     }));
+
 
   } catch (err) {
     console.error('[getViews] fetch failed:', err);

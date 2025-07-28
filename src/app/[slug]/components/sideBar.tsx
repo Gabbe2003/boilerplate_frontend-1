@@ -1,16 +1,18 @@
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+"use client"; 
+
 import clsx from "clsx";
 import Link from "next/link";
-import AdCard from "./adcard";
-import { ADS } from "./adsSideBar";
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+import { ArrowRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { AdCard } from "./adcard";
+import { ADS } from "./adsSideBar";
+import { Card, CardContent } from "@/components/ui/card";
 
 const RecommendationList = dynamic(() => import("./RecommendationList"), { ssr: false });
 
-export default function PostRecommendations({ currentSlug }: { currentSlug: string }) {
+export function Sidebar({ currentSlug }: { currentSlug: string }) {
   const [adIndex, setAdIndex] = useState(0);
   const AD_ROTATE_INTERVAL = 15000;
 
@@ -42,10 +44,10 @@ export default function PostRecommendations({ currentSlug }: { currentSlug: stri
                         href={`/${post.slug}`}
                         className="group block overflow-hidden rounded border border-neutral-200 bg-[#fafafa] shadow hover:shadow-lg transition-all hover:border-blue-300 relative focus-visible:ring-2 focus-visible:ring-blue-300"
                       >
-                         {post.featured_image?.node.sourceUrl && (
+                         {post.featuredImage?.node.sourceUrl && (
                           <div className="relative w-full aspect-[6/3] overflow-hidden rounded-t">
                             <Image
-                              src={post.featured_image.node.sourceUrl}
+                              src={post.featuredImage.node.sourceUrl}
                               alt={post.title}
                               fill
                               className="object-cover transition-transform duration-300 group-hover:scale-105"

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ITOCItem } from '@/lib/types';
  
-export default function TocCard({ toc }: { toc: ITOCItem[] }) {
+export function TocCard({ toc }: { toc: ITOCItem[] }) {
   const [open, setOpen] = useState(true);
 
   return (

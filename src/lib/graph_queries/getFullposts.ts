@@ -1,7 +1,7 @@
 'use server';
 
 import { Post, GraphQLError } from '@/lib/types';
-import { loggedFetch } from '../logged-fetch';
+// import { loggedFetch } from '../logged-fetch';
 import { normalizeImages } from '../helper_functions/featured_image';
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
@@ -117,28 +117,28 @@ fragment PostFull on Post {
   `;
 
   try {
-    // const res = await fetch(GRAPHQL_URL, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     query,
-    //     variables: { first, after, last, before },
-    //   }),
-    //  next: { revalidate: 300}, // We should adjust based on the script in make
-    //   cache: 'force-cache',
-    // });
-
-     const res = await loggedFetch(GRAPHQL_URL, {
+    const res = await fetch(GRAPHQL_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         query,
         variables: { first, after, last, before },
       }),
-      context: 'getAllPosts',
-      next: { revalidate: 300}, 
+     next: { revalidate: 300}, // We should adjust based on the script in make
       cache: 'force-cache',
     });
+
+    //  const res = await loggedFetch(GRAPHQL_URL, {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({
+    //     query,
+    //     variables: { first, after, last, before },
+    //   }),
+    //   context: 'getAllPosts',
+    //   next: { revalidate: 300}, 
+    //   cache: 'force-cache',
+    // });
 
     const json = (await res.json()) as {
       data?: { posts?: { nodes: Post[] } };

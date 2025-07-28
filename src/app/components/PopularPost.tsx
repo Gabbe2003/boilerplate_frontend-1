@@ -9,8 +9,6 @@ import {get_popular_post} from "../../lib/graph_queries/getPopularPost"
 import FEATURED_IMAGE from "../../../public/next.svg"
 export default async function PopularPost(){
   const post = await get_popular_post(); 
-  console.log('post', post);
-  
     
   return (
   <>

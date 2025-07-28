@@ -14,6 +14,11 @@ We should make the navigation like this /news/post_name, as of now when we navig
 Fix the author design and robots/sitemap
 
 
+
+(There are some errors in production code, not major but recheck them: 
+1. The update post is not working
+2. The cache is kinda off, sometimes it revalidate and sometimes not?. s
+)
 When we are in the slug we there is so many calls 
 fix the api calls and reuse components and optimizitions here and there, 
 

@@ -3,7 +3,7 @@
 import { GraphQLError, Post } from '../types';
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
-import { loggedFetch } from '../logged-fetch';
+// import { loggedFetch } from '../logged-fetch';
 import { normalizeImages } from '../helper_functions/featured_image';
 
 // Fetch a single post by slug
@@ -48,21 +48,21 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   `;
 
   try {
-    // const res = await fetch(GRAPHQL_URL, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ query, variables: { slug } }),
-    //    next: { revalidate: 300  }, 
-    //    
-    // });
-
-const res = await loggedFetch(GRAPHQL_URL, {
+    const res = await fetch(GRAPHQL_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, variables: { slug } }),
-      next: { revalidate: 60 },
-      context: 'getPostBySlug',
+       next: { revalidate: 300  }, 
+       
     });
+
+// const res = await loggedFetch(GRAPHQL_URL, {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify({ query, variables: { slug } }),
+//       next: { revalidate: 60 },
+//       context: 'getPostBySlug',
+//     });
 
 
     const json = (await res.json()) as {
@@ -70,10 +70,14 @@ const res = await loggedFetch(GRAPHQL_URL, {
       errors?: GraphQLError;
     };
 
-    const post = json.data?.postBy ?? [];
-    const normalizedList = normalizeImages(post);
+const post = json.data?.postBy;
+if (!post) return null;
 
-    return normalizedList;
+const normalized = normalizeImages(post);
+if (Array.isArray(normalized)) return null;  // Defensive, shouldn't happen
+
+return normalized; // Is a Post
+
   } catch (error) {
     console.error('Failed to fetch post:', error);
     return null;

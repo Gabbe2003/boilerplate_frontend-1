@@ -85,3 +85,9 @@ later:
 
  
 1. Also Also runtime = edge can increase performance - Kerlos (Done) We can add it later, we can also check the erros and the prons. it will be lightning fast, TTFB, performance, 
+
+
+
+
+boilerplate_frontend\src\styles\globals.css
+boilerplate_frontend\src\app\components\MonthPouplarPosts.tsx

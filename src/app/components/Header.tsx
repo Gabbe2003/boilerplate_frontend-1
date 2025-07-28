@@ -23,7 +23,7 @@ import PopupModal from './Rule_sub';
 
 export default function Header() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
-  const { logo, links, searchBarHeader, setSearchBarHeader, tagline } = useAppContext(); 
+  const { logo, links, searchBarHeader, setSearchBarHeader } = useAppContext(); 
   const pathname = usePathname();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -47,13 +47,10 @@ export default function Header() {
                 <span className="font-bold text-gray-900">{host}</span>
               )}
             </Link>
-            {tagline && (
-              <span className="mt-1 text-sm text-gray-500">{tagline}</span>
-            )}
           </div>
 
           {/* Desktop Search */}
-          <div className="hidden sm:block flex-grow max-w-xs mx-4">
+          <div className="hidden [@media(min-width:1050px)]:block flex-grow max-w-xs mx-4">
             <div className="relative">
               <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <Input
@@ -69,13 +66,13 @@ export default function Header() {
           {/* Navigation / Menu */}
           <div className="flex items-center gap-4">
             {/* Mobile Dropdown */}
-            <div className="sm:hidden">
+            <div className="[@media(min-width:1050px)]:hidden">
               <DropdownMenu open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost">
-                      <MenuIcon className="h-6 w-6" />
-                    </Button>
-                  </DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="navlink">
+                    <MenuIcon className="h-6 w-6" />
+                  </Button>
+                </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="start"
                   className="w-screen max-w-none left-0 rounded-none p-4 bg-white shadow-lg border animate-fadeInDown"
@@ -119,7 +116,7 @@ export default function Header() {
             </div>
 
             {/* Desktop Nav */}
-            <div className="hidden sm:flex sm:items-center sm:gap-4">
+            <div className="hidden [@media(min-width:1050px)]:flex items-center gap-4">
               <NavigationMenu>
                 <NavigationMenuList className="flex items-center gap-4">
                   {links.slice(0, 4).map(({ title, href }) => {

@@ -99,10 +99,11 @@ h6 {
 
 
 .ad-responsive img {
-  width: 100% !important;
-  height: auto !important;
+  width: 300px !important;
+  height: 150px !important;
+  object-fit: cover !important;
   display: block;
-  object-fit: cover;
+  margin: 0 auto;
 }
 
 .navlink-underline {

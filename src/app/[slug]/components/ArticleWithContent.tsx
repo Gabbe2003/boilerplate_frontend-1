@@ -2,12 +2,9 @@
 import Image from "next/image";
 import { Breadcrumb, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import type { AuthorNode, Post, ITOCItem} from "@/lib/types";
-import { ShareButtons } from "./shareButtons";
-import { useEffect } from "react";
-import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";
+import type { AuthorNode, Post, ITOCItem } from "@/lib/types";
 import { stripHtml } from "@/lib/helper_functions/strip_html";
-
+import ShareButtonsClient from "../wrapper/ShareButtons.wrapper";
 
 function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   if (!author) return null;
@@ -34,34 +31,34 @@ function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   );
 }
 
-
-
 export function ArticleWithContent({
-    post,
-    postUrl,
-    postExcerpt,
-    aboveImageRef,
-    index
-  }: {
-    post: Post & { updatedHtml: string; toc: ITOCItem[] };
-    postUrl: string;
-    postExcerpt: string;
-    aboveImageRef?: React.Ref<HTMLDivElement>;
-    index: number
-  }) {
- 
-  useEffect(() => {
-    update_viewed_post(String(post.databaseId)); 
-  }, [index])
+  post,
+  postUrl,
+  postExcerpt,
+  aboveImageRef,
+  index,
+}: {
+  post: Post & { updatedHtml: string; toc: ITOCItem[] };
+  postUrl: string;
+  postExcerpt: string;
+  aboveImageRef?: React.Ref<HTMLDivElement>;
+  index: number;
+}) {
+  // No useEffect or any client-only code!
 
   return (
     <article className="lg:col-span-2 flex flex-col">
       {/* Title, Excerpt, Author+Share */}
       <div ref={aboveImageRef ?? undefined} className="mb-2">
-        {index === 0 ? 
-          <h1 className="text-3xl md:text-4xl font-bold text-start mb-1">{post.title}</h1> :
-          <h2 className="text-3xl md:text-4xl font-bold text-start mb-1">{post.title}</h2>
-        }
+        {index === 0 ? (
+          <h1 className="text-3xl md:text-4xl font-bold text-start mb-1">
+            {post.title}
+          </h1>
+        ) : (
+          <h2 className="text-3xl md:text-4xl font-bold text-start mb-1">
+            {post.title}
+          </h2>
+        )}
         {post.excerpt && (
           <p className="text-lg text-muted-foreground leading-snug mb-1">
             {stripHtml(post.excerpt)}
@@ -71,12 +68,12 @@ export function ArticleWithContent({
         <div className="flex items-center justify-between mt-5 mb-1">
           <span className="text-sm flex items-center gap-2">
             <AuthorInfo author={post.author} />
-            By    
+            By
             <Link href={`/author/${post.author?.node.name || "admin"}`} className="text-blue-700">
               <strong>{post.author?.node.name || "Admin"}</strong>
             </Link>
           </span>
-          <ShareButtons postUrl={postUrl} postTitle={post.title} postExcerpt={postExcerpt} />
+          <ShareButtonsClient postUrl={postUrl} postTitle={post.title} postExcerpt={postExcerpt} />
         </div>
       </div>
 

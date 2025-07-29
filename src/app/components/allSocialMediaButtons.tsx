@@ -10,12 +10,11 @@ import Linkedin from "./icons/linkedin";
 import Twitter from "./icons/twitter";
 
 // Social media link variables
-const facebookUrl = "#";   // e.g. "https://facebook.com/yourpage"
-const instagramUrl = "#";  // e.g. "https://instagram.com/yourprofile"
-const linkedinUrl = "#";   // e.g. "https://linkedin.com/in/yourprofile"
-const xUrl = "#";          // e.g. "https://x.com/yourprofile"
+const facebookUrl = "https://www.facebook.com/people/Finanstidning-Nyheter/pfbid02SvfPjub9ZZjT86PukPpdM2m59eCyQNMXqrRy43yHcK2b8huV5sjE7FVGJGpSEFpTl/";  
+const instagramUrl = "https://www.instagram.com/finanstidning/"; 
+const linkedinUrl = "https://www.linkedin.com/in/finanstidning-nyheter-b32662377/";  
+const xUrl = "https://x.com/Finanstidning1";
 
-// Array of button definitions for easy editing
 const socialButtons = [
   { Icon: Facebook, label: "Facebook", url: facebookUrl },
   { Icon: Instagram, label: "Instagram", url: instagramUrl },

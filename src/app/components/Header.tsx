@@ -3,9 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, MenuIcon, Search as SearchIcon } from 'lucide-react';
+import { ChevronDown, MenuIcon } from 'lucide-react';
 import { useAppContext } from '@/store/AppContext';
-import { useState } from "react";
+import { useState } from 'react';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -18,165 +18,144 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import PopupModal from './Rule_sub';
+import SearchDrawer from './Searchbar';
 
 export default function Header() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
-  const { logo, links, searchBarHeader, setSearchBarHeader } = useAppContext(); 
+  const { logo, links, searchBarHeader, setSearchBarHeader } = useAppContext();
   const pathname = usePathname();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <>
-      <header className="themed-section sticky top-0 z-50 w-full border-b bg-white">
-        <div className="w-[90%] mx-auto flex items-center justify-between">
-          {/* Logo & Tagline */}
-          <div className="flex flex-col items-start">
-            <Link href="/" className="flex-shrink-0">
-              {logo?.sourceUrl ? (
-                <Image
-                  src={logo.sourceUrl}
-                  alt={logo.altText || "Logo"}
-                  width={80}
-                  height={80}
-                  className="rounded object-cover bg-white"
-                />
-              ) : (
-                <span className="font-bold text-gray-900">{host}</span>
-              )}
-            </Link>
+  <>
+    <header className="themed-section sticky top-0 z-50 w-full border-b bg-white">
+      <div className="w-[90%] mx-auto flex items-center justify-between py-2">
+        {/* Logo */}
+        <div className="flex flex-col items-start">
+          <Link href="/" className="flex-shrink-0">
+            {logo?.sourceUrl ? (
+              <Image
+                src={logo.sourceUrl}
+                alt={logo.altText || 'Logo'}
+                width={80}
+                height={80}
+                className="rounded object-cover bg-white"
+              />
+            ) : (
+              <span className="font-bold text-gray-900">{host}</span>
+            )}
+          </Link>
+        </div>
+
+        {/* Navigation and Controls */}
+        <div className="flex items-center gap-4">
+          {/* MOBILE: Search + Hamburger */}
+          <div className="[@media(min-width:1050px)]:hidden flex items-center gap-2">
+            {/* Search always visible */}
+            <SearchDrawer
+              value={searchBarHeader}
+              onChange={(e) => setSearchBarHeader(e.target.value)}
+            />
+            {/* Hamburger */}
+            <DropdownMenu open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="navlink">
+                  <MenuIcon className="h-6 w-6" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                className="w-screen max-w-none left-0 rounded-none p-4 bg-white shadow-lg border animate-fadeInDown"
+              >
+                {links.map(({ title, href }) => (
+                  <DropdownMenuItem key={href} asChild>
+                    <Button asChild variant="navlink" className="w-full text-left py-2">
+                      <Link href={href}>{title}</Link>
+                    </Button>
+                  </DropdownMenuItem>
+                ))}
+
+                <DropdownMenuItem asChild>
+                  <Button
+                    onClick={() => {
+                      setIsModalOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                    className="bg-yellow-400 text-black font-semibold hover:bg-yellow-500 shadow-md transition-all w-full text-left py-2 mt-2 animate-fadeInDown"
+                  >
+                    Newsletter
+                  </Button>
+                </DropdownMenuItem>
+                {/* No search field here! */}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
-          {/* Desktop Search */}
-          <div className="hidden [@media(min-width:1050px)]:block flex-grow max-w-xs mx-4">
-            <div className="relative">
-              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <Input
-                placeholder="Search..."
-                aria-label="Search"
+          {/* DESKTOP: Navigation */}
+          <div className="hidden [@media(min-width:1050px)]:flex items-center gap-4">
+            <NavigationMenu>
+              <NavigationMenuList className="flex items-center gap-4">
+                {links.slice(0, 4).map(({ title, href }) => {
+                  const isActive = pathname === href;
+                  return (
+                    <NavigationMenuItem key={href}>
+                      <Button
+                        asChild
+                        variant="navlink"
+                        className={`${isActive ? 'text-yellow-400' : ''}`}
+                      >
+                        <Link href={href}>{title}</Link>
+                      </Button>
+                    </NavigationMenuItem>
+                  );
+                })}
+
+                <NavigationMenuItem>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="navlink" className="flex items-center">
+                        Find more
+                        <ChevronDown className="ml-1 h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="bg-white shadow-lg border animate-fadeInDown"
+                    >
+                      {links.slice(3).map(({ title, href }) => (
+                        <DropdownMenuItem key={href} asChild>
+                          <Button asChild variant="navlink" className="w-full text-left py-2">
+                            <Link href={href}>{title}</Link>
+                          </Button>
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+
+            {/* Newsletter + Search (desktop) */}
+            <div className="flex items-center gap-2 ml-4">
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-yellow-400 text-black font-semibold hover:bg-yellow-500 shadow-md transition-all"
+              >
+                Newsletter
+              </Button>
+              <SearchDrawer
                 value={searchBarHeader}
                 onChange={(e) => setSearchBarHeader(e.target.value)}
-                className="pl-10 bg-transparent"
               />
             </div>
           </div>
-
-          {/* Navigation / Menu */}
-          <div className="flex items-center gap-4">
-            {/* Mobile Dropdown */}
-            <div className="[@media(min-width:1050px)]:hidden">
-              <DropdownMenu open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="navlink">
-                    <MenuIcon className="h-6 w-6" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="start"
-                  className="w-screen max-w-none left-0 rounded-none p-4 bg-white shadow-lg border animate-fadeInDown"
-                >
-                  {links.map(({ title, href }) => (
-                    <DropdownMenuItem key={href} asChild>
-                      <Button asChild variant="navlink" className="w-full text-left py-2">
-                        <Link href={href}>{title}</Link>
-                      </Button>
-                    </DropdownMenuItem>
-                  ))}
-
-                  {/* Standout Subscribe Button in mobile */}
-                  <DropdownMenuItem asChild>
-                    <Button
-                      onClick={() => {
-                        setIsModalOpen(true);
-                        setMobileMenuOpen(false);
-                      }}
-                      className="bg-yellow-400 text-black font-semibold hover:bg-yellow-500 shadow-md transition-all w-full text-left py-2 mt-2 animate-fadeInDown"
-                    >
-                      Newsletter
-                    </Button>
-                  </DropdownMenuItem>
-
-                  {/* Mobile Search */}
-                  <div className="pt-4 border-t border-gray-300">
-                    <div className="relative">
-                      <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                      <Input
-                        placeholder="Search..."
-                        aria-label="Search"
-                        value={searchBarHeader}
-                        onChange={(e) => setSearchBarHeader(e.target.value)}
-                        className="pl-10 w-full"
-                      />
-                    </div>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* Desktop Nav */}
-            <div className="hidden [@media(min-width:1050px)]:flex items-center gap-4">
-              <NavigationMenu>
-                <NavigationMenuList className="flex items-center gap-4">
-                  {links.slice(0, 4).map(({ title, href }) => {
-                    const isActive = pathname === href;
-                    return (
-                      <NavigationMenuItem key={href}>
-                        <Button
-                          asChild
-                          variant="navlink"
-                          className={`${isActive ? "text-yellow-400" : ""}`}
-                        >
-                          <Link href={href}>{title}</Link>
-                        </Button>
-                      </NavigationMenuItem>
-                    );
-                  })}
-
-                  {/* More Menu */}
-                  <NavigationMenuItem>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="navlink"
-                          className="flex items-center"
-                        >
-                          Find more
-                          <ChevronDown className="ml-1 h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-white shadow-lg border animate-fadeInDown">
-                        {links.slice(3).map(({ title, href }) => (
-                          <DropdownMenuItem key={href} asChild>
-                            <Button asChild variant="navlink" className="w-full text-left py-2">
-                              <Link href={href}>{title}</Link>
-                            </Button>
-                          </DropdownMenuItem>
-                        ))}
-                        {/* No Subscribe button in desktop dropdown! */}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </NavigationMenuItem>
-
-                  {/* Subscribe Button (desktop only, NOT in More dropdown) */}
-                  <NavigationMenuItem>
-                    <Button
-                      onClick={() => setIsModalOpen(true)}
-                      className="bg-yellow-400 text-black font-semibold hover:bg-yellow-500 shadow-md transition-all"
-                    >
-                      Newsletter
-                    </Button>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
-          </div>
         </div>
-      </header>
-
-      {/* Modal Render */}
-      <PopupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-    </>
-  );
-}
+      </div>
+    </header>
+    {/* Modal Render */}
+    <PopupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+  </>
+);
+};

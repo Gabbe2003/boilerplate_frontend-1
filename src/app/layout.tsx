@@ -1,14 +1,13 @@
-// src/app/layout.tsx
 import type { ReactNode } from 'react'
-import { AppProvider, DEFAULT_LINKS } from '@/store/AppContext'
-import { getLogo } from '@/lib/graph_queries/getLogo'
-import Header from './components/Header'
 import dynamic from 'next/dynamic'
-import '@/styles/globals.css'
+import { getLogo } from '@/lib/graph_queries/getLogo'
 import { getAllPosts } from '@/lib/graph_queries/getFullposts'
+import '@/styles/globals.css'
+import { DEFAULT_LINKS } from '@/store/AppContext'
+import RootClientProviders from './client-wrapper'
 
 const Footer = dynamic(() => import('./components/Footer'), {
-  loading: () => <div className="w-full h-24 bg-gray-100" /> // Optional skeleton
+  loading: () => <div className="w-full h-24 bg-gray-100" />
 })
 
 export async function generateMetadata() {
@@ -30,11 +29,10 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">
-        <AppProvider links={DEFAULT_LINKS} logo={favicon} posts={posts}>
-          <Header />
-            <main className="flex-1">{children}</main>
-          <Footer />
-        </AppProvider>
+        <RootClientProviders links={DEFAULT_LINKS} logo={favicon} posts={posts}>
+          <main className="flex-1">{children}</main>
+        </RootClientProviders>
+        <Footer />
       </body>
     </html>
   );

@@ -63,7 +63,16 @@ export default function SearchDrawer() {
         </Button>
       </DrawerTrigger>
       <DrawerOverlay className="fixed inset-0 bg-black/30 z-40" />
-      <DrawerContent className="fixed top-0 right-0 h-full w-[60vw] bg-white z-50 shadow-lg flex flex-col">
+<DrawerContent
+  className="
+    fixed top-0 right-0 h-full
+    w-[95vw] sm:w-[90vw] md:w-[60vw]
+    bg-white z-50 shadow-lg flex flex-col
+    data-[vaul-drawer-direction=right]:inset-y-0
+    data-[vaul-drawer-direction=right]:right-0
+    data-[vaul-drawer-direction=right]:border-l
+  "
+>
         <DrawerTitle className="sr-only">Search</DrawerTitle>
         <div className="flex items-center justify-between border-b p-4">
           <h2 className="text-lg font-semibold">Search</h2>

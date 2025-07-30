@@ -19,16 +19,18 @@ export interface LinkItem {
 const host = process.env.NEXT_PUBLIC_HOSTNAME || '';
 
 export const DEFAULT_LINKS = [
+  { title: 'Contact', href: '/contact' },
  {
     title: host ? `About ${host}` : 'About',
     href: '/about', 
   },
-  { title: 'Contact', href: '/contact' },
-  { title: 'Advertisement', href: '/advertisement' },
   { title: 'Privacy policy', href: '/privacy' },
   { title: 'Social Media', href: '#footer' }, 
   { title: 'Archive', href: '/archive' },
 ];
+
+  // { title: 'Advertisement', href: '/advertisement' },
+
 
 export interface AppContextType {
   links: LinkItem[];

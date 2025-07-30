@@ -116,15 +116,12 @@ export interface Post {
   status?: string;
   isSticky?: boolean;
   author_name: string; 
-
-
+  category?: string
   title: string; // rendered title
   excerpt: string; // rendered excerpt
   content: string; // rendered content
-
   date: string; // published date
   modified?: string;
-
   commentCount?: number;
 
   featuredImage?: {

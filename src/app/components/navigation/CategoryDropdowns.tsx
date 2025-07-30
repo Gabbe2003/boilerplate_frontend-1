@@ -40,18 +40,12 @@ function formatDate(dateString?: string): string {
 
 // ---------------------
 // Constants
-// ---------------------
+//// ...imports and types remain unchanged
+
 const desktopButtonClasses = `
-  flex items-center
-  px-2 py-1 text-sm
-  [@media(min-width:1100px)]:px-5 [@media(min-width:1100px)]:py-2 [@media(min-width:1100px)]:text-lg
-  [@media(min-width:1600px)]:px-8 [@media(min-width:1600px)]:py-3 [@media(min-width:1600px)]:text-xl
-  font-medium min-w-0
+  flex items-center px-3 py-1 text-sm font-normal min-w-0 text-black
 `;
 
-// ---------------------
-// Components
-// ---------------------
 function SingleCategoryDropdown({
   title,
   hoverable = true,
@@ -78,7 +72,7 @@ function SingleCategoryDropdown({
   }, [open]);
 
   const btnClasses = isMobile
-    ? 'w-full text-left py-2 font-medium'
+    ? 'w-full text-left py-2 font-normal text-black'
     : desktopButtonClasses;
 
   const menuContentClass = isMobile
@@ -99,15 +93,9 @@ function SingleCategoryDropdown({
     >
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
-          <Button variant="navlink" className={btnClasses}>
+          <Button variant="ghost" className={btnClasses}>
             {title}
-            <ChevronDown
-              className="
-              ml-2 h-4 w-4
-              [@media(min-width:1100px)]:h-5 [@media(min-width:1100px)]:w-5
-              [@media(min-width:1600px)]:h-6 [@media(min-width:1600px)]:w-6
-            "
-            />
+            <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -127,7 +115,7 @@ function SingleCategoryDropdown({
               <DropdownMenuItem key={post.slug} asChild>
                 <a
                   href={`/${post.slug}`}
-                  className="block w-full px-2 py-2 hover:bg-gray-100 rounded transition gap-3 items-center"
+                  className="flex w-full px-2 py-2 hover:bg-gray-100 rounded transition gap-3 items-center"
                 >
                   {post.featuredImage?.node?.sourceUrl ? (
                     <Image
@@ -136,7 +124,6 @@ function SingleCategoryDropdown({
                       width={48}
                       height={48}
                       className="rounded-md object-cover flex-shrink-0 border"
-                      style={{ width: 48, height: 48 }}
                     />
                   ) : (
                     <span className="flex items-center justify-center w-12 h-12 bg-gray-200 text-gray-400 rounded-md border text-xs">
@@ -144,7 +131,7 @@ function SingleCategoryDropdown({
                     </span>
                   )}
                   <div className="flex flex-col min-w-0">
-                    <span className="font-medium text-gray-900 truncate">{post.title}</span>
+                    <span className="font-normal text-black truncate">{post.title}</span>
                     {post.date && (
                       <span className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
                         <Calendar className="h-3 w-3" /> {formatDate(post.date)}

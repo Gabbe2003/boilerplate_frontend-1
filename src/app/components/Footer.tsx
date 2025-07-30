@@ -30,6 +30,7 @@ export default function Footer() {
     { type: "link", title: "Work with us", href: "/work" },
     { type: "link", title: "Sitemap", href: "/sitemap" },
   ];
+console.log('logo:', logo);
 
   return (
     <footer id="footer" className="w-full border-t border-gray-200 bg-gray-100">
@@ -47,7 +48,6 @@ export default function Footer() {
                   width={150}
                   height={60}
                   className="bg-white rounded"
-                  priority
                 />
               ) : (
                 <span className="font-bold text-gray-900 text-xl">{host}</span>

@@ -1,54 +1,51 @@
-
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {AdCard} from "../[slug]/components/adcard";
+import { AdCard } from "../[slug]/components/adcard";
 import { ADS } from "../[slug]/components/adsSideBar";
-import {get_popular_post} from "../../lib/graph_queries/getPopularPost"
+import { get_popular_post } from "../../lib/graph_queries/getPopularPost";
+import FEATURED_IMAGE from "../../../public/next.svg";
 
-import FEATURED_IMAGE from "../../../public/next.svg"
-export default async function PopularPost(){
-  const post = await get_popular_post(); 
-    
+export default async function PopularPost() {
+  const post = await get_popular_post();
+
   return (
-  <>
-    <div className="flex gap-10 mt-3 items-center justify-center">
+    <div className="w-[70%] mx-auto flex gap-4 mt-4 items-start justify-center">
       {post.map((item, index) => {
-        const safeDate = item.date.replace('+00:00', 'Z'); // replace with 'Z' for UTC
-        const formattedDate = new Date(safeDate).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
+        const safeDate = item.date.replace("+00:00", "Z");
+        const formattedDate = new Date(safeDate).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
         });
         return (
           <React.Fragment key={item.id ?? index}>
-            {index === 2 && 
-                <div className="w-full">
-                    <AdCard ad={ADS[index]} />
-                </div>
-            }
-            <div>
+            {index === 2 && (
+              <div className="w-full my-2">
+                <AdCard ad={ADS[index]} />
+              </div>
+            )}
+            <div className="flex flex-col items-center w-[120px]">
               <Link href={`${item.slug}`}>
                 <Image
                   src={
                     typeof item.featuredImage === "string"
-                    ? item.featuredImage
-                    : item.featuredImage?.node?.sourceUrl || FEATURED_IMAGE // fallback image
+                      ? item.featuredImage
+                      : item.featuredImage?.node?.sourceUrl || FEATURED_IMAGE
                   }
-                  width={100}
-                  height={70}
+                  width={80}
+                  height={56}
                   alt={item.title}
-                  className="object-cover rounded"
-                  style={{ width: '100px', height: '70px' }}
+                  className="object-cover rounded bg-amber-950"
+                  style={{ width: "80px", height: "56px" }}
                 />
-                <h4>{item.title}</h4>
-                <p>{formattedDate}</p>
+                <h4 className="text-sm font-normal mt-2 text-black text-center truncate">{item.title}</h4>
+                <p className="text-xs text-gray-500 mt-1 text-center">{formattedDate}</p>
               </Link>
             </div>
           </React.Fragment>
         );
       })}
     </div>
-  </>
-);
+  );
 }

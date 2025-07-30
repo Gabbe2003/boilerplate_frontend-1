@@ -38,7 +38,7 @@ export default function MobileNav({ links, onNewsletterClick }: MobileNavProps) 
     <div className="max-[1099px]:flex hidden items-center gap-2">
       <Drawer direction="right" open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          <Button variant="navlink" className="p-2">
+          <Button variant="ghost" className="p-2">
             <MenuIcon className="h-6 w-6 text-black" />
           </Button>
         </DrawerTrigger>
@@ -58,9 +58,9 @@ export default function MobileNav({ links, onNewsletterClick }: MobileNavProps) 
 
           {/* Drawer Header */}
           <div className="flex items-center justify-between border-b p-4">
-            <h2 className="text-lg font-semibold">Meny</h2>
+            <h2 className="text-lg font-normal text-black">Meny</h2>
             <DrawerClose asChild>
-              <Button variant="ghost" onClick={() => setOpen(false)}>
+              <Button variant="ghost" onClick={() => setOpen(false)} className="text-black font-normal">
                 Stäng
               </Button>
             </DrawerClose>
@@ -78,8 +78,8 @@ export default function MobileNav({ links, onNewsletterClick }: MobileNavProps) 
                 <li key={href}>
                   <Button
                     asChild
-                    variant="navlink"
-                    className="w-full text-left py-2"
+                    variant="ghost"
+                    className="w-full text-left py-2 text-black font-normal"
                     onClick={() => setOpen(false)}
                   >
                     <Link href={href}>{title}</Link>
@@ -91,7 +91,8 @@ export default function MobileNav({ links, onNewsletterClick }: MobileNavProps) 
               <li>
                 <Button
                   asChild
-                  className="bg-yellow-400 text-black font-semibold hover:bg-yellow-500 shadow-md transition-all w-full text-left py-2 mt-2"
+                  variant="ghost"
+                  className="w-full text-left py-2 mt-2 text-black font-normal"
                   onClick={() => setOpen(false)}
                 >
                   <Link href="/advertisement">Advertisement</Link>
@@ -105,7 +106,8 @@ export default function MobileNav({ links, onNewsletterClick }: MobileNavProps) 
                     onNewsletterClick();
                     setOpen(false);
                   }}
-                  className="bg-blue-500 text-white font-semibold hover:bg-blue-600 shadow-md transition-all w-full text-left py-2 mt-2"
+                  variant="ghost"
+                  className="w-full text-left py-2 mt-2 text-black font-normal"
                 >
                   Newsletter
                 </Button>

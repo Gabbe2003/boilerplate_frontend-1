@@ -21,9 +21,13 @@ module.exports = {
         magenta: '#FFFF00', 
 
       },
+       fontFamily: {
+      sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+    },
        screens: {
         'xlmin': '1100px',
-        'xlmax': { 'max': '1600px' },
+        'xlmax': { 'max': '1440px' },
+        'xl': '1440px'
       },
       borderRadius: {
         sm: 'var(--radius-sm)',

@@ -170,7 +170,7 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
             <form onSubmit={handleSubmit} className="rulemailer-subscriber-form">
               <h2 className="rulemailer-header text-xl font-bold mb-2">DAILY NEWS IN YOUR INBOX!</h2>
               <p className="rulemailer-header text-sm font-semibold mb-4">
-                Receive daily news with the most recent updates.
+              Receive daily news with the most recent updates.
               </p>
               <input
                 id="rule_email"

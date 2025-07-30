@@ -4,15 +4,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useAppContext } from '@/store/AppContext';
 import { useState } from 'react';
-import DesktopNav from './DesktopNav';
-import MobileNav from './MobileNav';
+import DesktopNav from './navigation/DesktopNav';
+import MobileNav from './navigation/MobileNav';
 import PopupModal from './Rule_sub';
-import SearchDrawer from './Searchbar';
+import SearchDrawer from './navigation/Searchbar';
 
 export default function Header() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
   const { logo, links, searchBarHeader, setSearchBarHeader } = useAppContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchBarHeader(e.target.value);
+  };
 
   return (
     <>
@@ -37,30 +41,30 @@ export default function Header() {
 
           {/* Navigation and Controls */}
           <div className="flex items-center gap-4">
-            {/* MOBILE: Search always visible + Mobile Nav */}
+            {/* MOBILE */}
             <div className="[@media(min-width:1050px)]:hidden flex items-center gap-2">
-              <SearchDrawer
-                value={searchBarHeader}
-                onChange={(e) => setSearchBarHeader(e.target.value)}
-              />
+              <SearchDrawer value={searchBarHeader} onChange={handleSearchChange} />
               <MobileNav
                 links={links}
                 onNewsletterClick={() => setIsModalOpen(true)}
               />
             </div>
 
-            {/* DESKTOP: Navigation (DesktopNav includes Newsletter button) */}
-            <DesktopNav
-              links={links}
-              onNewsletterClick={() => setIsModalOpen(true)}
-              searchBarHeader={searchBarHeader}
-              setSearchBarHeader={setSearchBarHeader}
-            />
-            {/* Search is already included in DesktopNav */}
+            {/* DESKTOP */}
+            <div className="hidden [@media(min-width:1050px)]:flex items-center gap-4">
+              <DesktopNav
+                links={links}
+                onNewsletterClick={() => setIsModalOpen(true)}
+              />
+              <div className="ml-4">
+                <SearchDrawer value={searchBarHeader} onChange={handleSearchChange} />
+              </div>
+            </div>
           </div>
         </div>
       </header>
-      {/* Modal Render */}
+
+      {/* Newsletter Modal */}
       <PopupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </>
   );

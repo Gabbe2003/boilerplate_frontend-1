@@ -29,9 +29,6 @@ export const DEFAULT_LINKS = [
   { title: 'Archive', href: '/archive' },
 ];
 
-  // { title: 'Advertisement', href: '/advertisement' },
-
-
 export interface AppContextType {
   links: LinkItem[];
   logo: Logo | null;

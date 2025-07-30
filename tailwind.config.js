@@ -21,6 +21,10 @@ module.exports = {
         magenta: '#FFFF00', 
 
       },
+       screens: {
+        'xlmin': '1100px',
+        'xlmax': { 'max': '1600px' },
+      },
       borderRadius: {
         sm: 'var(--radius-sm)',
         md: 'var(--radius-md)',

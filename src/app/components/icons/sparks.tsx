@@ -1,14 +1,14 @@
 import React from "react";
 import { ISocial_Media_Props } from "@/lib/types";
 
-// Classic Dollar Sign ($) Icon with a single path
-const Dollar: React.FC<ISocial_Media_Props> = ({
+// Simple Sparkles/Star icon
+const Sparkles: React.FC<ISocial_Media_Props> = ({
     className,
     color = "currentColor",
-    width = 22,
+    width = 20,
     style,
 }) => {
-    const aspectRatio = 22 / 22;
+    const aspectRatio = 20 / 20;
     const height = width * aspectRatio;
 
     return (
@@ -16,25 +16,24 @@ const Dollar: React.FC<ISocial_Media_Props> = ({
             <svg
                 width={width}
                 height={height}
-                viewBox="0 0 22 22"
+                viewBox="0 0 20 20"
                 fill="none"
                 style={{ width, height, ...style }}
                 xmlns="http://www.w3.org/2000/svg"
             >
-                <title>Dollar icon</title>
+                <title>Sparkles icon</title>
+                {/* Large center star */}
                 <path
-                    d="
-                       M 28.90625 1.96875 C 28.863281 1.976563 28.820313 1.988281 28.78125 2 L 11.5 2 C 9.585938 2 8 3.558594 8 5.46875 L 8 43.90625 C 8 46.160156 9.867188 48 12.125 48 L 37.875 48 C 40.132813 48 42 46.160156 42 43.90625 L 42 15.1875 C 42.027344 15.054688 42.027344 14.914063 42 14.78125 L 42 14.5 C 42.007813 14.234375 41.90625 13.972656 41.71875 13.78125 L 30.21875 2.28125 C 30.027344 2.09375 29.765625 1.992188 29.5 2 L 29.1875 2 C 29.097656 1.976563 29 1.964844 28.90625 1.96875 Z M 11.5 4 L 28 4 L 28 12.34375 C 28 14.355469 29.644531 16 31.65625 16 L 40 16 L 40 43.90625 C 40 45.074219 39.054688 46 37.875 46 L 12.125 46 C 10.945313 46 10 45.074219 10 43.90625 L 10 5.46875 C 10 4.644531 10.660156 4 11.5 4 Z M 30 4.9375 L 39.0625 14 L 31.65625 14 C 30.722656 14 30 13.277344 30 12.34375 Z M 17 24 L 17 26 L 33 26 L 33 24 Z M 17 28 L 17 30 L 33 30 L 33 28 Z M 17 32 L 17 34 L 33 34 L 33 32 Z M 17 36 L 17 38 L 26 38 L 26 36 Z
-                        "
-                    stroke={color}
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    fill="none"
+                    d="M10 2l1.16 3.53a1 1 0 00.68.68L15 8l-3.53 1.16a1 1 0 00-.68.68L10 15l-1.16-3.53a1 1 0 00-.68-.68L5 8l3.53-1.16a1 1 0 00.68-.68L10 2z"
+                    fill={color}
+                    opacity="0.7"
                 />
+                {/* Small sparkles */}
+                <circle cx="16.5" cy="4" r="1.1" fill={color} opacity="0.5" />
+                <circle cx="4" cy="15.5" r="0.8" fill={color} opacity="0.5" />
             </svg>
         </span>
     );
 };
 
-export default Dollar;
+export default Sparkles;

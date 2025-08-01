@@ -1,15 +1,17 @@
 'use client';
 
-import React from "react";
-import Link from "next/link";
-import { AdCard } from "../[slug]/components/adcard";
-import { ADS } from "../[slug]/components/adsSideBar";
-import { useAppContext } from "@/store/AppContext";
-import { PostCard } from "./postCard";
+import React from 'react';
+import Link from 'next/link';
+import { AdCard } from '../[slug]/components/adcard';
+import { ADS } from '../[slug]/components/adsSideBar';
+import { useAppContext } from '@/store/AppContext';
+import { PostCard } from './postCard';
 
-function AdGridCard({ ad, className = "" }: { ad: any; className?: string }) {
+function AdGridCard({ ad, className = '' }: { ad: any; className?: string }) {
   return (
-    <div className={`bg-white border border-gray-200 flex items-center justify-center h-[220px] p-2 ${className}`}>
+    <div
+      className={`bg-white border border-gray-200 flex items-center justify-center h-[220px] p-2 ${className}`}
+    >
       <AdCard ad={ad} />
     </div>
   );
@@ -36,17 +38,17 @@ export default function PopularNews({ items = [] }) {
         {/* Mobile: 2 columns x4, last full width */}
         <div className="grid grid-cols-2 gap-2 lg:hidden">
           {items.slice(0, 8).map((item, idx) =>
-            item.type === "ad" ? (
+            item.type === 'ad' ? (
               <AdGridCard key={`ad-m-${idx}`} ad={ADS[item.adIndex]} />
             ) : (
               <Link href={`/${item.slug}`} key={item.id}>
                 <PostCard post={item} />
               </Link>
-            )
+            ),
           )}
           {items[8] && (
             <div className="col-span-2 mt-2">
-              {items[8].type === "ad" ? (
+              {items[8].type === 'ad' ? (
                 <AdGridCard ad={ADS[items[8].adIndex]} />
               ) : (
                 <Link href={`/${items[8].slug}`}>
@@ -60,29 +62,29 @@ export default function PopularNews({ items = [] }) {
         {/* Desktop: first row, 4 columns */}
         <div className="hidden lg:grid grid-cols-4 gap-2">
           {topItems.map((item, idx) =>
-            item.type === "ad" ? (
+            item.type === 'ad' ? (
               <AdGridCard key={`ad-top-${idx}`} ad={ADS[item.adIndex]} />
             ) : (
               <Link href={`/${item.slug}`} key={item.id}>
                 <PostCard post={item} />
               </Link>
-            )
+            ),
           )}
         </div>
 
         {/* Desktop: second row, 5 columns, last item fills last cell if present */}
         <div className="hidden lg:grid grid-cols-5 gap-2">
           {bottomItems.map((item, idx) =>
-            item.type === "ad" ? (
+            item.type === 'ad' ? (
               <AdGridCard key={`ad-bot-${idx}`} ad={ADS[item.adIndex]} />
             ) : (
               <Link href={`/${item.slug}`} key={item.id}>
                 <PostCard post={item} />
               </Link>
-            )
+            ),
           )}
           {lastItem &&
-            (lastItem.type === "ad" ? (
+            (lastItem.type === 'ad' ? (
               <AdGridCard key={`ad-last`} ad={ADS[lastItem.adIndex]} />
             ) : (
               <Link href={`/${lastItem.slug}`} key={lastItem.id}>

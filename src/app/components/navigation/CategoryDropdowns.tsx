@@ -103,11 +103,17 @@ function SingleCategoryDropdown({
           className={menuContentClass}
         >
           {loading ? (
-            <DropdownMenuItem disabled className="w-full py-2 text-center text-gray-400">
+            <DropdownMenuItem
+              disabled
+              className="w-full py-2 text-center text-gray-400"
+            >
               Laddar in...
             </DropdownMenuItem>
           ) : posts.length === 0 ? (
-            <DropdownMenuItem disabled className="w-full py-2 text-center text-gray-400">
+            <DropdownMenuItem
+              disabled
+              className="w-full py-2 text-center text-gray-400"
+            >
               Inga inlägg
             </DropdownMenuItem>
           ) : (
@@ -131,7 +137,9 @@ function SingleCategoryDropdown({
                     </span>
                   )}
                   <div className="flex flex-col min-w-0">
-                    <span className="font-normal text-black truncate">{post.title}</span>
+                    <span className="font-normal text-black truncate">
+                      {post.title}
+                    </span>
                     {post.date && (
                       <span className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
                         <Calendar className="h-3 w-3" /> {formatDate(post.date)}
@@ -148,12 +156,32 @@ function SingleCategoryDropdown({
   );
 }
 
-export default function CategoryDropdowns({ isMobile = false }: CategoryDropdownsProps) {
+export default function CategoryDropdowns({
+  isMobile = false,
+}: CategoryDropdownsProps) {
   return (
-    <div className={isMobile ? 'flex flex-col gap-2 items-center w-full' : 'flex items-center gap-4'}>
-      <SingleCategoryDropdown title="NYHETER" hoverable={!isMobile} isMobile={isMobile} />
-      <SingleCategoryDropdown title="FÖRETAG" hoverable={!isMobile} isMobile={isMobile} />
-      <SingleCategoryDropdown title="PRIVAT" hoverable={!isMobile} isMobile={isMobile} />
+    <div
+      className={
+        isMobile
+          ? 'flex flex-col gap-2 items-center w-full'
+          : 'flex items-center gap-4'
+      }
+    >
+      <SingleCategoryDropdown
+        title="NYHETER"
+        hoverable={!isMobile}
+        isMobile={isMobile}
+      />
+      <SingleCategoryDropdown
+        title="FÖRETAG"
+        hoverable={!isMobile}
+        isMobile={isMobile}
+      />
+      <SingleCategoryDropdown
+        title="PRIVAT"
+        hoverable={!isMobile}
+        isMobile={isMobile}
+      />
     </div>
   );
 }

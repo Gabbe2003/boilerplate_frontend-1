@@ -1,14 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 // Zod schema for validation & sanitization
 const SubscribeSchema = z.object({
-  email: z.string()
+  email: z
+    .string()
     .trim()
     .min(3, 'Email is required')
     .max(100, 'Email too long')
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Invalid email format')
-    .transform(str => str.replace(/[<>]/g, '')), // Strip angle brackets
+    .transform((str) => str.replace(/[<>]/g, '')), // Strip angle brackets
   // Add more fields if needed:
   // name: z.string().trim().max(100).optional(),
   // link: z.string().trim().max(300).optional(),
@@ -20,15 +21,21 @@ export async function POST(req: NextRequest) {
   const RULE_SIGN_UP_KEY = process.env.RULE_SIGN_UP_KEY;
 
   if (!RULE_SIGN_UP_KEY) {
-    return NextResponse.json({ message: 'Missing RULE_SIGN_UP_KEY', path: endpointPath }, { status: 500 });
+    return NextResponse.json(
+      { message: 'Missing RULE_SIGN_UP_KEY', path: endpointPath },
+      { status: 500 },
+    );
   }
 
   let data;
   try {
     data = await req.json();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err:any) {
-    return NextResponse.json({ message: `Invalid JSON body ${err}`, path: endpointPath }, { status: 400 });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    return NextResponse.json(
+      { message: `Invalid JSON body ${err}`, path: endpointPath },
+      { status: 400 },
+    );
   }
 
   // Zod validation
@@ -39,9 +46,9 @@ export async function POST(req: NextRequest) {
       {
         message: 'Validation error',
         path: endpointPath,
-        issues: parsed.error.issues
+        issues: parsed.error.issues,
       },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -59,7 +66,7 @@ export async function POST(req: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${RULE_SIGN_UP_KEY}`,
+        Authorization: `Bearer ${RULE_SIGN_UP_KEY}`,
       },
       body: JSON.stringify(rulePayload),
     });
@@ -73,13 +80,19 @@ export async function POST(req: NextRequest) {
           path: endpointPath,
           email,
         },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
-    return NextResponse.json({ success: true, path: endpointPath }, { status: 200 });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return NextResponse.json(
+      { success: true, path: endpointPath },
+      { status: 200 },
+    );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return NextResponse.json({ message: error.message || 'Internal Server Error', path: endpointPath }, { status: 500 });
+    return NextResponse.json(
+      { message: error.message || 'Internal Server Error', path: endpointPath },
+      { status: 500 },
+    );
   }
 }

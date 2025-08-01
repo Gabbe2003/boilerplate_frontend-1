@@ -1,16 +1,18 @@
-"use client"; 
+'use client';
 
-import clsx from "clsx";
-import Link from "next/link";
-import Image from "next/image";
-import dynamic from "next/dynamic";
-import { ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
-import { AdCard } from "./adcard";
-import { ADS } from "./adsSideBar";
-import { Card, CardContent } from "@/components/ui/card";
+import clsx from 'clsx';
+import Link from 'next/link';
+import Image from 'next/image';
+import dynamic from 'next/dynamic';
+import { ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { AdCard } from './adcard';
+import { ADS } from './adsSideBar';
+import { Card, CardContent } from '@/components/ui/card';
 
-const RecommendationList = dynamic(() => import("./RecommendationList"), { ssr: false });
+const RecommendationList = dynamic(() => import('./RecommendationList'), {
+  ssr: false,
+});
 
 export function Sidebar({ currentSlug }: { currentSlug: string }) {
   const [adIndex, setAdIndex] = useState(0);
@@ -26,8 +28,8 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
   return (
     <Card
       className={clsx(
-        "border border-neutral-100 shadow-sm transition-all duration-500 bg-white/90 overflow-hidden",
-        "rounded-sm"
+        'border border-neutral-100 shadow-sm transition-all duration-500 bg-white/90 overflow-hidden',
+        'rounded-sm',
       )}
     >
       <CardContent className="p-0">
@@ -35,7 +37,7 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
           <RecommendationList currentSlug={currentSlug}>
             {(recommendations) => {
               const postsToShow = recommendations.slice(0, 2);
-              
+
               return (
                 <ul className="space-y-4 px-2 py-3">
                   {postsToShow.map((post, idx) => (
@@ -44,7 +46,7 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
                         href={`/${post.slug}`}
                         className="group block overflow-hidden rounded border border-neutral-200 bg-[#fafafa] shadow hover:shadow-lg transition-all hover:border-blue-300 relative focus-visible:ring-2 focus-visible:ring-blue-300"
                       >
-                         {post.featuredImage?.node.sourceUrl && (
+                        {post.featuredImage?.node.sourceUrl && (
                           <div className="relative w-full aspect-[6/3] overflow-hidden rounded-t">
                             <Image
                               src={post.featuredImage.node.sourceUrl}
@@ -67,11 +69,11 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
                             {post.title}
                           </h4>
                           <div className="text-[11px] text-neutral-600 truncate">
-                            By {post.author?.node.name || 'Admin'} ·{" "}
-                            {new Date(post.date).toLocaleDateString("sv-SE", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
+                            By {post.author?.node.name || 'Admin'} ·{' '}
+                            {new Date(post.date).toLocaleDateString('sv-SE', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
                             })}
                           </div>
                         </div>

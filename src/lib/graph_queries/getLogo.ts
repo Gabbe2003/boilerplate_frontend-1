@@ -1,5 +1,5 @@
-"use server"
-import { load } from "cheerio";
+'use server';
+import { load } from 'cheerio';
 // import { loggedFetch } from "../logged-fetch";
 
 interface Asset {

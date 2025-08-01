@@ -1,29 +1,35 @@
 'use client';
 
-import React from "react";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { Button } from '@/components/ui/button';
 
 // Use relative paths for icons (assume this file is in components/ and icons/ is a sibling)
-import Facebook from "./icons/facebook";
-import Instagram from "./icons/instagram";
-import Linkedin from "./icons/linkedin";
-import Twitter from "./icons/twitter";
+import Facebook from './icons/facebook';
+import Instagram from './icons/instagram';
+import Linkedin from './icons/linkedin';
+import Twitter from './icons/twitter';
 
 // Social media link variables
-const facebookUrl = "https://www.facebook.com/people/Finanstidning-Nyheter/pfbid02SvfPjub9ZZjT86PukPpdM2m59eCyQNMXqrRy43yHcK2b8huV5sjE7FVGJGpSEFpTl/";  
-const instagramUrl = "https://www.instagram.com/finanstidning/"; 
-const linkedinUrl = "https://www.linkedin.com/in/finanstidning-nyheter-b32662377/";  
-const xUrl = "https://x.com/Finanstidning1";
+const facebookUrl =
+  'https://www.facebook.com/people/Finanstidning-Nyheter/pfbid02SvfPjub9ZZjT86PukPpdM2m59eCyQNMXqrRy43yHcK2b8huV5sjE7FVGJGpSEFpTl/';
+const instagramUrl = 'https://www.instagram.com/finanstidning/';
+const linkedinUrl =
+  'https://www.linkedin.com/in/finanstidning-nyheter-b32662377/';
+const xUrl = 'https://x.com/Finanstidning1';
 
 const socialButtons = [
-  { Icon: Facebook, label: "Facebook", url: facebookUrl },
-  { Icon: Instagram, label: "Instagram", url: instagramUrl },
-  { Icon: Linkedin, label: "LinkedIn", url: linkedinUrl },
-  { Icon: Twitter, label: "X", url: xUrl },
+  { Icon: Facebook, label: 'Facebook', url: facebookUrl },
+  { Icon: Instagram, label: 'Instagram', url: instagramUrl },
+  { Icon: Linkedin, label: 'LinkedIn', url: linkedinUrl },
+  { Icon: Twitter, label: 'X', url: xUrl },
 ];
 
-const SocialMediaButtons: React.FC<{ className?: string }> = ({ className }) => (
-  <div className={`flex flex-row gap-2 justify-center md:justify-end ${className || ""}`}>
+const SocialMediaButtons: React.FC<{ className?: string }> = ({
+  className,
+}) => (
+  <div
+    className={`flex flex-row gap-2 justify-center md:justify-end ${className || ''}`}
+  >
     {socialButtons.map(({ Icon, label, url }) => (
       <Button
         key={label}
@@ -33,11 +39,7 @@ const SocialMediaButtons: React.FC<{ className?: string }> = ({ className }) => 
         asChild
         aria-label={label}
       >
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={url} target="_blank" rel="noopener noreferrer">
           <Icon className="w-5 h-5 text-neutral-500" />
         </a>
       </Button>

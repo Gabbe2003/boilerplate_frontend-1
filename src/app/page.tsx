@@ -5,7 +5,7 @@ import ViewedPosts from './components/ViewsPosts';
 import { getViews } from '@/lib/graph_queries/getViews';
 import PopularNews from './components/pouplarPosts-main';
 
-export const revalidate = 3000; 
+export const revalidate = 3000;
 
 export async function generateStaticParams() {
   const res = await fetch(process.env.WP_GRAPHQL_URL!, {
@@ -29,23 +29,21 @@ export async function generateStaticParams() {
 }
 
 const Page = async () => {
-  const posts = await getViews("month");
+  const posts = await getViews('month');
 
   return (
-  <>
-  
-    <PopularNews posts={posts} />;
-    <div className="flex w-full flex-col gap-8 px-4 py-10 md:flex-row">     
-      <section className="w-full md:w-4/5 lg:w-3/1">
-        <PostsList />
-      </section>
-      <aside className="w-full md:w-1/5 lg:w-1/2 shrink-0" >
-        <ViewedPosts />
-      </aside>
-    </div>
-  </>
-);
-
+    <>
+      <PopularNews posts={posts} />;
+      <div className="flex w-full flex-col gap-8 px-4 py-10 md:flex-row">
+        <section className="w-full md:w-4/5 lg:w-3/1">
+          <PostsList />
+        </section>
+        <aside className="w-full md:w-1/5 lg:w-1/2 shrink-0">
+          <ViewedPosts />
+        </aside>
+      </div>
+    </>
+  );
 };
 
 export default Page;

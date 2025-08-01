@@ -18,16 +18,17 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        pathname: "/**",
+        pathname: '/**',
         hostname,
       },
       {
-        hostname: "boilerplate.local", 
-        protocol: "http",
-      }, {
-        hostname: "secure.gravatar.com",
-        protocol: "https",
-      }
+        hostname: 'boilerplate.local',
+        protocol: 'http',
+      },
+      {
+        hostname: 'secure.gravatar.com',
+        protocol: 'https',
+      },
     ],
   },
 };

@@ -1,18 +1,24 @@
-"use client"
-import dynamic from "next/dynamic";
-import { Card, CardContent } from "@/components/ui/card";
-import clsx from "clsx";
-import Image from "next/image";
-import Link from "next/link";
+'use client';
+import dynamic from 'next/dynamic';
+import { Card, CardContent } from '@/components/ui/card';
+import clsx from 'clsx';
+import Image from 'next/image';
+import Link from 'next/link';
 
-const RecommendationList = dynamic(() => import("./RecommendationList"), { ssr: false });
+const RecommendationList = dynamic(() => import('./RecommendationList'), {
+  ssr: false,
+});
 
-export default function EndOfPageRecommendations({ currentSlug }: { currentSlug: string }) {
+export default function EndOfPageRecommendations({
+  currentSlug,
+}: {
+  currentSlug: string;
+}) {
   return (
     <Card
       className={clsx(
-        "border border-neutral-100 shadow-sm transition-all duration-500 bg-white/90 overflow-hidden",
-        "rounded"
+        'border border-neutral-100 shadow-sm transition-all duration-500 bg-white/90 overflow-hidden',
+        'rounded',
       )}
     >
       <CardContent className="p-0">
@@ -62,11 +68,11 @@ export default function EndOfPageRecommendations({ currentSlug }: { currentSlug:
                               {post.title}
                             </h4>
                             <div className="text-[11px] text-neutral-600 truncate">
-                              By {post.author?.node.name || 'Admin'} ·{" "}
-                              {new Date(post.date).toLocaleDateString("sv-SE", {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
+                              By {post.author?.node.name || 'Admin'} ·{' '}
+                              {new Date(post.date).toLocaleDateString('sv-SE', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
                               })}
                             </div>
                           </div>

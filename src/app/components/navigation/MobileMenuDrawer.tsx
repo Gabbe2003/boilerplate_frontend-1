@@ -24,7 +24,10 @@ interface MobileMenuDrawerProps {
   onNewsletterClick: () => void;
 }
 
-export default function MobileMenuDrawer({ links, onNewsletterClick }: MobileMenuDrawerProps) {
+export default function MobileMenuDrawer({
+  links,
+  onNewsletterClick,
+}: MobileMenuDrawerProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 

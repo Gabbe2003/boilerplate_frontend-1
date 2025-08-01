@@ -124,7 +124,7 @@ fragment PostFull on Post {
         query,
         variables: { first, after, last, before },
       }),
-     next: { revalidate: 300}, // We should adjust based on the script in make
+      next: { revalidate: 300 }, // We should adjust based on the script in make
       cache: 'force-cache',
     });
 
@@ -136,7 +136,7 @@ fragment PostFull on Post {
     //     variables: { first, after, last, before },
     //   }),
     //   context: 'getAllPosts',
-    //   next: { revalidate: 300}, 
+    //   next: { revalidate: 300},
     //   cache: 'force-cache',
     // });
 
@@ -154,13 +154,15 @@ fragment PostFull on Post {
     const posts = normalizeImages(rawPosts);
     const firstAuthorSlug = posts[0].author?.node?.slug;
 
-    if (firstAuthorSlug) { 
-      await fetch(`${process.env.NEXT_PUBLIC_SHARENAME}/api/update_author_cache/${firstAuthorSlug}`, { method: "POST" });
+    if (firstAuthorSlug) {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_SHARENAME}/api/update_author_cache/${firstAuthorSlug}`,
+        { method: 'POST' },
+      );
     }
     // Revalidate the author cache for the first post's author
-    
-    return posts;
 
+    return posts;
   } catch (error) {
     console.error('getAllPosts failed:', error);
     return [];

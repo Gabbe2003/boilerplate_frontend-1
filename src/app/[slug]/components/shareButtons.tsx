@@ -1,19 +1,19 @@
-import { Button } from "@/components/ui/button";
-import Twitter from "@/app/components/icons/twitter";
-import Facebook from "@/app/components/icons/facebook";
-import Linkedin from "@/app/components/icons/linkedin";
-import Email from "@/app/components/icons/email";
+import { Button } from '@/components/ui/button';
+import Twitter from '@/app/components/icons/twitter';
+import Facebook from '@/app/components/icons/facebook';
+import Linkedin from '@/app/components/icons/linkedin';
+import Email from '@/app/components/icons/email';
 
 function getShareUrl(
-  platform: "twitter" | "facebook" | "linkedin",
-  { url, title }: { url: string; title: string }
+  platform: 'twitter' | 'facebook' | 'linkedin',
+  { url, title }: { url: string; title: string },
 ) {
   switch (platform) {
-    case "twitter":
+    case 'twitter':
       return `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
-    case "facebook":
+    case 'facebook':
       return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-    case "linkedin":
+    case 'linkedin':
       return `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`;
     default:
       return url;
@@ -30,14 +30,14 @@ export function ShareButtons({
   postExcerpt: string;
 }) {
   return (
-    <div className="flex items-center justify-center gap-1 px-3 py-2 bg-white border border-neutral-200 rounded-xs">
+    <div className="flex items-center justify-center gap-1 px-3 py-2 border border-neutral-100 rounded-xs">
       {/* Native share/copy */}
       <Button
         variant="ghost"
         className="h-9 min-w-[52px] flex items-center justify-center text-neutral-700 font-medium rounded-xs px-3 cursor-pointer transition-colors duration-150 text-mx border border-transparent hover:bg-neutral-100"
         aria-label="Share Link"
         onClick={async () => {
-          if (typeof window !== "undefined" && navigator.share) {
+          if (typeof window !== 'undefined' && navigator.share) {
             try {
               await navigator.share({
                 title: postTitle,
@@ -45,11 +45,11 @@ export function ShareButtons({
                 url: postUrl,
               });
             } catch (e) {
-              console.log("User cancelled and sharing failed", e);
+              console.log('User cancelled and sharing failed', e);
             }
-          } else if (typeof window !== "undefined" && navigator.clipboard) {
+          } else if (typeof window !== 'undefined' && navigator.clipboard) {
             await navigator.clipboard.writeText(postUrl);
-            alert("Link Copied!");
+            alert('Link Copied!');
           }
         }}
       >
@@ -65,7 +65,7 @@ export function ShareButtons({
         aria-label="Dela på Facebook"
       >
         <a
-          href={getShareUrl("facebook", { url: postUrl, title: postTitle })}
+          href={getShareUrl('facebook', { url: postUrl, title: postTitle })}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -83,7 +83,7 @@ export function ShareButtons({
       >
         <a
           href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-            postUrl
+            postUrl,
           )}&text=${encodeURIComponent(`${postTitle}\n\n${postExcerpt}`)}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -101,7 +101,7 @@ export function ShareButtons({
         aria-label="Dela på LinkedIn"
       >
         <a
-          href={getShareUrl("linkedin", { url: postUrl, title: postTitle })}
+          href={getShareUrl('linkedin', { url: postUrl, title: postTitle })}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -119,9 +119,9 @@ export function ShareButtons({
       >
         <a
           href={`mailto:?subject=${encodeURIComponent(
-            postTitle
+            postTitle,
           )}&body=${encodeURIComponent(
-            `${postTitle}\n\n${postExcerpt}\n\n${postUrl}`
+            `${postTitle}\n\n${postExcerpt}\n\n${postUrl}`,
           )}`}
         >
           <Email className="w-5 h-5 text-neutral-500" />

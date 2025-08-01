@@ -13,7 +13,7 @@ export default function Error({ error, reset }: ErrorProps) {
   }, [error]);
 
   return (
-    <div className="p-6 " style={{height: '100vh'}}>
+    <div className="p-6 " style={{ height: '100vh' }}>
       <h2>Something went wrong</h2>
       <pre className="text-wrap">{error.message}</pre>
       <button onClick={() => reset()}>Try again</button>

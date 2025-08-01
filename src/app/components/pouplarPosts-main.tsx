@@ -1,6 +1,6 @@
-import { getViews } from "@/lib/graph_queries/getViews";
-import PopularNews from "./MonthPouplarPosts";
-import { ADS } from "../[slug]/components/adsSideBar";
+import { getViews } from '@/lib/graph_queries/getViews';
+import PopularNews from './MonthPouplarPosts';
+import { ADS } from '../[slug]/components/adsSideBar';
 
 // --- Helper utilities ---
 function pickTwoUniqueAds(adsArray) {
@@ -22,13 +22,13 @@ function shuffleArray(array) {
 }
 
 export default async function Page() {
-  const posts = await getViews("month");
+  const posts = await getViews('week');
   if (!posts.length) return <div>No fun posts!</div>;
 
-  const mainPosts = posts.slice(0, 7).map(p => ({ ...p, type: "post" }));
+  const mainPosts = posts.slice(0, 7).map((p) => ({ ...p, type: 'post' }));
   const [adIndex1, adIndex2] = pickTwoUniqueAds(ADS);
-  const ad1 = { type: "ad", adIndex: adIndex1 };
-  const ad2 = { type: "ad", adIndex: adIndex2 };
+  const ad1 = { type: 'ad', adIndex: adIndex1 };
+  const ad2 = { type: 'ad', adIndex: adIndex2 };
   const mixed = shuffleArray([...mainPosts, ad1, ad2]);
 
   return <PopularNews items={mixed} />;

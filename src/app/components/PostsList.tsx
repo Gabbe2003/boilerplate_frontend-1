@@ -9,7 +9,7 @@ export default function PostsList() {
   const { searchBarHeader, posts } = useAppContext();
   const term = searchBarHeader.trim().toLowerCase();
   const filtered = term
-    ? posts.filter(p => p.title.toLowerCase().includes(term))
+    ? posts.filter((p) => p.title.toLowerCase().includes(term))
     : posts;
 
   // Only render up to "visibleCount" posts
@@ -28,7 +28,7 @@ export default function PostsList() {
           setVisibleCount((c) => Math.min(filtered.length, c + 3));
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: '200px' },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -57,7 +57,7 @@ export default function PostsList() {
                 width={1200}
                 height={700}
                 className="w-full h-90 object-cover rounded-xl mb-6"
-                priority={index < 3 }
+                priority={index < 3}
               />
             </Link>
           )}

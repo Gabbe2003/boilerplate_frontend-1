@@ -24,7 +24,10 @@ interface MobileNavProps {
   onNewsletterClick: () => void;
 }
 
-export default function MobileNav({ links, onNewsletterClick }: MobileNavProps) {
+export default function MobileNav({
+  links,
+  onNewsletterClick,
+}: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -60,7 +63,11 @@ export default function MobileNav({ links, onNewsletterClick }: MobileNavProps) 
           <div className="flex items-center justify-between border-b p-4">
             <h2 className="text-lg font-normal text-black">Meny</h2>
             <DrawerClose asChild>
-              <Button variant="ghost" onClick={() => setOpen(false)} className="text-black font-normal">
+              <Button
+                variant="ghost"
+                onClick={() => setOpen(false)}
+                className="text-black font-normal"
+              >
                 Stäng
               </Button>
             </DrawerClose>

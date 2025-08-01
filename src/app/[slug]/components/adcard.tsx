@@ -1,5 +1,5 @@
 // AdCard.tsx
-import { Ad } from "./adsSideBar";
+import { Ad } from './adsSideBar';
 
 export function AdCard({ ad }: { ad: Ad }) {
   if (ad.script) {

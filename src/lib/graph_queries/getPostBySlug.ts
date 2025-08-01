@@ -1,4 +1,4 @@
-"use server"
+'use server';
 
 import { GraphQLError, Post } from '../types';
 
@@ -8,7 +8,7 @@ import { normalizeImages } from '../helper_functions/featured_image';
 
 // Fetch a single post by slug
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-   const query = `
+  const query = `
     query GetPostBySlug($slug: String!) {
       postBy(slug: $slug) {
         databaseId
@@ -52,32 +52,29 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, variables: { slug } }),
-       next: { revalidate: 300  }, 
-       
+      next: { revalidate: 300 },
     });
 
-// const res = await loggedFetch(GRAPHQL_URL, {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ query, variables: { slug } }),
-//       next: { revalidate: 60 },
-//       context: 'getPostBySlug',
-//     });
-
+    // const res = await loggedFetch(GRAPHQL_URL, {
+    //       method: 'POST',
+    //       headers: { 'Content-Type': 'application/json' },
+    //       body: JSON.stringify({ query, variables: { slug } }),
+    //       next: { revalidate: 60 },
+    //       context: 'getPostBySlug',
+    //     });
 
     const json = (await res.json()) as {
       data?: { postBy?: Post };
       errors?: GraphQLError;
     };
 
-const post = json.data?.postBy;
-if (!post) return null;
+    const post = json.data?.postBy;
+    if (!post) return null;
 
-const normalized = normalizeImages(post);
-if (Array.isArray(normalized)) return null;  // Defensive, shouldn't happen
+    const normalized = normalizeImages(post);
+    if (Array.isArray(normalized)) return null; // Defensive, shouldn't happen
 
-return normalized; // Is a Post
-
+    return normalized; // Is a Post
   } catch (error) {
     console.error('Failed to fetch post:', error);
     return null;

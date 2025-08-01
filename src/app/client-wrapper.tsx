@@ -7,7 +7,7 @@ import Header from './components/Header';
 
 interface RootClientProvidersProps {
   children: ReactNode;
-  links: any; 
+  links: any;
   logo: any;
   posts: any;
 }

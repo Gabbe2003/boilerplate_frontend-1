@@ -24,7 +24,11 @@ function recently(key: string) {
   return ts ? Date.now() - new Date(ts).getTime() < ONE_DAY : false;
 }
 
-export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProps) {
+export default function PopupModal({
+  isOpen,
+  onClose,
+  onSubmit,
+}: PopupModalProps) {
   const modalRef = React.useRef<HTMLDivElement>(null);
   const [visible, setVisible] = React.useState(false);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
@@ -78,48 +82,53 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
     }
   };
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  try {
-    const res = await fetch('/api/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
 
+      if (!res.ok) {
+        const errorData = await res.json();
+        if (errorData.issues) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          alert(
+            'Validation errors:\n' +
+              errorData.issues.map((issue: any) => issue.message).join('\n'),
+          );
+        } else {
+          alert(`Subscription failed: ${errorData.message}`);
+        }
+      }
 
-    if (!res.ok) {
-  const errorData = await res.json();
-  if (errorData.issues) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    alert("Validation errors:\n" + errorData.issues.map((issue: any) => issue.message).join('\n'));
-  } else {
-    alert(`Subscription failed: ${errorData.message}`);
-  }
-}
-
-
-    if (res.ok) {
-      window.setRuleSubmitSuccess?.();
-    } else {
-      const errorData = await res.json();
-      // Log all data for debugging
-      console.error('[Frontend] Subscription failed:', errorData);
-      // Show more details in alert (or in your UI as you wish)
-      alert(
-        `Subscription failed (${errorData.path || 'unknown path'}):\n` +
-        `Message: ${errorData.message || 'Unknown error'}\n` +
-        (errorData.details ? `Details: ${JSON.stringify(errorData.details, null, 2)}` : '') +
-        (errorData.email ? `\nEmail: ${errorData.email}` : '') +
-        (errorData.rulePayload ? `\nPayload: ${JSON.stringify(errorData.rulePayload, null, 2)}` : '')
-      );
+      if (res.ok) {
+        window.setRuleSubmitSuccess?.();
+      } else {
+        const errorData = await res.json();
+        // Log all data for debugging
+        console.error('[Frontend] Subscription failed:', errorData);
+        // Show more details in alert (or in your UI as you wish)
+        alert(
+          `Subscription failed (${errorData.path || 'unknown path'}):\n` +
+            `Message: ${errorData.message || 'Unknown error'}\n` +
+            (errorData.details
+              ? `Details: ${JSON.stringify(errorData.details, null, 2)}`
+              : '') +
+            (errorData.email ? `\nEmail: ${errorData.email}` : '') +
+            (errorData.rulePayload
+              ? `\nPayload: ${JSON.stringify(errorData.rulePayload, null, 2)}`
+              : ''),
+        );
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error('[Frontend] Network or unexpected error:', err);
+      alert(`Network or unexpected error: ${err.message || err}`);
     }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (err: any) {
-    console.error('[Frontend] Network or unexpected error:', err);
-    alert(`Network or unexpected error: ${err.message || err}`);
-  }
-};
+  };
 
   if (!visible) return null;
 
@@ -133,7 +142,9 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
       <div
         ref={modalRef}
         className={`relative flex w-full max-w-3xl transform flex-col rounded-lg bg-white p-0 shadow-lg transition-all duration-300 md:flex-row ${
-          isOpen || internalOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          isOpen || internalOpen
+            ? 'scale-100 opacity-100'
+            : 'scale-95 opacity-0'
         }`}
       >
         <div className="flex w-full md:w-1/2 items-center justify-center bg-[#EDE5DF] p-6 md:p-8">
@@ -163,14 +174,20 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
                 Thank you for subscribing
               </h2>
               <p className="text-gray-600 text-sm">
-                You will now receive daily news in your email. If you don’t find our emails, check spam or contact us.
+                You will now receive daily news in your email. If you don’t find
+                our emails, check spam or contact us.
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="rulemailer-subscriber-form">
-              <h2 className="rulemailer-header text-xl font-bold mb-2">DAILY NEWS IN YOUR INBOX!</h2>
+            <form
+              onSubmit={handleSubmit}
+              className="rulemailer-subscriber-form"
+            >
+              <h2 className="rulemailer-header text-xl font-bold mb-2">
+                DAILY NEWS IN YOUR INBOX!
+              </h2>
               <p className="rulemailer-header text-sm font-semibold mb-4">
-              Receive daily news with the most recent updates.
+                Receive daily news with the most recent updates.
               </p>
               <input
                 id="rule_email"
@@ -182,9 +199,15 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
                 className="mb-6 p-2 w-full border rounded"
               />
               <div id="recaptcha"></div>
-              <button type="submit" className="w-full bg-[#FFA94D] text-white p-2 rounded cursor-pointer">Submit</button>
+              <button
+                type="submit"
+                className="w-full bg-[#FFA94D] text-white p-2 rounded cursor-pointer"
+              >
+                Submit
+              </button>
               <p className="mt-4 text-xs text-gray-500">
-                By submitting my email, I consent to receive daily updates and promotional emails.
+                By submitting my email, I consent to receive daily updates and
+                promotional emails.
               </p>
             </form>
           )}

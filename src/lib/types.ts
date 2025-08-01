@@ -1,7 +1,3 @@
- 
-
-
- 
 export interface ISocial_Media_Props {
   className?: string;
   color?: string;
@@ -56,7 +52,7 @@ export interface AuthorNode {
   uri?: string;
   avatar?: AuthorAvatar;
   description?: string;
-  featuredImage?: string; 
+  featuredImage?: string;
   posts: {
     node: Post[];
   };
@@ -115,8 +111,8 @@ export interface Post {
   uri?: string;
   status?: string;
   isSticky?: boolean;
-  author_name: string; 
-  category?: string
+  author_name: string;
+  category?: string;
   title: string; // rendered title
   excerpt: string; // rendered excerpt
   content: string; // rendered content

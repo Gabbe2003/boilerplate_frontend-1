@@ -1,22 +1,22 @@
 // lib/logged-fetch.ts
-"use server";
+'use server';
 
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
-const LOG_FILE = path.join(process.cwd(), "api-logs.txt");
+const LOG_FILE = path.join(process.cwd(), 'api-logs.txt');
 
 function writeLog(message: string) {
   // Don't block the main thread; fire-and-forget
-  fs.promises.appendFile(LOG_FILE, message + "\n").catch(console.error);
+  fs.promises.appendFile(LOG_FILE, message + '\n').catch(console.error);
 }
 
 export async function loggedFetch(
   input: RequestInfo,
-  init?: RequestInit & { context?: string }
+  init?: RequestInit & { context?: string },
 ) {
   const start = Date.now();
-  const url = typeof input === "string" ? input : input.url;
+  const url = typeof input === 'string' ? input : input.url;
   const context = init?.context || 'unknown';
   try {
     const res = await fetch(input, init);

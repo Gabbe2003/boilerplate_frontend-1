@@ -10,12 +10,15 @@ interface RecommendationListProps {
   children: (recommendations: Post[]) => React.ReactNode;
 }
 
-export default function RecommendationList({ currentSlug, children }: RecommendationListProps) {
+export default function RecommendationList({
+  currentSlug,
+  children,
+}: RecommendationListProps) {
   const { posts } = useAppContext();
 
   const filtered = useMemo(
     () => posts.filter((post) => post.slug !== currentSlug),
-    [posts, currentSlug]
+    [posts, currentSlug],
   );
 
   const recommendations: Post[] = useMemo(() => {
@@ -28,7 +31,5 @@ export default function RecommendationList({ currentSlug, children }: Recommenda
 
   return <>{children(recommendations)}</>;
 }
-
-
 
 //fix later, add the pouplar posts

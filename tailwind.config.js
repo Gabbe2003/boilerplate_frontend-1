@@ -19,6 +19,7 @@ module.exports = {
         ring: 'var(--color-ring)',
         input: 'var(--color-input)',
         magenta: '#FFFF00',
+        secBG: 'var(--color-secBG)',
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],

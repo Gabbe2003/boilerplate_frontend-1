@@ -89,10 +89,10 @@ export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
   }, [rendered.length]);
 
   return (
-    <div className="space-y-16 max-w-7xl mx-auto py-12 px-4 mb-10">
+<div className="space-y-16 max-w-7xl mx-auto py-12 px-4 sm:px-6 md:px-8 mb-10">
       {rendered.map((post, i) => {
         const postUrl = `${process.env.NEXT_PUBLIC_SHARENAME || 'https://yoursite.com'}/${post.slug}`;
-        const postExcerpt = stripHtml(post.excerpt);
+        const postExcerpt = stripHtml(post.excerpt!);
 
         return (
           <div
@@ -109,6 +109,8 @@ export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
                 index={i}
               />
               <EndOfPageRecommendations currentSlug={post.slug} />
+              <div className="border-t border-neutral-200 w-full my-8" />
+
             </div>
           </div>
         );

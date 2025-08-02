@@ -1,21 +1,17 @@
 'use client';
 
 import clsx from 'clsx';
-import Link from 'next/link';
-import Image from 'next/image';
-import dynamic from 'next/dynamic';
-import { ArrowRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { AdCard } from './adcard';
 import { ADS } from './adsSideBar';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import PopupModal from '@/app/components/Rule_sub';
 
-const RecommendationList = dynamic(() => import('./RecommendationList'), {
-  ssr: false,
-});
-
-export function Sidebar({ currentSlug }: { currentSlug: string }) {
+export function Sidebar() {
   const [adIndex, setAdIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const AD_ROTATE_INTERVAL = 15000;
 
   useEffect(() => {
@@ -26,79 +22,54 @@ export function Sidebar({ currentSlug }: { currentSlug: string }) {
   }, []);
 
   return (
-    <Card
-      className={clsx(
-        'border border-neutral-100 shadow-sm transition-all duration-500 bg-white/90 overflow-hidden',
-        'rounded-sm',
-      )}
-    >
-      <CardContent className="p-0">
-        <div id="recommendation-list">
-          <RecommendationList currentSlug={currentSlug}>
-            {(recommendations) => {
-              const postsToShow = recommendations.slice(0, 2);
+    <>
+      <Card
+        className={clsx(
+          'shadow-sm transition-all duration-500 overflow-hidden',
+          'rounded-sm',
+        )}
+      >
+        <CardContent className="p-0">
+          <div className="p-3 space-y-4 flex flex-col items-start">
+            {/* Announcement/Call-to-Action */}
+            <section className="w-full p-3 rounded bg-muted flex flex-col gap-2">
+              <span className="text-sm font-medium">
+                Want to get noticed by over 20,000 users? Reach out to us and feature your brand in our newsletter!
+              </span>
+              
+             <Button asChild size="default" className="text-[#fcf6f0] bg-black w-full">
+              <Link href="/advertisement">Advertise Now</Link>
+            </Button>
 
-              return (
-                <ul className="space-y-4 px-2 py-3">
-                  {postsToShow.map((post, idx) => (
-                    <li key={post.slug}>
-                      <Link
-                        href={`/${post.slug}`}
-                        className="group block overflow-hidden rounded border border-neutral-200 bg-[#fafafa] shadow hover:shadow-lg transition-all hover:border-blue-300 relative focus-visible:ring-2 focus-visible:ring-blue-300"
-                      >
-                        {post.featuredImage?.node.sourceUrl && (
-                          <div className="relative w-full aspect-[6/3] overflow-hidden rounded-t">
-                            <Image
-                              src={post.featuredImage.node.sourceUrl}
-                              alt={post.title}
-                              fill
-                              className="object-cover transition-transform duration-300 group-hover:scale-105"
-                              sizes="160px"
-                              style={{ minHeight: 72 }}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#fafafa]/60 via-[#fafafa]/5 to-transparent" />
-                          </div>
-                        )}
-                        {post.categories?.nodes?.[0]?.name && (
-                          <span className="absolute left-3 top-3 z-20 bg-blue-50 text-blue-700 text-[10px] px-1.5 py-0.5 rounded-sm font-medium shadow-sm">
-                            {post.categories.nodes[0].name}
-                          </span>
-                        )}
-                        <div className="px-3 py-2 relative z-10">
-                          <h4 className="font-semibold text-sm mb-0.5 group-hover:text-blue-700 transition truncate">
-                            {post.title}
-                          </h4>
-                          <div className="text-[11px] text-neutral-600 truncate">
-                            By {post.author?.node.name || 'Admin'} ·{' '}
-                            {new Date(post.date).toLocaleDateString('sv-SE', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}
-                          </div>
-                        </div>
-                        <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                          <ArrowRight className="w-4 h-4 text-blue-600" />
-                        </div>
-                      </Link>
-                      {/* Show ad after the first post */}
-                      {idx === 0 && (
-                        <div className="my-2">
-                          <AdCard ad={ADS[adIndex]} />
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                  {/* Optionally, show a second ad at the end */}
-                  <li className="my-2">
-                    <AdCard ad={ADS[(adIndex + 1) % ADS.length]} />
-                  </li>
-                </ul>
-              );
-            }}
-          </RecommendationList>
-        </div>
-      </CardContent>
-    </Card>
+            </section>
+
+            <AdCard ad={ADS[adIndex]} />
+
+            {/* Daily News Modal Button */}
+            <section className="w-full p-3 rounded flex flex-col gap-2">
+              <span className="text-sm font-medium">
+                DAILY NEWS IN YOUR INBOX!
+              </span>
+              <span className="text-sm font-medium">
+                Receive daily news with the most recent updates.
+              </span>
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-black text-[#fcf6f0] w-full"
+                size="default"
+              >
+                Subscribe Now
+              </Button>
+            </section>
+
+            {/* Second Ad */}
+            <AdCard ad={ADS[(adIndex + 1) % ADS.length]} />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Modal */}
+      <PopupModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </>
   );
 }

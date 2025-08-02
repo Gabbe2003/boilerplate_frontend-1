@@ -114,8 +114,8 @@ export interface Post {
   author_name: string;
   category?: string;
   title: string; // rendered title
-  excerpt: string; // rendered excerpt
-  content: string; // rendered content
+  excerpt?: string; // rendered excerpt
+  content?: string; // rendered content
   date: string; // published date
   modified?: string;
   commentCount?: number;

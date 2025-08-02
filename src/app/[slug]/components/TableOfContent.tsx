@@ -10,7 +10,7 @@ export function TocCard({ toc }: { toc: ITOCItem[] }) {
   const [open, setOpen] = useState(true);
 
   return (
-    <Card className="overflow-hidden gap-2 border-none shadow-none bg-gray-100 rounded-sm">
+    <Card className="mt-2 overflow-hidden shadow-none rounded-sm">
       <CardHeader className="flex items-center justify-between px-6">
         <nav className="text-lg font-semibold">Table of Content</nav>
         <Button

@@ -22,6 +22,7 @@ const ONE_DAY = 24 * 60 * 60 * 1000;
 function recently(key: string) {
   if (typeof window === "undefined") return false;
   const ts = localStorage.getItem(key);
+  console.log(`[recently] key: ${key}, value: ${ts}`);
   return ts ? Date.now() - new Date(ts).getTime() < ONE_DAY : false;
 }
 
@@ -36,57 +37,103 @@ export default function PopupModal({
   const [email, setEmail] = React.useState("");
   const [internalOpen, setInternalOpen] = React.useState(false);
   const { logo } = useAppContext();
-  const [timerStarted, setTimerStarted] = React.useState(false);
 
-  // Show modal after 10s if not recently closed/submitted
+const timerStartedRef = React.useRef(false);
+const timerIdRef = React.useRef<NodeJS.Timeout | null>(null);
+
+React.useEffect(() => {
+  let cancelled = false;
   if (
     typeof window !== "undefined" &&
     !recently(MODAL_SUBMIT_KEY) &&
     !recently(MODAL_DISMISS_KEY) &&
     !isOpen &&
     !internalOpen &&
-    !timerStarted
+    !timerStartedRef.current
   ) {
-    setTimerStarted(true);
-    setTimeout(() => setInternalOpen(true), 10000);
+    timerStartedRef.current = true;
+    console.log("[Timer] Starting 10s timer for modal popup...");
+    timerIdRef.current = setTimeout(() => {
+      if (!cancelled) {
+        console.log("[Timer] 10s passed, opening modal via timer!");
+        setInternalOpen(true);
+      }
+    }, 10000);
   }
+  return () => {
+    cancelled = true;
+    if (timerIdRef.current) {
+      clearTimeout(timerIdRef.current);
+      timerIdRef.current = null;
+      console.log("[Timer] Timer cleaned up.");
+    }
+  };
+  // Only depend on isOpen/internalOpen
+}, [isOpen, internalOpen]);
 
-  // Compute visible status without useEffect
-  const shouldOpen = isOpen || internalOpen;
-  if (visible !== shouldOpen) {
-    if (shouldOpen) setVisible(true);
-    else setTimeout(() => setVisible(false), 300);
-  }
 
-  // Instead of useEffect, set the handler directly
-  if (typeof window !== "undefined") {
-    window.setRuleSubmitSuccess = () => {
-      setIsSubmitted(true);
-      onSubmit?.();
-      localStorage.setItem(MODAL_SUBMIT_KEY, new Date().toISOString());
+  // Effect to sync visible state with isOpen/internalOpen, handles fade out
+  React.useEffect(() => {
+    const shouldOpen = isOpen || internalOpen;
+    if (shouldOpen && !visible) {
+      console.log(`[Visibility] Modal becoming visible. isOpen: ${isOpen}, internalOpen: ${internalOpen}`);
+      setVisible(true);
+    }
+    if (!shouldOpen && visible) {
+      console.log("[Visibility] Modal starting fade-out.");
+      const timer = setTimeout(() => {
+        setVisible(false);
+        console.log("[Visibility] Modal now hidden.");
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen, internalOpen, visible]);
+
+  // Effect to set global success handler (for form submit)
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.setRuleSubmitSuccess = () => {
+        setIsSubmitted(true);
+        onSubmit?.();
+        localStorage.setItem(MODAL_SUBMIT_KEY, new Date().toISOString());
+        console.log("[Global] setRuleSubmitSuccess called. Modal submitted. Timestamp saved.");
+      };
+      console.log("[Global] setRuleSubmitSuccess handler attached.");
+    }
+    return () => {
+      if (typeof window !== "undefined") {
+        delete window.setRuleSubmitSuccess;
+        console.log("[Global] setRuleSubmitSuccess handler removed.");
+      }
     };
-  }
+  }, [onSubmit]);
 
+  // Handlers
   const closeModal = () => {
+    console.log("[Action] Closing modal.");
     onClose();
     setInternalOpen(false);
     localStorage.setItem(MODAL_DISMISS_KEY, new Date().toISOString());
+    console.log("[Action] Modal dismissed. Timestamp saved.");
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+      console.log("[Action] Clicked outside modal, closing.");
       closeModal();
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
+      console.log("[Action] Escape pressed, closing modal.");
       closeModal();
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("[Submit] Submitting email:", email);
     try {
       const res = await fetch("/api/subscribe", {
         method: "POST",
@@ -99,7 +146,6 @@ export default function PopupModal({
         if (errorData.issues) {
           alert(
             "Validation errors:\n" +
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               errorData.issues.map((issue: any) => issue.message).join("\n")
           );
         } else {
@@ -108,6 +154,7 @@ export default function PopupModal({
       }
 
       if (res.ok) {
+        console.log("[Submit] Success! Calling setRuleSubmitSuccess.");
         window.setRuleSubmitSuccess?.();
       } else {
         const errorData = await res.json();
@@ -124,38 +171,41 @@ export default function PopupModal({
               : "")
         );
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.error("[Frontend] Network or unexpected error:", err);
       alert(`Network or unexpected error: ${err.message || err}`);
     }
   };
 
-  if (!visible) return null;
+  if (!visible) {
+    console.log("[Render] Modal not visible, returning null.");
+    return null;
+  }
 
+  console.log("[Render] Modal visible, rendering.");
 
-return (
-  <div
-    onClick={handleBackdropClick}
-    onKeyDown={handleKeyDown}
-    tabIndex={-1}
-    className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 transition-opacity duration-300 ${
-      isOpen || internalOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
-    }`}
-  >
+  return (
     <div
-      ref={modalRef}
-      className={`relative flex w-full max-w-3xl transform flex-col rounded-lg bg-white p-0 shadow-lg transition-all duration-300 md:flex-row ${
-        isOpen || internalOpen
-          ? 'scale-100 opacity-100'
-          : 'scale-95 opacity-0'
+      onClick={handleBackdropClick}
+      onKeyDown={handleKeyDown}
+      tabIndex={-1}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 transition-opacity duration-300 ${
+        isOpen || internalOpen ? "opacity-100" : "pointer-events-none opacity-0"
       }`}
     >
+      <div
+        ref={modalRef}
+        className={`relative flex w-full max-w-3xl transform flex-col rounded-lg bg-white p-0 shadow-lg transition-all duration-300 md:flex-row ${
+          isOpen || internalOpen
+            ? "scale-100 opacity-100"
+            : "scale-95 opacity-0"
+        }`}
+      >
         <div className="flex w-full md:w-1/2 items-center justify-center bg-[#EDE5DF] p-6 md:p-8">
           {logo?.sourceUrl ? (
             <Image
               src={logo.sourceUrl}
-              alt={logo.altText ?? 'Logo'}
+              alt={logo.altText ?? "Logo"}
               width={400}
               height={200}
               className="w-full rounded max-w-[300px] md:max-w-[360px] h-auto object-contain"

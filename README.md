@@ -75,3 +75,8 @@ later:
 
 boilerplate_frontend\src\styles\globals.css
 boilerplate_frontend\src\app\components\MonthPouplarPosts.tsx
+
+
+
+Fix: Page for Cat/Tag, & single page for each Cat/Tag
+Fix: Double render for the popupmodal

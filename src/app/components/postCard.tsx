@@ -46,7 +46,7 @@ export function PostCard({ post, className = '' }: PostCardProps) {
       <p>test</p>
       {/* Excerpt */}
       {post.excerpt && (
-        <p className="text-sm text-gray-700 leading-snug mb-1">
+        <p className="text-sm text-gray-700 leading-snug mb-1 break-words">
           {getExcerpt(post.excerpt, 20)}
         </p>
       )}

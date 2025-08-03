@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { X } from 'lucide-react';
-import Image from 'next/image';
-import { useAppContext } from '@/store/AppContext';
+import * as React from "react";
+import { X } from "lucide-react";
+import Image from "next/image";
+import { useAppContext } from "@/store/AppContext";
 
 declare global {
   interface Window {
@@ -15,12 +15,13 @@ type PopupModalProps = {
   onSubmit?: () => void;
 };
 
-const MODAL_SUBMIT_KEY = 'modalFormSubmittedAt';
-const MODAL_DISMISS_KEY = 'modalDismissedAt';
+const MODAL_SUBMIT_KEY = "modalFormSubmittedAt";
+const MODAL_DISMISS_KEY = "modalDismissedAt";
 const ONE_DAY = 24 * 60 * 60 * 1000;
 
 function recently(key: string) {
-  const ts = typeof window !== 'undefined' ? localStorage.getItem(key) : null;
+  if (typeof window === "undefined") return false;
+  const ts = localStorage.getItem(key);
   return ts ? Date.now() - new Date(ts).getTime() < ONE_DAY : false;
 }
 
@@ -30,45 +31,41 @@ export default function PopupModal({
   onSubmit,
 }: PopupModalProps) {
   const modalRef = React.useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = React.useState(isOpen);
   const [isSubmitted, setIsSubmitted] = React.useState(false);
-  const [email, setEmail] = React.useState('');
+  const [email, setEmail] = React.useState("");
   const [internalOpen, setInternalOpen] = React.useState(false);
   const { logo } = useAppContext();
+  const [timerStarted, setTimerStarted] = React.useState(false);
 
-  React.useEffect(() => {
-    if (!recently(MODAL_SUBMIT_KEY) && !recently(MODAL_DISMISS_KEY)) {
-      const timer = setTimeout(() => setInternalOpen(true), 10000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  // Show modal after 10s if not recently closed/submitted
+  if (
+    typeof window !== "undefined" &&
+    !recently(MODAL_SUBMIT_KEY) &&
+    !recently(MODAL_DISMISS_KEY) &&
+    !isOpen &&
+    !internalOpen &&
+    !timerStarted
+  ) {
+    setTimerStarted(true);
+    setTimeout(() => setInternalOpen(true), 10000);
+  }
 
-  React.useEffect(() => {
-    const shouldOpen = isOpen || internalOpen;
+  // Compute visible status without useEffect
+  const shouldOpen = isOpen || internalOpen;
+  if (visible !== shouldOpen) {
     if (shouldOpen) setVisible(true);
-    else {
-      const timeout = setTimeout(() => setVisible(false), 300);
-      return () => clearTimeout(timeout);
-    }
-  }, [isOpen, internalOpen]);
+    else setTimeout(() => setVisible(false), 300);
+  }
 
-  React.useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        closeModal();
-      }
-    };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, []);
-
-  React.useEffect(() => {
+  // Instead of useEffect, set the handler directly
+  if (typeof window !== "undefined") {
     window.setRuleSubmitSuccess = () => {
       setIsSubmitted(true);
       onSubmit?.();
       localStorage.setItem(MODAL_SUBMIT_KEY, new Date().toISOString());
     };
-  }, [onSubmit]);
+  }
 
   const closeModal = () => {
     onClose();
@@ -82,22 +79,28 @@ export default function PopupModal({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape") {
+      closeModal();
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
         if (errorData.issues) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           alert(
-            'Validation errors:\n' +
-              errorData.issues.map((issue: any) => issue.message).join('\n'),
+            "Validation errors:\n" +
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              errorData.issues.map((issue: any) => issue.message).join("\n")
           );
         } else {
           alert(`Subscription failed: ${errorData.message}`);
@@ -108,45 +111,46 @@ export default function PopupModal({
         window.setRuleSubmitSuccess?.();
       } else {
         const errorData = await res.json();
-        // Log all data for debugging
-        console.error('[Frontend] Subscription failed:', errorData);
-        // Show more details in alert (or in your UI as you wish)
+        console.error("[Frontend] Subscription failed:", errorData);
         alert(
-          `Subscription failed (${errorData.path || 'unknown path'}):\n` +
-            `Message: ${errorData.message || 'Unknown error'}\n` +
+          `Subscription failed (${errorData.path || "unknown path"}):\n` +
+            `Message: ${errorData.message || "Unknown error"}\n` +
             (errorData.details
               ? `Details: ${JSON.stringify(errorData.details, null, 2)}`
-              : '') +
-            (errorData.email ? `\nEmail: ${errorData.email}` : '') +
+              : "") +
+            (errorData.email ? `\nEmail: ${errorData.email}` : "") +
             (errorData.rulePayload
               ? `\nPayload: ${JSON.stringify(errorData.rulePayload, null, 2)}`
-              : ''),
+              : "")
         );
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error('[Frontend] Network or unexpected error:', err);
+      console.error("[Frontend] Network or unexpected error:", err);
       alert(`Network or unexpected error: ${err.message || err}`);
     }
   };
 
   if (!visible) return null;
 
-  return (
+
+return (
+  <div
+    onClick={handleBackdropClick}
+    onKeyDown={handleKeyDown}
+    tabIndex={-1}
+    className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 transition-opacity duration-300 ${
+      isOpen || internalOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+    }`}
+  >
     <div
-      onClick={handleBackdropClick}
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 transition-opacity duration-300 ${
-        isOpen || internalOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+      ref={modalRef}
+      className={`relative flex w-full max-w-3xl transform flex-col rounded-lg bg-white p-0 shadow-lg transition-all duration-300 md:flex-row ${
+        isOpen || internalOpen
+          ? 'scale-100 opacity-100'
+          : 'scale-95 opacity-0'
       }`}
     >
-      <div
-        ref={modalRef}
-        className={`relative flex w-full max-w-3xl transform flex-col rounded-lg bg-white p-0 shadow-lg transition-all duration-300 md:flex-row ${
-          isOpen || internalOpen
-            ? 'scale-100 opacity-100'
-            : 'scale-95 opacity-0'
-        }`}
-      >
         <div className="flex w-full md:w-1/2 items-center justify-center bg-[#EDE5DF] p-6 md:p-8">
           {logo?.sourceUrl ? (
             <Image

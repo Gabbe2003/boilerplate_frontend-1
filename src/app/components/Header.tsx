@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAppContext } from '@/store/AppContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DesktopNav from './navigation/DesktopNav';
 import MobileNav from './navigation/MobileNav';
 import PopupModal from './Rule_sub';
@@ -13,6 +13,24 @@ export default function Header() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
   const { logo, links, searchBarHeader, setSearchBarHeader } = useAppContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Category state
+const [categories, setCategories] = useState([]);
+
+useEffect(() => {
+  async function fetchCategories() {
+    try {
+      const res = await fetch('/api/categories');
+      const data = await res.json();
+      setCategories(data.categories || []);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      setCategories([]);
+    }
+  }
+  fetchCategories();
+}, []);
+
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchBarHeader(e.target.value);
@@ -52,6 +70,7 @@ export default function Header() {
               <MobileNav
                 links={links}
                 onNewsletterClick={() => setIsModalOpen(true)}
+                categories={categories}
               />
             </div>
 
@@ -60,6 +79,7 @@ export default function Header() {
               <DesktopNav
                 links={links}
                 onNewsletterClick={() => setIsModalOpen(true)}
+                categories={categories}
               />
               <div className="ml-2">
                 <SearchDrawer

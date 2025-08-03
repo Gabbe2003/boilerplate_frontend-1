@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Link from 'next/link';
@@ -16,9 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import CategoryDropdowns from './CategoryDropdowns';
 
-// Define prop types
 interface LinkItem {
   title: string;
   href: string;
@@ -27,11 +26,13 @@ interface LinkItem {
 interface DesktopNavProps {
   links: LinkItem[];
   onNewsletterClick: () => void;
+  categories: string[];
 }
 
 export default function DesktopNav({
   links,
   onNewsletterClick,
+  categories,
 }: DesktopNavProps) {
   const pathname = usePathname();
   const socialLinks = links.slice(3);
@@ -40,9 +41,25 @@ export default function DesktopNav({
   return (
     <div className="hidden lg:flex items-center gap-3 min-w-0 flex-shrink">
       <NavigationMenu>
-        <CategoryDropdowns />
-
         <NavigationMenuList className="flex items-center gap-3">
+          {/* --- Categories (as text-style buttons) --- */}
+          {categories && categories.length > 0 && (
+            <NavigationMenuItem>
+              <div className="flex gap-1">
+                {categories.map((cat: any) => (
+                  <Link href={`/category/${cat.slug}`} key={cat.id}>
+                    <Button
+                      variant="ghost"
+                      className="px-3 py-1 text-sm font-normal min-w-0 text-black hover:bg-transparent hover:underline transition rounded-none"
+                    >
+                      {cat.name}
+                    </Button>
+                  </Link>
+                ))}
+              </div>
+            </NavigationMenuItem>
+          )}
+
           {/* Social Dropdown */}
           {socialLinks.length > 0 && (
             <NavigationMenuItem
@@ -85,9 +102,9 @@ export default function DesktopNav({
               asChild
               variant="ghost"
               className={`
-            px-3 py-1 text-sm font-normal min-w-0 text-black
-            ${pathname === '/advertisement' ? 'ring-2 ring-gray-300' : ''}
-          `}
+                px-3 py-1 text-sm font-normal min-w-0 text-black
+                ${pathname === '/advertisement' ? 'ring-2 ring-gray-300' : ''}
+              `}
             >
               <Link href="/advertisement">Advertisement</Link>
             </Button>

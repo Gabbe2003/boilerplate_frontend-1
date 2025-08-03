@@ -10,7 +10,7 @@ export default async function PopularPost() {
   const post = await get_popular_post();
 
   return (
-    <div className="w-[70%] mx-auto flex gap-4 mt-4 items-start justify-center">
+    <div className="w-[70%] mx-auto flex gap-4 mt-4 items-start justify-center bg-amber-900">
       {post.map((item, index) => {
         const safeDate = item.date.replace('+00:00', 'Z');
         const formattedDate = new Date(safeDate).toLocaleDateString('en-US', {

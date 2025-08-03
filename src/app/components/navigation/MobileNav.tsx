@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import Link from 'next/link';
@@ -12,7 +13,6 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import CategoryDropdowns from './CategoryDropdowns';
 
 interface LinkItem {
   title: string;
@@ -22,11 +22,13 @@ interface LinkItem {
 interface MobileNavProps {
   links: LinkItem[];
   onNewsletterClick: () => void;
+  categories: string[]; 
 }
 
 export default function MobileNav({
   links,
   onNewsletterClick,
+  categories, // <-- NEW
 }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -61,21 +63,15 @@ export default function MobileNav({
 
           {/* Drawer Header */}
           <div className="flex items-center justify-between border-b p-4">
-            <h2 className="text-lg font-normal text-black">Meny</h2>
             <DrawerClose asChild>
               <Button
                 variant="ghost"
                 onClick={() => setOpen(false)}
-                className="text-black font-normal"
+                className="text-black text-lg font-normal mt-6"
               >
-                Stäng
+                X
               </Button>
             </DrawerClose>
-          </div>
-
-          {/* Categories */}
-          <div className="p-4 border-b">
-            <CategoryDropdowns isMobile />
           </div>
 
           {/* Navigation Links */}
@@ -93,6 +89,26 @@ export default function MobileNav({
                   </Button>
                 </li>
               ))}
+
+              {/* --- CATEGORIES LIST --- */}
+              {categories && categories.length > 0 && (
+                <li>
+                  <div className="border-b my-1" />
+                  <div className="flex flex-col gap-0.5">
+                    {categories.map((cat: any) => (
+                      <Button
+                        asChild
+                        key={cat.id}
+                        variant="ghost"
+                        className="w-full text-left py-2 px-2 text-black font-normal hover:bg-transparent hover:underline rounded-none"
+                        onClick={() => setOpen(false)}
+                      >
+                        <Link href={`/category/${cat.slug}`}>{cat.name}</Link>
+                      </Button>
+                    ))}
+                  </div>
+                </li>
+              )}
 
               {/* Advertisement Button */}
               <li>

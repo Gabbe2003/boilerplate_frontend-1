@@ -12,7 +12,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { MenuIcon } from 'lucide-react';
 import Link from 'next/link';
-import CategoryDropdowns from './CategoryDropdowns';
 
 interface LinkItem {
   title: string;
@@ -66,11 +65,6 @@ export default function MobileMenuDrawer({
               Close
             </Button>
           </DrawerClose>
-        </div>
-
-        {/* Categories */}
-        <div className="p-4 border-b">
-          <CategoryDropdowns isMobile />
         </div>
 
         {/* Navigation Links */}

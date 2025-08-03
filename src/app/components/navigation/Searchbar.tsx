@@ -92,11 +92,10 @@ export default function SearchDrawer({ value, onChange }: SearchDrawerProps) {
         "
       >
         <DrawerTitle className="sr-only">Search</DrawerTitle>
-        <div className="flex items-center justify-between border-b p-4">
-          <h2 className="text-lg font-semibold">Search</h2>
+        <div className="flex items-center text-lg mt-5 justify-between border-b p-4">
           <DrawerClose asChild>
             <Button variant="ghost" onClick={() => setOpen(false)}>
-              Close
+              X
             </Button>
           </DrawerClose>
         </div>

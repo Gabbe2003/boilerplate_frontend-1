@@ -73,7 +73,7 @@ export default function PopularNews({ items = [] }) {
         </div>
 
         {/* Desktop: second row, 5 columns, last item fills last cell if present */}
-        <div className="hidden lg:grid grid-cols-5 gap-2">
+        <div className="hidden lg:grid grid-cols-5 gap-2 ">
           {bottomItems.map((item, idx) =>
             item.type === 'ad' ? (
               <AdGridCard key={`ad-bot-${idx}`} ad={ADS[item.adIndex]} />

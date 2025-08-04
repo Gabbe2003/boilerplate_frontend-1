@@ -10,7 +10,7 @@ export async function getAuthorBySlug(slug: string) {
         avatar {
           url
         }
-        posts(first: 10) {
+        posts(first: 20) {
           nodes {
             id
             title

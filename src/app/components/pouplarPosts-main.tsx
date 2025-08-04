@@ -22,7 +22,7 @@ function shuffleArray(array) {
 }
 
 export default async function Page() {
-  const posts = await getViews('week');
+  const posts = await getViews('month');
   if (!posts.length) return <div>No fun posts!</div>;
 
   const mainPosts = posts.slice(0, 7).map((p) => ({ ...p, type: 'post' }));

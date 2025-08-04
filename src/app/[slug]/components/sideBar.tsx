@@ -23,12 +23,15 @@ export function Sidebar() {
 
   return (
     <>
-      <Card
-        className={clsx(
-          'shadow-sm transition-all duration-500 overflow-hidden',
-          'rounded-sm',
-        )}
-      >
+     <Card
+  className={clsx(
+    'shadow-sm transition-all duration-500 overflow-hidden',
+    'rounded-sm',
+    'border-0',
+    'bg-[var(--secBG)]'    
+  )}
+>
+
         <CardContent className="p-0">
           <div className="p-3 space-y-4 flex flex-col items-start">
             {/* Announcement/Call-to-Action */}

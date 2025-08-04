@@ -1,4 +1,4 @@
-import { getViews } from "@/lib/graph_queries/getViews";
+import { getViews } from "@/lib/graph_queries/getPostByPeriod";
 import PopularNews from "./MonthPouplarPosts";
 import { ADS } from "../[slug]/components/adsSideBar";
 

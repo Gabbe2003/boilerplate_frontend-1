@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import { getLogo } from '@/lib/graph_queries/getLogo'
-import { getAllPosts } from '@/lib/graph_queries/getFullposts'
+import { getAllPosts } from '@/lib/graph_queries/getAllPages'
 import '@/styles/globals.css'
 import { DEFAULT_LINKS } from '@/store/AppContext'
 import RootClientProviders from './client-wrapper'

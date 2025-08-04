@@ -5,7 +5,7 @@ import Link from 'next/link';
 import useSWR from 'swr';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { getViews } from '@/lib/graph_queries/getViews';
+import { getViews } from '@/lib/graph_queries/getPostByPeriod';
 
 // type ViewsPost = {
 //   id: number;

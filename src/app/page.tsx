@@ -2,7 +2,7 @@
 import PostsList from './components/PostsList';
 import React from 'react';
 import ViewedPosts from './components/ViewsPosts';
-import { getViews } from '@/lib/graph_queries/getViews';
+import { getViews } from '@/lib/graph_queries/getPostByPeriod';
 import PopularNews from './components/pouplarPosts-main';
 
 export const revalidate = 3000; 

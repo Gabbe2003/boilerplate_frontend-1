@@ -35,7 +35,7 @@
     "src/app/[slug]/page.jsx",
     "src/app/NotFound.tsx",
     "src/app/page.tsx",
-    "src/lib/graph_queries/getFullposts.ts",
+    "src/lib/graph_queries/getAllPages.ts",
     ".next/types/**/*.ts"
   ],
   "exclude": [

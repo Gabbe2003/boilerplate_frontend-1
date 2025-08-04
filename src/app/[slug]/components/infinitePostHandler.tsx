@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
-import { getPosts } from "@/lib/graph_queries/getPosts";
+import { getPosts } from "@/lib/graph_queries/getRecommendationPost";
 import { load } from "cheerio";
 import type { ITOCItem, Post } from "@/lib/types";
 

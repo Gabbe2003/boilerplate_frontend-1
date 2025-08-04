@@ -1,4 +1,9 @@
 
+fixa. >  import Doc from '../components/icons/doc';
+
+
+
+
                     **** TO DOOO ****
 
 We start be fixing the component section (Done)
@@ -87,6 +92,8 @@ later:
 1. Also Also runtime = edge can increase performance - Kerlos (Done) We can add it later, we can also check the erros and the prons. it will be lightning fast, TTFB, performance, 
 
 
+
+header: Fix the pages, simpler
 
 
 boilerplate_frontend\src\styles\globals.css

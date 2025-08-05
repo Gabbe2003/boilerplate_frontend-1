@@ -1,4 +1,3 @@
- 
 const page = () => {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-blue-50">
@@ -7,7 +6,8 @@ const page = () => {
           Work Submissions
         </h1>
         <p className="text-lg text-gray-600 mb-6">
-          Thank you for your interest in joining our team!<br />
+          Thank you for your interest in joining our team!
+          <br />
           <span className="block mt-2 font-semibold text-red-500">
             We are not hiring at the moment.
           </span>
@@ -18,7 +18,8 @@ const page = () => {
             No open positions right now. But dont go far!
           </p>
           <p className="text-gray-500">
-            Keep an eye on this page for future opportunities. We update this page weekly
+            Keep an eye on this page for future opportunities. We update this
+            page weekly
           </p>
         </div>
       </div>

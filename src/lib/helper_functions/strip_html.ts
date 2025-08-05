@@ -1,9 +1,4 @@
-
-
-
-
-
 export function stripHtml(html: string) {
-    if (!html) return "";
-    return html.replace(/<[^>]*>?/gm, "").trim();
+  if (!html) return '';
+  return html.replace(/<[^>]*>?/gm, '').trim();
 }

@@ -18,8 +18,16 @@ module.exports = {
         border: 'var(--color-border)',
         ring: 'var(--color-ring)',
         input: 'var(--color-input)',
-        magenta: '#FFFF00', 
-
+        magenta: '#FFFF00',
+        secBG: 'var(--color-secBG)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
+      screens: {
+        xlmin: '1100px',
+        xlmax: { max: '1440px' },
+        xl: '1440px',
       },
       borderRadius: {
         sm: 'var(--radius-sm)',

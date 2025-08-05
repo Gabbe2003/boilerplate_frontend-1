@@ -1,8 +1,6 @@
-import { revalidateTag } from "next/cache";
+import { revalidateTag } from 'next/cache';
 
-export async function POST(
-  request: Request
-) {
+export async function POST(request: Request) {
   try {
     const { slug } = await request.json();
     await revalidateTag(`author-${slug}`);
@@ -10,7 +8,7 @@ export async function POST(
   } catch (err) {
     return Response.json(
       { revalidated: false, error: (err as Error).message },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

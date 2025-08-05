@@ -19,14 +19,13 @@ export interface LinkItem {
 const host = process.env.NEXT_PUBLIC_HOSTNAME || '';
 
 export const DEFAULT_LINKS = [
- {
-    title: host ? `About ${host}` : 'About',
-    href: '/about', 
-  },
   { title: 'Contact', href: '/contact' },
-  { title: 'Advertisement', href: '/advertisement' },
+  {
+    title: host ? `About ${host}` : 'About',
+    href: '/about',
+  },
   { title: 'Privacy policy', href: '/privacy' },
-  { title: 'Social Media', href: '#footer' }, 
+  { title: 'Social Media', href: '#footer' },
   { title: 'Archive', href: '/archive' },
 ];
 
@@ -64,22 +63,22 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   const [searchBarHeader, setSearchBarHeader] = useState('');
   const [tagline, setTagline] = useState('');
 
-useEffect(() => {
-  const graphqlEndpoint = `${process.env.NEXT_PUBLIC_SHARENAME}/graphql`;
+  useEffect(() => {
+    const graphqlEndpoint = `${process.env.NEXT_PUBLIC_SHARENAME}/graphql`;
 
-  fetch(graphqlEndpoint, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      query: `{ generalSettings { description } }`
-    }),
-  })
-    .then(res => res.json())
-    .then(data => setTagline(data?.data?.generalSettings?.description || ''))
-    .catch(() => setTagline(''));
-}, []);
-
-
+    fetch(graphqlEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `{ generalSettings { description } }`,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) =>
+        setTagline(data?.data?.generalSettings?.description || ''),
+      )
+      .catch(() => setTagline(''));
+  }, []);
 
   return (
     <AppContext.Provider

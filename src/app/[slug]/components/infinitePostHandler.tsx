@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useEffect, useRef, useState, useCallback } from "react";
 import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
 import { getPosts } from "@/lib/graph_queries/getRecommendationPost";
@@ -10,13 +9,18 @@ import type { ITOCItem, Post } from "@/lib/types";
 const extractHeadingsClient = (html: string): { updatedHtml: string; toc: ITOCItem[] } => {
   const $ = load(html);
   const toc: ITOCItem[] = [];
-  $("h2, h3, h4, h5, h6").each((_, el) => {
+  $('h2, h3, h4, h5, h6').each((_, el) => {
     const $el = $(el);
     const tag = el.tagName.toLowerCase();
     const level = parseInt(tag.charAt(1), 10);
     const text = $el.text().trim();
-    const id = $el.attr("id") || text.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
-    $el.attr("id", id);
+    const id =
+      $el.attr('id') ||
+      text
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w-]+/g, '');
+    $el.attr('id', id);
     toc.push({ text, id, level });
   });
   return { updatedHtml: $.root().html()!, toc };

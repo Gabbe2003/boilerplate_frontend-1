@@ -70,11 +70,14 @@ export default function ViewedPosts() {
       {!isLoading && posts.length > 0 && (
         <ul className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
           {posts.map((post) => {
-            const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            });
+            const formattedDate = new Date(post.date).toLocaleDateString(
+              'en-US',
+              {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              },
+            );
 
             return (
               <li key={post.id} className="rounded-2xl">

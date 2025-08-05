@@ -26,8 +26,8 @@ export function normalizeFlatFeaturedImage(post: Post): Post {
         node: {
           sourceUrl: FEATURED_IMAGE as string,
           altText: FEATURED_ALT,
-        }
-      }
+        },
+      },
     };
   }
 
@@ -39,14 +39,13 @@ export function normalizeFlatFeaturedImage(post: Post): Post {
         node: {
           ...updated.featuredImage.node,
           altText: FEATURED_ALT,
-        }
-      }
+        },
+      },
     };
   }
 
   return updated;
 }
-
 
 export function normalizeFeaturedImage(post: Post): Post {
   const updated: Post = { ...post };

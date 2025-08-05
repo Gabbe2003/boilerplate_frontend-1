@@ -1,7 +1,6 @@
 import { ISocial_Media_Props } from '@/lib/types';
 import React from 'react';
 
- 
 const Twitter: React.FC<ISocial_Media_Props> = ({
   className,
   color = 'currentColor',

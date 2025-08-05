@@ -1,7 +1,3 @@
- 
-
-
- 
 export interface ISocial_Media_Props {
   className?: string;
   color?: string;
@@ -56,7 +52,7 @@ export interface AuthorNode {
   uri?: string;
   avatar?: AuthorAvatar;
   description?: string;
-  featuredImage?: string; 
+  featuredImage?: string;
   posts: {
     node: Post[];
   };
@@ -115,16 +111,13 @@ export interface Post {
   uri?: string;
   status?: string;
   isSticky?: boolean;
-  author_name: string; 
-
-
-  title: string; // rendered title
-  excerpt: string; // rendered excerpt
-  content: string; // rendered content
-
-  date: string; // published date
+  author_name: string;
+  category?: string;
+  title: string; 
+  excerpt?: string;
+  content?: string;
+  date: string;
   modified?: string;
-
   commentCount?: number;
 
   featuredImage?: {
@@ -149,6 +142,8 @@ export interface Post {
 
   seo?: SEO;
 }
+
+
 export interface GraphQLError {
   message: string;
   locations?: { line: number; column: number }[];
@@ -159,4 +154,52 @@ export interface GraphQLError {
 export interface Logo {
   sourceUrl: string;
   altText?: string | null;
+}
+
+export interface ICategory {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  count: number;
+  image?: {
+    sourceUrl: string;
+    altText?: string | null;
+  } | null;
+  parent?: {
+    node: {
+      id: string;
+      name: string;
+      slug: string;
+    }
+  } | null;
+  posts: {
+    nodes: Array<{
+      id: string;
+      title: string;
+      slug: string;
+      excerpt: string;
+      date: string;
+      featuredImage?: {
+        node: {
+          sourceUrl: string;
+          altText?: string | null;
+        } | null;
+      } | null;
+      author?: {
+        node?: {
+          id: string;
+          name: string;
+          slug: string;
+          avatar?: {
+            url?: string;
+          };
+        };
+      };
+    }>;
+    pageInfo: {
+      hasNextPage: boolean;
+      endCursor: string;
+    };
+  };
 }

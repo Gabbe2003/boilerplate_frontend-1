@@ -1,4 +1,4 @@
-"use server";
+'use server';
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 
 export async function getAuthorBySlug(slug: string) {
@@ -10,7 +10,7 @@ export async function getAuthorBySlug(slug: string) {
         avatar {
           url
         }
-        posts(first: 10) {
+        posts(first: 20) {
           nodes {
             id
             title
@@ -31,23 +31,23 @@ export async function getAuthorBySlug(slug: string) {
 
   try {
     const res = await fetch(GRAPHQL_URL, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ query, variables: { slug } }),
-      cache: "force-cache", 
-      next: { revalidate: 600, tags: [`author-${slug}`] }, 
+      cache: 'force-cache',
+      next: { revalidate: 600, tags: [`author-${slug}`] },
     });
 
     if (!res.ok) throw new Error(`Network error: ${res.status}`);
 
     const { data, errors } = await res.json();
     if (errors) throw new Error(JSON.stringify(errors));
-    
+
     return data.user;
   } catch (error) {
-    console.error("Error occurred in getAuthorBySlug:", error);
+    console.error('Error occurred in getAuthorBySlug:', error);
     throw error;
   }
 }

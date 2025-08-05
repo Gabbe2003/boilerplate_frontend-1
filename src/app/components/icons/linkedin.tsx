@@ -1,6 +1,5 @@
 import { ISocial_Media_Props } from '@/lib/types';
 import React from 'react';
- 
 
 const LinkedIn: React.FC<ISocial_Media_Props> = ({
   className,

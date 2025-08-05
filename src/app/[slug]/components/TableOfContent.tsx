@@ -5,18 +5,18 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ITOCItem } from '@/lib/types';
- 
+
 export function TocCard({ toc }: { toc: ITOCItem[] }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(true); 
 
   return (
-    <Card className="overflow-hidden gap-2 border-none shadow-none bg-gray-100 rounded-sm">
+    <Card className="mt-2 overflow-hidden shadow-none rounded-sm">
       <CardHeader className="flex items-center justify-between px-6">
         <nav className="text-lg font-semibold">Table of Content</nav>
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setOpen(o => !o)}
+          onClick={() => setOpen((o) => !o)}
           className="cursor-pointer"
         >
           {open ? 'Hide' : 'Show'}
@@ -31,7 +31,7 @@ export function TocCard({ toc }: { toc: ITOCItem[] }) {
         >
           {!!toc.length && (
             <ul className="space-y-2 px-6 list-disc text-black">
-              {toc.map(item => (
+              {toc.map((item) => (
                 <li key={item.id}>
                   <a
                     href={`#${item.id}`}

@@ -64,12 +64,12 @@ export function InfinitePosts(initialPost: Post & { updatedHtml: string; toc: IT
       try {
         if (nextSlug) post = await getPostBySlug(nextSlug);
         if (post) {
-          const { updatedHtml, toc } = extractHeadingsClient(post.content);
-          setRendered((prev) =>
-            prev.some((p) => p.slug === post.slug)
-              ? prev
-              : [...prev, { ...post, updatedHtml, toc }]
-          );
+          const { updatedHtml, toc } = extractHeadingsClient(String(post.content));
+            setRendered((prev) =>
+              prev.some((p) => p.slug === post?.slug)
+                ? prev
+                : [...prev, { ...(post as Post), updatedHtml, toc }]
+            );
         }
       } finally {
         setQueue((q) => q.slice(1));

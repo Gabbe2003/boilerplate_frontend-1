@@ -68,7 +68,7 @@ export default async function Page({
     const { slug } = await params;
     const post: Post | null = await getPostBySlug(slug);
     if (!post) return;
-    const { updatedHtml, toc } = await extractHeadings(post.content);
+    const { updatedHtml, toc } = await extractHeadings(String(post.content));
 
     return <SinglePost initialPost={{ ...post, updatedHtml, toc }} />;
   } catch (e) {

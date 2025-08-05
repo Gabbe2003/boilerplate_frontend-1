@@ -13,7 +13,7 @@ import { ChevronRight } from "lucide-react";
 import TagPosts from "./TagPosts"; // Import your client tag posts component!
 
 interface TagPageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>;
 }
 
 export default async function TagPage({ params }: TagPageProps) {
@@ -91,7 +91,7 @@ export default async function TagPage({ params }: TagPageProps) {
       {/* Posts */}
       <div className="lg:col-span-2 flex flex-col">
         {tag.posts.nodes.length === 0 ? (
-          <div className="mb-8 p-6 rounded-2xl border border-gray-200 bg-gray-50 text-center">
+          <div className="mb-8 p-6 rounded-sm border border-gray-200 bg-gray-50 text-center">
             <p className="text-lg font-semibold text-gray-600 mb-4">
               No posts found with this tag.
             </p>

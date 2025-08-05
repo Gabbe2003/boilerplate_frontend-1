@@ -67,27 +67,26 @@ export function ArticleWithContent({
           </p>
         )}
 
-        <div className="flex items-center justify-between mt-5 mb-1">
-          <span className="text-sm flex items-center gap-2">
-            <AuthorInfo author={post.author} />
-            By
-            <Link href={`/author/${post.author?.node.name || "admin"}`} className="text-blue-700">
-              <strong>{post.author?.node.name || "Admin"}</strong>
-            </Link>
-          </span>
-          <ShareButtonsClient postUrl={postUrl} postTitle={post.title} postExcerpt={postExcerpt} />
-        </div>
-      </div>
+<div className="flex flex-row flex-wrap items-center justify-center sm:justify-between gap-3 mt-1 mb-1">
+  <span className="text-sm flex items-center gap-2">
+    <AuthorInfo author={post.author} />
+    By
+    <Link href={`/author/${post.author?.node.name || 'admin'}`} className="text-blue-700">
+      <strong>{post.author?.node.name || 'Admin'}</strong>
+    </Link>
+  </span>
+  <ShareButtonsClient postUrl={postUrl} postTitle={post.title} postExcerpt={postExcerpt} />
+</div>
+  </div>
 
   {/* Featured Image */}
   {post.featuredImage?.node.sourceUrl && (
-    <div className="w-full mb-3">
+    <div className="w-full mb-3 h-56 sm:h-80 md:h-[350px] relative">
       <Image
         src={post.featuredImage.node.sourceUrl}
         alt={post.featuredImage.node.altText || ''}
-        className="rounded-sm shadow-sm w-full h-auto object-cover"
-        width={750}
-        height={500}
+        className="rounded-sm shadow-sm w-full h-full object-cover"
+        fill
         priority
         sizes="(max-width: 768px) 100vw, 750px"
       />
@@ -131,19 +130,13 @@ export function ArticleWithContent({
       dangerouslySetInnerHTML={{ __html: post.updatedHtml }}
     />
 
-    {/* Sidebar/Aside: Stacks below on mobile, right side on desktop */}
-    <aside className="space-y-8 lg:col-span-1 mt-10 bg-[var(--secBG)] px-0 sm:px-2">
-      <div
-        style={{ height: 0, minHeight: 0 }}
-        className="hidden lg:block"
-        aria-hidden="true"
-      />
+    {/* Sidebar/Aside: Hidden on mobile, right side on desktop */}
+    <aside className="hidden lg:block space-y-8 lg:col-span-1 mt-10 bg-[var(--secBG)] px-0 sm:px-2">
       <PostTOC toc={post.toc} />
       <Sidebar />
     </aside>
   </div>
 </article>
-
 );
 };
 

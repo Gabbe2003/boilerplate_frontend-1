@@ -6,12 +6,16 @@ import { Sidebar } from "./sideBar";
 import { PostTOC } from "./TOCContent";
 import EndOfPageRecommendations from "./EndOfPageRecommendations";
 import InfiniteScrollClient from "./InfinitePostClient";
+import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";
 
 // Dynamically import the client component for infinite scroll
 
 export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
   const postUrl = `${process.env.NEXT_PUBLIC_SHARENAME || "https://yoursite.com"}/${initialPost.slug}`; // fix later
-  const postExcerpt = initialPost.excerpt.replace(/<[^>]+>/g, "").trim();
+  const postExcerpt = initialPost.excerpt!.replace(/<[^>]+>/g, "").trim();
+
+
+  update_viewed_post(String(initialPost.databaseId)); // Update the post view count
 
   return (
     <div className="space-y-16 max-w-7xl mx-auto py-12 px-4 mb-10">
@@ -34,8 +38,9 @@ export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
             className="hidden lg:block"
             aria-hidden="true"
           />
+
           <PostTOC toc={initialPost.toc} />
-          <Sidebar currentSlug={initialPost.slug} />
+          <Sidebar />
         </aside>
       </div>
       {/* The client-only infinite scroll lives here */}

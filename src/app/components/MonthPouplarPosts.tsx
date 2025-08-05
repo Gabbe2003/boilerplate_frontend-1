@@ -2,11 +2,11 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { AdCard } from '../[slug]/components/adcard';
-import { Ad, ADS } from '../[slug]/components/adsSideBar';
+import { Ad, ADS } from './ads/adsContent';
 import { useAppContext } from '@/store/AppContext';
 import { Post } from '@/lib/types';
 import { PostCard } from './postCard';
+import { AdCard } from './ads/adcard';
 
 // --- Feed item discriminated union types ---
 type AdItem = {

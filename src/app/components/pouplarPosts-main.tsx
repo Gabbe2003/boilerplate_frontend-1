@@ -1,6 +1,6 @@
 import { getViews } from "@/lib/graph_queries/getPostByPeriod";
 import PopularNews from "./MonthPouplarPosts";
-import { Ad, ADS } from "../[slug]/components/adsSideBar";
+import { Ad, ADS } from "./ads/adsContent";
 import { Post } from '@/lib/types';
 
 // --- Feed item discriminated union types ---

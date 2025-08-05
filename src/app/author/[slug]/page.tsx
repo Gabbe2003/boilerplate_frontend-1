@@ -39,19 +39,6 @@ export default async function AuthorInfo({
   return (
     <div className="container mx-auto py-8 px-4">
       {/* Author header (like category image) */}
-      {author.avatar?.url && (
-        <div className="mb-2 w-full flex justify-center">
-          <Image
-            src={author.avatar.url}
-            alt={author.name}
-            width={160}
-            height={160}
-            className="rounded-full object-cover shadow border bg-white"
-            style={{ maxHeight: 160, maxWidth: 160 }}
-            priority
-          />
-        </div>
-      )}
       {/* <h3>{author}</h3> */}
 
       {/* Title left-aligned */}
@@ -70,7 +57,7 @@ export default async function AuthorInfo({
               <BreadcrumbItem>
                 {item.current ? (
                   <BreadcrumbLink
-                    className="font-semibold text-primary underline underline-offset-4 cursor-default"
+                  className="font-semibold text-primary underline underline-offset-4 cursor-default"
                   >
                     {item.label}
                   </BreadcrumbLink>
@@ -90,6 +77,7 @@ export default async function AuthorInfo({
         </BreadcrumbList>
       </Breadcrumb>
 
+                
       {/* Description (like category.description) */}
       <div className="text-gray-700 mb-6 mt-6">{author.description}</div>
       <div className="text-xs text-gray-500 mb-4">

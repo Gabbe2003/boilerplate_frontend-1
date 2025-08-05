@@ -13,7 +13,7 @@ import { ChevronRight } from "lucide-react";
 import TagPosts from "./TagPosts"; // Import your client tag posts component!
 
 interface TagPageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }
 
 export default async function TagPage({ params }: TagPageProps) {

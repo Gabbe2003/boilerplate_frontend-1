@@ -203,3 +203,18 @@ export interface ICategory {
     };
   };
 }
+
+
+export type AdItem = {
+  type: 'ad';
+  adIndex: number; // Index in your ADS array
+  id: string | number;
+};
+
+// 2. Type for a single post item in the feed:
+export type PostItem = Post & {
+  type: 'post';
+};
+
+// 3. Union type for all possible items:
+export type FeedItem = AdItem | PostItem;

@@ -7,14 +7,17 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { getViews } from '@/lib/graph_queries/getPostByPeriod';
 
-// type ViewsPost = {
-//   id: number;
-//   title: string;
-//   slug: string;
-//   featuredImage: string;
-//   date: string;
-//   author_name: string;
-// };
+// If you know your post shape, uncomment and update this type!
+/*
+type ViewsPost = {
+  id: number;
+  title: string;
+  slug: string;
+  featuredImage: string | { node: { sourceUrl: string } };
+  date: string;
+  author_name: string;
+};
+*/
 
 const fetcher = (period: 'week' | 'month') => getViews(period);
 
@@ -70,6 +73,12 @@ export default function ViewedPosts() {
       {!isLoading && posts.length > 0 && (
         <ul className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
           {posts.map((post) => {
+            // Normalize image src: handle both string and object with node.sourceUrl
+            const imgSrc =
+              typeof post.featuredImage === 'string'
+                ? post.featuredImage
+                : post.featuredImage?.node?.sourceUrl ?? '';
+
             const formattedDate = new Date(post.date).toLocaleDateString(
               'en-US',
               {
@@ -84,7 +93,7 @@ export default function ViewedPosts() {
                 <Link href={post?.slug}>
                   <div className="relative overflow-hidden rounded-tl-2xl rounded-tr-2xl rounded-br-2xl">
                     <Image
-                      src={post.featuredImage || ''}
+                      src={imgSrc}
                       width={300}
                       height={200}
                       alt={post.title}

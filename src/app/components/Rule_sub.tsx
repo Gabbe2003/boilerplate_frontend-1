@@ -146,7 +146,8 @@ React.useEffect(() => {
         if (errorData.issues) {
           alert(
             "Validation errors:\n" +
-              errorData.issues.map((issue: unknown) => issue.message).join("\n")
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              errorData.issues.map((issue: any) => issue.message).join("\n")
           );
         } else {
           alert(`Subscription failed: ${errorData.message}`);
@@ -171,7 +172,8 @@ React.useEffect(() => {
               : "")
         );
       }
-    } catch (err: unknown) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       console.error("[Frontend] Network or unexpected error:", err);
       alert(`Network or unexpected error: ${err.message || err}`);
     }

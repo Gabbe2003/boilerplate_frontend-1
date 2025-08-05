@@ -36,10 +36,12 @@ useEffect(() => {
     setSearchBarHeader(e.target.value);
   };
 
+  //   <section className="w-[90%] lg:w-[70%] mx-auto py-8">
+
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
-        <div className="w-[70%] mx-auto flex items-center justify-between py-1">
+        <div className="w-[90%] lg:w-[70%] mx-auto flex items-center justify-between py-1">
           {/* Logo */}
           <div className="flex flex-col items-start">
             <Link href="/" className="flex-shrink-0">

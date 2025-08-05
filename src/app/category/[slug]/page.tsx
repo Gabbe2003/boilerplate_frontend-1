@@ -55,7 +55,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           alt={category.image.altText || category.name}
           width={160}
           height={160}
-          className="rounded-full object-cover shadow border bg-white"
+          className=" object-cover shadow border bg-white"
           style={{ maxHeight: 160, maxWidth: 160 }}
           priority
         />
@@ -112,7 +112,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       {/* Posts */}
       <div className="lg:col-span-2 flex flex-col">
         {category.posts.nodes.length === 0 ? (
-          <div className="mb-8 p-6 rounded-2xl border border-gray-200 bg-gray-50 text-center">
+          <div className="mb-8 p-6 rounded-sm border border-gray-200 bg-gray-50 text-center">
             <p className="text-lg font-semibold text-gray-600 mb-4">
               No posts found in this category.
             </p>

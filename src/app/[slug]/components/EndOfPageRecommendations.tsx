@@ -21,7 +21,7 @@ export default function EndOfPageRecommendations({
             const postsToShow = recommendations.slice(0, 6);
             return (
               <>
-                <p className="px-4 pt-4 pb-2 text-sm font-semibold text-blue-800 tracking-tight">
+                <p className="px-2 pt-4 pb-2 text-sm font-semibold tracking-tight">
                   More from us
                 </p>
                 <ul
@@ -35,10 +35,10 @@ export default function EndOfPageRecommendations({
                     <li key={post.slug} className="h-full">
                       <Link
                         href={`/${post.slug}`}
-                        className="group flex flex-col h-full overflow-hidden shadow hover:shadow-lg transition-all hover:border-blue-300 relative focus-visible:ring-2 focus-visible:ring-blue-300 rounded"
+                        className="group flex flex-col h-full overflow-hidden shadow hover:shadow-lg transition-all hover:border-blue-300 relative focus-visible:ring-2 focus-visible:ring-blue-300"
                       >
                         {post.featuredImage?.node.sourceUrl && (
-                          <div className="relative w-full aspect-[6/3] overflow-hidden rounded-t">
+                          <div className="relative w-full aspect-[6/3] overflow-hidden">
                             <Image
                               src={post.featuredImage.node.sourceUrl}
                               alt={post.title}

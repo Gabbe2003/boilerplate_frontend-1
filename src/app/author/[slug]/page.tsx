@@ -100,7 +100,7 @@ export default async function AuthorInfo({
                 return (
                   <li
                     key={post.id}
-                    className="border rounded-2xl shadow-md hover:shadow-lg transition bg-white flex flex-col overflow-hidden group"
+                    className="border rounded-sm shadow-md hover:shadow-lg transition bg-white flex flex-col overflow-hidden group"
                   >
                     <Link
                       href={`/posts/${post.slug}`}

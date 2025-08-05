@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import { Breadcrumb, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import Link from "next/link";
@@ -46,10 +45,8 @@ export function ArticleWithContent({
   aboveImageRef?: React.Ref<HTMLDivElement>;
   index: number;
 }) {
-  // No useEffect or any client-only code!
-
   return (
-    <article className="lg:col-span-2 flex flex-col">
+    <article className="max-w-7xl mx-auto px-4 md:px-8 py-8 mb-10">
       {/* Title, Excerpt, Author+Share */}
       <div ref={aboveImageRef ?? undefined} className="mb-2">
         {index === 0 ? (
@@ -67,17 +64,17 @@ export function ArticleWithContent({
           </p>
         )}
 
-<div className="flex flex-row flex-wrap items-center justify-center sm:justify-between gap-3 mt-1 mb-1">
-  <span className="text-sm flex items-center gap-2">
-    <AuthorInfo author={post.author} />
-    By
-    <Link href={`/author/${post.author?.node.name || 'admin'}`} className="text-blue-700">
-      <strong>{post.author?.node.name || 'Admin'}</strong>
-    </Link>
-  </span>
-  <ShareButtonsClient postUrl={postUrl} postTitle={post.title} postExcerpt={postExcerpt} />
-</div>
-  </div>
+        <div className="flex flex-col sm:flex-row sm:flex-nowrap items-start sm:items-center justify-center sm:justify-between gap-3 mt-4 mb-1 min-w-0">
+          <span className="text-sm flex items-center gap-2 text-center sm:text-left min-w-0">
+            <AuthorInfo author={post.author} />
+            By
+            <Link href={`/author/${post.author?.node.name || 'admin'}`} className="text-blue-700">
+              <strong>{post.author?.node.name || 'Admin'}</strong>
+            </Link>
+          </span>
+          <ShareButtonsClient postUrl={postUrl} postTitle={post.title} postExcerpt={postExcerpt} />
+        </div>
+        </div>
 
   {/* Featured Image */}
    {post.featuredImage?.node.sourceUrl && (
@@ -112,7 +109,8 @@ export function ArticleWithContent({
       </time>
     </span>
   </div>
-  <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+
+  <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mt-6">
     {/* Post Content */}
     <section
       className="
@@ -130,19 +128,16 @@ export function ArticleWithContent({
       dangerouslySetInnerHTML={{ __html: post.updatedHtml }}
     />
 
-   <aside className="space-y-8 lg:col-span-1 bg-[var(--secBG)] px-0 sm:px-2">
-      <div
-        style={{ height: 0, minHeight: 0 }}
-        className="hidden lg:block"
-        aria-hidden="true"
-      />
-      <PostTOC toc={post.toc} />
-      <Sidebar />
-    </aside>
+  <aside className="hidden lg:block space-y-0 lg:col-span-1 bg-[var(--secBG)] px-0 sm:px-2">
+  <div
+    style={{ height: 0, minHeight: 0 }}
+    className="hidden lg:block"
+    aria-hidden="true"
+  />
+  <PostTOC toc={post.toc} />
+  <Sidebar />
+</aside>
   </div>
 </article>
 );
 };
-
-// #F1D7BB
-// #fcf6f0

@@ -2,8 +2,6 @@
 
 import type { PostWithTOC } from "@/lib/types";
 import { ArticleWithContent } from "./ArticleWithContent";
-import { Sidebar } from "./sideBar";
-import { PostTOC } from "./TOCContent";
 import EndOfPageRecommendations from "./EndOfPageRecommendations";
 import InfiniteScrollClient from "./InfinitePostClient";
 import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";

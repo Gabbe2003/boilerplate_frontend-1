@@ -110,7 +110,6 @@ export default async function TagPage({ params }: TagPageProps) {
       {/* Sidebar */}
       <aside className="w-full h-full hidden lg:block">
         <div className="sticky top-24 w-[60%]">
-          <Sidebar />
         </div>
       </aside>
     </div>

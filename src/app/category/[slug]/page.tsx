@@ -21,8 +21,9 @@ params: Promise<{ slug: string }>;
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   let category: ICategory | null = null;
+  const {slug} = await params;
   try {
-    category = await getCategoryBySlug(await params.slug);
+    category = await getCategoryBySlug(slug);
   } catch (e) {
     console.error(e);
     return (

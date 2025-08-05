@@ -80,13 +80,14 @@ export function ArticleWithContent({
   </div>
 
   {/* Featured Image */}
-  {post.featuredImage?.node.sourceUrl && (
-    <div className="w-full mb-3 h-56 sm:h-80 md:h-[350px] relative">
+   {post.featuredImage?.node.sourceUrl && (
+    <div className="w-full mb-3">
       <Image
         src={post.featuredImage.node.sourceUrl}
         alt={post.featuredImage.node.altText || ''}
-        className="rounded-sm shadow-sm w-full h-full object-cover"
-        fill
+        className="rounded-sm shadow-sm w-full h-auto object-cover"
+        width={750}
+        height={500}
         priority
         sizes="(max-width: 768px) 100vw, 750px"
       />
@@ -94,7 +95,7 @@ export function ArticleWithContent({
   )}
 
   {/* Breadcrumbs + Published Date Row */}
-  <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-2 text-sm text-muted-foreground my-2">
+   <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-2 text-sm text-muted-foreground my-2">
     <Breadcrumb>
       <BreadcrumbItem>
         <Link href="/" className="text-blue-700">
@@ -111,7 +112,6 @@ export function ArticleWithContent({
       </time>
     </span>
   </div>
-
   <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
     {/* Post Content */}
     <section
@@ -130,8 +130,12 @@ export function ArticleWithContent({
       dangerouslySetInnerHTML={{ __html: post.updatedHtml }}
     />
 
-    {/* Sidebar/Aside: Hidden on mobile, right side on desktop */}
-    <aside className="hidden lg:block space-y-8 lg:col-span-1 mt-10 bg-[var(--secBG)] px-0 sm:px-2">
+   <aside className="space-y-8 lg:col-span-1 bg-[var(--secBG)] px-0 sm:px-2">
+      <div
+        style={{ height: 0, minHeight: 0 }}
+        className="hidden lg:block"
+        aria-hidden="true"
+      />
       <PostTOC toc={post.toc} />
       <Sidebar />
     </aside>

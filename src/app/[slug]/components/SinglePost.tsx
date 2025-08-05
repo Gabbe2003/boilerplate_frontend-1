@@ -20,7 +20,7 @@ export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
   return (
     <div className="space-y-16 max-w-7xl mx-auto py-12 px-4 mb-10">
       <div
-        className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
         data-index={0}
       >
         <div className="col-span-1 lg:col-span-2 flex flex-col gap-8">
@@ -38,9 +38,6 @@ export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
             className="hidden lg:block"
             aria-hidden="true"
           />
-
-          <PostTOC toc={initialPost.toc} />
-          <Sidebar />
         </aside>
       </div>
       {/* The client-only infinite scroll lives here */}

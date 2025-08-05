@@ -27,7 +27,7 @@ export function PostCard({ post, className = '' }: PostCardProps) {
   return (
     <div className={`flex flex-col shadow bg-[#FFF8F2] w-full overflow-hidden ${className}`}>
       {/* Image fills the top of the card */}
-      <div className="relative w-full h-[180px] overflow-hidden">
+      <div className="relative w-full h-[180px] overflow-hidden transition-transform duration-200 ease-in-out hover:scale-105">
         <Image
           src={featuredImageUrl}
           alt={post.title}
@@ -39,7 +39,7 @@ export function PostCard({ post, className = '' }: PostCardProps) {
       </div>
       {/* Content gets the padding */}
       <div className="p-4">
-        <p className="font-semibold text-base text-gray-900 mb-2 leading-tight">
+        <p className="font-semibold text-base text-gray-900 mb-2 leading-tight ">
           {post.title}
         </p>
         {post.excerpt && (

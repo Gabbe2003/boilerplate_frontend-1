@@ -1,8 +1,6 @@
 "use client"
 
 import { ArticleWithContent } from "./ArticleWithContent";
-import { Sidebar } from "./sideBar";
-import { PostTOC } from "./TOCContent";
 import EndOfPageRecommendations from "./EndOfPageRecommendations";
 import { stripHtml } from "@/lib/helper_functions/strip_html";
 import type { PostWithTOC } from "@/lib/types";
@@ -25,11 +23,11 @@ export default function InfiniteScrollClient({ initialPost }: { initialPost: Pos
         return (
           <div
             key={post.slug}
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start"
+            className="w-full grid grid-cols-1 lg:grid-cols- gap-8 items-start"
             data-index={i + 1}
             ref={setArticleRef(i + 1)}
           >
-            <div className="col-span-1 lg:col-span-2 flex flex-col gap-8">
+              <div className="col-span-1 lg:col-span-2 flex flex-col gap-8 ">
               <ArticleWithContent
                 post={post}
                 postUrl={postUrl}
@@ -38,15 +36,13 @@ export default function InfiniteScrollClient({ initialPost }: { initialPost: Pos
               />
               <EndOfPageRecommendations currentSlug={post.slug} />
             </div>
-            <aside className="space-y-8">
-              <div
-                style={{ height: 200, minHeight: 0 }}
-                className="hidden lg:block"
-                aria-hidden="true"
-              />
-              <PostTOC toc={post.toc} />
-              <Sidebar />
-            </aside>
+            <aside className="hidden lg:block space-y-8 lg:col-span-1 bg-[var(--secBG)] px-0 sm:px-2">
+            <div
+              style={{ height: 0, minHeight: 0 }}
+              className="hidden lg:block"
+              aria-hidden="true"
+            />
+          </aside>
           </div>
         );
       })}

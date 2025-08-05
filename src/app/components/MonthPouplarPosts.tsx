@@ -7,7 +7,7 @@ import { ADS } from '../[slug]/components/adsSideBar';
 import { useAppContext } from '@/store/AppContext';
 import { PostCard } from './postCard';
 
-function AdGridCard({ ad, className = '' }: { ad: []; className?: string }) {
+function AdGridCard({ ad, className = '' }: { ad; className?: string }) {
   return (
     <div
       className={`bg-white border border-gray-200 flex items-center justify-center h-[220px] p-2 ${className}`}

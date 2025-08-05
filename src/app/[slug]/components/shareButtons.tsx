@@ -30,11 +30,11 @@ export function ShareButtons({
   postExcerpt: string;
 }) {
   return (
-    <div className="flex items-center justify-center gap-1 px-3 py-2 border border-neutral-100 rounded-xs">
+<div className="flex items-center justify-center sm:justify-start gap-1 lg:px-3 py-2 border border-neutral-100 rounded-xs">
       {/* Native share/copy */}
       <Button
         variant="ghost"
-        className="h-9 min-w-[52px] flex items-center justify-center text-neutral-700 font-medium rounded-xs px-3 cursor-pointer transition-colors duration-150 text-mx border border-transparent hover:bg-neutral-100"
+        className="h-9 min-w-[52px] flex items-start justify-start text-neutral-700 font-medium rounded-xs px--3 cursor-pointer transition-colors duration-150 text-mx border border-transparent hover:bg-neutral-100"
         aria-label="Share Link"
         onClick={async () => {
           if (typeof window !== 'undefined' && navigator.share) {

@@ -1,5 +1,5 @@
 import { ITOCItem } from '@/lib/types';
-import { TocCard } from './TableOfContent';
+import { TocCard } from './TOCCard';
 
 export function PostTOC({ toc }: { toc: ITOCItem[] }) {
   return (

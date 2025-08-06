@@ -173,10 +173,7 @@ export default function Footer() {
                   </li>
                 ))}
               </ul>
-              <PopupModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-              />
+             
             </div>
           </div>
         </div>

@@ -65,7 +65,7 @@ export default function PostsList() {
           <h3 className="text-3xl font-semibold mb-4">{post.title}</h3>
           <div
             className="text-gray-700 mb-6 prose prose-base max-w-none"
-            dangerouslySetInnerHTML={{ __html: stripHtml(post.excerpt) || '' }}
+            dangerouslySetInnerHTML={{ __html: stripHtml(post.excerpt!) || '' }}
           />
           <Link
             href={`/${post.slug}`}

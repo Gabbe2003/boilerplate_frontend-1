@@ -1,10 +1,12 @@
+import { MediaItemNode } from '@/lib/types';
 import Image from 'next/image';
+import FEATURED_IMAGE from '../../../public/next.svg';
 
 export interface ViewPost {
-  id: number;
+  id: string;
   title: string;
   slug: string;
-  featuredImage: string;
+  featuredImage?: { node: MediaItemNode }
   date: string;
   author_name: string;
   excerpt?: string;
@@ -22,18 +24,21 @@ function getExcerpt(text?: string, words = 15) {
 }
 
 export function PostCard({ post, className = '' }: PostCardProps) {
-  const featuredImageUrl = post.featuredImage || '/no-image.png';
+ const featuredImageUrl = post.featuredImage?.node?.sourceUrl ?? FEATURED_IMAGE;
+
+ console.log(post.excerpt);
+ 
 
   return (
     <div className={`flex flex-col shadow bg-[#FFF8F2] w-full overflow-hidden ${className}`}>
       {/* Image fills the top of the card */}
       <div className="relative w-full h-[180px] overflow-hidden transition-transform duration-200 ease-in-out hover:scale-105">
         <Image
-          src={featuredImageUrl}
+          src={featuredImageUrl }
           alt={post.title}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover w-full h-full"
+          className="object-contain w-full h-full"
           priority={false}
         />
       </div>

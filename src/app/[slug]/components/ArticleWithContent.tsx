@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { AuthorNode, Post, ITOCItem } from "@/lib/types";
 import { stripHtml } from "@/lib/helper_functions/strip_html";
 import ShareButtonsClient from "../wrapper/ShareButtons.wrapper";
-import { PostTOC } from "./TOCContent";
+import { PostTOC } from "./TOCWrapper";
 import { Sidebar } from "./sideBar";
 
 function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {

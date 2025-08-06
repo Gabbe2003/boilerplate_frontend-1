@@ -1,5 +1,9 @@
 
-fixa. >  import Doc from '../components/icons/doc';
+Check those
+1. src\app\components\ads\adsPopup.tsx
+2. src\app\components\Rule_sub.tsx
+3. src\app\components\allSocialMediaButtons.tsx
+4. 
 
 
 

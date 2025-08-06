@@ -1,4 +1,4 @@
-import { Ad } from './adsSideBar';
+import { Ad } from './adsContent';
 
 export function AdCard({ ad }: { ad: Ad }) {
   if (ad.script) {

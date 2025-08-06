@@ -2,11 +2,11 @@
 
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { AdCard } from './adcard';
-import { ADS } from './adsSideBar';
+import { ADS } from '../../components/ads/adsContent';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import PopupModal from '@/app/components/Rule_sub';
+import { AdCard } from '@/app/components/ads/adcard';
 
 export function Sidebar() {
   const [adIndex, setAdIndex] = useState(0);

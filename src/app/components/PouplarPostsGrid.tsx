@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Ad, ADS } from './ads/adsContent';
 import { useAppContext } from '@/store/AppContext';
 import { Post } from '@/lib/types';
-import { PostCard } from './postCard';
+import { PostCard } from './PouplarPostsCard';
 import { AdCard } from './ads/adcard';
 
 // --- Feed item discriminated union types ---
@@ -18,11 +18,32 @@ type PostItem = Post & { type: 'post' };
 type FeedItem = AdItem | PostItem;
 
 function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
+  // Helper function to limit text
+  function getExcerpt(text: string, words = 15): string {
+    const wordArray = text.trim().split(/\s+/);
+    return wordArray.length > words
+      ? wordArray.slice(0, words).join(' ') + '…'
+      : text;
+  }
+
   return (
-    <div
-      className={`bg-white border border-gray-200 flex items-center justify-center h-[220px] p-2 ${className}`}
-    >
-      <AdCard ad={ad} />
+    <div className={`flex flex-col shadow bg-[#FFF8F2] w-full overflow-hidden ${className}`}>
+      {/* Ad image area */}
+      <div className="relative w-full h-[180px] overflow-hidden">
+        <AdCard ad={ad} />
+      </div>
+
+      {/* Bottom content */}
+      <div className="p-4 flex flex-col justify-between flex-grow">
+        <span className="block text-xs font-semibold text-neutral-500 uppercase tracking-wide text-start mb-2">
+          Sponsored
+        </span>
+        {ad.text && (
+          <p className="text-sm text-gray-700 leading-snug mb-1 break-words">
+            {getExcerpt(ad.text, 15)}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

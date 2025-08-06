@@ -33,8 +33,7 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export default async function Page() {
-  const posts = await getViews('month');
-  console.log('[Page] Fetched posts:', posts);
+  const posts = await getViews('week');
 
   if (!posts.length) return <div>No fun posts!</div>;
 

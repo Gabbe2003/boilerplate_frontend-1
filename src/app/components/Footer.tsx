@@ -14,8 +14,8 @@ export default function Footer() {
   const pathname = usePathname();
   const { logo, links, tagline } = useAppContext();
   const currentYear = new Date().getFullYear();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  
   // Slicing logic for columns
   const firstColumnLinks = links.slice(0, 3); // or 4, as you wish!
   const secondColumnLinks = links.slice(3);
@@ -25,12 +25,10 @@ export default function Footer() {
     {
       type: 'button',
       title: 'Newsletter',
-      onClick: () => setIsModalOpen(true),
     },
     { type: 'link', title: 'Work with us', href: '/work' },
     { type: 'link', title: 'Sitemap', href: '/sitemap' },
   ];
-  console.log('logo:', logo);
 
   return (
     <footer id="footer" className="w-full border-t border-gray-200 bg-gray-100">
@@ -157,7 +155,6 @@ export default function Footer() {
                       <Button
                         variant="navlink"
                         className="text-base w-full justify-start px-0"
-                        onClick={item.onClick}
                       >
                         {item.title}
                       </Button>

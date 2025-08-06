@@ -70,7 +70,7 @@ export default function AdPopup() {
         <div className="flex-1" />
         <div className="w-full flex justify-end">
           <Link href="/advertisement" passHref>
-            <button className="px-5 py-2 sm:px-6 bg-blue-700 text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-blue-900 transition">
+            <button className="px-5 py-2 sm:px-6 bg-blue-700 text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-blue-900 transition hover:cursor-pointer">
               Learn More
             </button>
           </Link>

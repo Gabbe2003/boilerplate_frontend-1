@@ -2,9 +2,10 @@
 import PostsList from './components/PostsList';
 import React from 'react';
 import ViewedPosts from './components/ViewsPosts';
-import PopularNews from './components/pouplarPosts-main';
+import PopularNews from './components/PouplarQuery';
 import TagList from './components/TagCard';
-import AdPopup from './components/ads/adsPopup';
+// import AdPopup from './components/ads/adsPopup';
+import CategorySections from './components/CategoryArticlesGrid';
 
 export const revalidate = 3000;
 
@@ -34,8 +35,16 @@ const Page = async () => {
 return (
   <>
     <PopularNews  />
+    <CategorySections />
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
+    <br></br>
     <TagList />
-    <AdPopup />
+    {/* <AdPopup /> */}
+
     <div className="flex w-full flex-col gap-8 px-4 py-10 md:flex-row">
       <section className="w-full md:w-4/5 lg:w-3/1">
         <PostsList />

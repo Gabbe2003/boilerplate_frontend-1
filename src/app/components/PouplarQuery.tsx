@@ -1,5 +1,5 @@
 import { getViews } from "@/lib/graph_queries/getPostByPeriod";
-import PopularNews from "./MonthPouplarPosts";
+import PopularNews from "./PouplarPostsGrid";
 import { Ad, ADS } from "./ads/adsContent";
 import { Post } from '@/lib/types';
 

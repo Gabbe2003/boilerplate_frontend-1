@@ -34,7 +34,6 @@ export function PostCard({ post, className = '' }: PostCardProps) {
         src={featuredImageUrl}
         alt={post.title}
         fill
-        sizes="(max-width: 768px) 100vw, 33vw"
         quality={100}
         className="object-cover w-full h-full"
         priority={true}

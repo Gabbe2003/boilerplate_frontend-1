@@ -5,7 +5,7 @@ import ViewedPosts from './components/ViewsPosts';
 import PopularNews from './components/PouplarQuery';
 import TagList from './components/TagCard';
 import CategorySections from './components/CategoryArticlesGrid';
-import AdPopup from './components/ads/adsPopup';
+// import AdPopup from './components/ads/adsPopup';
 
 export const revalidate = 3000;
 
@@ -44,7 +44,7 @@ return (
     <br></br>
     <br></br>
     <TagList />
-    <AdPopup />
+    {/* <AdPopup /> */}
 
     <div className="flex w-full flex-col gap-8 px-4 py-10 md:flex-row">
       <section className="w-full md:w-4/5 lg:w-3/1">

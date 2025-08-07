@@ -3,7 +3,7 @@ import { load } from 'cheerio';
 // import { loggedFetch } from "../logged-fetch";
 
 interface Asset {
-  sourceUrl: string;
+  sourceUrl?: string;
   altText?: string | null;
 }
 

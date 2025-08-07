@@ -1,3 +1,6 @@
+"use server"; 
+
+
 export async function getTagBySlug(slug: string, after?: string) {
   const query = `
     query TagBySlug($slug: ID!, $after: String) {

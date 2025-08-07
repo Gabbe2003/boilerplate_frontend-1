@@ -98,11 +98,6 @@ export default async function TagPage({ params }: TagPageProps) {
       <div className="text-xs text-gray-500 mb-4">
         Posts: {tag.count ?? "0"}
       </div>
-<<<<<<< HEAD
-      {/* Sidebar */}
-      <aside className="w-full h-full hidden lg:block">
-        <div className="sticky top-24 w-[60%]">
-=======
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
         <div className="lg:col-span-2 flex flex-col">
@@ -126,7 +121,6 @@ export default async function TagPage({ params }: TagPageProps) {
               initialPageInfo={tag.posts.pageInfo}
             />
           )}
->>>>>>> 6040ed36d126d5a16bb879722352650742907c28
         </div>
 
         <aside className="w-full h-full hidden lg:block">

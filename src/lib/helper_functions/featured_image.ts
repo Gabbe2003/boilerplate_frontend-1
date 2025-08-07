@@ -1,4 +1,5 @@
 // types.ts
+
 import { Post } from '@/lib/types';
 import FEATURED_IMAGE from '../../../public/next.svg';
 const FEATURED_ALT = 'Default featured image';

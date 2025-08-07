@@ -1,3 +1,5 @@
+"use server"; 
+
 export async function getCategoryBySlug(slug: string, after?: string) {
   const query = `
     query CategoryBySlug($slug: ID!, $after: String) {

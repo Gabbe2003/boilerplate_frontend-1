@@ -60,9 +60,6 @@ export default function PopularNews({ items = [] }: { items: FeedItem[] }) {
   const lastItem = items[8];
 
   // --- DYNAMIC COLUMNS for 2nd desktop row ---
-  const bottomGridCols = bottomItems.length > 0
-    ? `grid-cols-${Math.max(bottomItems.length, lastItem ? bottomItems.length + 1 : bottomItems.length)}`
-    : 'grid-cols-5';
 
   return (
     <section className="w-[90%] mx-auto py-8">
@@ -94,45 +91,59 @@ export default function PopularNews({ items = [] }: { items: FeedItem[] }) {
             </div>
           )}
         </div>
-
-        {/* Desktop: first row, 4 columns */}
-        <div className="hidden lg:grid grid-cols-4 gap-2">
-          {topItems.map((item, idx) =>
-            item.type === 'ad' ? (
-              <AdGridCard key={`ad-top-${idx}`} ad={ADS[(item as AdItem).adIndex]} />
-            ) : (
-              <Link href={`/${(item as PostItem).slug}`} key={item.id}>
-                <PostCard post={item as PostItem} />
-              </Link>
-            )
-          )}
+          {/* Desktop: first row, 4 columns */}
+        <div
+          className="hidden lg:grid grid-cols-4 gap-2"
+          style={{ gridAutoRows: '1fr', minHeight: 0, minWidth: 0 }}
+        >
+          {topItems.map((item, idx) => (
+            <div
+              className="h-full w-full flex min-h-0 min-w-0"
+              key={item.id || `top-${idx}`}
+            >
+              {item.type === 'ad' ? (
+                <AdGridCard ad={ADS[item.adIndex]} className="h-full w-full" />
+              ) : (
+                <Link href={`/${item.slug}`} className="h-full w-full">
+                  <PostCard post={item} className="h-full w-full" />
+                </Link>
+              )}
+            </div>
+          ))}
         </div>
 
         {/* Desktop: second row, dynamic columns */}
         <div
-          className={`hidden lg:grid gap-2 ${
-            lastItem
-              ? `grid-cols-${bottomItems.length + 1}`
-              : `grid-cols-${bottomItems.length || 5}`
+          className={`hidden lg:grid gap-2 grid-cols-${
+            bottomItems.length + (lastItem ? 1 : 0)
           }`}
+          style={{ gridAutoRows: '1fr', minHeight: 0, minWidth: 0 }}
         >
-          {bottomItems.map((item, idx) =>
-            item.type === 'ad' ? (
-              <AdGridCard key={`ad-bot-${idx}`} ad={ADS[(item as AdItem).adIndex]} />
-            ) : (
-              <Link href={`/${(item as PostItem).slug}`} key={item.id}>
-                <PostCard post={item as PostItem} />
-              </Link>
-            )
+          {bottomItems.map((item, idx) => (
+            <div
+              className="h-full w-full flex min-h-0 min-w-0"
+              key={item.id || `bot-${idx}`}
+            >
+              {item.type === 'ad' ? (
+                <AdGridCard ad={ADS[item.adIndex]} className="h-full w-full" />
+              ) : (
+                <Link href={`/${item.slug}`} className="h-full w-full">
+                  <PostCard post={item} className="h-full w-full" />
+                </Link>
+              )}
+            </div>
+          ))}
+          {lastItem && (
+            <div className="h-full w-full flex min-h-0 min-w-0" key={lastItem.id || 'last'}>
+              {lastItem.type === 'ad' ? (
+                <AdGridCard ad={ADS[lastItem.adIndex]} className="h-full w-full" />
+              ) : (
+                <Link href={`/${lastItem.slug}`} className="h-full w-full">
+                  <PostCard post={lastItem} className="h-full w-full" />
+                </Link>
+              )}
+            </div>
           )}
-          {lastItem &&
-            (lastItem.type === 'ad' ? (
-              <AdGridCard key="ad-last" ad={ADS[(lastItem as AdItem).adIndex]} />
-            ) : (
-              <Link href={`/${(lastItem as PostItem).slug}`} key={lastItem.id}>
-                <PostCard post={lastItem as PostItem} />
-              </Link>
-            ))}
         </div>
       </div>
     </section>

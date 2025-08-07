@@ -52,6 +52,7 @@ export default function AdPopup() {
             fill // This makes the image absolutely fill its parent
             className="object-cover rounded bg-white"
             sizes="100vw" // helps with responsive images
+            priority={true} // or true, if this should be LCP
           />
         ) : (
           <span className="font-bold text-gray-900 text-base">

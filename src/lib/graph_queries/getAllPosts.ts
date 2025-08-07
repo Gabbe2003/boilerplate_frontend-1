@@ -128,18 +128,6 @@ fragment PostFull on Post {
       cache: 'force-cache',
     });
 
-    //  const res = await loggedFetch(GRAPHQL_URL, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     query,
-    //     variables: { first, after, last, before },
-    //   }),
-    //   context: 'getAllPosts',
-    //   next: { revalidate: 300}, 
-    //   cache: 'force-cache',
-    // });
-
     const json = (await res.json()) as {
       data?: { posts?: { nodes: Post[] } };
       errors?: GraphQLError[];

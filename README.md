@@ -1,9 +1,10 @@
 
 Check those
-1. src\app\components\ads\adsPopup.tsx || Make 
+1. src\app\components\ads\adsPopup.tsx || I think we can refactor here to server?
 2. src\app\components\Rule_sub.tsx || Optimize the code and make it easier
 3. src\app\components\allSocialMediaButtons.tsx || Social media buttons should be dynamic not finanstidning
 
+Remove the api route because we dont need to expose any data outside our app
 
 
 1. Header optimize > When the page render there is a delay.
@@ -18,13 +19,11 @@ Check those
 10. Trigger the update post on infinity scroll. 
 
 
-(There are some errors in production code, not major but recheck them:
-
-1. The update post is not working
-2. The cache is kinda off, sometimes it revalidate and sometimes not?. s
-   )
-   When we are in the slug we there is so many calls
-   fix the api calls and reuse components and optimizitions here and there,
+There are some errors in production code, not major but recheck them:
+   
+The render modal is being called three times.    
+When we are in the slug we there is so many calls
+fix the api calls and reuse components and optimizitions here and there,
 
 then we fix the npm run build.
 

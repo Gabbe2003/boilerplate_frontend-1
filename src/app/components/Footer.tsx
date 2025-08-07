@@ -6,8 +6,6 @@ import { usePathname } from 'next/navigation';
 import { useAppContext } from '@/store/AppContext';
 import { Button } from '@/components/ui/button';
 import SocialMediaButtons from './allSocialMediaButtons';
-import { useState } from 'react';
-import PopupModal from './Rule_sub';
 
 export default function Footer() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;

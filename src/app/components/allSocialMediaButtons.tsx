@@ -1,6 +1,3 @@
-'use client';
-
-import React from 'react';
 import { Button } from '@/components/ui/button';
 
 // Use relative paths for icons (assume this file is in components/ and icons/ is a sibling)
@@ -24,9 +21,7 @@ const socialButtons = [
   { Icon: Twitter, label: 'X', url: xUrl },
 ];
 
-const SocialMediaButtons: React.FC<{ className?: string }> = ({
-  className,
-}) => (
+const SocialMediaButtons = ({ className }: { className?: string }) => (
   <div
     className={`flex flex-row gap-2 justify-center md:justify-end ${className || ''}`}
   >

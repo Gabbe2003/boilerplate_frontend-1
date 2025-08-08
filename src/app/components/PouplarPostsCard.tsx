@@ -1,5 +1,6 @@
 import { MediaItemNode } from '@/lib/types';
 import Image from 'next/image';
+import FEATURED_IMAGE from '../../../public/next.svg';
 
 export interface ViewPost {
   id: string;
@@ -23,7 +24,7 @@ function getExcerpt(text?: string, words = 15) {
 }
 
 export function PostCard({ post, className = '' }: PostCardProps) {
- const featuredImageUrl = post.featuredImage?.node?.sourceUrl ?? '/no-image.png';
+ const featuredImageUrl = post.featuredImage?.node?.sourceUrl ?? FEATURED_IMAGE;
 
 
   return (

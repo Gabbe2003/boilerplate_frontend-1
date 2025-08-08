@@ -6,6 +6,7 @@ import useSWR from 'swr';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { getViews } from '@/lib/graph_queries/getPostByPeriod';
+import FEATURED_IMAGE from '../../../public/next.svg';
 
 // If you know your post shape, uncomment and update this type!
 /*
@@ -77,7 +78,7 @@ export default function ViewedPosts() {
             const imgSrc =
               typeof post.featuredImage === 'string'
                 ? post.featuredImage
-                : post.featuredImage?.node?.sourceUrl ?? '';
+                : post.featuredImage?.node?.sourceUrl ?? FEATURED_IMAGE;
 
             const formattedDate = new Date(post.date).toLocaleDateString(
               'en-US',

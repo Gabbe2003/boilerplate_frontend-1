@@ -59,7 +59,7 @@ return raw.map((item) => {
   } else {
     normalizedImage = undefined;
   }
-  
+
   return {
     id: String(item.id),
     title: item.title?.trim() ?? "",

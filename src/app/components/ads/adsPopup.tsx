@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useAppContext } from '@/store/AppContext';
 
 export default function AdPopup() {
   const [visible, setVisible] = useState(true);
+  const {logo} = useAppContext(); 
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -43,15 +45,21 @@ export default function AdPopup() {
       </button>
 
       <div className="w-full sm:w-32 h-24 mt-3 sm:h-48 relative rounded-xl overflow-hidden bg-gray-200">
-        <Image
-          src="/your-ad-image.jpg"
-          alt="Ad"
-          fill
-          className="rounded-xl object-cover"
-          sizes="(max-width: 640px) 100vw, 128px"
-        />
+        {logo?.sourceUrl ? (
+          <Image
+            src={logo.sourceUrl}
+            alt={logo.altText || 'Logo'}
+            fill // This makes the image absolutely fill its parent
+            className="object-cover rounded bg-white"
+            sizes="100vw" // helps with responsive images
+            priority={true} // or true, if this should be LCP
+          />
+        ) : (
+          <span className="font-bold text-gray-900 text-base">
+            {process.env.NEXT_PUBLIC_HOSTNAME}
+          </span>
+        )}
       </div>
-
       <div className="flex flex-col flex-1 min-w-0 h-full">
         <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">
           Discover Amazing Deals!

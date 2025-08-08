@@ -1,4 +1,6 @@
-import * as React from "react";
+import * as React from "react"; // PÅMIN MIG ATT KNULLA DIG
+
+
 import { X } from "lucide-react";
 import Image from "next/image";
 import { useAppContext } from "@/store/AppContext";

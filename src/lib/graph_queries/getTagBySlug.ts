@@ -1,3 +1,6 @@
+"use server"; 
+
+
 export async function getTagBySlug(slug: string, after?: string) {
   const query = `
     query TagBySlug($slug: ID!, $after: String) {
@@ -56,9 +59,6 @@ export async function getTagBySlug(slug: string, after?: string) {
 
     const json = await res.json();
 
-    if (process.env.NODE_ENV !== 'production') {
-      console.log("GraphQL response for getTagBySlug:", JSON.stringify(json, null, 2));
-    }
 
     if (json.errors) {
       console.error('GraphQL errors:', json.errors);

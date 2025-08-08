@@ -1,3 +1,5 @@
+"use server"; 
+
 export async function getCategoryBySlug(slug: string, after?: string) {
   const query = `
     query CategoryBySlug($slug: ID!, $after: String) {
@@ -62,11 +64,6 @@ export async function getCategoryBySlug(slug: string, after?: string) {
     }
 
     const json = await res.json();
-
-    // Log the response for debugging (remove after fixing)
-    if (process.env.NODE_ENV !== 'production') {
-      console.log("GraphQL response for getCategoryBySlug:", JSON.stringify(json, null, 2));
-    }
 
     // Check for errors in GraphQL response
     if (json.errors) {

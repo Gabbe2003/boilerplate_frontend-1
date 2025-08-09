@@ -1,6 +1,4 @@
-'use client';
 
-import React from 'react';
 import Image from 'next/image';
 import { Post } from '@/lib/types';
 import {
@@ -10,6 +8,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from '@/components/ui/carousel';
+import Link from 'next/link';
 
 interface Props {
   posts: Post[];
@@ -40,7 +39,7 @@ export default function CategoryMobileCarousel({ posts }: Props) {
                 marginRight: idx === posts.length - 1 ? 0 : undefined,
               }}
             >
-              <a href={`/${post.slug}`} className="group flex flex-col items-center gap-1">
+              <Link href={`/${post.slug}`} className="group flex flex-col items-center gap-1">
                 {post.featuredImage?.node?.sourceUrl && (
                   <div className="relative w-full h-[160px] overflow-hidden rounded-sm">
                     <Image
@@ -54,7 +53,7 @@ export default function CategoryMobileCarousel({ posts }: Props) {
                 <p className="text-xs font-medium group-hover:underline text-gray-800 truncate w-full text-start mt-2">
                   {post.title}
                 </p>
-              </a>
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>

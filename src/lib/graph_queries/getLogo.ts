@@ -1,9 +1,10 @@
 'use server';
 import { load } from 'cheerio';
-// import { loggedFetch } from "../logged-fetch";
+
+
 
 interface Asset {
-  sourceUrl?: string;
+  sourceUrl: string;
   altText?: string | null;
 }
 
@@ -18,7 +19,6 @@ export async function getLogo(): Promise<SiteAssets> {
   try {
     const url = `http://${DEFAULT_URL}`;
     const res = await fetch(url);
-    // const res = await loggedFetch(url, {context: 'getLogo'});
 
     if (!res.ok) {
       return { favicon: null, logo: null };

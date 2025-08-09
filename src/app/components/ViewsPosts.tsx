@@ -8,17 +8,6 @@ import Image from 'next/image';
 import { getViews } from '@/lib/graph_queries/getPostByPeriod';
 import FEATURED_IMAGE from '../../../public/next.svg';
 
-// If you know your post shape, uncomment and update this type!
-/*
-type ViewsPost = {
-  id: number;
-  title: string;
-  slug: string;
-  featuredImage: string | { node: { sourceUrl: string } };
-  date: string;
-  author_name: string;
-};
-*/
 
 const fetcher = (period: 'week' | 'month') => getViews(period);
 

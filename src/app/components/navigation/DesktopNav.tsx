@@ -21,7 +21,6 @@ import { DEFAULT_LINKS_header } from '@/store/AppContext';
 interface LinkItem {
   label?: string;
   href?: string;
-  // ...whatever else you expect
 };
 
 interface DesktopNavProps {
@@ -31,9 +30,7 @@ interface DesktopNavProps {
 }
 
 // Your component should accept props:
-export default function DesktopNav({
- 
-}: DesktopNavProps) {
+export default function DesktopNav({}: DesktopNavProps) {
 return (
     <div className="hidden lg:flex items-center gap-3 min-w-0 flex-shrink">
       <NavigationMenu>

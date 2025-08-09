@@ -5,6 +5,7 @@ import Facebook from './icons/facebook';
 import Instagram from './icons/instagram';
 import Linkedin from './icons/linkedin';
 import Twitter from './icons/twitter';
+import Link from 'next/link';
 
 // Social media link variables
 const facebookUrl =
@@ -34,9 +35,9 @@ const SocialMediaButtons = ({ className }: { className?: string }) => (
         asChild
         aria-label={label}
       >
-        <a href={url} target="_blank" rel="noopener noreferrer">
+        <Link href={url} target="_blank" rel="noopener noreferrer">
           <Icon className="w-5 h-5 text-neutral-500" />
-        </a>
+        </Link>
       </Button>
     ))}
   </div>

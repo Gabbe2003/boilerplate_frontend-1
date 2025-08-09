@@ -1,4 +1,12 @@
 
+1. The site is not responsive. 
+2. The footer is responsive but looks off on different breaking points, 
+we can make the footer ssr if we want and then make getLogo server the download the icon and then serve it instead of being called reguraly which is what is happening, as for the tagling we can expose an api route for that and then remove the useEffect in the store becuase it is not needed and then we can move the links into the footer. That way we have better performance and seo. 
+
+3. Check the code there are many places that uses <a>, <button> etc. Make sure to use next and shadcn PopupModal(I uploaded a code there try it, and commented out the old one) for example.   
+
+
+
 Check those
 1. src\app\components\ads\adsPopup.tsx || I think we can refactor here to server?
 2. src\app\components\Rule_sub.tsx || Optimize the code and make it easier

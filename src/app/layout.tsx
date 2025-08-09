@@ -3,8 +3,7 @@ import dynamic from 'next/dynamic';
 import { getLogo } from '@/lib/graph_queries/getLogo';
 import { getAllPosts } from '@/lib/graph_queries/getAllPosts';
 import '@/styles/globals.css';
-import { DEFAULT_LINKS } from '@/store/AppContext';
-import RootClientProviders from './client-wrapper';
+import { AppProvider, DEFAULT_LINKS } from '@/store/AppContext';
 import Header from './components/Header';
 
 const Footer = dynamic(() => import('./components/Footer'), {
@@ -31,11 +30,11 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">
-        <RootClientProviders links={DEFAULT_LINKS} logo={favicon} posts={posts}>
+        <AppProvider links={DEFAULT_LINKS} logo={favicon} posts={posts}>
           <Header />
             <main className="flex-1">{children}</main>
           <Footer />
-        </RootClientProviders>
+        </AppProvider>
       </body>
     </html>
   );

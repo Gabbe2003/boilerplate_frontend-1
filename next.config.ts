@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
         hostname,
       },
       {
-        hostname: 'boilerplate.local',
+        hostname: `${process.env.NEXT_PUBLIC_SHARENAME! || 'boilerplate.local'}`,
         protocol: 'http',
       },
       {

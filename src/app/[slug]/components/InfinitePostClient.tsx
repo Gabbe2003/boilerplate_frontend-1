@@ -9,7 +9,6 @@ import { InfinitePosts } from "./infinitePostHandler";
 export default function InfiniteScrollClient({ initialPost }: { initialPost: PostWithTOC }) {
   const { rendered, loading, sentinelRef, setArticleRef } = InfinitePosts(initialPost);
 
-  // Don't render the initial post (already rendered server-side)
   if (rendered.length <= 1) {
     return <div ref={sentinelRef} style={{ height: 1 }} />;
   }

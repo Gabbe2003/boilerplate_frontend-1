@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useAppContext } from '@/store/AppContext';
+import { Button } from '@/components/ui/button';
 
 export default function AdPopup() {
   const [visible, setVisible] = useState(true);
@@ -19,9 +20,7 @@ export default function AdPopup() {
 
   const handleClose = () => {
     setVisible(false);
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem('adPopupClosed', 'true');
-    }
+    sessionStorage.setItem('adPopupClosed', 'true');
   };
 
   if (!visible) return null;
@@ -36,13 +35,13 @@ export default function AdPopup() {
         max-w-[90vw] sm:max-w-5xl sm:ml-4 sm:mr-auto mx-auto
       "
     >
-      <button
+      <Button
         className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-400 hover:text-black"
         onClick={handleClose}
         aria-label="Close"
       >
         <X className="w-5 h-5 sm:w-6 sm:h-6 hover:cursor-pointer" />
-      </button>
+      </Button>
 
       <div className="w-full sm:w-32 h-24 mt-3 sm:h-48 relative rounded-xl overflow-hidden bg-gray-200">
         {logo?.sourceUrl ? (
@@ -70,9 +69,9 @@ export default function AdPopup() {
         <div className="flex-1" />
         <div className="w-full flex justify-end">
           <Link href="/advertisement" passHref>
-            <button className="px-5 py-2 sm:px-6 bg-blue-700 text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-blue-900 transition hover:cursor-pointer">
+            <Button className="px-5 py-2 sm:px-6 bg-blue-700 text-white text-sm sm:text-base font-semibold rounded-lg hover:bg-blue-900 transition hover:cursor-pointer">
               Learn More
-            </button>
+            </Button>
           </Link>
         </div>
       </div>

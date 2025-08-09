@@ -8,36 +8,9 @@ import DesktopNav from './navigation/DesktopNav';
 import MobileNav from './navigation/MobileNav';
 import PopupModal from './Rule_sub';
 import SearchDrawer from './navigation/Searchbar';
-import { getAllCategories } from '@/lib/graph_queries/getAllCategories';
 
-// Category type for local state
-type Category = { id: string | number; name: string; slug: string };
-
-// Normalize various API shapes into a simple array of { id, name, slug }
-function normalizeCategories(raw: any): Category[] {
-  if (!raw) return [];
-  if (Array.isArray(raw)) return raw as Category[];
-
-  // Common WPGraphQL shape: { data: { categories: { nodes: [...] } } }
-  if (raw?.data?.categories?.nodes) {
-    return raw.data.categories.nodes.map((n: any) => ({
-      id: n.databaseId ?? n.id ?? n.slug,
-      name: n.name,
-      slug: n.slug,
-    }));
-  }
-
-  // Alternate shape: { categories: [...] }
-  if (raw?.categories) {
-    return raw.categories.map((n: any) => ({
-      id: n.id ?? n.slug,
-      name: n.name,
-      slug: n.slug,
-    }));
-  }
-
-  return [];
-}
+// Match the server util's return type
+type Category = { id: string; name: string; slug: string };
 
 export default function Header() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
@@ -47,20 +20,17 @@ export default function Header() {
 
   useEffect(() => {
     let active = true;
-
-    async function fetchCategories() {
+    (async () => {
       try {
-        const res = await getAllCategories();
-        // Support both fetch Response and plain object return
-        const json = typeof (res as any)?.json === 'function' ? await (res as any).json() : res;
-        const normalized = normalizeCategories(json);
-        if (active) setCategories(normalized || []);
-      } catch {
+        const res = await fetch('/api/categories', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed to fetch categories');
+        const list: Category[] = await res.json();
+        if (active) setCategories(list);
+      } catch (err) {
+        console.error('Error loading categories:', err);
         if (active) setCategories([]);
       }
-    }
-
-    fetchCategories();
+    })();
     return () => {
       active = false;
     };
@@ -73,10 +43,10 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
-        {/* Top row: logo + navs + search */}
+        {/* Top row: logo + categories + search */}
         <div className="w-[90%] lg:w-[70%] mx-auto flex items-center justify-between py-1">
-          {/* Logo */}
-          <div className="flex flex-col items-start">
+          {/* Logo (Left) */}
+          <div className="flex flex-col items-start flex-shrink-0">
             <Link href="/" className="flex-shrink-0">
               {logo?.sourceUrl ? (
                 <Image
@@ -85,24 +55,32 @@ export default function Header() {
                   width={48}
                   height={48}
                   className="rounded object-cover bg-white"
+                  priority
                 />
               ) : (
-                <span className="font-bold text-gray-900 text-base">
-                  {host}
-                </span>
+                <span className="font-bold text-gray-900 text-base">{host}</span>
               )}
             </Link>
           </div>
-          {/* /Logo */}
 
-          {/* Navigation and Controls */}
-          <div className="flex items-center gap-2">
+          {/* Categories in the Center (Desktop only) */}
+          <div className="hidden [@media(min-width:1050px)]:flex flex-1 justify-center min-h-[40px]">
+            {categories.length > 0 ? (
+              <DesktopNav
+                links={links}
+                onNewsletterClick={() => setIsModalOpen(true)}
+                categories={categories}
+              />
+            ) : (
+              <span className="text-sm text-gray-500">Loading…</span>
+            )}
+          </div>
+
+          {/* Right Controls */}
+          <div className="flex items-center gap-2 flex-shrink-0">
             {/* MOBILE */}
             <div className="[@media(min-width:1050px)]:hidden flex items-center gap-1">
-              <SearchDrawer
-                value={searchBarHeader}
-                onChange={handleSearchChange}
-              />
+              <SearchDrawer value={searchBarHeader} onChange={handleSearchChange} />
               <MobileNav
                 links={links}
                 onNewsletterClick={() => setIsModalOpen(true)}
@@ -110,25 +88,12 @@ export default function Header() {
               />
             </div>
 
-            {/* DESKTOP */}
-            <div className="hidden [@media(min-width:1050px)]:flex items-center gap-2">
-              <DesktopNav
-                links={links}
-                onNewsletterClick={() => setIsModalOpen(true)}
-                categories={categories}
-              />
-              <div className="ml-2">
-                <SearchDrawer
-                  value={searchBarHeader}
-                  onChange={handleSearchChange}
-                />
-              </div>
+            {/* DESKTOP Search */}
+            <div className="hidden [@media(min-width:1050px)]:flex items-center ml-2">
+              <SearchDrawer value={searchBarHeader} onChange={handleSearchChange} />
             </div>
           </div>
-          {/* /Navigation and Controls */}
         </div>
-
-       
       </header>
 
       {/* Newsletter Modal */}

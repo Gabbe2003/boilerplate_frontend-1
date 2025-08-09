@@ -1,8 +1,6 @@
-// hooks/useCategorySections.ts
 "use client";
 
 import { useEffect, useState } from "react";
-import { getCategoryBySlug } from "@/lib/graph_queries/getCategoryBySlug";
 import { Post } from "@/lib/types";
 
 interface Category {
@@ -10,6 +8,9 @@ interface Category {
   name: string;
   slug: string;
 }
+
+type PageInfo = { hasNextPage: boolean; endCursor: string | null };
+type PostsResponse = { posts: Post[]; pageInfo: PageInfo };
 
 export function useCategorySections() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -22,16 +23,21 @@ export function useCategorySections() {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [endCursor, setEndCursor] = useState<string | null>(null);
 
+  // 1) Load all categories
   useEffect(() => {
     let alive = true;
     (async () => {
       try {
         const res = await fetch("/api/categories", { cache: "no-store" });
+        if (!res.ok) throw new Error("Failed to fetch categories");
         const data = await res.json();
-        const allCats: Category[] = data?.categories ?? [];
+
+        // The route returns a top-level array: Category[]
+        const allCats: Category[] = Array.isArray(data) ? data : (data?.categories ?? []);
         if (!alive) return;
 
         setCategories(allCats);
+        // Initialize selected category if not set
         setSelectedCategorySlug((prev) => prev ?? allCats[0]?.slug ?? null);
       } catch (error) {
         console.error("Error loading categories:", error);
@@ -45,6 +51,7 @@ export function useCategorySections() {
     };
   }, []);
 
+  // 2) Load posts for the selected category
   useEffect(() => {
     if (!selectedCategorySlug) return;
 
@@ -52,12 +59,17 @@ export function useCategorySections() {
     (async () => {
       setPostsLoading(true);
       try {
-        const cat = await getCategoryBySlug(selectedCategorySlug);
+        const res = await fetch(
+          `/api/categories?slug=${encodeURIComponent(selectedCategorySlug)}`,
+          { cache: "no-store" }
+        );
+        if (!res.ok) throw new Error("Failed to fetch posts");
+        const { posts, pageInfo }: PostsResponse = await res.json();
         if (!alive) return;
 
-        setSelectedCategoryPosts(cat?.posts?.nodes ?? []);
-        setEndCursor(cat?.posts?.pageInfo?.endCursor ?? null);
-        setHasNextPage(!!cat?.posts?.pageInfo?.hasNextPage);
+        setSelectedCategoryPosts(posts ?? []);
+        setEndCursor(pageInfo?.endCursor ?? null);
+        setHasNextPage(!!pageInfo?.hasNextPage);
       } catch (error) {
         console.error("Error loading posts:", error);
         if (alive) {
@@ -77,21 +89,27 @@ export function useCategorySections() {
 
   function handleCategoryClick(slug: string) {
     if (slug === selectedCategorySlug) return;
-    // Only update state; effect above will fetch & re-render
-    setSelectedCategorySlug(slug);
+    setSelectedCategorySlug(slug); // effect above will fetch
   }
 
+  // 3) Pagination
   async function loadMorePosts() {
     if (!selectedCategorySlug || !endCursor) return;
 
     setPostsLoading(true);
     try {
-      const category = await getCategoryBySlug(selectedCategorySlug, endCursor);
-      const newPosts = category?.posts?.nodes ?? [];
+      const res = await fetch(
+        `/api/categories?slug=${encodeURIComponent(selectedCategorySlug)}&after=${encodeURIComponent(
+          endCursor
+        )}`,
+        { cache: "no-store" }
+      );
+      if (!res.ok) throw new Error("Failed to fetch more posts");
+      const { posts, pageInfo }: PostsResponse = await res.json();
 
-      setSelectedCategoryPosts((prev) => prev.concat(newPosts));
-      setEndCursor(category?.posts?.pageInfo?.endCursor ?? null);
-      setHasNextPage(!!category?.posts?.pageInfo?.hasNextPage);
+      setSelectedCategoryPosts((prev) => prev.concat(posts ?? []));
+      setEndCursor(pageInfo?.endCursor ?? null);
+      setHasNextPage(!!pageInfo?.hasNextPage);
     } catch (error) {
       console.error("Error loading more posts:", error);
     } finally {

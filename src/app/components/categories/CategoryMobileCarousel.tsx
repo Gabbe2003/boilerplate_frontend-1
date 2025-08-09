@@ -1,72 +1,74 @@
-
-import Image from 'next/image';
-import { Post } from '@/lib/types';
+import Image from "next/image";
+import Link from "next/link";
+import { Post } from "@/lib/types";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
-} from '@/components/ui/carousel';
-import Link from 'next/link';
+} from "@/components/ui/carousel";
 
 interface Props {
   posts: Post[];
 }
 
 export default function CategoryMobileCarousel({ posts }: Props) {
-  if (!posts || posts.length === 0) return null;
+  if (!posts?.length) return null;
 
   return (
     <div className="relative block lg:hidden">
       <Carousel
-        opts={{
-          align: 'start',
-          skipSnaps: true,
-          loop: false,
-        }}
+        opts={{ align: "start", skipSnaps: true, loop: false }}
         className="w-full"
       >
-        <CarouselContent
-          className="carousel-item w-[10vw] min-w-[70px] max-w-[90px] flex-shrink-0 snap-start"
-          style={{ scrollSnapType: 'x mandatory' }}
-        >
-          {posts.map((post, idx) => (
+        {/* Track */}
+        <CarouselContent className="-ml-3">
+          {posts.map((post) => (
+            // Each slide
             <CarouselItem
               key={post.id}
-              className="carousel-item w-[80vw] min-w-[350px] max-w-[90px] snap-start flex-shrink-0"
-              style={{
-                marginRight: idx === posts.length - 1 ? 0 : undefined,
-              }}
+              className="pl-3 basis-[80%] xs:basis-[80%] sm:basis-[50%]"
             >
-              <Link href={`/${post.slug}`} className="group flex flex-col items-center gap-1">
+              <Link
+                href={`/${post.slug}`}
+                className="group flex flex-col items-start gap-2"
+              >
                 {post.featuredImage?.node?.sourceUrl && (
-                  <div className="relative w-full h-[160px] overflow-hidden rounded-sm">
+                  <div className="relative w-full aspect-[16/9] overflow-hidden rounded-sm">
                     <Image
                       src={post.featuredImage.node.sourceUrl}
-                      alt={post.featuredImage.node.altText || post.title}
+                      alt={post.featuredImage.node.altText || post.title || "Post image"}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 640px) 85vw, 50vw"
+                      priority={false}
                     />
                   </div>
                 )}
-                <p className="text-xs font-medium group-hover:underline text-gray-800 truncate w-full text-start mt-2">
+
+                <p className="w-full text-xs font-medium text-gray-800 group-hover:underline truncate">
                   {post.title}
                 </p>
               </Link>
             </CarouselItem>
           ))}
         </CarouselContent>
-        <div className="flex justify-between mt-4 px-2">
+
+        {/* Arrows under the track */}
+        <div className="flex justify-between mt-3 px-1">
           <CarouselPrevious />
           <CarouselNext />
         </div>
       </Carousel>
-      {/* Edge blur effect */}
+
+      {/* Subtle right edge fade */}
       <div
-        className="pointer-events-none absolute top-0 right-0 h-full w-8 z-10"
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 right-0 w-8 z-10"
         style={{
-          background: 'linear-gradient(to left, rgba(255,255,255,0.95), rgba(255,255,255,0))',
+          background:
+            "linear-gradient(to left, rgba(246,228,211,0.95), rgba(246,228,211,0))",
         }}
       />
     </div>

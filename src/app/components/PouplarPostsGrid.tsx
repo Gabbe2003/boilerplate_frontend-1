@@ -27,7 +27,7 @@ function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
   }
 
   return (
-    <div className={`flex flex-col shadow bg-[#FFF8F2] w-full h-full overflow-hidden rounded-2xl ${className}`}>
+    <div className={` flex flex-col shadow bg-[#FFF8F2] w-full h-full overflow-hidden ${className}`}>
       {/* Ad image area */}
       <div className="relative w-full h-[180px] overflow-hidden">
         <AdCard ad={ad} />
@@ -62,7 +62,7 @@ export default function PopularNews({ items = [] }: { items: FeedItem[] }) {
   // --- DYNAMIC COLUMNS for 2nd desktop row ---
 
   return (
-    <section className="w-[90%] mx-auto py-8">
+    <section className="w-[90%] lg:w-[70%] mx-auto py-8">
       {tagline && (
         <h1 className="mt-1 text-sm text-gray-500 block mb-4">{tagline}</h1>
       )}

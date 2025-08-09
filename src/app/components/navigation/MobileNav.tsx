@@ -22,7 +22,7 @@ interface LinkItem {
 interface MobileNavProps {
   links: LinkItem[];
   onNewsletterClick: () => void;
-  categories: string[]; 
+  categories: any[]; 
 }
 
 export default function MobileNav({

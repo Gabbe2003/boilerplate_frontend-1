@@ -30,7 +30,8 @@
     "src/app/NotFound.tsx",
     "src/app/page.tsx",
     "src/lib/graph_queries/getAllPosts.ts",
-    ".next/types/**/*.ts"
-, "src/app/components/PouplarQuery.tsx"  ],
+    ".next/types/**/*.ts",
+    "src/app/components/pouplarPosts/PouplarQuery.tsx"
+  ],
   "exclude": ["node_modules"]
 }

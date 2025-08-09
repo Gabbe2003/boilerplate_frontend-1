@@ -44,7 +44,7 @@ export default function Header() {
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
         {/* Top row: logo + categories + search */}
-        <div className="w-[90%] lg:w-[70%] mx-auto flex items-center justify-between py-1">
+        <div className="w-[90%] lg:w-[70%] mx-auto flex items-center justify-end py-1">
           {/* Logo (Left) */}
           <div className="flex flex-col items-start flex-shrink-0">
             <Link href="/" className="flex-shrink-0">
@@ -52,9 +52,9 @@ export default function Header() {
                 <Image
                   src={logo.sourceUrl}
                   alt={logo.altText || 'Logo'}
-                  width={48}
-                  height={48}
-                  className="rounded object-cover bg-white"
+                  width={40}
+                  height={40}
+                  className="rounded object-cover"
                   priority
                 />
               ) : (

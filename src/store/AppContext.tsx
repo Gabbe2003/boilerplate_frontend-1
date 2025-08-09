@@ -29,28 +29,6 @@ export const DEFAULT_LINKS = [
   { title: 'Archive', href: '/archive' },
 ];
 
-
-export const DEFAULT_LINKS_header = {
-  "Social": {
-    sub: {
-      "Social Media": "/social",
-      "Archive": "/archive",
-    }
-  },
-  "Newsletter": {
-    href: "/newsletter"
-  },
-  "Uncategorized": {
-    href: "/Uncategorized"
-  },
-  "Advertisement": {
-    href: "/Advertisement"
-  }
-} as const;
-
-
-
-
 export interface AppContextType {
   links: LinkItem[];
   logo: Logo | null;

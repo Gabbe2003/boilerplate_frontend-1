@@ -8,28 +8,28 @@ import DesktopNav from './navigation/DesktopNav';
 import MobileNav from './navigation/MobileNav';
 import PopupModal from './Rule_sub';
 import SearchDrawer from './navigation/Searchbar';
-import { getAllCategories } from '@/lib/graph_queries/getAllCategories';
 
 export default function Header() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
   const { logo, links, searchBarHeader, setSearchBarHeader } = useAppContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [categories, setCategories] = useState([]);
+  // Category state
+const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    async function fetchCategories() {
-      try {
-         const categories = await getAllCategories().then(res => res.json());
-       
-        setCategories(categories || []);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (err) {
-        setCategories([]);
-      }
+useEffect(() => {
+  async function fetchCategories() {
+    try {
+      const res = await fetch('/api/categories');
+      const data = await res.json();
+      setCategories(data.categories || []);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      setCategories([]);
     }
-    fetchCategories();
-  }, []);
+  }
+  fetchCategories();
+}, []);
 
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,13 +60,9 @@ export default function Header() {
               )}
             </Link>
           </div>
-          {/* Logo */}
-
-
 
           {/* Navigation and Controls */}
           <div className="flex items-center gap-2">
-            
             {/* MOBILE */}
             <div className="[@media(min-width:1050px)]:hidden flex items-center gap-1">
               <SearchDrawer
@@ -95,7 +91,6 @@ export default function Header() {
               </div>
             </div>
           </div>
-
         </div>
       </header>
 

@@ -1,4 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import {
   NavigationMenu,
@@ -12,86 +16,110 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-
-// Import the new nested links object
-import { DEFAULT_LINKS_header } from '@/store/AppContext';
-
-// At the top of DesktopNav.tsx (or .jsx, but use .tsx for TS support)
+import { useState } from 'react';
 
 interface LinkItem {
-  label?: string;
-  href?: string;
-};
+  title: string;
+  href: string;
+}
 
 interface DesktopNavProps {
   links: LinkItem[];
   onNewsletterClick: () => void;
-  categories: object; // use correct type if known
+  categories: string[];
 }
 
-// Your component should accept props:
-export default function DesktopNav({}: DesktopNavProps) {
-return (
+export default function DesktopNav({
+  links,
+  onNewsletterClick,
+  categories,
+}: DesktopNavProps) {
+  const pathname = usePathname();
+  const socialLinks = links.slice(3);
+  const [socialOpen, setSocialOpen] = useState(false);
+
+  return (
     <div className="hidden lg:flex items-center gap-3 min-w-0 flex-shrink">
       <NavigationMenu>
         <NavigationMenuList className="flex items-center gap-3">
-          {/* Loop through all top-level keys */}
-          {Object.entries(DEFAULT_LINKS_header).map(([label, data]) => {
-            // If this link has sublinks, render as dropdown
-            if ('sub' in data && data.sub && typeof data.sub === 'object') {
-              return (
-                <NavigationMenuItem key={label}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="flex items-center px-3 py-1 text-sm font-normal min-w-0 text-black"
-                      >
-                        {label}
-                        <ChevronDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      align="end"
-                      className="bg-white border animate-fadeInDown min-w-[160px]"
+          {/* --- Categories (as text-style buttons) --- */}
+          {categories && categories.length > 0 && (
+            <NavigationMenuItem>
+              <div className="flex gap-1">
+                {categories.map((cat: any) => (
+                  <Link href={`/category/${cat.slug}`} key={cat.id}>
+                    <Button
+                      variant="ghost"
+                      className="px-3 py-1 text-sm font-normal min-w-0 text-black hover:bg-transparent hover:underline transition rounded-none"
                     >
-                      {Object.entries(data.sub).map(([sublabel, href]) => (
-                        <DropdownMenuItem key={sublabel} asChild>
-                          <Button
-                            asChild
-                            variant="ghost"
-                            className="w-full text-left py-1 px-3 text-sm font-normal min-w-0 text-black"
-                          >
-                            <Link href={href as string}  rel="noopener noreferrer">
-                              {sublabel}
-                            </Link>
-                          </Button>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </NavigationMenuItem>
-              );
-            }
+                      {cat.name}
+                    </Button>
+                  </Link>
+                ))}
+              </div>
+            </NavigationMenuItem>
+          )}
 
-            // Otherwise, render as single link
-            if ('href' in data && data.href) {
-              return (
-                <NavigationMenuItem key={label}>
+          {/* Social Dropdown */}
+          {socialLinks.length > 0 && (
+            <NavigationMenuItem
+              onMouseEnter={() => setSocialOpen(true)}
+              onMouseLeave={() => setSocialOpen(false)}
+            >
+              <DropdownMenu open={socialOpen} onOpenChange={setSocialOpen}>
+                <DropdownMenuTrigger asChild>
                   <Button
-                    asChild
                     variant="ghost"
-                    className="px-3 py-1 text-sm font-normal min-w-0 text-black"
+                    className="flex items-center px-3 py-1 text-sm font-normal min-w-0 text-black"
                   >
-                    <Link href={data.href}>{label}</Link>
+                    SOCIAL
+                    <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
-                </NavigationMenuItem>
-              );
-            }
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="bg-white border animate-fadeInDown min-w-[160px]"
+                >
+                  {socialLinks.map(({ title, href }: LinkItem) => (
+                    <DropdownMenuItem key={href} asChild>
+                      <Button
+                        asChild
+                        variant="ghost"
+                        className="w-full text-left py-1 px-3 text-sm font-normal min-w-0 text-black"
+                      >
+                        <Link href={href}>{title}</Link>
+                      </Button>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </NavigationMenuItem>
+          )}
 
-            // fallback (ignore unsupported shapes)
-            return null;
-          })}
+          {/* Advertisement Button */}
+          <NavigationMenuItem>
+            <Button
+              asChild
+              variant="ghost"
+              className={`
+                px-3 py-1 text-sm font-normal min-w-0 text-black
+                ${pathname === '/advertisement' ? 'ring-2 ring-gray-300' : ''}
+              `}
+            >
+              <Link href="/advertisement">Advertisement</Link>
+            </Button>
+          </NavigationMenuItem>
+
+          {/* Newsletter Button */}
+          <NavigationMenuItem>
+            <Button
+              onClick={onNewsletterClick}
+              variant="ghost"
+              className="px-3 py-1 text-sm font-normal min-w-0 text-black"
+            >
+              Newsletter
+            </Button>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </div>

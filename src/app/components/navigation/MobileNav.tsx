@@ -22,13 +22,13 @@ interface LinkItem {
 interface MobileNavProps {
   links: LinkItem[];
   onNewsletterClick: () => void;
-  categories: any[]; 
+  categories: any[];
 }
 
 export default function MobileNav({
   links,
   onNewsletterClick,
-  categories, // <-- NEW
+  categories,
 }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -39,14 +39,16 @@ export default function MobileNav({
 
   if (!mounted) return null;
 
+  // NOTE: No breakpoint here. Header controls visibility at 1500px.
   return (
-    <div className="max-[1099px]:flex hidden items-center gap-2">
+    <div className="flex items-center gap-2">
       <Drawer direction="right" open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
           <Button variant="ghost" className="p-2">
             <MenuIcon className="h-6 w-6 text-black" />
           </Button>
         </DrawerTrigger>
+
         <DrawerOverlay className="fixed inset-0 bg-black/30 z-40" />
 
         <DrawerContent
@@ -90,7 +92,7 @@ export default function MobileNav({
                 </li>
               ))}
 
-              {/* --- CATEGORIES LIST --- */}
+              {/* Categories */}
               {categories && categories.length > 0 && (
                 <li>
                   <div className="border-b my-1" />
@@ -110,7 +112,7 @@ export default function MobileNav({
                 </li>
               )}
 
-              {/* Advertisement Button */}
+              {/* Advertisement */}
               <li>
                 <Button
                   asChild
@@ -122,7 +124,7 @@ export default function MobileNav({
                 </Button>
               </li>
 
-              {/* Newsletter Button */}
+              {/* Newsletter */}
               <li>
                 <Button
                   onClick={() => {

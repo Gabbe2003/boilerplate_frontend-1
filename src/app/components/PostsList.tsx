@@ -33,7 +33,7 @@ export default function PostsList() {
   }
 
   return (
-    <div className="w-[90%] lg:w-[50%] mx-auto">
+    <div className="w-[90%] lg:w-[70%] mx-auto">
       {/* More gap between columns on desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-x-12 lg:gap-y-6 py-4">
         {/* Main feed */}

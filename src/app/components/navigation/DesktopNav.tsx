@@ -18,44 +18,38 @@ interface DesktopNavProps {
   categories: Category[];
 }
 
-export default function DesktopNav({
-  onNewsletterClick,
-  categories,
-}: DesktopNavProps) {
+export default function DesktopNav({ onNewsletterClick, categories }: DesktopNavProps) {
   const pathname = usePathname();
 
   return (
-    // Show from md and up
-    <div className="hidden md:grid w-full grid-cols-[1fr_auto_1fr] items-center">
-      {/* Left spacer */}
-      <div aria-hidden />
-
-      {/* Centered categories */}
-      <div className="min-w-0">
-        <NavigationMenu>
-          <NavigationMenuList className="flex items-center gap-2">
-            {categories?.length > 0 && (
-              <NavigationMenuItem>
-                <div className="flex flex-wrap justify-center gap-1">
-                  {categories.map((cat) => (
-                    <Link href={`/category/${cat.slug}`} key={cat.id}>
-                      <Button
-                        variant="ghost"
-                        className="px-3 py-1 text-sm font-normal min-w-0 text-black hover:bg-transparent hover:underline rounded-none"
-                      >
-                        {cat.name}
-                      </Button>
-                    </Link>
-                  ))}
-                </div>
-              </NavigationMenuItem>
-            )}
-          </NavigationMenuList>
-        </NavigationMenu>
-      </div>
+    <div className="flex items-center gap-3">
+      {/* Categories — end-aligned parent already handled by Header */}
+      <NavigationMenu>
+        <NavigationMenuList className="flex items-center gap-2">
+          {categories?.length > 0 && (
+            <NavigationMenuItem>
+              <div className="flex items-center gap-1 flex-wrap max-w-[48vw] lg:max-w-[40vw] overflow-hidden">
+                {/* Optional: enable horizontal scroll on overflow */}
+                {/* <div className="flex items-center gap-1 overflow-x-auto no-scrollbar"> */}
+                {categories.map((cat) => (
+                  <Link href={`/category/${cat.slug}`} key={cat.id}>
+                    <Button
+                      variant="ghost"
+                      className="px-3 py-1 text-sm font-normal min-w-0 text-black hover:bg-transparent hover:underline rounded-none"
+                    >
+                      {cat.name}
+                    </Button>
+                  </Link>
+                ))}
+                {/* </div> */}
+              </div>
+            </NavigationMenuItem>
+          )}
+        </NavigationMenuList>
+      </NavigationMenu>
 
       {/* Right-side actions */}
-      <div className="justify-self-end flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <Button
           asChild
           variant="ghost"

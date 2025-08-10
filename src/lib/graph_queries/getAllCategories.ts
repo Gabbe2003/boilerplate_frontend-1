@@ -1,5 +1,7 @@
 'use server';
 
+import { normalizeFeaturedImage, normalizeFlatImages, normalizeImages } from "../helper_functions/featured_image";
+
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 
 export async function getAllCategories() {
@@ -37,6 +39,7 @@ export async function getAllCategories() {
     }
 
     const data = await res.json();
+    const image = normalizeImages(data); 
     return data.data.categories.nodes;
   } catch (error) {
     console.error('Error fetching categories:', error);

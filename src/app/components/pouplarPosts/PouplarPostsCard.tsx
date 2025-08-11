@@ -16,7 +16,7 @@ export interface PostCardProps {
   className?: string;
 }
 
-function getExcerpt(text?: string, words = 15) {
+function getExcerpt(text?: string, words = 10) {
   if (!text) return '';
   const arr = text.split(/\s+/);
   return arr.length > words ? arr.slice(0, words).join(' ') + '…' : text;
@@ -46,7 +46,7 @@ export function PostCard({ post, className = '' }: PostCardProps) {
         </p>
         {post.excerpt && (
           <p className="text-sm text-gray-700 leading-snug mb-1 break-words">
-            {getExcerpt(post.excerpt, 14)}
+            {getExcerpt(post.excerpt, 10)}
           </p>
         )}
       </div>

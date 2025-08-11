@@ -60,7 +60,7 @@ export default function Header() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
-        <div className="w-[90%] lg:w-[70%] mx-auto grid grid-cols-[auto_1fr_auto] items-center py-2 gap-2">
+        <div className="w-[100%] px-2 lg:w-[70%] mx-auto grid grid-cols-[auto_1fr_auto] items-center py-2 gap-2">
           {/* Left: Logo */}
           <div className="flex items-center min-h-[40px]">
             <Link href="/" aria-label="Go to homepage" className="flex-shrink-0">

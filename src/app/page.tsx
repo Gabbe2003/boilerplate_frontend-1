@@ -34,8 +34,8 @@ const Page = async () => {
 
 return (
   <>
-    <PopularNews  />
-    <CategorySections />
+    {/* <PopularNews  /> */}
+    {/* <CategorySections /> */}
     <PostsList />
     <br></br>
     <br></br>

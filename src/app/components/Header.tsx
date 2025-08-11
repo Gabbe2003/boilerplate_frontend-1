@@ -7,19 +7,21 @@ import { useEffect, useState, useCallback } from 'react';
 import DesktopNav from './navigation/DesktopNav';
 import MobileNav from './navigation/MobileNav';
 import PopupModal from './Rule_sub';
-// import SearchDrawer from './navigation/Searchbar'; // ⛔️ remove this
 import SearchBarInline from './navigation/SearchBarInline';
+import type { SearchResult } from './navigation/hooks/useSearchBar';
 
 type Category = { id: string; name: string; slug: string };
 
 export default function Header() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME || 'Home';
-  const { logo, links, searchBarHeader, setSearchBarHeader, posts } = useAppContext();
+  // Stop using global search value to avoid mirroring:
+  const { logo, links, posts } = useAppContext();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [searchValue, setSearchValue] = useState('');
 
-  // load categories (unchanged)
+  // load categories
   useEffect(() => {
     let active = true;
     (async () => {
@@ -38,10 +40,22 @@ export default function Header() {
     };
   }, []);
 
-  // handlers
+  // modal handlers
   const handleOpenNewsletter = useCallback(() => setIsModalOpen(true), []);
   const handleCloseNewsletter = useCallback(() => setIsModalOpen(false), []);
-  const handleSearchChange = useCallback((v: string) => setSearchBarHeader(v), [setSearchBarHeader]);
+
+  // server-backed search (calls your /api/search route)
+  const searchFn = useCallback(
+    async (q: string, opts?: { signal?: AbortSignal }): Promise<SearchResult[]> => {
+      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
+        cache: 'no-store',
+        signal: opts?.signal,
+      });
+      if (!res.ok) return [];
+      return (await res.json()) as SearchResult[];
+    },
+    []
+  );
 
   return (
     <>
@@ -68,9 +82,10 @@ export default function Header() {
           {/* Center: Search (desktop) */}
           <div className="hidden [@media(min-width:1100px)]:flex justify-center">
             <SearchBarInline
-              value={searchBarHeader || ''}
-              onChange={handleSearchChange}
-              posts={posts}
+              value={searchValue}
+              onChange={setSearchValue}
+              posts={posts}            // optional local fallback
+              searchFn={searchFn}      // server-backed suggestions
               className="w-full max-w-xl"
             />
           </div>
@@ -86,7 +101,7 @@ export default function Header() {
               />
             </div>
 
-            {/* Mobile nav buttons (burger etc) */}
+            {/* Mobile nav (burger etc) */}
             <div className="[@media(min-width:1100px)]:hidden flex items-center gap-1">
               <MobileNav
                 links={links}
@@ -99,9 +114,10 @@ export default function Header() {
           {/* Mobile: full-width search row */}
           <div className="col-span-3 [@media(min-width:1100px)]:hidden">
             <SearchBarInline
-              value={searchBarHeader || ''}
-              onChange={handleSearchChange}
+              value={searchValue}
+              onChange={setSearchValue}
               posts={posts}
+              searchFn={searchFn}
               className="w-full"
             />
           </div>

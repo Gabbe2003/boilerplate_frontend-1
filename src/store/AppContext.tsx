@@ -29,7 +29,6 @@ export const DEFAULT_LINKS = [
   { title: 'Archive', href: '/archive' },
 ];
 
-
 export const DEFAULT_LINKS_header = {
   "Social": {
     sub: {
@@ -41,13 +40,12 @@ export const DEFAULT_LINKS_header = {
     href: "/newsletter"
   },
   "Uncategorized": {
-    href: "/Uncategorized"
+    href: "/category/uncategorized"
   },
   "Advertisement": {
     href: "/Advertisement"
   }
 } as const;
-
 
 
 

@@ -15,7 +15,7 @@ export default function CategoryDesktopGrid({ posts }: Props) {
       {posts.map((post) => (
         <Link key={post.id} href={`/${post.slug}`} className="group flex flex-col gap-2">
           {post.featuredImage?.node?.sourceUrl && (
-            <div className="relative w-full h-[160px] overflow-hidden rounded-sm ">
+            <div className="relative w-full h-[160px] overflow-hidden">
               <Image
                 src={post.featuredImage.node.sourceUrl}
                 alt={post.featuredImage.node.altText || post.title}

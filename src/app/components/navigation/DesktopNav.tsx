@@ -29,19 +29,16 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
           {categories?.length > 0 && (
             <NavigationMenuItem>
               <div className="flex items-center gap-1 flex-wrap max-w-[48vw] lg:max-w-[40vw] overflow-hidden">
-                {/* Optional: enable horizontal scroll on overflow */}
-                {/* <div className="flex items-center gap-1 overflow-x-auto no-scrollbar"> */}
                 {categories.map((cat) => (
                   <Link href={`/category/${cat.slug}`} key={cat.id}>
                     <Button
                       variant="ghost"
-                      className="px-3 py-1 text-sm font-normal min-w-0 text-black hover:bg-transparent hover:underline rounded-none"
+                      className="px-4 py-2 text-base font-normal min-w-0 text-black hover:bg-transparent hover:underline"
                     >
                       {cat.name}
                     </Button>
                   </Link>
                 ))}
-                {/* </div> */}
               </div>
             </NavigationMenuItem>
           )}
@@ -53,7 +50,7 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
         <Button
           asChild
           variant="ghost"
-          className={`px-3 py-1 text-sm font-normal min-w-0 text-black ${
+          className={`px-4 py-2 text-base font-normal min-w-0 text-black ${
             pathname === '/advertisement' ? 'ring-2 ring-gray-300' : ''
           }`}
         >
@@ -63,7 +60,7 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
         <Button
           onClick={onNewsletterClick}
           variant="ghost"
-          className="px-3 py-1 text-sm font-normal min-w-0 text-black"
+          className="px-4 py-2 text-base font-normal min-w-0 text-black"
         >
           Newsletter
         </Button>

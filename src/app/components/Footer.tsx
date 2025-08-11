@@ -61,7 +61,7 @@ export default function Footer() {
 
   return (
     <footer id="footer" className="w-full border-t border-gray-200 bg-gray-100">
-      <div className="w-[90%] mx-auto py-6">
+      <div className="w-[100%] px-2 lg:w-[70%] mx-auto py-6">
         {/* Logo and Links */}
         <div className="flex flex-col md:flex-row mb-8 gap-8">
           {/* Logo/Tagline */}

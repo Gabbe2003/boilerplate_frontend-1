@@ -4,9 +4,9 @@ import { getLogo } from '@/lib/graph_queries/getLogo';
 import { getAllPosts } from '@/lib/graph_queries/getAllPosts';
 import '@/styles/globals.css';
 import { AppProvider, DEFAULT_LINKS } from '@/store/AppContext';
-import Header from './components/Header';
+import Header from './components/Main-page/Header';
 
-const Footer = dynamic(() => import('./components/Footer'), {
+const Footer = dynamic(() => import('./components/Main-page/Footer'), {
   loading: () => <div className="w-full h-24 bg-gray-100" />,
 });
 

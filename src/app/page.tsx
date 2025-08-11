@@ -1,10 +1,10 @@
 // app/page.tsx  (or page.jsx/tsx)
-import PostsList from './components/PostsList';
+import PostsList from './components/Main-page/PostsList';
 import React from 'react';
-import ViewedPosts from './components/ViewsPosts';
-import PopularNews from './components/PoplarQuery';
+// import ViewedPosts from './components/ViewsPosts';
 import TagList from './components/TagCard';
 import CategorySections from './components/categories/CategoryFeed';
+import PopularPosts from './components/pouplarPosts/PopularPosts';
 // import AdPopup from './components/ads/adsPopup';
 
 export const revalidate = 3000;
@@ -36,7 +36,7 @@ return (
   <>
     <PostsList />
     <CategorySections />
-    <PopularNews  />
+    <PopularPosts  />
     <br></br>
     <br></br>
     <br></br>

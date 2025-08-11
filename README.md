@@ -1,5 +1,7 @@
 
-1. The site is not responsive. 
+
+
+
 2. The footer is responsive but looks off on different breaking points, 
 we can make the footer ssr if we want and then make getLogo server the download the icon and then serve it instead of being called reguraly which is what is happening, as for the tagling we can expose an api route for that and then remove the useEffect in the store becuase it is not needed and then we can move the links into the footer. That way we have better performance and seo. 
 
@@ -14,6 +16,8 @@ Check those
 
 Remove the api route because we dont need to expose any data outside our app
 
+
+When we try the page out we just need to make sure the advertiesment and contact. 
 
 1. Header optimize > When the page render there is a delay.
 2. News letter popup twice double check it. 

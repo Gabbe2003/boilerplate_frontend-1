@@ -1,10 +1,10 @@
 "use client"
 
-import { ArticleWithContent } from "./ArticleWithContent";
-import EndOfPageRecommendations from "./EndOfPageRecommendations";
+import { ArticleWithContent } from "../ArticleContent";
+import EndOfPageRecommendations from "../FooterRecommendations";
 import { stripHtml } from "@/lib/helper_functions/strip_html";
 import type { PostWithTOC } from "@/lib/types";
-import { InfinitePosts } from "./infinitePostHandler";
+import { InfinitePosts } from "./useInfinitePosts";
  
 export default function InfiniteScrollClient({ initialPost }: { initialPost: PostWithTOC }) {
   const { rendered, loading, sentinelRef, setArticleRef } = InfinitePosts(initialPost);
@@ -16,7 +16,7 @@ export default function InfiniteScrollClient({ initialPost }: { initialPost: Pos
   return (
     <>
       {rendered.slice(1).map((post, i) => {
-        const postUrl = `${process.env.NEXT_PUBLIC_SHARENAME || "https://yoursite.com"}/${post.slug}`;
+        const postUrl = `${process.env.NEXT_PUBLIC_SHARENAME || `${process.env.NEXT_PUBLIC_SHARENAME}`}/${post.slug}`;
         const postExcerpt = stripHtml(String(post.excerpt));
 
         return (

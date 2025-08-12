@@ -1,8 +1,11 @@
-import type { NextConfig } from 'next';
 
 const hostname: string = process.env.HOSTNAME ?? 'boiler.local';
 
-const nextConfig: NextConfig = {
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+module.exports = withBundleAnalyzer({
   env: {
     WP_GRAPHQL_URL:
       process.env.WP_GRAPHQL_URL ?? 'http://localhost:8888/graphql',
@@ -28,6 +31,5 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
+});
 
-export default nextConfig;

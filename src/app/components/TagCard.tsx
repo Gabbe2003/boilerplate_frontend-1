@@ -1,31 +1,18 @@
-'use client';
+import { getAllTags } from "@/lib/graph_queries/getAllTags";
 
-import { useEffect, useState } from 'react';
+interface Props {
+  id: number, 
+  name: string
+}
 
-export default function TagList() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [tags, setTags] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+export default async function TagList(){
+  const tags = await getAllTags();
 
-  useEffect(() => {
-    async function fetchTags() {
-      try {
-        const res = await fetch('/api/tags');
-        const data = await res.json();
-        setTags(data.tags || []);
-      } catch {
-        setTags([]);
-      }
-      setLoading(false);
-    }
-    fetchTags();
-  }, []);
-
-  if (loading) return <span className="text-xs text-gray-400">Loading tags…</span>;
+  if (!tags) return <span className="text-xs text-gray-400">Loading tags…</span>;
 
   return (
     <div className="flex flex-wrap gap-2">
-      {tags.map(tag => (
+      {tags.map((tag : Props) => (
         <span
           key={tag.id}
           className="px-3 py-1 rounded bg-gray-200 text-xs text-black"

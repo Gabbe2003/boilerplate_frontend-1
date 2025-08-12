@@ -1,7 +1,7 @@
 import type { PostWithTOC } from "@/lib/types";
-import { ArticleWithContent } from "./ArticleWithContent";
-import EndOfPageRecommendations from "./EndOfPageRecommendations";
-import InfiniteScrollClient from "./InfinitePostClient";
+import { ArticleWithContent } from "./ArticleContent";
+import EndOfPageRecommendations from "./FooterRecommendations";
+import InfiniteScrollClient from "./Infinity-scroll/InfinitePost";
 import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";
 
 export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {

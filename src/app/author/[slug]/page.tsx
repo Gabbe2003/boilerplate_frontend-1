@@ -1,5 +1,6 @@
 import { getAuthorBySlug } from '@/lib/graph_queries/getAuthorBySlug';
-import { Sidebar } from "@/app/[slug]/components/sideBar";
+import { Sidebar } from "@/app/components/Main-page/SideBar";
+
 import { stripHtml } from '@/lib/helper_functions/strip_html';
 import { Post } from '@/lib/types';
 import Link from "next/link";

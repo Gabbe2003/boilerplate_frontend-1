@@ -4,7 +4,7 @@ import React from 'react';
 // import ViewedPosts from './components/ViewsPosts';
 import TagList from './components/TagCard';
 import CategorySections from './components/categories/CategoryFeed';
-import PopularPosts from './components/pouplarPosts/PopularPosts';
+import PopularPosts from './components/Popular/PopularPosts';
 // import AdPopup from './components/ads/adsPopup';
 
 export const revalidate = 3000;

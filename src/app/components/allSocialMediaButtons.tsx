@@ -1,10 +1,10 @@
 import { Button } from '@/components/ui/button';
 
 // Use relative paths for icons (assume this file is in components/ and icons/ is a sibling)
-import Facebook from './icons/facebook';
-import Instagram from './icons/instagram';
-import Linkedin from './icons/linkedin';
-import Twitter from './icons/twitter';
+import Facebook from './Icons/facebook';
+import Instagram from './Icons/instagram';
+import Linkedin from './Icons/linkedin';
+import Twitter from './Icons/twitter';
 import Link from 'next/link';
 
 // Social media link variables

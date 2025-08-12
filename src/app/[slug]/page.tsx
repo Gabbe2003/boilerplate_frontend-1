@@ -1,7 +1,7 @@
 import { getPostBySlug } from '@/lib/graph_queries/getPostBySlug';
 import { load } from 'cheerio';
 import type { ITOCItem, Post } from '@/lib/types';
-import { SinglePost } from './components/SinglePost';
+import { SinglePost } from './_components/SinglePost';
 import NotFound from '../NotFound';
 
 export const dynamicParams = false;
@@ -67,7 +67,9 @@ export default async function Page({
   try {
     const { slug } = await params;
     const post: Post | null = await getPostBySlug(slug);
-    if (!post) return;
+    if (!post) {
+      return <NotFound />
+    }
     const { updatedHtml, toc } = await extractHeadings(String(post.content));
 
     return <SinglePost initialPost={{ ...post, updatedHtml, toc }} />;

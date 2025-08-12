@@ -1,5 +1,13 @@
+"use client"
+
 import { ITOCItem } from '@/lib/types';
-import { TocCard } from './TOCCard';
+import dynamic from 'next/dynamic';
+
+const TocCard = dynamic(() =>
+  import("../_components/TocCard").then((mod) => mod.TocCard)
+);
+
+
 
 export function PostTOC({ toc }: { toc: ITOCItem[] }) {
   return (

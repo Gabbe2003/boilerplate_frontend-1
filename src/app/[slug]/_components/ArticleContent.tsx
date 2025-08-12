@@ -1,11 +1,12 @@
+
 import Image from "next/image";
 import { Breadcrumb, BreadcrumbItem } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import type { AuthorNode, Post, ITOCItem } from "@/lib/types";
 import { stripHtml } from "@/lib/helper_functions/strip_html";
 import ShareButtonsClient from "../wrapper/ShareButtons.wrapper";
-import { PostTOC } from "./TOCWrapper";
-import { Sidebar } from "./sideBar";
+import { PostTOC } from "../wrapper/TocWrapper";
+import { Sidebar } from "../../components/Main-page/SideBar";
 
 function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   if (!author) return null;

@@ -1,4 +1,4 @@
-import { Sidebar } from "@/app/[slug]/components/sideBar";
+import { Sidebar } from "@/app/components/Main-page/SideBar";
 import { getCategoryBySlug } from "@/lib/graph_queries/getCategoryBySlug";
 import { notFound } from "next/navigation";
 import Link from "next/link";

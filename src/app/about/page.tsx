@@ -1,5 +1,5 @@
 export const metadata = {
-  title: `${process.env.HOSTNAME} | About`,
+  title: `${process.env.NEXT_PUBLIC_HOSTNAME} | About`,
 };
 
 const AboutPage = () => {

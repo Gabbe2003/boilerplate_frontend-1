@@ -1,14 +1,11 @@
 'use server';
 
 import { Post } from '../types';
-
-const POPULAR_POST = process.env.POPULAR_POST!;
-
 import { normalizeFlatImages } from '../helper_functions/featured_image';
 
 export async function get_popular_post(): Promise<Post[]> {
   try {
-    const res = await fetch(`${POPULAR_POST}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?popular`, {
       cache: 'force-cache',
       next: { revalidate: 1800 },
     });

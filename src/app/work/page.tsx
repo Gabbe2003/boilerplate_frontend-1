@@ -1,3 +1,7 @@
+export const metadata = {
+  title: `${process.env.NEXT_PUBLIC_HOSTNAME} | Work`,
+};
+
 const page = () => {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-blue-50">

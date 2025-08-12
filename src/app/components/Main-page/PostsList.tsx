@@ -4,7 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useAppContext } from '@/store/AppContext';
 import { stripHtml } from '@/lib/helper_functions/strip_html';
-import { Sidebar } from '@/app/components/Main-page/SideBar';
+import { Sidebar } from './SideBar';
+import { SidebarMarkets } from '@/app/[slug]/_components/SidebarMarkets';
 
 export default function PostsList() {
   const { searchBarHeader, posts } = useAppContext();
@@ -88,9 +89,9 @@ export default function PostsList() {
           <Sidebar />
         </aside>
 
-       {/* <aside className="lg:col-span-3 lg:sticky lg:top-15 self-start text-sm rounded-sm">
+       <aside className="lg:col-span-3 lg:sticky lg:top-15 self-start text-sm rounded-sm">
         <SidebarMarkets />
-      </aside> */}
+      </aside>
       </div>
     </div>
   );

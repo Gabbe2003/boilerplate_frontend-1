@@ -51,7 +51,7 @@ const CATEGORY_QUERY_LEGACY = `
 `;
 
 export async function getAllCategories({
-  pageSize = 100,           // use the common cap
+  pageSize = 15,      
   hideEmpty = true,
   orderby = 'NAME',
   order = 'ASC',

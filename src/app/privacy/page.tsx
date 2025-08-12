@@ -1,5 +1,5 @@
 export const metadata = {
-  title: `${process.env.HOSTNAME} | Privacy`,
+  title: `${process.env.NEXT_PUBLIC_HOSTNAME} | Privacy`,
 };
 
 const PrivacyPage = () => {

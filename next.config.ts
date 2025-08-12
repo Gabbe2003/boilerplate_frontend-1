@@ -1,5 +1,5 @@
 
-const hostname: string = process.env.HOSTNAME ?? 'boiler.local';
+const hostname: string = process.env.NEXT_PUBLIC_HOSTNAME ?? 'boiler.local';
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -22,7 +22,7 @@ module.exports = withBundleAnalyzer({
         hostname,
       },
       {
-        hostname: `${process.env.NEXT_PUBLIC_SHARENAME! || 'boilerplate.local'}`,
+        hostname: `${process.env.NEXT_PUBLIC_HOST_URL! || 'boilerplate.local'}`,
         protocol: 'http',
       },
       {

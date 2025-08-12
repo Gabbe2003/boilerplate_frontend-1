@@ -43,7 +43,7 @@ export const DEFAULT_LINKS_header = {
     href: "/category/uncategorized"
   },
   "Advertisement": {
-    href: "/Advertisement"
+    href: "/advertisement"
   }
 } as const;
 
@@ -84,7 +84,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   const [tagline, setTagline] = useState('');
 
   useEffect(() => {
-    const graphqlEndpoint = `${process.env.NEXT_PUBLIC_SHARENAME}/graphql`;
+    const graphqlEndpoint = `${process.env.NEXT_PUBLIC_HOST_URL}/graphql`;
 
     fetch(graphqlEndpoint, {
       method: 'POST',

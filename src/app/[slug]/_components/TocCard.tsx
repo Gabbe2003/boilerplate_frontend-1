@@ -5,6 +5,7 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ITOCItem } from '@/lib/types';
+import Link from 'next/link';
 
 export function TocCard({ toc }: { toc: ITOCItem[] }) {
   const [open, setOpen] = useState(true); 
@@ -33,12 +34,12 @@ export function TocCard({ toc }: { toc: ITOCItem[] }) {
             <ul className="space-y-2 px-6 list-disc text-black">
               {toc.map((item) => (
                 <li key={item.id}>
-                  <a
+                  <Link
                     href={`#${item.id}`}
                     className="flex gap-2 text-primary hover:underline"
                   >
                     {item.text}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useInView } from "react-intersection-observer";
 import { Post } from "@/lib/types";
 
+
 interface CategoryPostsProps {
   slug: string;
   initialPosts: Post[];

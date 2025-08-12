@@ -74,19 +74,6 @@ fragment AuthorFields on User {
   }
 }
 
-fragment CommentFields on Comment {
-  id
-  date
-  content
-  parentId
-  author {
-    node {
-      name
-      url
-    }
-  }
-}
-
 fragment PostFull on Post {
   id
   databaseId
@@ -99,7 +86,6 @@ fragment PostFull on Post {
   content(format: RENDERED)
   date
   modified
-  commentCount
 
   featuredImage {
     node { ...MediaFields }
@@ -108,7 +94,6 @@ fragment PostFull on Post {
   author { node { ...AuthorFields } }
   categories { nodes { ...TermFields } }
   tags       { nodes { ...TermFields } }
-  comments(first: 5) { nodes { ...CommentFields } }
 
   # — SEO removed until plugin exposes matching fields —
 }
@@ -143,7 +128,7 @@ fragment PostFull on Post {
     const firstAuthorSlug = posts[0].author?.node?.slug;
 
     if (firstAuthorSlug) { 
-      await fetch(`${process.env.NEXT_PUBLIC_SHARENAME}/api/update_author_cache/${firstAuthorSlug}`, { method: "POST" });
+      await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/api/update_author_cache/${firstAuthorSlug}`, { method: "POST" });
     }
     // Revalidate the author cache for the first post's author
     

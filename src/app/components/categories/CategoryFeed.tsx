@@ -21,7 +21,7 @@ export default function CategorySections() {
     categories.find((c) => c.slug === selectedCategorySlug) ?? null;
 
   return (
-    <div className="w-[90%] lg:w-[70%] mx-auto py-6">
+    <div className="w-[100%] px-2 lg:w-[70%] mx-auto py-6">
       {loading ? (
         <p className="text-center">Loading categories...</p>
       ) : (

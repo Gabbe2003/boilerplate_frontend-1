@@ -44,7 +44,7 @@ export async function generateMetadata({
   const post: Post | null = await getPostBySlug(slug);
   if (!post) {
     return {
-      title: `Not found - ${process.env.HOSTNAME}`,
+      title: `Not found - ${process.env.NEXT_PUBLIC_HOSTNAME}`,
       description: 'Sorry, this post was not found.',
     };
   }

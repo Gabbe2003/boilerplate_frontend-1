@@ -16,7 +16,7 @@ export default function InfiniteScrollClient({ initialPost }: { initialPost: Pos
   return (
     <>
       {rendered.slice(1).map((post, i) => {
-        const postUrl = `${process.env.NEXT_PUBLIC_SHARENAME || `${process.env.NEXT_PUBLIC_SHARENAME}`}/${post.slug}`;
+        const postUrl = `${process.env.NEXT_PUBLIC_HOST_URL || `${process.env.NEXT_PUBLIC_HOST_URL}`}/${post.slug}`;
         const postExcerpt = stripHtml(String(post.excerpt));
 
         return (

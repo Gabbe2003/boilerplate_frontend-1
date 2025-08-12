@@ -1,7 +1,5 @@
 // lib/getViews.ts
 "use server"
-const VIEW_POPULAR_PERIOD_POST = process.env.VIEW_POPULAR_PERIOD_POST!;
-// import { loggedFetch } from '../logged-fetch';
 
 interface FeaturedImageObject {
   node?: {
@@ -34,8 +32,7 @@ export async function getViews(
 > {
   try {
     
-    const res = await fetch(`${VIEW_POPULAR_PERIOD_POST}=${period}`, { cache: 'force-cache', next: { revalidate: 10 }});
-    // const res = await loggedFetch(`${VIEW_POPULAR_PERIOD_POST}=${period}`, {context: 'getViews'});
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`, { cache: 'force-cache', next: { revalidate: 10 }});
 
     if (!res.ok) {
       console.error('[getViews] non-OK response:', await res.text());

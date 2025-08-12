@@ -87,7 +87,7 @@ export async function submitInquiry(
   }
 
   // Compose email
-  const site = process.env.HOSTNAME || "Website";
+  const site = process.env.NEXT_PUBLIC_HOSTNAME || "Website";
   const kind = raw.source ?? (safeLink ? "link" : "ad");
   const subject =
     kind === "link" ? `New Link Purchase request from ${site}` : `New Ad Inquiry from ${site}`;

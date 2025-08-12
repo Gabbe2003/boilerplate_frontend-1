@@ -13,7 +13,7 @@ interface SiteAssets {
   logo: Asset | null;
 }
 
-const DEFAULT_URL = process.env.HOSTNAME!;
+const DEFAULT_URL = process.env.NEXT_PUBLIC_HOSTNAME!;
 
 export async function getLogo(): Promise<SiteAssets> {
   try {

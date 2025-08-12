@@ -13,9 +13,38 @@ import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { ICategory, Post } from "@/lib/types";
 import CategoryPosts from "./CategoryPosts";
+import type { Metadata, ResolvingMetadata } from 'next';
+
+export async function generateMetadata(
+  { params }: { params: { slug: string } },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { slug } = params;
+  const category = await getCategoryBySlug(slug);
+
+  // Fallback if not found
+  if (!category) {
+    return { title: 'Category not found' };
+  }
+
+  const previousImages = (await parent).openGraph?.images ?? [];
+  const ogImages = category.image?.sourceUrl
+    ? [category.image.sourceUrl, ...previousImages]
+    : previousImages;
+
+  return {
+    title: category.name,                      
+    description: category.description || undefined,
+    openGraph: {
+      title: category.name,                   
+      description: category.description || undefined,
+      images: ogImages,
+    },
+  };
+}
 
 interface CategoryPageProps {
-params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>;
 
 }
 

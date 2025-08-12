@@ -5,7 +5,7 @@ import InfiniteScrollClient from "./Infinity-scroll/InfinitePost";
 import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";
 
 export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
-  const postUrl = `${process.env.NEXT_PUBLIC_SHARENAME || "https://yoursite.com"}/${initialPost.slug}`;
+  const postUrl = `${process.env.NEXT_PUBLIC_HOST_URL || process.env.NEXT_PUBLIC_HOST_URL}/${initialPost.slug}`;
   const postExcerpt = initialPost.excerpt!.replace(/<[^>]+>/g, "").trim();
 
   update_viewed_post(String(initialPost.databaseId)); 

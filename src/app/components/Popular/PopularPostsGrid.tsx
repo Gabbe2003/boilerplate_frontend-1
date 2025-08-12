@@ -19,7 +19,7 @@ type FeedItem = AdItem | PostItem;
 
 function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
   // Helper function to limit text
-  function getExcerpt(text: string, words = 15): string {
+  function getExcerpt(text: string, words = 10): string {
     const wordArray = text.trim().split(/\s+/);
     return wordArray.length > words
       ? wordArray.slice(0, words).join(' ') + '…'
@@ -40,7 +40,7 @@ function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
         </span>
         {ad.text && (
           <p className="text-sm text-gray-700 leading-snug mb-1 break-words">
-            {getExcerpt(ad.text, 15)}
+            {getExcerpt(ad.text, 10)}
           </p>
         )}
       </div>
@@ -61,7 +61,7 @@ export default function PopularNews({ items = [] }: { items: FeedItem[] }) {
   const lastItem = items[8];
 
   return (
-    <section className="w-[90%] lg:w-[70%] mx-auto py-8">
+    <section className="w-[100%] px-2 lg:w-[70%] mx-auto py-8">
       {tagline && (
         <h1 className="mt-1 text-sm text-gray-500 block mb-4">{tagline}</h1>
       )}

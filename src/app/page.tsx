@@ -5,7 +5,7 @@ import ViewedPosts from './components/ViewsPosts';
 import PopularNews from './components/pouplarPosts/PouplarQuery';
 import TagList from './components/TagCard';
 import CategorySections from './components/categories/CategoryFeed';
-// import AdPopup from './components/ads/adsPopup';
+import AdPopup from './components/ads/adsPopup';
 
 export const revalidate = 3000;
 
@@ -34,17 +34,17 @@ const Page = async () => {
 
 return (
   <>
+    <PopularNews  />
+    <br></br>
+    <CategorySections />
+    <br></br>
+    <br></br>
+    <br></br>
     <PostsList />
-    {/* <PopularNews  /> */}
-    {/* <CategorySections /> */}
     <br></br>
     <br></br>
     <br></br>
-    <br></br>
-    <br></br>
-    <br></br>
-    <TagList />
-    {/* <AdPopup /> */}
+    <AdPopup />
 
     <div className="flex w-full flex-col gap-8 px-4 py-10 md:flex-row">
       

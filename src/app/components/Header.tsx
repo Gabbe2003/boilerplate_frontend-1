@@ -7,8 +7,8 @@ import { useEffect, useState, useCallback } from 'react';
 import DesktopNav from './navigation/DesktopNav';
 import MobileNav from './navigation/MobileNav';
 import PopupModal from './Rule_sub';
-import SearchBarInline from './navigation/SearchBarInline';
 import type { SearchResult } from './navigation/hooks/useSearchBar';
+import SearchBarInline from './navigation/SearchBarInline';
 
 type Category = { id: string; name: string; slug: string };
 
@@ -59,7 +59,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
+      <header className="sticky top-0 bottom-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
         <div className="w-[100%] px-2 lg:w-[70%] mx-auto grid grid-cols-[auto_1fr_auto] items-center py-2 gap-2">
           {/* Left: Logo */}
           <div className="flex items-center min-h-[40px]">
@@ -84,8 +84,8 @@ export default function Header() {
             <SearchBarInline
               value={searchValue}
               onChange={setSearchValue}
-              posts={posts}            // optional local fallback
-              searchFn={searchFn}      // server-backed suggestions
+              posts={posts}            
+              searchFn={searchFn}
               className="w-full max-w-xl"
             />
           </div>

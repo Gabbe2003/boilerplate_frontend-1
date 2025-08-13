@@ -13,6 +13,26 @@ import { ChevronRight } from "lucide-react";
 import TagPosts from "./TagPosts";
 import { Post } from "@/lib/types";
 
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const slug = (await params).slug;
+  const tag = await getTagBySlug(slug);
+
+  if (!tag) return { title: 'Tag not found' };
+
+  return {
+    title: tag.name, // ← show the tag name in the tab/title
+    description: tag.description || undefined,
+ 
+  };
+}
+
+
 interface Tag {
   id: string;
   slug: string;

@@ -1,4 +1,5 @@
-"use server"; 
+import "server-only"; 
+
 
 
 export async function getTagBySlug(slug: string, after?: string) {
@@ -50,7 +51,7 @@ export async function getTagBySlug(slug: string, after?: string) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ query, variables: { slug, after } }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 3600, tags:[`tag-${slug}`] },
     });
 
     if (!res.ok) {

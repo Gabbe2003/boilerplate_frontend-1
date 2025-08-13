@@ -1,10 +1,10 @@
 "use client"
 
-import { ArticleWithContent } from "../ArticleContent";
-import EndOfPageRecommendations from "../FooterRecommendations";
+import { ArticleContent } from "../ArticleContent";
 import { stripHtml } from "@/lib/helper_functions/strip_html";
 import type { PostWithTOC } from "@/lib/types";
 import { InfinitePosts } from "./useInfinitePosts";
+import RecommendationList from "../Single-page-footer/RecommendationList";
  
 export default function InfiniteScrollClient({ initialPost }: { initialPost: PostWithTOC }) {
   const { rendered, loading, sentinelRef, setArticleRef } = InfinitePosts(initialPost);
@@ -27,13 +27,13 @@ export default function InfiniteScrollClient({ initialPost }: { initialPost: Pos
             ref={setArticleRef(i + 1)}
           >
               <div className="col-span-1 lg:col-span-2 flex flex-col gap-8 ">
-              <ArticleWithContent
+              <ArticleContent
                 post={post}
                 postUrl={postUrl}
                 postExcerpt={postExcerpt}
                 index={i + 1}
               />
-              <EndOfPageRecommendations currentSlug={post.slug} />
+              <RecommendationList currentSlug={post.slug} />
             </div>
             <aside className="hidden lg:block space-y-8 lg:col-span-1 bg-[var(--secBG)] px-0 sm:px-2">
             <div

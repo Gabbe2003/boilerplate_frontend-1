@@ -33,7 +33,7 @@ function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   );
 }
 
-export function ArticleWithContent({
+export function ArticleContent({
   post,
   postUrl,
   postExcerpt,
@@ -47,11 +47,11 @@ export function ArticleWithContent({
   index: number;
 }) {
   return (
-    <article className="max-w-7xl mx-auto px-4 md:px-8 py-8 mb-10">
+    <article className="max-w-7xl mx-auto px-4 md:px-8 py-8 mb-10 w-full ">
       {/* Title, Excerpt, Author+Share */}
       <div ref={aboveImageRef ?? undefined} className="mb-2">
         {index === 0 ? (
-          <h1 className="text-3xl md:text-4xl font-bold text-start mb-1">
+          <h1 className="text-3xl md:text-4xl font-bold text-start mb-1 mt-[0]">
             {post.title}
           </h1>
         ) : (

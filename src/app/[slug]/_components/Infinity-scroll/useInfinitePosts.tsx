@@ -1,11 +1,21 @@
 import { useEffect, useRef, useState, useCallback } from "react";
-import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
-import { getPosts } from "@/lib/graph_queries/getRecommendationPost";
 import type { ITOCItem, Post, PostWithTOC } from "@/lib/types";
 
-/**
- * Lightweight, browser-native heading extraction (no cheerio needed in the client).
- */
+
+async function loadPost(nextSlug: string) {
+  const res = await fetch("/api/post-by-slug", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ nextSlug }),
+  });
+
+  if (!res.ok) throw new Error(`Failed: ${res.status}`);
+  const { data } = (await res.json()) as { data: Post | null };
+
+  return data; // Post | null
+}
+
+
 function extractHeadingsClient(html: string): { updatedHtml: string; toc: ITOCItem[] } {
   const doc = new DOMParser().parseFromString(html || "", "text/html");
   const toc: ITOCItem[] = [];
@@ -59,8 +69,16 @@ export function InfinitePosts(initialPost: PostWithTOC & { updatedHtml?: string;
     const controller = new AbortController();
 
     (async () => {
+      async function fetchRecommendations(): Promise<Post[]> {
+        const res = await fetch("/api/recommendations", { method: "GET" });
+        if (!res.ok) throw new Error(`Failed: ${res.status}`);
+        return (await res.json()) as Post[]; // <- now posts.map(p => p.slug) is valid
+      }
+
       try {
-        const posts = await getPosts();
+        const posts = await fetchRecommendations();
+        console.log(posts);
+        
         if (!mounted) return;
         const uniqueSlugs = Array.from(new Set(posts.map((p) => p.slug)));
         setQueue(uniqueSlugs.filter((s) => s !== initialPost.slug));
@@ -97,7 +115,9 @@ export function InfinitePosts(initialPost: PostWithTOC & { updatedHtml?: string;
         setLoading(true);
 
         try {
-          const post = await getPostBySlug(nextSlug);
+       
+
+        const post = await loadPost(nextSlug);
           if (post) {
             const { updatedHtml, toc } = extractHeadingsClient(String(post.content ?? ""));
             setRendered((prev) =>
@@ -107,7 +127,6 @@ export function InfinitePosts(initialPost: PostWithTOC & { updatedHtml?: string;
                     ...prev,
                     {
                       ...(post as Post),
-                      // keep shape compatible with PostWithTOC consumer
                       updatedHtml,
                       toc,
                     } as PostWithTOC,

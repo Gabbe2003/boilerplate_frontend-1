@@ -13,44 +13,34 @@ import { ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { ICategory, Post } from "@/lib/types";
 import CategoryPosts from "./CategoryPosts";
-import type { Metadata, ResolvingMetadata } from 'next';
 
-export async function generateMetadata(
-  { params }: { params: { slug: string } },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const { slug } = params;
+
+// ---- Shared props (Promise style) ----
+type RouteParams = { slug: string };
+type PagePropsPromise = { params: Promise<RouteParams> };
+
+// ---- generateMetadata (Promise params) ----
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const slug = (await params).slug;
   const category = await getCategoryBySlug(slug);
 
-  // Fallback if not found
-  if (!category) {
-    return { title: 'Category not found' };
-  }
-
-  const previousImages = (await parent).openGraph?.images ?? [];
-  const ogImages = category.image?.sourceUrl
-    ? [category.image.sourceUrl, ...previousImages]
-    : previousImages;
+  if (!category) return { title: 'Category not found' };
 
   return {
-    title: category.name,                      
+    title: category.name,
     description: category.description || undefined,
-    openGraph: {
-      title: category.name,                   
-      description: category.description || undefined,
-      images: ogImages,
-    },
   };
 }
 
-interface CategoryPageProps {
-  params: Promise<{ slug: string }>;
 
-}
+export default async function CategoryPage({ params }: PagePropsPromise) {
+  const { slug } = await params;                
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
   let category: ICategory | null = null;
-  const {slug} = await params;
   try {
     category = await getCategoryBySlug(slug);
   } catch (e) {
@@ -63,9 +53,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     );
   }
 
-  if (!category) {
-    notFound();
-  }
+  if (!category) notFound();
 
   // Breadcrumb items
   const breadcrumbItems = [

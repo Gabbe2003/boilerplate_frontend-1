@@ -1,4 +1,4 @@
-"use server"; 
+import "server-only"; 
 
 export async function getCategoryBySlug(slug: string, after?: string) {
   const query = `
@@ -56,7 +56,7 @@ export async function getCategoryBySlug(slug: string, after?: string) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ query, variables: { slug, after } }),
-      next: { revalidate: 3600 },
+      next: { revalidate: 15 * 60 },
     });
 
     if (!res.ok) {

@@ -1,5 +1,5 @@
 // lib/graph_queries/getAllCategories.ts
-'use server';
+import "server-only"; 
 
 import { revalidateTag } from 'next/cache';
 

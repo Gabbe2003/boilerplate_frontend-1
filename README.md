@@ -1,5 +1,10 @@
 
 
+Footer and header can each call their own fetch
+
+
+add then a tags to revalidate which is may better
+Fix the import 'server-only's instead of "use server" just make sure we are appending the right top for every file. And then we look over the logic once more. 
 
 
 2. The footer is responsive but looks off on different breaking points, 

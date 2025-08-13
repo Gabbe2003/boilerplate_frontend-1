@@ -42,7 +42,7 @@ export default function MobileNav({
 
   // NOTE: No breakpoint here. Header controls visibility at 1500px.
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center pl-2">
       <Drawer direction="right" open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
           <Button variant="ghost" className="p-2">

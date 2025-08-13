@@ -53,15 +53,15 @@ return (
           ))}
         </CarouselContent>
 
-        {/* Right edge fade (only over the track) */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 w-8 z-10"
-          style={{
-            background:
-              "linear-gradient(to left, rgba(246,228,211,0.95), rgba(246,228,211,0))",
-          }}
-        />
+    <div
+  aria-hidden
+  className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 sm:w-28 md:w-32"
+  style={{
+    background:
+      // start opaque on the far right, fade out more gradually to the left
+      "linear-gradient(to left, rgba(246,228,211,0.95) 35%, rgba(246,228,211,0) 100%)",
+  }}
+/>
       </div>
 
       {/* Arrows UNDER the posts */}

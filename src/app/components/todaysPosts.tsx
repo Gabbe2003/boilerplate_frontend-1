@@ -1,6 +1,3 @@
-// lib/rest_queries/getTodaysPosts.ts
-'use server';
-
 const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL!;
 
 export async function getTodaysPosts(limit: number = 5) {

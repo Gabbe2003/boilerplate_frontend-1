@@ -3,7 +3,7 @@ import React from 'react';
 import CategorySections from './components/categories/CategoryFeed';
 import PopularPosts from './components/Popular/PopularPosts';
 import AdPopup from './components/ads/adsPopup';
-import TodayPostsSidebar from './components/TodayPostsSidebar';
+import CatsPage from './[slug]/_components/categoryWrapper';
 
 export const revalidate = 3000;
 
@@ -32,11 +32,11 @@ const Page = async () => {
 
 return (
   <>
-    <div className='grid gap-10'>
+    <div className='grid gap-10 px-2'>
       {/* <PopularPosts  /> */}
-      < TodayPostsSidebar />
-      <CategorySections />
-      <PostsList />
+      {/* <CatsPage /> */}
+      {/* <CategorySections /> */}
+      {/* <PostsList /> */}
     </div>
     {/* <AdPopup /> */}
 

@@ -1,12 +1,19 @@
-// components/TodayPostsSidebar.tsx
+import clsx from "clsx";
 import Link from "next/link";
 import { getTodaysPosts } from "./todaysPosts";
 
 type Props = {
-  /** Max posts to show in the sidebar */
-  limit?: number;
   /** Optional heading text */
   heading?: string;
+};
+
+type Post = {
+  id: string | number;
+  title: string;
+  date?: string;
+  excerpt?: string;
+  slug?: string;
+  uri?: string;
 };
 
 function stripHtml(input?: string): string {
@@ -30,45 +37,70 @@ function formatDateStockholm(iso?: string) {
   }).format(d);
 }
 
+// Server Component (no "use client")
 export default async function TodayPostsSidebar({
-  limit = 8,
   heading = "Today’s Posts",
 }: Props) {
-  // getTodaysPosts already accepts a limit
-  const posts = await getTodaysPosts(limit);
+  // Force limit to 5
+  let posts: Post[] = [];
+  try {
+    posts = await getTodaysPosts(5);
+  } catch {
+    posts = [];
+  }
 
   return (
-    <aside className="flex flex-col w-full md:w-80 lg:w-96 border rounded-xl p-4 bg-white/50 dark:bg-zinc-900/50">
-      <h2 className="text-lg font-semibold mb-3">{heading}</h2>
+    <>
+      <div
+        className={clsx(
+          "transition-all duration-500 overflow-hidden",
+          "bg-[var(--secBG)]"
+        )}
+      >
+        <div>
+          <div className="p-3 space-y-4 flex flex-col items-start">
+            <section className="w-full p-3 bg-muted flex flex-col gap-3 rounded-md">
+              <h2 className="text-base font-semibold">{heading}</h2>
 
-      {posts.length === 0 ? (
-        <div className="text-sm text-zinc-500">No posts yet today.</div>
-      ) : (
-        <ul className="space-y-4">
-          {posts.map((p) => {
-            const date = formatDateStockholm(p.date);
-            const excerpt = truncate(stripHtml(p.excerpt));
-            return (
-              <li key={p.id} className="group">
-                <Link
-                  href={p.uri || `/posts/${p.slug}`}
-                  className="block focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg"
-                >
-                  <div className="text-sm text-zinc-500">{date}</div>
-                  <div className="mt-0.5 font-medium leading-snug group-hover:underline">
-                    {p.title}
-                  </div>
-                  {excerpt && (
-                    <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-300 line-clamp-3">
-                      {excerpt}
-                    </p>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </aside>
+              {posts.length === 0 ? (
+                <div className="text-sm text-zinc-600 dark:text-black-300">
+                  No posts yet today.
+                </div>
+              ) : (
+                <ul className="space-y-3 w-full">
+                  {posts.map((p) => {
+                    const date = formatDateStockholm(p.date);
+                    const excerpt = truncate(stripHtml(p.excerpt), 40);
+                    return (
+                      <li
+                        key={p.id}
+                        className="group bg-white dark:bg-black-800 rounded-md p-3 shadow-sm hover:shadow-md transition-shadow"
+                      >
+                        <Link
+                          href={p.uri || `/posts/${p.slug}`}
+                          className="block focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg"
+                        >
+                          {date && (
+                            <div className="text-xs text-black-500">{date}</div>
+                          )}
+                          <div className="mt-0.5 font-medium leading-snug group-hover:underline">
+                            {p.title}
+                          </div>
+                          {excerpt && (
+                            <p className="mt-1 text-sm text-black-600 dark:text-black-300">
+                              {excerpt}
+                            </p>
+                          )}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </section>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

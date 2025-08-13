@@ -3,6 +3,7 @@ import React from 'react';
 import CategorySections from './components/categories/CategoryFeed';
 import PopularPosts from './components/Popular/PopularPosts';
 import AdPopup from './components/ads/adsPopup';
+import TodayPostsSidebar from './components/TodayPostsSidebar';
 
 export const revalidate = 3000;
 
@@ -32,11 +33,12 @@ const Page = async () => {
 return (
   <>
     <div className='grid gap-10'>
-      <PopularPosts  />
+      {/* <PopularPosts  /> */}
+      < TodayPostsSidebar />
       <CategorySections />
       <PostsList />
     </div>
-    <AdPopup />
+    {/* <AdPopup /> */}
 
     <div className="flex w-full flex-col gap-8 px-4 py-10 md:flex-row">
       

@@ -8,7 +8,6 @@ import { AdCard } from '../ads/adcard';
 import { PostCard } from './PopularPostsCard';
 import { Ad, ADS } from '../ads/adsContent';
 
-// --- Feed item discriminated union types ---
 type AdItem = {
   type: 'ad';
   adIndex: number;
@@ -19,7 +18,7 @@ type FeedItem = AdItem | PostItem;
 
 function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
   // Helper function to limit text
-  function getExcerpt(text: string, words = 10): string {
+  function getExcerpt(text: string, words = 15): string {
     const wordArray = text.trim().split(/\s+/);
     return wordArray.length > words
       ? wordArray.slice(0, words).join(' ') + '…'
@@ -40,7 +39,7 @@ function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
         </span>
         {ad.text && (
           <p className="text-sm text-gray-700 leading-snug mb-1 break-words">
-            {getExcerpt(ad.text, 10)}
+            {getExcerpt(ad.text, 15)}
           </p>
         )}
       </div>

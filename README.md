@@ -46,3 +46,5 @@ Server and client components can be used together but as a recommendation for se
 
 Check later:
 
+CREATE A TODAYS NEWS MARKET LIKE DI.SE
+

@@ -3,7 +3,7 @@ import { Ad } from './adsContent';
 export function AdCard({ ad }: { ad: Ad }) {
   if (ad.script) {
     return (
-      <div className="w-full h-full flex flex-col items-center justify-center text-center overflow-hidden">
+      <div className="w-full h-full flex flex-col items-center justify-center text-center overflow-hidden transition-transform duration-200 ease-in-out hover:scale-105">
         <div
           className="flex-1 w-full h-full flex items-center justify-center overflow-hidden"
           style={{ padding: 0 }}

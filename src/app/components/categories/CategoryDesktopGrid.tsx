@@ -11,7 +11,7 @@ export default function CategoryDesktopGrid({ posts }: Props) {
   if (!posts || posts.length === 0) return null;
 
   return (
-    <div className="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="hidden lg:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
       {posts.map((post) => (
         <Link key={post.id} href={`/${post.slug}`} className="group flex flex-col gap-2">
           {post.featuredImage?.node?.sourceUrl && (

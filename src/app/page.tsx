@@ -2,7 +2,8 @@ import PostsList from './components/Main-page/PostsList';
 import React from 'react';
 import CategorySections from './components/categories/CategoryFeed';
 import PopularPosts from './components/Popular/PopularPosts';
-// import AdPopup from './components/ads/adsPopup';
+import AdPopup from './components/ads/adsPopup';
+import CatsPage from './[slug]/_components/categoryWrapper';
 
 export const revalidate = 3000;
 
@@ -11,8 +12,9 @@ const Page = async () => {
 
 return (
   <>
-    <div className='grid gap-10'>
+    <div className='grid gap-10 px-2'>
       <PopularPosts  />
+      <CatsPage />
       <CategorySections />
       <PostsList />
     </div>

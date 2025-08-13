@@ -58,8 +58,9 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 bottom-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
-        <div className="w-[100%] px-2 lg:w-[70%] mx-auto grid grid-cols-[auto_1fr_auto] items-center py-2 gap-2">
+    <header className="sticky top-0 bottom-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md px-2 sm:px-4 md:px-6">
+  <div className="w-full lg:w-[70%] md:w-full mx-auto grid grid-cols-[auto_1fr_auto] items-center py-2 gap-2 px-2 sm:px-4 md:px-6">
+
           {/* Left: Logo */}
           <div className="flex items-center min-h-[40px]">
             <Link href="/" aria-label="Go to homepage" className="flex-shrink-0">
@@ -69,7 +70,7 @@ export default function Header() {
                   alt={logo.altText || 'Logo'}
                   width={40}
                   height={40}
-                  className="rounded object-cover"
+                  className="object-cover"
                   priority
                 />
               ) : (

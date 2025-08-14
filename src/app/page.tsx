@@ -1,9 +1,10 @@
 import PostsList from './components/Main-page/PostsList';
 import React from 'react';
-import CategorySections from './components/categories/CategoryFeed';
 import PopularPosts from './components/Popular/PopularPosts';
 import AdPopup from './components/ads/adsPopup';
 import CatsPage from './[slug]/_components/categoryWrapper';
+import ViewedPosts from './components/ViewsPosts';
+import PopularNewsTicker from './components/PopularNewsTicker';
 
 export const revalidate = 3000;
 
@@ -33,10 +34,14 @@ const Page = async () => {
 return (
   <>
     <div className='grid gap-10 px-2'>
-      {/* <PopularPosts  /> */}
-      {/* <CatsPage /> */}
-      {/* <CategorySections /> */}
-      {/* <PostsList /> */}
+      <PopularPosts />
+      <PopularNewsTicker
+        speed={90}              // pixels/second
+        showThumbnails={true}   // or false
+        className="mx-auto"     // optional extra classes
+      />
+      <CatsPage />
+      <PostsList />
     </div>
     {/* <AdPopup /> */}
 
@@ -45,8 +50,8 @@ return (
       <section className="w-full md:w-4/5 lg:w-3/1">
       </section>
       {/* <aside className="w-full md:w-1/5 lg:w-1/2 shrink-0">
-        <ViewedPosts />
-      </aside> */}
+      // </aside> */}
+      {/* <ViewedPosts /> */}
     </div>
   </>
   );

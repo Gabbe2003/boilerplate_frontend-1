@@ -25,7 +25,7 @@ export default function CategoryDesktopGrid({ posts }: Props) {
             </div>
           )}
           <div className="flex flex-col gap-1">
-            <p className="text-sm font-medium group-hover:underline text-gray-800">
+            <p className="text-sm font-medium text-gray-800">
               {post.title}
             </p>
             {post.excerpt && (

@@ -14,5 +14,6 @@ export async function getTodaysPosts(limit: number = 5) {
   }
 
   const data = await res.json();
+  console.log(data)
   return data.slice(0, limit);
 }

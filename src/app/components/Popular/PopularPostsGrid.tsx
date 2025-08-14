@@ -60,7 +60,8 @@ export default function PopularNews({ items = [] }: { items: FeedItem[] }) {
   const lastItem = items[8];
 
   return (
-    <section className="w-[100%] px-2 lg:w-[70%] mx-auto py-8">
+    <section className="w-[100%] px-2 lg:w-[70%] mx-auto py-8 ">
+      
       {tagline && (
         <h1 className="mt-1 text-sm text-gray-500 block mb-4">{tagline}</h1>
       )}

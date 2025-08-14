@@ -1,4 +1,4 @@
-'use server';
+import "server-only"; 
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 

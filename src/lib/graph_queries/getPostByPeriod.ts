@@ -1,5 +1,5 @@
 // lib/getViews.ts
-"use server"
+import "server-only"; 
 
 interface FeaturedImageObject {
   node?: {
@@ -32,7 +32,9 @@ export async function getViews(
 > {
   try {
     
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`, { cache: 'force-cache', next: { revalidate: 10 }});
+    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`, 
+      { cache: 'force-cache', next: { revalidate: 400 }
+    });
 
     if (!res.ok) {
       console.error('[getViews] non-OK response:', await res.text());

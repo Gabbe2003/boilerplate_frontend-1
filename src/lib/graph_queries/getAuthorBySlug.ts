@@ -1,4 +1,4 @@
-'use server';
+import "server-only"; 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 
 export async function getAuthorBySlug(slug: string) {
@@ -36,7 +36,6 @@ export async function getAuthorBySlug(slug: string) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ query, variables: { slug } }),
-      cache: 'force-cache',
       next: { revalidate: 600, tags: [`author-${slug}`] },
     });
 

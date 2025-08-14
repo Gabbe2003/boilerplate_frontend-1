@@ -1,9 +1,7 @@
-"use server"
-
+import "server-only"; 
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 import { GraphQLError, Post } from '@/lib/types';
-// import { loggedFetch } from '../logged-fetch';
 
 export async function getPosts(): Promise<Post[]> {
   
@@ -32,16 +30,8 @@ export async function getPosts(): Promise<Post[]> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),
-      next: { revalidate: 604800 }, 
+      next: { revalidate: 604800, tags: [`recommendation`]}, 
     });
-
-
-  //  const res = await loggedFetch(GRAPHQL_URL, {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ query }),
-  //       context: 'getPosts',
-  //     });
 
     const json = (await res.json()) as {
       data?: { posts?: { nodes: Post[] } };

@@ -14,7 +14,6 @@ type Category = { id: string; name: string; slug: string };
 
 export default function Header() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME || 'Home';
-  // Stop using global search value to avoid mirroring:
   const { logo, links, posts } = useAppContext();
 
   const [isModalOpen, setIsModalOpen] = useState(false);

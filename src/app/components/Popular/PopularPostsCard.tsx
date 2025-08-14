@@ -25,12 +25,12 @@ function getExcerpt(text?: string, words = 10) {
 export function PostCard({ post, className = '' }: PostCardProps) {
  const featuredImageUrl = post.featuredImage?.node?.sourceUrl ?? "";
 
-
   return (
     <div className={`flex flex-col shadow bg-[#FFF8F2] w-full overflow-hidden ${className}`}>
       {/* Image fills the top of the card */}
       <div className="relative w-full h-[180px] overflow-hidden transition-transform duration-200 ease-in-out hover:scale-105">
-        <Image
+       {featuredImageUrl && (
+         <Image
           src={featuredImageUrl}
           alt={post.title}
           fill
@@ -38,6 +38,7 @@ export function PostCard({ post, className = '' }: PostCardProps) {
           className="object-cover w-full h-full"
           priority={true}
         />
+       )}
       </div>
       {/* Content gets the padding */}
       <div className="p-4">

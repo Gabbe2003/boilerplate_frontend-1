@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useAppContext } from '@/store/AppContext';
 import { stripHtml } from '@/lib/helper_functions/strip_html';
 import { Sidebar } from './SideBar';
-import { SidebarMarkets } from '@/app/[slug]/_components/SidebarMarkets';
+import { SidebarMarkets } from '@/app/[slug]/_components/Sidebar/SidebarMarkets';
 
 export default function PostsList() {
   const { searchBarHeader, posts } = useAppContext();

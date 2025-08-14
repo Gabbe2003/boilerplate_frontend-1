@@ -1,4 +1,4 @@
-'use server';
+import "server-only"; 
 
 export async function update_viewed_post(postID: string) {
   console.log('Updating viewed post:', postID);

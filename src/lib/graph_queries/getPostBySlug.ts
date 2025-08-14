@@ -1,4 +1,5 @@
-'use server';
+import "server-only"; 
+
 
 import { GraphQLError, Post } from '../types';
 
@@ -52,16 +53,10 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, variables: { slug } }),
-      next: { revalidate: 300 },
+      next: { revalidate: 300, tags: [`post-${slug}`]},
     });
 
-    // const res = await loggedFetch(GRAPHQL_URL, {
-    //       method: 'POST',
-    //       headers: { 'Content-Type': 'application/json' },
-    //       body: JSON.stringify({ query, variables: { slug } }),
-    //       next: { revalidate: 60 },
-    //       context: 'getPostBySlug',
-    //     });
+  
 
     const json = (await res.json()) as {
       data?: { postBy?: Post };

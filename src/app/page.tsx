@@ -15,11 +15,6 @@ return (
   <>
     <div className='grid gap-10 px-2'>
       <PopularPosts />
-      <PopularNewsTicker
-        speed={90}              // pixels/second
-        showThumbnails={true}   // or false
-        className="mx-auto"     // optional extra classes
-      />
       <CatsPage />
       <PostsList />
     </div>

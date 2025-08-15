@@ -7,6 +7,7 @@ import { Post } from '@/lib/types';
 import { AdCard } from '../ads/adcard';
 import { PostCard } from './PopularPostsCard';
 import { Ad, ADS } from '../ads/adsContent';
+import PopularNewsSequenceClient from './MonthPouplar';
 
 type AdItem = {
   type: 'ad';
@@ -17,7 +18,6 @@ type PostItem = Post & { type: 'post' };
 type FeedItem = AdItem | PostItem;
 
 function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
-  // Helper function to limit text
   function getExcerpt(text: string, words = 15): string {
     const wordArray = text.trim().split(/\s+/);
     return wordArray.length > words
@@ -27,12 +27,9 @@ function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
 
   return (
     <div className={`flex flex-col shadow bg-[#FFF8F2] w-full overflow-hidden ${className}`}>
-      {/* Ad image area */}
       <div className="relative w-full h-[180px] overflow-hidden">
         <AdCard ad={ad} />
       </div>
-
-      {/* Bottom content */}
       <div className="p-4 flex flex-col justify-between flex-grow">
         <span className="block text-xs font-semibold text-neutral-500 uppercase tracking-wide text-start mb-2">
           Sponsored
@@ -47,24 +44,46 @@ function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
   );
 }
 
-export default function PopularNews({ items = [] }: { items: FeedItem[] }) {
+export default function PopularNews({
+  items = [],
+  tickerItems = [],
+}: {
+  items: FeedItem[];
+  tickerItems?: {
+    id: string;
+    slug: string;
+    title: string;
+    date?: string;
+    author_name?: string;
+    featuredImage?: string | { node?: { sourceUrl?: string } };
+  }[];
+}) {
   const { tagline } = useAppContext();
 
   if (!items.length) {
     return <div className="py-8 text-center">No popular posts found.</div>;
   }
 
-  // Split into "top", "bottom", "last" for lg layout
   const topItems = items.slice(0, 4);
   const bottomItems = items.slice(4, 8);
   const lastItem = items[8];
 
   return (
-    <section className="w-[100%] px-2 lg:w-[70%] mx-auto py-8 ">
-      
+    <section className="w-[100%] px-2 lg:w-[70%] mx-auto py-8">
       {tagline && (
         <h1 className="mt-1 text-sm text-gray-500 block mb-4">{tagline}</h1>
       )}
+
+      {/* Ticker directly under the tagline */}
+      {tickerItems && tickerItems.length > 0 && (
+        
+        <div>
+          <PopularNewsSequenceClient
+            items={tickerItems}
+            />
+        </div>
+      )}
+
       <div className="flex flex-col gap-8">
         {/* Mobile: 2 columns x4, last full width */}
         <div className="grid grid-cols-2 gap-4 lg:hidden">
@@ -90,7 +109,7 @@ export default function PopularNews({ items = [] }: { items: FeedItem[] }) {
           )}
         </div>
 
-        {/* Desktop: first row, 4 columns */}
+        {/* Desktop: first row */}
         <div className="hidden lg:grid grid-cols-4 gap-2">
           {topItems.map((item, idx) =>
             item.type === 'ad' ? (
@@ -103,7 +122,7 @@ export default function PopularNews({ items = [] }: { items: FeedItem[] }) {
           )}
         </div>
 
-        {/* Desktop: second row, 5 columns, last item fills last cell if present */}
+        {/* Desktop: second row */}
         <div className="hidden lg:grid grid-cols-5 gap-2">
           {bottomItems.map((item, idx) =>
             item.type === 'ad' ? (

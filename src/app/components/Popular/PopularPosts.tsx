@@ -1,3 +1,4 @@
+// Server Component (no 'use client')
 import { getViews } from "@/lib/graph_queries/getPostByPeriod";
 import PopularNews from "./PopularPostsGrid";
 import { Ad, ADS } from "../ads/adsContent";
@@ -11,6 +12,16 @@ type AdItem = {
 };
 type PostItem = Post & { type: 'post' };
 type FeedItem = AdItem | PostItem;
+
+// --- Ticker item type (matches PopularNewsSequenceClient props) ---
+type TickerItem = {
+  id: string;
+  slug: string;
+  title: string;
+  date?: string;
+  author_name?: string;
+  featuredImage?: string | { node?: { sourceUrl?: string } };
+};
 
 // --- Helper utilities ---
 function pickTwoUniqueAds(adsArray: Ad[]): [number, number] {
@@ -34,14 +45,26 @@ function shuffleArray<T>(array: T[]): T[] {
 
 export default async function PopularPosts() {
   const posts = await getViews('week');
+  if (!posts?.length) return <div>No fun posts!</div>;
 
-  if (!posts.length) return <div>No fun posts!</div>;
-
+  // Grid items (mix in two ads)
   const mainPosts: PostItem[] = posts.slice(0, 7).map((p) => ({ ...p, type: 'post' }));
   const [adIndex1, adIndex2] = pickTwoUniqueAds(ADS);
   const ad1: AdItem = { type: 'ad', adIndex: adIndex1, id: `ad-${adIndex1}` };
   const ad2: AdItem = { type: 'ad', adIndex: adIndex2, id: `ad-${adIndex2}` };
   const mixed: FeedItem[] = shuffleArray([...mainPosts, ad1, ad2]);
 
-  return <PopularNews items={mixed} />;
+  // Ticker items (pure posts, up to 12)
+  const tickerItems: TickerItem[] = posts.slice(0, 12).map((p) => ({
+    id: String(p.id),
+    slug: p.slug,
+    title: p.title,
+    date: p.date,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    author_name: (p as any).author_name,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    featuredImage: (p as any).featuredImage,
+  }));
+
+  return <PopularNews items={mixed} tickerItems={tickerItems} />;
 }

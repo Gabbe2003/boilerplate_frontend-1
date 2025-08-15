@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { getTodaysPosts } from "./todaysPosts";
+import TradingViewTickerTape from "./TradingViewTicker";
 
 type Props = {
-  /** Optional heading text */
   heading?: string;
 };
 
@@ -57,17 +57,24 @@ export default async function TodayPostsSidebar({
   }
 
   return (
-    <div className={clsx("transition-all duration-500 overflow-hidden", "bg-[#ffff]")}>
+    <div
+      className={clsx(
+        "transition-all duration-500 overflow-hidden",
+        "bg-[#ffff]"
+      )}
+    >
       <div className="rounded-sm">
         <div className="p-3 space-y-4 flex flex-col items-start rounded-sm">
-          <section className="w-full p-3 bg-muted flex flex-col gap-3">
-            <h2 className="text-base font-semibold flex items-center gap-2">
+          <section className="w-full bg-muted flex flex-col">
+            <h2 className="text-base font-semibold flex items-center">
               <span className="relative inline-flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-2.5 w-2.5 rounded-full bg-red-500 opacity-75 animate-ping" />
-                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />
               </span>
               {heading}
             </h2>
+
+            <div className="rounded-md overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm">
+              <TradingViewTickerTape />
+            </div>
 
             {posts.length === 0 ? (
               <div className="text-sm text-zinc-600 dark:text-black-300">
@@ -83,11 +90,17 @@ export default async function TodayPostsSidebar({
                   return (
                     <li
                       key={p.id}
-                      className="group bg-white dark:bg-black-800 rounded-sm p-3 shadow-sm hover:shadow-sm transition-shadow"
+                      className="group bg-white dark:bg-black-800 rounded-sm p-3 shadow-sm hover:shadow-sm transition-shadow flex items-start gap-2"
                     >
+                      {/* Red pulsing dot */}
+                      <span className="relative inline-flex flex-shrink-0 h-2.5 w-2.5 mt-1">
+                        <span className="absolute inline-flex h-2.5 w-2.5 rounded-full bg-red-500 opacity-75 animate-ping" />
+                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />
+                      </span>
+
                       <Link
                         href={`/${p.slug}`}
-                        className="block focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg"
+                        className="block flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg"
                       >
                         {(category || date) && (
                           <div className="text-xs text-red-700 flex items-center gap-1">
@@ -99,12 +112,13 @@ export default async function TodayPostsSidebar({
                           </div>
                         )}
 
-                        <div className="mt-1.5 font-medium leading-snug group-hover:underline">
+                        {/* Reduced top margin here */}
+                        <div className="mt-0.5 font-medium leading-snug group-hover:underline">
                           {p.title}
                         </div>
 
                         {excerpt && (
-                          <p className="mt-1.5 text-sm text-black-600 dark:text-black-300">
+                          <p className="mt-1 text-sm text-black-600 dark:text-black-300">
                             {excerpt}
                           </p>
                         )}

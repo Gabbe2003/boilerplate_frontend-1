@@ -1,6 +1,6 @@
 // Server Component (no "use client")
 import { getViews } from '@/lib/graph_queries/getPostByPeriod';
-import PopularNewsTickerClient from './Popular/MonthPouplar';
+import PopularNewsTickerClient from './Popular/featuredPostsTicker';
 
 export type Item = {
   id: string;

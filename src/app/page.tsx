@@ -4,7 +4,6 @@ import PopularPosts from './components/Popular/PopularPosts';
 import AdPopup from './components/ads/adsPopup';
 import CatsPage from './[slug]/_components/categoryWrapper';
 import ViewedPosts from './components/ViewsPosts';
-import PopularNewsTicker from './components/PopularNewsTicker';
 
 export const revalidate = 3000;
 

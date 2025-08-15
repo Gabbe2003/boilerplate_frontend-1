@@ -1,19 +1,14 @@
 // Server Component (no 'use client')
-import { getViews } from "@/lib/graph_queries/getPostByPeriod";
-import PopularNews from "./PopularPostsGrid";
-import { Ad, ADS } from "../ads/adsContent";
+import { getViews } from '@/lib/graph_queries/getPostByPeriod';
+import PopularNews from './PopularPostsGrid'; // make sure this is the file that default-exports PopularNews
+import { Ad, ADS } from '../ads/adsContent';
 import { Post } from '@/lib/types';
+import { getSiteTagline } from '@/lib/graph_queries/getSiteTagline';
 
-// --- Feed item discriminated union types ---
-type AdItem = {
-  type: 'ad';
-  adIndex: number;
-  id: string | number;
-};
+type AdItem = { type: 'ad'; adIndex: number; id: string | number };
 type PostItem = Post & { type: 'post' };
 type FeedItem = AdItem | PostItem;
 
-// --- Ticker item type (matches PopularNewsSequenceClient props) ---
 type TickerItem = {
   id: string;
   slug: string;
@@ -23,7 +18,6 @@ type TickerItem = {
   featuredImage?: string | { node?: { sourceUrl?: string } };
 };
 
-// --- Helper utilities ---
 function pickTwoUniqueAds(adsArray: Ad[]): [number, number] {
   if (adsArray.length < 2) return [0, 0];
   const first = Math.floor(Math.random() * adsArray.length);
@@ -44,7 +38,9 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export default async function PopularPosts() {
-  const posts = await getViews('week');
+  // Fetch both in parallel for speed
+  const [posts, tagline] = await Promise.all([getViews('week'), getSiteTagline()]);
+
   if (!posts?.length) return <div>No fun posts!</div>;
 
   // Grid items (mix in two ads)
@@ -66,5 +62,5 @@ export default async function PopularPosts() {
     featuredImage: (p as any).featuredImage,
   }));
 
-  return <PopularNews items={mixed} tickerItems={tickerItems} />;
+  return <PopularNews items={mixed} tickerItems={tickerItems} tagline={tagline} />;
 }

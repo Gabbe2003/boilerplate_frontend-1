@@ -13,7 +13,6 @@ import SearchBarInline from '../Header-navigation/SearchBarInline';
 type Category = { id: string; name: string; slug: string };
 
 type HeaderProps = {
-  /** Server-fetched categories from HeaderServer (RSC) */
   initialCategories?: Category[];
 };
 
@@ -24,33 +23,25 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [searchValue, setSearchValue] = useState('');
 
-  // Background revalidation: always safe, even if initialCategories exist
   useEffect(() => {
     const ac = new AbortController();
     (async () => {
       try {
-        const res = await fetch('/api/categories', {
-          cache: 'no-store',
-          signal: ac.signal,
-        });
+        const res = await fetch('/api/categories', { cache: 'no-store', signal: ac.signal });
         if (!res.ok) throw new Error('Failed to fetch categories');
         const list: Category[] = await res.json();
         setCategories(list);
-      } catch (err) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((err as any)?.name !== 'AbortError') {
-          console.error('Error loading categories:', err);
-        }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        if (err?.name !== 'AbortError') console.error('Error loading categories:', err);
       }
     })();
     return () => ac.abort();
   }, []);
 
-  // modal handlers
   const handleOpenNewsletter = useCallback(() => setIsModalOpen(true), []);
   const handleCloseNewsletter = useCallback(() => setIsModalOpen(false), []);
 
-  // server-backed search
   const searchFn = useCallback(
     async (q: string, opts?: { signal?: AbortSignal }): Promise<SearchResult[]> => {
       const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
@@ -65,8 +56,10 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
 
   return (
     <>
-      <header className="sticky top-0 bottom-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md px-2 sm:px-4 md:px-6">
-        <div className="w-full lg:w-[70%] mx-auto grid grid-cols-[auto_1fr_auto] items-center py-2 gap-2 px-2 sm:px-4 md:px-6">
+      {/* CHANGED: added py-0 */}
+      <header className="sticky top-0 bottom-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md px-2 sm:px-4 md:px-6 py-0">
+        {/* CHANGED: py-2 -> py-0; kept md:w-full */}
+        <div className="w-full lg:w-[70%] md:w-full mx-auto grid grid-cols-[auto_1fr_auto] items-center py-0 gap-2 px-2 sm:px-4 md:px-6">
 
           {/* Left: Static Logo */}
           <div className="flex items-center min-h-[40px]">
@@ -95,22 +88,11 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
 
           {/* Right: Nav */}
           <div className="flex items-center gap-2 min-h-[40px] justify-end">
-            {/* Desktop nav */}
             <div className="hidden [@media(min-width:1100px)]:flex">
-              <DesktopNav
-                links={links}
-                onNewsletterClick={handleOpenNewsletter}
-                categories={categories}
-              />
+              <DesktopNav links={links} onNewsletterClick={handleOpenNewsletter} categories={categories} />
             </div>
-
-            {/* Mobile nav */}
             <div className="[@media(min-width:1100px)]:hidden flex items-center gap-1">
-              <MobileNav
-                links={links}
-                onNewsletterClick={handleOpenNewsletter}
-                categories={categories}
-              />
+              <MobileNav links={links} onNewsletterClick={handleOpenNewsletter} categories={categories} />
             </div>
           </div>
 

@@ -3,137 +3,159 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, useMotionValue, animate, type AnimationPlaybackControls } from 'framer-motion';
-import { Item } from '../PopularNewsTicker';
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  type Variants,
+} from 'framer-motion';
+import type { Item } from '../PopularNewsTicker';
 
-export default function PopularNewsTickerClient({
+export default function PopularNewsSequenceClient({
   items,
-  speed,
+  // Optional: how long to show each post (ms). The pulse lasts 2000ms; we wait exactly that long before switching.
+  intervalMs = 2000,
   showThumbnails,
   className,
 }: {
   items: Item[];
-  speed: number;
+  intervalMs?: number;
   showThumbnails: boolean;
   className?: string;
 }) {
-  // Motion value so we can pause/resume without restarting
-  const x = useMotionValue(0);
-  const animRef = React.useRef<AnimationPlaybackControls | null>(null);
+  const [index, setIndex] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
-  const trackRef = React.useRef<HTMLDivElement | null>(null);
-  const [distance, setDistance] = React.useState(1000); // fallback width
-
-  // Measure width of the first copy to know how far to scroll
+  // Advance after pulse duration unless paused or 0/1 item
   React.useEffect(() => {
-    if (!trackRef.current) return;
-    const firstRow = trackRef.current.querySelector('[data-copy="1"]') as HTMLElement | null;
-    if (!firstRow) return;
-    setDistance(firstRow.scrollWidth);
-  }, [items]);
+    if (paused || items.length <= 1) return;
+    const t = setTimeout(() => {
+      setIndex((i) => (i + 1) % items.length);
+    }, intervalMs);
+    return () => clearTimeout(t);
+  }, [index, paused, items.length, intervalMs]);
 
-  const start = React.useCallback(() => {
-    const pxPerSec = Math.max(1, speed);
-    const duration = distance / pxPerSec;
+  const onPause = () => setPaused(true);
+  const onResume = () => setPaused(false);
 
-    // Restart loop from current x without jumping back after hover
-    animRef.current?.stop();
-    animRef.current = animate(x, [0, -distance], {
-      duration,
-      ease: 'linear',
-      repeat: Infinity,
-      repeatType: 'loop',
-    });
-  }, [x, distance, speed]);
-
-  const pause = React.useCallback(() => animRef.current?.pause(), []);
-  const resume = React.useCallback(() => animRef.current?.play(), []);
-
-  React.useEffect(() => {
-    start();
-    return () => animRef.current?.stop();
-  }, [start]);
+  const current = items[index];
 
   return (
     <div
       className={`group relative w-full overflow-hidden border bg-background ${className ?? ''}`}
-      onMouseEnter={pause}
-      onMouseLeave={resume}
-      onFocusCapture={pause}
-      onBlurCapture={resume}
+      onMouseEnter={onPause}
+      onMouseLeave={onResume}
+      onFocusCapture={onPause}
+      onBlurCapture={onResume}
       role="region"
-      aria-label="Featured posts news ticker"
+      aria-label="Featured posts"
     >
       <div className="flex items-center gap-2 border-b px-3 py-2">
         <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
           Featured posts
         </span>
-        <span className="text-xs text-muted-foreground">Hover to pause</span>
+        <span className="text-xs text-muted-foreground">
+          {paused ? 'Paused' : 'Hover to pause'}
+        </span>
       </div>
 
-      <div className="relative h-12">
-        <div className="absolute inset-0">
-          <motion.div ref={trackRef} style={{ x }} className="flex h-12 items-center">
-            {/* Copy 1 */}
-            <TickerRow items={items} showThumbnails={showThumbnails} copy={1} />
-            {/* Copy 2 (duplicate for seamless infinite loop) */}
-            <TickerRow items={items} showThumbnails={showThumbnails} copy={2} />
-          </motion.div>
-        </div>
+      <div className="relative h-16"> {/* slightly taller than old ticker */}
+        <AnimatePresence mode="wait">
+          <PostSlide
+            key={current?.id ?? index}
+            post={current}
+            showThumbnails={showThumbnails}
+            reduced={prefersReducedMotion}
+          />
+        </AnimatePresence>
       </div>
     </div>
   );
 }
 
-function TickerRow({
-  items,
+function PostSlide({
+  post,
   showThumbnails,
-  copy,
+  reduced,
 }: {
-  items: Item[];
+  post: Item;
   showThumbnails: boolean;
-  copy: 1 | 2;
+  reduced: boolean;
 }) {
+  // Entrance -> pulse for 2s -> (parent swaps index) -> exit
+  const variants: Variants = reduced
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1, transition: { duration: 0.2 } },
+        exit: { opacity: 0, transition: { duration: 0.2 } },
+      }
+    : {
+        initial: { opacity: 0, y: 12, filter: 'blur(3px)' },
+        animate: {
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
+        },
+        exit: {
+          opacity: 0,
+          y: -12,
+          filter: 'blur(3px)',
+          transition: { duration: 0.35, ease: [0.4, 0, 1, 1] },
+        },
+      };
+
+  const pulseProps = reduced
+    ? {}
+    : {
+        // Subtle single pulse that lasts ~2s
+        animate: { scale: [1, 1.02, 1], opacity: [1, 0.98, 1] },
+        transition: { duration: 2, ease: 'easeInOut' as const },
+      };
+
+  const imgSrc =
+    typeof post.featuredImage === 'string'
+      ? post.featuredImage
+      : (post.featuredImage as any)?.node?.sourceUrl;
+
   return (
-    <div
-      className="flex h-12 items-center gap-6 pr-6"
-      aria-hidden={copy === 2} // duplicate is decorative
-      data-copy={copy}
+    <motion.div
+      variants={variants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      className="absolute inset-0 flex items-center px-3"
     >
-      {items.map((post) => {
-        const imgSrc =
-          typeof post.featuredImage === 'string'
-            ? post.featuredImage
-            : post.featuredImage?.node?.sourceUrl;
-
-        return (
-          <div key={`${copy}-${post.id}`} className="flex shrink-0 items-center gap-3">
-            {showThumbnails && (
-              <div className="relative size-7 overflow-hidden bg-secondary">
-                {imgSrc ? (
-                  <Image src={imgSrc} alt="" fill sizes="28px" className="object-cover" />
-                ) : (
-                  <span className="block h-full w-full" aria-hidden />
-                )}
-              </div>
+      <motion.div
+        {...pulseProps}
+        className="flex items-center gap-3"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {showThumbnails && (
+          <div className="relative size-9 overflow-hidden rounded bg-secondary">
+            {imgSrc ? (
+              <Image src={imgSrc} alt="" fill sizes="36px" className="object-cover" />
+            ) : (
+              <span className="block h-full w-full" aria-hidden />
             )}
-
-            {/* pulsing red dot before each post title */}
-            <span className="relative inline-flex h-2.5 w-2.5" aria-hidden>
-              <span className="absolute inline-flex h-2.5 w-2.5 rounded-full bg-red-500 opacity-75 animate-ping" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />
-            </span>
-
-            <Link
-              href={post.slug?.startsWith('/') ? post.slug : `/posts/${post.slug}`}
-              className="max-w-[28rem] truncate text-sm font-medium hover:underline"
-            >
-              {post.title}
-            </Link>
-            <span className="text-muted-foreground">•</span>
           </div>
-        );
-      })}
-    </div>
+        )}
+
+        {/* pulsing red dot */}
+        <span className="relative inline-flex h-3 w-3" aria-hidden>
+          <span className="absolute inline-flex h-3 w-3 rounded-full bg-red-500 opacity-75 animate-ping" />
+          <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600" />
+        </span>
+
+        <Link
+          href={post.slug?.startsWith('/') ? post.slug : `/posts/${post.slug}`}
+          className="max-w-[40rem] truncate text-base font-medium leading-6 hover:underline"
+        >
+          {post.title}
+        </Link>
+      </motion.div>
+    </motion.div>
   );
 }

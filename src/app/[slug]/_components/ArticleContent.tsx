@@ -6,7 +6,7 @@ import type { AuthorNode, Post, ITOCItem } from "@/lib/types";
 import { stripHtml } from "@/lib/helper_functions/strip_html";
 import ShareButtonsClient from "../wrapper/ShareButtons.wrapper";
 import { Sidebar } from "../../components/Main-page/SideBar";
-import { PostTOC } from "../wrapper/TocWrapper";
+import { PostTOC } from "../wrapper/TOCWrapper";
 
 function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   if (!author) return null;

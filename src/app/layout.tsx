@@ -4,7 +4,7 @@ import { getLogo } from '@/lib/graph_queries/getLogo';
 import { getAllPosts } from '@/lib/graph_queries/getAllPosts';
 import '@/styles/globals.css';
 import { AppProvider, DEFAULT_LINKS } from '@/store/AppContext';
-import Header from './components/Main-page/Header';
+import HeaderServer from './components/Main-page/HeaderServer';
 
 const Footer = dynamic(() => import('./components/Main-page/Footer'), {
   loading: () => <div className="w-full h-24 bg-gray-100" />,
@@ -31,7 +31,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     <html lang="en">
       <body className="flex flex-col min-h-screen">
         <AppProvider links={DEFAULT_LINKS} logo={favicon} posts={posts}>
-          <Header />
+          <HeaderServer />
             <main className="flex-1">{children}</main>
           <Footer />
         </AppProvider>

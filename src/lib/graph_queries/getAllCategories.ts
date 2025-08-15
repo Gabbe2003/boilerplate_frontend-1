@@ -74,7 +74,7 @@ export async function getAllCategories({
         query,
         variables: { first: size, after, hideEmpty, orderby, order },
       }),
-      next: { revalidate: 86400, tags: ['categories'] },
+      next: { revalidate: 60 * 60, tags: ['categories'] },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     return res.json();

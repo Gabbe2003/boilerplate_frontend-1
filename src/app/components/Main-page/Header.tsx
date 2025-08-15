@@ -12,38 +12,45 @@ import SearchBarInline from '../Header-navigation/SearchBarInline';
 
 type Category = { id: string; name: string; slug: string };
 
-export default function Header() {
-  const host = process.env.NEXT_PUBLIC_HOSTNAME || 'Home';
-  const { logo, links, posts } = useAppContext();
+type HeaderProps = {
+  /** Server-fetched categories from HeaderServer (RSC) */
+  initialCategories?: Category[];
+};
+
+export default function Header({ initialCategories = [] }: HeaderProps) {
+  const { links, posts } = useAppContext();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [searchValue, setSearchValue] = useState('');
 
-  // load categories
+  // Background revalidation: always safe, even if initialCategories exist
   useEffect(() => {
-    let active = true;
+    const ac = new AbortController();
     (async () => {
       try {
-        const res = await fetch('/api/categories', { cache: 'no-store' });
+        const res = await fetch('/api/categories', {
+          cache: 'no-store',
+          signal: ac.signal,
+        });
         if (!res.ok) throw new Error('Failed to fetch categories');
         const list: Category[] = await res.json();
-        if (active) setCategories(list);
+        setCategories(list);
       } catch (err) {
-        console.error('Error loading categories:', err);
-        if (active) setCategories([]);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((err as any)?.name !== 'AbortError') {
+          console.error('Error loading categories:', err);
+        }
       }
     })();
-    return () => {
-      active = false;
-    };
+    return () => ac.abort();
   }, []);
 
   // modal handlers
   const handleOpenNewsletter = useCallback(() => setIsModalOpen(true), []);
   const handleCloseNewsletter = useCallback(() => setIsModalOpen(false), []);
 
-  // server-backed search (calls your /api/search route)
+  // server-backed search
   const searchFn = useCallback(
     async (q: string, opts?: { signal?: AbortSignal }): Promise<SearchResult[]> => {
       const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`, {
@@ -58,24 +65,20 @@ export default function Header() {
 
   return (
     <>
-    <header className="sticky top-0 bottom-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md px-2 sm:px-4 md:px-6">
-  <div className="w-full lg:w-[70%] md:w-full mx-auto grid grid-cols-[auto_1fr_auto] items-center py-2 gap-2 px-2 sm:px-4 md:px-6">
+      <header className="sticky top-0 bottom-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md px-2 sm:px-4 md:px-6">
+        <div className="w-full lg:w-[70%] mx-auto grid grid-cols-[auto_1fr_auto] items-center py-2 gap-2 px-2 sm:px-4 md:px-6">
 
-          {/* Left: Logo */}
+          {/* Left: Static Logo */}
           <div className="flex items-center min-h-[40px]">
             <Link href="/" aria-label="Go to homepage" className="flex-shrink-0">
-              {logo?.sourceUrl ? (
-                <Image
-                  src={logo.sourceUrl}
-                  alt={logo.altText || 'Logo'}
-                  width={40}
-                  height={40}
-                  className="object-cover"
-                  priority
-                />
-              ) : (
-                <span className="font-bold text-gray-900 text-base">{host}</span>
-              )}
+              <Image
+                src="/full_logo_with_slogan.png"
+                alt="Logo"
+                width={80}
+                height={60}
+                className="object-cover"
+                priority
+              />
             </Link>
           </div>
 
@@ -84,7 +87,7 @@ export default function Header() {
             <SearchBarInline
               value={searchValue}
               onChange={setSearchValue}
-              posts={posts}            
+              posts={posts}
               searchFn={searchFn}
               className="w-full max-w-xl"
             />
@@ -101,7 +104,7 @@ export default function Header() {
               />
             </div>
 
-            {/* Mobile nav (burger etc) */}
+            {/* Mobile nav */}
             <div className="[@media(min-width:1100px)]:hidden flex items-center gap-1">
               <MobileNav
                 links={links}

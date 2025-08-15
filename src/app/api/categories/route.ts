@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getCategoryBySlug } from '@/lib/graph_queries/getCategoryBySlug';
 import { getAllCategories } from '@/lib/graph_queries/getAllCategories';
 
+// optional: faster cold starts / lower latency
+export const runtime = 'edge';
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const slug = searchParams.get('slug');
@@ -13,9 +16,12 @@ export async function GET(req: NextRequest) {
     if (slug) {
       const category = await getCategoryBySlug(slug, after);
 
-      // minimal shape guard (in case WP returns null)
-      const posts = category?.posts?.nodes ?? [];
-      const pageInfo = category?.posts?.pageInfo ?? {
+      if (!category) {
+        return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+      }
+
+      const posts = category.posts?.nodes ?? [];
+      const pageInfo = category.posts?.pageInfo ?? {
         hasNextPage: false,
         endCursor: null,
       };
@@ -23,14 +29,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ posts, pageInfo }, { status: 200 });
     }
 
-    // Otherwise, return the list of categories for the header
+    // Otherwise, return the list of categories for the header (cached by getAllCategories)
     const categories = await getAllCategories();
     return NextResponse.json(categories, { status: 200 });
   } catch (err) {
     console.error('GET /api/categories error:', err);
-    return NextResponse.json(
-      { error: 'Failed to fetch data' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch data' }, { status: 500 });
   }
 }

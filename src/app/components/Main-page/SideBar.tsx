@@ -38,12 +38,12 @@ export function Sidebar() {
 
   return (
     <>
-      <div
-        className={clsx(
-          "transition-all duration-500 overflow-hidden",
-          "bg-[var(--secBG)]"
-        )}
-      >
+<div
+  className={clsx(
+    "transition-all duration-500 overflow-hidden hidden sm:block",
+    "bg-[var(--secBG)]"
+  )}
+>
         <div className="p-0">
           <div className="p-3 space-y-4 flex flex-col items-start">
 

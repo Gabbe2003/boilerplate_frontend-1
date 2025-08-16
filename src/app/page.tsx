@@ -14,8 +14,8 @@ return (
   <>
     <div className='grid gap-10 px-2'>
       {/* <PopularPosts /> */}
-      <CatsPage />
-      {/* <PostsList /> */}
+      {/* <CatsPage /> */}
+      <PostsList />
     </div>
     {/* <AdPopup /> */}
 

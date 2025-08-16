@@ -24,16 +24,12 @@ Remove the api route because we dont need to expose any data outside our app
 
 When we try the page out we just need to make sure the advertiesment and contact. 
 
-1. Header optimize > When the page render there is a delay.
-2. News letter popup twice double check it. 
-3. Searchbar/hamburger menu drawer width. Optimize logic. 
 4. Style the whole page
+
 5. SEO. meta tags opengraph and double check everything. 
-6. Delay ad popup 10 seconds
 7. Make sure all images look are optimized. 
 8. Decide what post data will show for the user. 
 9. Add robots/sitemap
-10. Trigger the update post on infinity scroll. 
 
 
 There are some errors in production code, not major but recheck them:

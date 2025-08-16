@@ -10,7 +10,7 @@ import SocialMediaButtons from '../allSocialMediaButtons';
 export default function Footer() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
   const pathname = usePathname();
-  const { logo, links, tagline } = useAppContext();
+  const { links, tagline } = useAppContext(); // logo no longer needed
   const currentYear = new Date().getFullYear();
 
   const extraLinks = [
@@ -28,7 +28,7 @@ export default function Footer() {
 
     if (!href) {
       return (
-        <Button variant="navlink" className={baseBtnClasses}>
+        <Button variant="link" className={baseBtnClasses}>
           {title}
         </Button>
       );
@@ -38,7 +38,7 @@ export default function Footer() {
       return (
         <Button
           type="button"
-          variant="navlink"
+          variant="link"
           className={`${baseBtnClasses} ${isActive ? 'text-yellow-500' : ''}`}
           onClick={(e) => {
             e.preventDefault();
@@ -54,7 +54,7 @@ export default function Footer() {
     return (
       <Button
         asChild
-        variant="navlink"
+        variant="link"
         className={`${baseBtnClasses} ${isActive ? 'text-yellow-500' : ''}`}
       >
         <Link href={href}>{title}</Link>
@@ -63,32 +63,40 @@ export default function Footer() {
   };
 
   return (
-    <footer id="footer" className="w-full px-2 border-t border-gray-200 bg-gray-100">
+    <footer
+      id="footer"
+      className="w-full px-2 border-t border-gray-200 bg-gray-100"
+    >
       <div className="w-[100%] px-2 lg:w-[70%] mx-auto py-6">
         {/* Logo and Links */}
         <div className="flex flex-col md:flex-row mb-8 gap-8">
           {/* Logo/Tagline */}
           <div className="flex flex-col items-start min-w-[170px]">
-            <Link href="/" className="mb-4 flex-shrink-0 flex items-center py-6">
-              {logo?.sourceUrl ? (
-                <Image
-                  src={logo.sourceUrl}
-                  alt={logo.altText || 'Logo'}
-                  width={150}
-                  height={60}
-                  className="bg-white rounded"
-                />
-              ) : (
-                <span className="font-bold text-gray-900 text-xl">{host}</span>
-              )}
+            <Link
+              href="/"
+              className="mb-4 flex-shrink-0 flex items-center py-6"
+            >
+              <Image
+                src="/full_logo_with_slogan.png"
+                alt="Logo"
+                width={150}
+                height={60}
+                priority
+              />
             </Link>
-            {tagline && <p className="mt-2 text-sm text-gray-500 break-normal whitespace-normal hyphens-auto text-pretty">{tagline}</p>}
+            {tagline && (
+              <p className="mt-2 text-sm pr-5 text-gray-500 break-normal whitespace-normal hyphens-auto text-pretty">
+                {tagline}
+              </p>
+            )}
           </div>
 
           {/* Links in columns */}
           <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4 justify-end md:items-start min-w-0">
             <div className="min-w-0">
-              <h3 className="mb-4 text-lg font-semibold text-gray-700">Readers favorites</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-700">
+                Readers favorites
+              </h3>
               <ul className="space-y-2">
                 {extraLinks.map((item, idx) => (
                   <li key={item.title + idx} className="min-w-0">
@@ -99,7 +107,9 @@ export default function Footer() {
             </div>
 
             <div className="min-w-0">
-              <h3 className="mb-4 text-lg font-semibold text-gray-700">Company</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-700">
+                Company
+              </h3>
               <ul className="space-y-2">
                 {links.map((link, idx) =>
                   idx >= 3 ? (
@@ -112,7 +122,9 @@ export default function Footer() {
             </div>
 
             <div className="min-w-0">
-              <h3 className="mb-4 text-lg font-semibold text-gray-700">About us</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-700">
+                About us
+              </h3>
               <ul className="space-y-2">
                 {links.map((link, idx) =>
                   idx < 3 ? (
@@ -142,4 +154,3 @@ export default function Footer() {
     </footer>
   );
 }
-0

@@ -1,75 +1,131 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { useAppContext } from '@/store/AppContext';
-import Image from 'next/image';
-import Link from 'next/link';
+import { useMemo, useEffect, useRef, useCallback, useState } from "react";
+import { useAppContext } from "@/store/AppContext";
+import Link from "next/link";
+import Image from "next/image";
 
-interface RecommendationListProps {
-  currentSlug: string;
-}
+interface Props { currentSlug: string }
 
-export default function RecommendationList({ currentSlug }: RecommendationListProps) {
+export default function RecommendationListMarquee({ currentSlug }: Props) {
   const { posts } = useAppContext();
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
 
-  // Efficiently filter and select up to 6 random recommendations (not including current)
-  const postsToShow = useMemo(() => {
-    const filtered = posts.filter(post => post.slug !== currentSlug);
-    if (filtered.length <= 6) return filtered;
+  const [speed, setSpeed] = useState(30); // default for desktop
 
-    // Choose a random consecutive slice of 6 posts
-    const maxStart = filtered.length - 6;
-    const start = Math.floor(Math.random() * (maxStart + 1));
-    return filtered.slice(start, start + 6);
-  }, [posts, currentSlug]);
+  // detect viewport and adjust speed
+  useEffect(() => {
+    const check = () => {
+      if (window.innerWidth < 640) setSpeed(15); // sm
+      else if (window.innerWidth < 1024) setSpeed(20); // md
+      else setSpeed(30); // lg+
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  const items = useMemo(
+    () => posts.filter(p => p.slug !== currentSlug).slice(0, 20),
+    [posts, currentSlug]
+  );
+
+  useEffect(() => {
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes marqueeLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+      @keyframes marqueeRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+
+      @media (prefers-reduced-motion: reduce) {
+        .marquee-anim { animation: none !important; transform: translateX(0) !important; }
+      }
+    `;
+    document.head.appendChild(style);
+    return () => { document.head.removeChild(style); };
+  }, []);
+
+  const pause = useCallback((yes: boolean) => {
+    const state = yes ? "paused" : "running";
+    if (row1Ref.current) row1Ref.current.style.animationPlayState = state;
+    if (row2Ref.current) row2Ref.current.style.animationPlayState = state;
+  }, []);
+
+  const row = [...items, ...items]; // duplicate
 
   return (
-    <>
-      <p className="px-4 pt-4 pb-2 text-sm font-semibold text-blue-800 tracking-tight">
-        More from us
-      </p>
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-8 px-2 py-3">
-        {postsToShow.map(post => (
-          <li key={post.slug} className="h-full">
-            <Link
-              href={`/${post.slug}`}
-              className="group flex flex-col h-full overflow-hidden shadow hover:shadow-lg transition-all hover:border-blue-300 relative focus-visible:ring-2 focus-visible:ring-blue-300 rounded"
-            >
-              {post.featuredImage?.node.sourceUrl && (
-                <div className="relative w-full aspect-[6/3] overflow-hidden rounded-t">
+    <div
+      className="w-full lg:w-[70%] mx-auto px-2"
+      onMouseEnter={() => pause(true)}
+      onMouseLeave={() => pause(false)}
+      onTouchStart={() => pause(true)}
+      onTouchEnd={() => pause(false)}
+    >
+      <div className="pt-6 pb-4 text-sm uppercase tracking-wide text-gray-600 font-semibold">
+        Recommended for you
+      </div>
+
+      <div className="space-y-4">
+        {/* Row 1 */}
+        <div className="relative overflow-hidden">
+          <div
+            ref={row1Ref}
+            className="marquee-anim flex w-[200%] gap-10 py-4"
+            style={{ animation: `marqueeLeft ${speed}s linear infinite` }}
+          >
+            {row.map((p, i) => (
+              <Link
+                key={`${p.slug}-1-${i}`}
+                href={`/${p.slug}`}
+                className="inline-flex items-center gap-4 whitespace-nowrap hover:underline"
+              >
+                <span className="relative block h-24 w-40 overflow-hidden rounded-md shadow-md flex-shrink-0">
                   <Image
-                    src={post.featuredImage.node.sourceUrl}
-                    alt={post.title}
+                    src={p.featuredImage?.node.sourceUrl || "/placeholder.png"}
+                    alt={p.title}
                     fill
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="object-cover"
                     sizes="160px"
-                    style={{ minHeight: 72, borderRadius: 0 }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#fafafa]/60 via-[#fafafa]/5 to-transparent" />
-                </div>
-              )}
-              {post.categories?.nodes?.[0]?.name && (
-                <span className="absolute left-3 top-3 z-20 bg-blue-50 text-blue-700 text-[10px] px-1.5 py-0.5 rounded-sm font-medium shadow-sm">
-                  {post.categories.nodes[0].name}
                 </span>
-              )}
-              <div className="px-3 py-2 relative z-10 flex-1 flex flex-col justify-between">
-                <h4 className="font-semibold text-sm mb-0.5 group-hover:text-blue-700 transition truncate">
-                  {post.title}
-                </h4>
-                <div className="text-[11px] text-neutral-600 truncate">
-                  By {post.author?.node.name || 'Admin'} ·{' '}
-                  {new Date(post.date).toLocaleDateString('sv-SE', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })}
-                </div>
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </>
+                <span className="font-semibold text-xl truncate max-w-[40ch]">
+                  {p.title}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Row 2 */}
+        <div className="relative overflow-hidden">
+          <div
+            ref={row2Ref}
+            className="marquee-anim flex w-[200%] gap-10 py-4"
+            style={{ animation: `marqueeRight ${speed}s linear infinite` }}
+          >
+            {row.map((p, i) => (
+              <Link
+                key={`${p.slug}-2-${i}`}
+                href={`/${p.slug}`}
+                className="inline-flex items-center gap-4 whitespace-nowrap hover:underline"
+              >
+                <span className="relative block h-24 w-40 overflow-hidden rounded-md shadow-md flex-shrink-0">
+                  <Image
+                    src={p.featuredImage?.node.sourceUrl || "/placeholder.png"}
+                    alt={p.title}
+                    fill
+                    className="object-cover"
+                    sizes="160px"
+                  />
+                </span>
+                <span className="font-semibold text-xl truncate max-w-[40ch]">
+                  {p.title}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

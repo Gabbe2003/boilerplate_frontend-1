@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCategorySections } from "./herlper.useCategoryFeed";
+import { useCategorySections } from "./herlper.useCategoryFeed"; // (Confirm the 'herlper' spelling)
 import CategoryDesktopGrid from "./CategoryDesktopGrid";
 import CategoryMobileCarousel from "./CategoryMobileCarousel";
 import { Button } from "@/components/ui/button";
@@ -15,23 +15,22 @@ export default function CategorySections() {
     postsLoading,
     hasNextPage,
     handleCategoryClick,
-    // loadMorePosts, // no longer used
   } = useCategorySections();
 
   const selectedCategory =
     categories.find((c) => c.slug === selectedCategorySlug) ?? null;
 
   return (
-    <div className="w-full px-2 lg:w-[100%] mx-auto py-6">
+    <div className="w-full px-2 mx-auto py-6">
       {loading ? (
         <p className="text-center">Loading categories...</p>
       ) : (
         <div className="flex flex-col lg:flex-row gap-6">
           {/* LEFT: Categories & Posts */}
-          <section className="w-full lg:w-[100%] flex flex-col gap-6">
+          <section className="w-full flex flex-col gap-6">
             {/* Title */}
             {selectedCategory && (
-              <h2 className="text-xl font-semibold text-start lg:text-left capitalize">
+              <h2 className="text-xl font-semibold text-start capitalize">
                 {selectedCategory.name}
               </h2>
             )}
@@ -41,13 +40,14 @@ export default function CategorySections() {
               <nav aria-label="Categories">
                 <div
                   className="
-                    flex items-start gap-2
+                    flex items-start gap-2 pb-2
                     overflow-x-auto md:overflow-visible
-                    md:flex-wrap md:justify-start lg:justify-start
+                    md:flex-wrap md:justify-start
                     [scrollbar-width:none] [-ms-overflow-style:none]
                     [&::-webkit-scrollbar]:hidden
-                    pb-2
+                    min-w-0
                   "
+                  role="listbox"
                 >
                   {categories.map((cat) => {
                     const isActive = selectedCategorySlug === cat.slug;
@@ -55,17 +55,25 @@ export default function CategorySections() {
                       <Button
                         key={cat.id}
                         onClick={() => handleCategoryClick(cat.slug)}
-                        
-                        className={`
-                          whitespace-nowrap px-4 py-2 text-sm font-medium transition
-                          ${
-                            isActive
-                              ? "bg-black text-white border-blue-600 shadow-sm"
-                              : "bg-white text-gray-800 border-gray-200 hover:bg-gray-100"
-                          }
-                        `}
-                        variant="destructive"
-                        aria-current={isActive ? "page" : undefined}
+                        title={cat.name}
+                        // NOTE:
+                        // - Mobile: allow wrapping & breaking (no overflow)
+                        // - md+: single-line with ellipsis (clean row)
+                        // - max-w caps each chip so it never exceeds viewport
+                        className={[
+                          "px-3 py-2 text-sm leading-tight font-medium transition",
+                          "whitespace-normal break-words md:whitespace-nowrap md:truncate",
+                          "max-w-[80vw] md:max-w-[16rem] overflow-hidden",
+                          "rounded-full border",
+                          isActive
+                            ? "bg-black text-white border-black shadow-sm"
+                            : "bg-white text-gray-800 border-gray-200 hover:bg-gray-100",
+                        ].join(" ")}
+                        // use a neutral variant so custom classes aren't fighting "destructive"
+                        variant="ghost"
+                        aria-current={isActive ? "true" : undefined}
+                        role="option"
+                        aria-selected={isActive}
                       >
                         {cat.name}
                       </Button>
@@ -90,27 +98,20 @@ export default function CategorySections() {
                 {/* DESKTOP */}
                 <CategoryDesktopGrid posts={selectedCategoryPosts} />
 
-                {/* CTA: link to full category page (replaces Load More) */}
-                {hasNextPage && selectedCategory && (
-                  <div className="mt-6 flex justify-center">
-                    <Button
-                      asChild
-                      variant="outline"
-                      className="px-6 py-2 text-sm font-medium"
-                    >
-                      <Link
-                        href={`/category/${selectedCategory.slug}`}
-                        prefetch
-                        aria-label={`Read more from ${selectedCategory.name}`}
-                      >
-                        Wanna read more from{" "}
-                        <span className="capitalize">
-                          {selectedCategory.name}
-                        </span>
-                      </Link>
-                    </Button>
-                  </div>
-                )}
+               {/* CTA */}
+              {hasNextPage && selectedCategory && (
+                <div className="mt-6 flex justify-center">
+                  <Link
+                    href={`/category/${selectedCategory.slug}`}
+                    prefetch
+                    aria-label={`Read more from ${selectedCategory.name}`}
+                    className="cursor-pointer hover:underline border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 px-6 py-2 text-sm font-medium rounded-md break-words max-w-[90vw] text-center"
+                  >
+                    Wanna read more from{" "}
+                    <span className="capitalize">{selectedCategory.name}</span>
+                  </Link>
+                </div>
+              )}
               </>
             )}
           </section>

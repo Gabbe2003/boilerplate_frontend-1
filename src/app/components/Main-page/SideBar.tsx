@@ -40,7 +40,7 @@ export function Sidebar() {
     <>
 <div
   className={clsx(
-    "transition-all duration-500 overflow-hidden hidden sm:block",
+    "transition-all duration-500 overflow-hidden hidden lg:block",
     "bg-[var(--secBG)]"
   )}
 >

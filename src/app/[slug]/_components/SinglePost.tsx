@@ -5,13 +5,34 @@ import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";
 import RecommendationList from "./Single-page-footer/RecommendationList";
 
 export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
-  const postUrl = `${process.env.NEXT_PUBLIC_HOST_URL || process.env.NEXT_PUBLIC_HOST_URL}/${initialPost.slug}`;
+  const postUrl = `${
+    process.env.NEXT_PUBLIC_HOST_URL || process.env.NEXT_PUBLIC_HOST_URL
+  }/${initialPost.slug}`;
   const postExcerpt = initialPost.excerpt!.replace(/<[^>]+>/g, "").trim();
 
-  update_viewed_post(String(initialPost.databaseId)); 
+  // 👉 Pull category names
+  const categoryNames =
+    (initialPost.categories?.nodes ?? [])
+      .map((n) => n?.name)
+      .filter((v): v is string => Boolean(v)) || [];
+
+  // 👉 Pull tag names
+  const tagNames =
+    (initialPost.tags?.nodes ?? [])
+      .map((n) => n?.name)
+      .filter((v): v is string => Boolean(v)) || [];
+
+  // Optional: debug logs (dev only)
+  if (process.env.NODE_ENV !== "production") {
+    console.log("SinglePost category names:", categoryNames);
+    console.log("SinglePost tag names:", tagNames);
+    console.log("SinglePost received initialPost:", initialPost);
+  }
+
+  update_viewed_post(String(initialPost.databaseId));
 
   return (
-    <div className="space-y-16 mx-auto py-12 px-4 mb-10">
+    <div className="space-y-16 mx-auto py-12 px-4 mb-10 s">
       <div
         className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
         data-index={0}
@@ -22,6 +43,8 @@ export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
             postUrl={postUrl}
             postExcerpt={postExcerpt}
             index={0}
+            categoryNames={categoryNames}
+            tagNames={tagNames}
           />
           <RecommendationList currentSlug={initialPost.slug} />
         </div>

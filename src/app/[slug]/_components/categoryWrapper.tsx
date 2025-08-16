@@ -3,16 +3,18 @@ import TodayPostsSidebar from "@/app/components/TodayPostsSidebar";
 
 export default function CatsPage() {
   return (
-    <div className="w-full px-2 lg:w-[70%] mx-auto py-6 flex flex-col lg:flex-row lg:items-start gap-4">
-      {/* Main content - 70% width */}
-      <section className="w-full px-2 lg:w-[70%] ">
-        <CategorySections />
-      </section>
+    <div className="mx-auto w-full max-w-screen-xl px-4 py-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* Main content */}
+        <section className="lg:col-span-8 min-w-0">
+          <CategorySections />
+        </section>
 
-      {/* Sidebar - 30% width, no forced height */}
-      <aside className="w-full px-2 lg:w-[30%] lg:py-50 ">
-        <TodayPostsSidebar />
-      </aside>
+        {/* Sidebar */}
+        <aside className="lg:col-span-4 min-w-0 lg:sticky lg:py-50">
+          <TodayPostsSidebar />
+        </aside>
+      </div>
     </div>
   );
 }

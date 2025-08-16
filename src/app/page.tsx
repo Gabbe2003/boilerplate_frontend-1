@@ -13,7 +13,7 @@ const Page = async () => {
 return (
   <>
     <div className='grid gap-10 px-2'>
-      <PopularPosts />
+      {/* <PopularPosts /> */}
       <CatsPage />
       <PostsList />
     </div>

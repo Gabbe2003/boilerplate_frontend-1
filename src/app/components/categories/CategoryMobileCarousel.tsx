@@ -61,7 +61,7 @@ export default function CategoryMobileCarousel({ posts }: Props) {
           {/* Right edge fade */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20"
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10"
             style={{
               background:
                 "linear-gradient(to left, rgba(246,228,211,0.95) 35%, rgba(246,228,211,0) 100%)",

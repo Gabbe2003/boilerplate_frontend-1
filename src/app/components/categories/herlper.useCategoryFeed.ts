@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Post } from "@/lib/types";
+import { useEffect, useRef, useState, useCallback, } from 'react';
+import type { Post } from '@/lib/types';
 
 interface Category {
   id: string;
@@ -11,6 +11,16 @@ interface Category {
 
 type PageInfo = { hasNextPage: boolean; endCursor: string | null };
 type PostsResponse = { posts: Post[]; pageInfo: PageInfo };
+type CacheEntry = { posts: Post[]; pageInfo: PageInfo };
+
+const idle = (cb: () => void) => {
+  if (typeof window === 'undefined') return;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ric: any =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).requestIdleCallback || ((fn: any) => setTimeout(fn, 1));
+  ric(cb);
+};
 
 export function useCategorySections() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -23,24 +33,25 @@ export function useCategorySections() {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [endCursor, setEndCursor] = useState<string | null>(null);
 
-  // 1) Load all categories
+  // NEW: per-category in-memory cache + abort handle
+  const cacheRef = useRef<Map<string, CacheEntry>>(new Map());
+  const abortRef = useRef<AbortController | null>(null);
+
+  // 1) Load all categories (use server cache)
   useEffect(() => {
     let alive = true;
     (async () => {
       try {
-        const res = await fetch("/api/categories", { cache: "no-store" });
-        if (!res.ok) throw new Error("Failed to fetch categories");
+        const res = await fetch('/api/categories', { cache: 'force-cache' });
+        if (!res.ok) throw new Error('Failed to fetch categories');
         const data = await res.json();
-
-        // The route returns a top-level array: Category[]
-        const allCats: Category[] = Array.isArray(data) ? data : (data?.categories ?? []);
+        const allCats: Category[] = Array.isArray(data) ? data : data?.categories ?? [];
         if (!alive) return;
 
         setCategories(allCats);
-        // Initialize selected category if not set
         setSelectedCategorySlug((prev) => prev ?? allCats[0]?.slug ?? null);
       } catch (error) {
-        console.error("Error loading categories:", error);
+        console.error('Error loading categories:', error);
         if (alive) setCategories([]);
       } finally {
         if (alive) setLoading(false);
@@ -51,31 +62,62 @@ export function useCategorySections() {
     };
   }, []);
 
-  // 2) Load posts for the selected category
+  const fetchPosts = useCallback(
+    async (slug: string, after?: string | null, signal?: AbortSignal) => {
+      const qs = new URLSearchParams();
+      qs.set('slug', slug);
+      if (after) qs.set('after', after);
+
+      const res = await fetch(`/api/categories?${qs.toString()}`, {
+        signal,
+        // For first page, allow server cache; for pagination we pass `after`
+        cache: after ? 'no-store' : 'force-cache',
+      });
+      if (!res.ok) throw new Error('Failed to fetch posts');
+      return (await res.json()) as PostsResponse;
+    },
+    []
+  );
+
+  // 2) Load posts for the selected category (cache first, then refresh)
   useEffect(() => {
     if (!selectedCategorySlug) return;
 
     let alive = true;
+
     (async () => {
+      // If cached, show immediately
+      const cached = cacheRef.current.get(selectedCategorySlug);
+      if (cached && alive) {
+        setSelectedCategoryPosts(cached.posts);
+        setEndCursor(cached.pageInfo.endCursor);
+        setHasNextPage(!!cached.pageInfo.hasNextPage);
+      }
+
       setPostsLoading(true);
+
+      // cancel any in-flight
+      abortRef.current?.abort();
+      const ac = new AbortController();
+      abortRef.current = ac;
+
       try {
-        const res = await fetch(
-          `/api/categories?slug=${encodeURIComponent(selectedCategorySlug)}`,
-          { cache: "no-store" }
-        );
-        if (!res.ok) throw new Error("Failed to fetch posts");
-        const { posts, pageInfo }: PostsResponse = await res.json();
+        const { posts, pageInfo } = await fetchPosts(selectedCategorySlug, null, ac.signal);
         if (!alive) return;
 
+        cacheRef.current.set(selectedCategorySlug, { posts: posts ?? [], pageInfo });
         setSelectedCategoryPosts(posts ?? []);
         setEndCursor(pageInfo?.endCursor ?? null);
         setHasNextPage(!!pageInfo?.hasNextPage);
-      } catch (error) {
-        console.error("Error loading posts:", error);
-        if (alive) {
-          setSelectedCategoryPosts([]);
-          setEndCursor(null);
-          setHasNextPage(false);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        if (error?.name !== 'AbortError') {
+          console.error('Error loading posts:', error);
+          if (alive && !cached) {
+            setSelectedCategoryPosts([]);
+            setEndCursor(null);
+            setHasNextPage(false);
+          }
         }
       } finally {
         if (alive) setPostsLoading(false);
@@ -84,38 +126,77 @@ export function useCategorySections() {
 
     return () => {
       alive = false;
+      abortRef.current?.abort();
     };
-  }, [selectedCategorySlug]);
+  }, [selectedCategorySlug, fetchPosts]);
+
+  // Hover/idle prefetch for smoother switches
+  const prefetchCategory = useCallback(
+    (slug: string) => {
+      if (!slug || cacheRef.current.has(slug)) return;
+      idle(async () => {
+        try {
+          const { posts, pageInfo } = await fetchPosts(slug);
+          cacheRef.current.set(slug, { posts: posts ?? [], pageInfo });
+        } catch {
+          /* ignore idle errors */
+        }
+      });
+    },
+    [fetchPosts]
+  );
 
   function handleCategoryClick(slug: string) {
     if (slug === selectedCategorySlug) return;
-    setSelectedCategorySlug(slug); // effect above will fetch
+
+    // If cached, switch immediately (UI stays snappy)
+    const cached = cacheRef.current.get(slug);
+    if (cached) {
+      setSelectedCategorySlug(slug);
+      // kick an idle refresh in the background
+      prefetchCategory(slug);
+      return;
+    }
+    // Not cached: switch (effect will fetch) and show spinner
+    setSelectedCategorySlug(slug);
   }
 
-  // 3) Pagination
+  // 3) Pagination (always network)
   async function loadMorePosts() {
     if (!selectedCategorySlug || !endCursor) return;
 
     setPostsLoading(true);
     try {
-      const res = await fetch(
-        `/api/categories?slug=${encodeURIComponent(selectedCategorySlug)}&after=${encodeURIComponent(
-          endCursor
-        )}`,
-        { cache: "no-store" }
-      );
-      if (!res.ok) throw new Error("Failed to fetch more posts");
-      const { posts, pageInfo }: PostsResponse = await res.json();
-
+      const { posts, pageInfo } = await fetchPosts(selectedCategorySlug, endCursor);
+      // append to UI
       setSelectedCategoryPosts((prev) => prev.concat(posts ?? []));
       setEndCursor(pageInfo?.endCursor ?? null);
       setHasNextPage(!!pageInfo?.hasNextPage);
+      // and update cache
+      const existing = cacheRef.current.get(selectedCategorySlug) || {
+        posts: [],
+        pageInfo: { hasNextPage: false, endCursor: null as string | null },
+      };
+      cacheRef.current.set(selectedCategorySlug, {
+        posts: existing.posts.concat(posts ?? []),
+        pageInfo,
+      });
     } catch (error) {
-      console.error("Error loading more posts:", error);
+      console.error('Error loading more posts:', error);
     } finally {
       setPostsLoading(false);
     }
   }
+
+  // Prefetch first few categories on idle
+  useEffect(() => {
+    if (!categories.length) return;
+    idle(() => {
+      categories.slice(0, 3).forEach((c) => {
+        if (c.slug !== selectedCategorySlug) prefetchCategory(c.slug);
+      });
+    });
+  }, [categories, selectedCategorySlug, prefetchCategory]);
 
   return {
     categories,
@@ -126,5 +207,6 @@ export function useCategorySections() {
     hasNextPage,
     handleCategoryClick,
     loadMorePosts,
+    prefetchCategory, // (optional) use on hover in your buttons
   };
 }

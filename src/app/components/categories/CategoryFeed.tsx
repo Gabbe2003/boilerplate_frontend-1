@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCategorySections } from "./herlper.useCategoryFeed";
 import CategoryDesktopGrid from "./CategoryDesktopGrid";
 import CategoryMobileCarousel from "./CategoryMobileCarousel";
@@ -14,7 +15,7 @@ export default function CategorySections() {
     postsLoading,
     hasNextPage,
     handleCategoryClick,
-    loadMorePosts,
+    // loadMorePosts, // no longer used
   } = useCategorySections();
 
   const selectedCategory =
@@ -54,15 +55,17 @@ export default function CategorySections() {
                       <Button
                         key={cat.id}
                         onClick={() => handleCategoryClick(cat.slug)}
+                        
                         className={`
                           whitespace-nowrap px-4 py-2 text-sm font-medium transition
                           ${
                             isActive
-                              ? "bg-blue-600 text-white border-blue-600 shadow-sm"
+                              ? "bg-black text-white border-blue-600 shadow-sm"
                               : "bg-white text-gray-800 border-gray-200 hover:bg-gray-100"
                           }
                         `}
-                        variant="ghost"
+                        variant="destructive"
+                        aria-current={isActive ? "page" : undefined}
                       >
                         {cat.name}
                       </Button>
@@ -87,14 +90,24 @@ export default function CategorySections() {
                 {/* DESKTOP */}
                 <CategoryDesktopGrid posts={selectedCategoryPosts} />
 
-                {hasNextPage && (
-                  <div className="mt-6 hidden lg:flex justify-center">
+                {/* CTA: link to full category page (replaces Load More) */}
+                {hasNextPage && selectedCategory && (
+                  <div className="mt-6 flex justify-center">
                     <Button
-                      onClick={loadMorePosts}
-                      disabled={postsLoading}
-                      className="px-6 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+                      asChild
+                      variant="outline"
+                      className="px-6 py-2 text-sm font-medium"
                     >
-                      {postsLoading ? "Loading more..." : "Load More"}
+                      <Link
+                        href={`/category/${selectedCategory.slug}`}
+                        prefetch
+                        aria-label={`Read more from ${selectedCategory.name}`}
+                      >
+                        Wanna read more from{" "}
+                        <span className="capitalize">
+                          {selectedCategory.name}
+                        </span>
+                      </Link>
                     </Button>
                   </div>
                 )}

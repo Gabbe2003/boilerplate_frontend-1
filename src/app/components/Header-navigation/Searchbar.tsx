@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAppContext } from '@/store/AppContext';
 import Link from 'next/link';
-import Search from '../Icons/search';
+import Search from '../icons/search';
 import clsx from 'clsx';
 
 interface SearchDrawerProps {

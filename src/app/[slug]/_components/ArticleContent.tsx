@@ -60,11 +60,6 @@ export function ArticleContent({
   categoryNames?: string[];
   tagNames?: string[];
 }) {
-  // Optional debug
-  if (process.env.NODE_ENV !== "production") {
-    console.log("ArticleContent categories:", categoryNames ?? []);
-    console.log("ArticleContent tags:", tagNames ?? []);
-  }
 
   return (
     <article className="max-w-7xl mx-auto px-4 md:px-8 py-8 mb-10 w-full ">

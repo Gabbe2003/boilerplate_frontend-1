@@ -77,7 +77,6 @@ export function InfinitePosts(initialPost: PostWithTOC & { updatedHtml?: string;
 
       try {
         const posts = await fetchRecommendations();
-        console.log(posts);
         
         if (!mounted) return;
         const uniqueSlugs = Array.from(new Set(posts.map((p) => p.slug)));

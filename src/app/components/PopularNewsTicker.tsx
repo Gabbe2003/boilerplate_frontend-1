@@ -12,12 +12,10 @@ export type Item = {
 };
 
 export default async function PopularNewsTicker({
-  speed = 80,
-  showThumbnails = false,
+  intervalMs = 3000,
   className = '',
 }: {
-  speed?: number;
-  showThumbnails?: boolean;
+  intervalMs?: number; // <-- renamed
   className?: string;
 }) {
   let items: Item[] = [];
@@ -39,8 +37,7 @@ export default async function PopularNewsTicker({
   return (
     <PopularNewsTickerClient
       items={items}
-      speed={speed}
-      showThumbnails={showThumbnails}
+      intervalMs={intervalMs}   
       className={className}
     />
   );

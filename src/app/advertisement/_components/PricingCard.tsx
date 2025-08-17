@@ -1,5 +1,5 @@
-import Dollar from "@/app/components/Icons/dollar";
-import Sparkles from "@/app/components/Icons/sparks";
+import Dollar from "@/app/components/icons/dollar";
+import Sparkles from "@/app/components/icons/sparks";
 
 export default async function PricingCard({ site }: { site: string }) {
   return (

@@ -3,9 +3,9 @@
 import { useFormStatus } from "react-dom";
 
 import { submitInquiry, type ActionState } from "../../../lib/actions/actions";
-import User from "@/app/components/Icons/user";
-import Email from "@/app/components/Icons/email";
-import Doc from "@/app/components/Icons/doc";
+import User from "@/app/components/icons/user";
+import Email from "@/app/components/icons/email";
+import Doc from "@/app/components/icons/doc";
 import { useActionState } from "react";
 
 const initialState: ActionState = { status: "idle" };

@@ -35,9 +35,10 @@ export default function PostsList() {
     );
   }
 
-  return (
-    <div className="mx-auto w-full px-2 lg:w-[70%] sm:px-4">
-      {/* 1 col on mobile; 70/30 split on lg+ */}
+return (
+  <div className="bg-[#f6e4d3]/50">
+  <div className="mx-auto w-full px-2 lg:w-[70%] sm:px-4">
+     {/* 1 col on mobile; 70/30 split on lg+ */}
       <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-6 py-4">
         {/* Main feed (≈70%) */}
         <main>
@@ -97,14 +98,15 @@ export default function PostsList() {
           
         {/* Aside (≈30%) */}
         <aside className="lg:pt-12 mt-12 self-start text-sm rounded-sm">
-          <Sidebar />
           <TradingViewWidget
             title="Upcoming Events"
             heights={{ base: 360, sm: 420, md: 500, lg: 560 }}
             className="rounded-md overflow-hidden border"
           />
+          <Sidebar />
         </aside>
       </div>
     </div>
+  </div>
   );
 }

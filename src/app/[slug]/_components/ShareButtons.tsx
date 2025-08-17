@@ -1,8 +1,8 @@
+import Email from '@/app/components/icons/email';
+import Facebook from '@/app/components/icons/facebook';
+import Linkedin from '@/app/components/icons/linkedin';
+import Twitter from '@/app/components/icons/twitter';
 import { Button } from '@/components/ui/button';
-import Twitter from '@/app/components/Icons/twitter';
-import Facebook from '@/app/components/Icons/facebook';
-import Linkedin from '@/app/components/Icons/linkedin';
-import Email from '@/app/components/Icons/email';
 
 function getShareUrl(
   platform: 'twitter' | 'facebook' | 'linkedin',

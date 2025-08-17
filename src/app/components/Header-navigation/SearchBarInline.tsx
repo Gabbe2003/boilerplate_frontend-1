@@ -3,7 +3,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Search from '../Icons/search';
+import Search from '../icons/search';
 import { useSearchBar, SearchResult } from './hooks/useSearchBar';
 import { Post } from '@/lib/types';
 

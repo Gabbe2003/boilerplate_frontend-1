@@ -1,4 +1,4 @@
-import News from "@/app/components/Icons/news";
+import News from "@/app/components/icons/news";
 
 export default function NewsletterHighlight({ site }: { site: string }) {
   return (

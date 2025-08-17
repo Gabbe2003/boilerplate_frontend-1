@@ -1,4 +1,3 @@
-// app/components/TradingViewScreener.tsx
 "use client";
 
 import React, {
@@ -11,10 +10,10 @@ import React, {
 } from "react";
 
 type HeightConfig = {
-  base?: number; // < 640px
-  sm?: number;   // >= 640px
-  md?: number;   // >= 768px
-  lg?: number;   // >= 1024px
+  base?: number;
+  sm?: number;
+  md?: number;
+  lg?: number;
 };
 
 type Props = {
@@ -35,7 +34,6 @@ function TradingViewScreener({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const bucketRef = useRef<"base" | "sm" | "md" | "lg">("base");
 
-  // --- Options (hamburger on small) ---
   const [open, setOpen] = useState(false);
   const [defaultColumn, setDefaultColumn] = useState<
     "overview" | "performance" | "oscillators" | "moving_averages"
@@ -44,12 +42,10 @@ function TradingViewScreener({
   const [locale, setLocale] = useState<string>("sv_SE");
   const menuId = useId();
 
-  // --- Speed: add resource hints to head (once) ---
   useEffect(() => {
     const head = document.head;
 
     const ensure = (el: HTMLLinkElement) => {
-      // Avoid duplicates by matching rel+href
       const exists = head.querySelector(
         `link[rel="${el.rel}"][href="${el.href}"]`
       );
@@ -67,7 +63,6 @@ function TradingViewScreener({
     dnsPrefetch.href = TV_HOST;
     ensure(dnsPrefetch);
 
-    // Preload the script so fetch starts ASAP (falls back gracefully if not supported)
     const preload = document.createElement("link");
     preload.rel = "preload";
     preload.as = "script";
@@ -76,7 +71,6 @@ function TradingViewScreener({
     ensure(preload);
   }, []);
 
-  // Height per breakpoint (widget uses height:"100%", so we size the container)
   const getHeightForBucket = useCallback(
     (b: "base" | "sm" | "md" | "lg") => {
       switch (b) {
@@ -93,13 +87,11 @@ function TradingViewScreener({
     [heights.base, heights.sm, heights.md, heights.lg]
   );
 
-  // Build TradingView widget (fast: script fetch prioritized; container sized in px)
   const buildWidget = useCallback(
     (heightPx: number) => {
       const container = containerRef.current;
       if (!container) return;
 
-      // Reset to avoid duplicate injections
       container.innerHTML = `
         <div class="tradingview-widget-container__widget" style="width:100%; height:${heightPx}px;"></div>
       `;
@@ -108,20 +100,19 @@ function TradingViewScreener({
       script.src = TV_SRC;
       script.type = "text/javascript";
       script.async = true;
-      // Speed hints on the script itself
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (script as any).fetchPriority = "high"; // supported by Chromium
+      (script as any).fetchPriority = "high";
       script.crossOrigin = "anonymous";
       script.referrerPolicy = "no-referrer";
       script.innerHTML = JSON.stringify({
-        defaultColumn,           // "performance" by default
+        defaultColumn,
         screener_type: "crypto_mkt",
-        displayCurrency,         // "USD" default
-        colorTheme: "light",     // white theme
+        displayCurrency,
+        colorTheme: "light",
         isTransparent: false,
-        locale,                  // "sv_SE" default
+        locale,
         width: "100%",
-        height: "100%",          // fill container heightPx
+        height: "100%",
       });
 
       container
@@ -131,7 +122,6 @@ function TradingViewScreener({
     [defaultColumn, displayCurrency, locale]
   );
 
-  // Rebuild on mount, breakpoint changes, or any option change
   useEffect(() => {
     const getBucket = (): "base" | "sm" | "md" | "lg" => {
       const w = window.innerWidth;
@@ -172,17 +162,14 @@ function TradingViewScreener({
     };
   }, [buildWidget, getHeightForBucket]);
 
-  // ---- UI ----
   return (
-    <div className={`flex justify-center ${className}`}>
-      {/* Centered; full width on mobile w/ tight padding; 70% on lg */}
+    <div className={`flex justify-center bg-[#f6e4d3]/50 ${className}`}>
       <div className="w-full px-1 sm:px-2 lg:w-[70%]">
         <div className="flex items-center justify-between gap-2 mb-2">
           <h4 className="text-sm sm:text-base font-semibold text-center w-full md:w-auto md:text-left">
             {title}
           </h4>
 
-          {/* Hamburger (show on small; hide on md+) */}
           <button
             type="button"
             className="md:hidden inline-flex items-center justify-center rounded-md border px-2.5 py-1.5 text-sm hover:bg-gray-50"
@@ -199,7 +186,6 @@ function TradingViewScreener({
           </button>
         </div>
 
-        {/* Options panel: hidden behind hamburger on small; always visible on md+ */}
         <div
           id={menuId}
           className={`${open ? "block" : "hidden"} md:block mb-3 rounded-md border p-2 bg-white`}
@@ -261,7 +247,6 @@ function TradingViewScreener({
           </p>
         </div>
 
-        {/* Widget container (height set by buildWidget) */}
         <div
           ref={containerRef}
           className="tradingview-widget-container w-full"

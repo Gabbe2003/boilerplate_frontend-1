@@ -7,6 +7,7 @@ import { useAppContext } from '@/store/AppContext';
 import { stripHtml } from '@/lib/helper_functions/strip_html';
 import { Sidebar } from './SideBar';
 import { Button } from '@/components/ui/button';
+import TradingViewWidget from '../tickers/uppcomingEventsTicker'; 
 
 export default function PostsList() {
   const { searchBarHeader, posts } = useAppContext();
@@ -35,15 +36,15 @@ export default function PostsList() {
   }
 
   return (
-    <div className="mx-auto w-full lg:w-[70%] px-2 sm:px-4 md:px-6">
+    <div className="mx-auto w-full px-2 lg:w-[70%] sm:px-4">
       {/* 1 col on mobile; 70/30 split on lg+ */}
       <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-6 py-4">
         {/* Main feed (≈70%) */}
         <main>
-          <h2 className="text-xl px-2 font-bold mb-4">Latest News</h2>
+          <h2 className="text-xl sm:px-2 font-bold mb-4">Latest News</h2>
 
           {/* 1 col on mobile, 2 cols on sm+ */}
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {items.map((post, index) => {
               const rawExcerpt = stripHtml(post.excerpt!) || '';
               const limitedExcerpt = limitWords(rawExcerpt, 15);
@@ -51,11 +52,11 @@ export default function PostsList() {
               return (
                 <li
                   key={post.id}
-                  className="group flex flex-col p-3 hover:cursor-pointer"
+                  className="group flex flex-col p-2 hover:cursor-pointer"
                 >
                   {post.featuredImage?.node?.sourceUrl && (
                     <Link href={`/${post.slug}`} className="block">
-                      <div className="relative w-full aspect-[2/1] overflow-hidden mb-1">
+                      <div className="relative w-full aspect-[2/1] overflow-hidden">
                         <Image
                           src={post.featuredImage.node.sourceUrl}
                           alt={post.featuredImage.node.altText || post.title}
@@ -68,11 +69,11 @@ export default function PostsList() {
                     </Link>
                   )}
 
-                  <h3 className="text-base lg:text-lg font-semibold mb-1 leading-snug">
+                  <h3 className="text-base lg:text-lg font-semibold leading-snug">
                     {post.title}
                   </h3>
 
-                  <p className="text-gray-700 mb-2 text-xs leading-relaxed underline">
+                  <p className="text-gray-700 text-xs leading-relaxed">
                     {limitedExcerpt}
                   </p>
                 </li>
@@ -97,6 +98,11 @@ export default function PostsList() {
         {/* Aside (≈30%) */}
         <aside className="lg:pt-12 mt-12 self-start text-sm rounded-sm">
           <Sidebar />
+          <TradingViewWidget
+            title="Upcoming Events"
+            heights={{ base: 360, sm: 420, md: 500, lg: 560 }}
+            className="rounded-md overflow-hidden border"
+          />
         </aside>
       </div>
     </div>

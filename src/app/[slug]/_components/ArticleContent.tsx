@@ -57,9 +57,7 @@ export function ArticleContent({
   postExcerpt: string;
   aboveImageRef?: React.Ref<HTMLDivElement>;
   index: number;
-  /** New: list of category names for this post */
   categoryNames?: string[];
-  /** New: list of tag names for this post */
   tagNames?: string[];
 }) {
   // Optional debug
@@ -89,16 +87,19 @@ export function ArticleContent({
           </p>
         )}
 
-        {/* Categories & Tags chips */}
-        {categoryNames?.length ? (
+{/* Categories & Tags chips */}
+{categoryNames?.length ? (
   <div>
     <h4 className="text-xs uppercase tracking-wide text-gray-500 mb-1">
       Categories
     </h4>
     <div className="flex flex-wrap gap-2">
       {categoryNames.map((name, i) => (
-        <Link key={`${name}-${i}`} href={`/category/${encodeURIComponent(name.toLowerCase())}`}
-          className="inline-flex items-center rounded-full border bg-background/80 px-3 py-1 text-xs font-medium hover:underline hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input">
+        <Link
+          key={`${name}-${i}`}
+          href={`/category/${encodeURIComponent(name.toLowerCase())}`}
+          className="inline-flex items-center rounded-full border bg-background/80 px-3 py-1 text-xs font-medium hover:underline hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input"
+        >
           {name}
         </Link>
       ))}
@@ -113,14 +114,18 @@ export function ArticleContent({
     </h4>
     <div className="flex flex-wrap gap-2">
       {tagNames.map((name, i) => (
-        <Link key={`${name}-${i}`} href={`/tag/${encodeURIComponent(name.toLowerCase())}`}
-          className="inline-flex items-center rounded-full bg-background/60 px-3 py-1 text-xs font-normal hover:underline hover:bg-accent/70 hover:text-accent-foreground dark:bg-input/20 dark:border-input">
+        <Link
+          key={`${name}-${i}`}
+          href={`/tag/${encodeURIComponent(name.toLowerCase())}`}
+          className="inline-flex items-center rounded-full border bg-background/80 px-3 py-1 text-xs font-medium hover:underline hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input"
+        >
           #{name}
         </Link>
       ))}
     </div>
   </div>
 ) : null}
+
 
 
         <div className="flex flex-col sm:flex-row sm:flex-nowrap items-start sm:items-center justify-center sm:justify-between gap-3 mt-3 mb-1 min-w-0">

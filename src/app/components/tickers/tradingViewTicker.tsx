@@ -12,7 +12,7 @@ const CONFIG = {
     { proName: 'FX_IDC:EURUSD', title: 'EUR to USD' },
     { proName: 'BITSTAMP:BTCUSD', title: 'Bitcoin' },
     { proName: 'BITSTAMP:ETHUSD', title: 'Ethereum' },
-    { proName: 'OMXSTO:OMXS30', title: 'OMX S30' }, // Sweden index (from your snippet)
+    { proName: 'OMXSTO:OMXS30', title: 'OMX S30' },
     { proName: 'NASDAQ:TSLA', title: 'Tesla' },
   ],
   colorTheme: 'light',
@@ -60,7 +60,6 @@ function TradingViewTickerTapeImpl() {
           rel="noopener nofollow"
           target="_blank"
         >
-          <span className="blue-text">Ticker tape by TradingView</span>
         </a>
       </div>
     </div>

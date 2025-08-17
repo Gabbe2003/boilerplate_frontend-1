@@ -9,6 +9,7 @@ import MobileNav from '../Header-navigation/MobileNav';
 import PopupModal from '../Rule_sub';
 import type { SearchResult } from '../Header-navigation/hooks/useSearchBar';
 import SearchBarInline from '../Header-navigation/SearchBarInline';
+import TickerTapeVisible from '../tickers/tradingviewServer';
 
 type Category = { id: string; name: string; slug: string };
 
@@ -43,6 +44,8 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
     <>
       {/* Outer layer: full-width background & border */}
       <header className="sticky top-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
+      <TickerTapeVisible height={0} preloadOffset="0px" />
+      
         {/* Inner container: truly 70% on lg, and the only place with horizontal padding */}
         <div className="mx-auto w-full lg:w-[70%] px-2 sm:px-4 md:px-6">
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 py-0">

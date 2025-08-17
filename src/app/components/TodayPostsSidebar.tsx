@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getTodaysPosts } from "./todaysPosts";
 import { getAllPosts } from "@/lib/graph_queries/getAllPosts";
 import type { Post } from "@/lib/types";
-import TickerTapeVisible from "./tradingviewServer";
+import TickerTapeVisible from "./tickers/tradingviewServer";
 
 type SidebarPost = {
   id: string | number;
@@ -73,6 +73,7 @@ function toSidebarPost(p: Post): SidebarPost {
 
 export default async function TodayPostsSidebar({ heading = "Today’s Posts" }: Props) {
   let posts: SidebarPost[] = [];
+  let usedFallback = false; // <-- add
 
   try {
     const todays = (await getTodaysPosts(5)) as Post[];
@@ -81,10 +82,14 @@ export default async function TodayPostsSidebar({ heading = "Today’s Posts" }:
     if (!posts.length) {
       const latest = (await getAllPosts({ first: 5 })) as Post[];
       posts = latest.map(toSidebarPost);
+      usedFallback = true; // <-- mark that we’re showing older posts
     }
   } catch {
     posts = [];
   }
+
+  // If we’re showing older posts, change the title
+  const finalHeading = usedFallback ? "Popular news" : heading;
 
   return (
     <div className="overflow-hidden bg-white">
@@ -93,7 +98,7 @@ export default async function TodayPostsSidebar({ heading = "Today’s Posts" }:
           <section className="w-full bg-muted flex flex-col">
             <h2 className="text-base sm:text-lg font-semibold flex items-center">
               <span className="relative inline-flex h-2.5 w-2.5" />
-              {heading}
+              {finalHeading}
             </h2>
 
             <div className="rounded-md overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm">

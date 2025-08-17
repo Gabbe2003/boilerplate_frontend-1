@@ -27,6 +27,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const { favicon } = await getLogo();
   const posts = await getAllPosts();
 
+  
+
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">

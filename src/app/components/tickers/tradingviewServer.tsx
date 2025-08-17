@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 
 // Will only load on the client when actually rendered
-const TradingViewTickerTape = dynamic(() => import('./Popular/TradingViewTicker'), {
+const TradingViewTickerTape = dynamic(() => import('./tradingViewTicker'), {
   ssr: false,
 });
 
@@ -25,7 +25,6 @@ export default function TickerTapeVisible({
   useEffect(() => {
     if (show) return; // already loaded
     const el = ref.current;
-    if (!el) return;
 
     // Fallback: load immediately if IO isn't available
     if (typeof window !== 'undefined' && !('IntersectionObserver' in window)) {

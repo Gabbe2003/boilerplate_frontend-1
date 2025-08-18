@@ -1,5 +1,5 @@
 // Server Component (no "use client")
-import { getViews } from '@/lib/graph_queries/getPostByPeriod';
+import { getViews } from '@/lib/graph_queries/graph_queries/getPost';
 import PopularNewsTickerClient from './Popular/featuredPostsTicker';
 
 export type Item = {

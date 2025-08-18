@@ -28,6 +28,7 @@ type Payload = {
 };
 
 export async function POST(req: Request) {
+  
   const verify = await verifyIncomingSignature(req, {
     seenNonce,
   });

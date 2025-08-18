@@ -53,6 +53,7 @@ export interface AppProviderProps {
   links?: LinkItem[];
   logo?: Logo | null;
   posts: Post[];
+  tagline?: string;
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({
@@ -60,26 +61,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   links = DEFAULT_LINKS,
   logo = null,
   posts,
+  tagline = '',
 }) => {
   const [searchBarHeader, setSearchBarHeader] = useState('');
-  const [tagline, setTagline] = useState('');
-
-  useEffect(() => {
-    const graphqlEndpoint = `${process.env.NEXT_PUBLIC_HOST_URL}/graphql`;
-
-    fetch(graphqlEndpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: `{ generalSettings { description } }`,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) =>
-        setTagline(data?.data?.generalSettings?.description || ''),
-      )
-      .catch(() => setTagline(''));
-  }, []);
 
   return (
     <AppContext.Provider

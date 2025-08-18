@@ -1,5 +1,5 @@
 // /api/post-by-slug/route.ts
-import { getPostBySlug } from "@/lib/graph_queries/getPostBySlug";
+import { getPostBySlug } from "@/lib/graph_queries/getPost";
 import { NextRequest, NextResponse } from "next/server";
 
 type Post = NonNullable<Awaited<ReturnType<typeof getPostBySlug>>>;

@@ -1,9 +1,22 @@
 
+Footer and header back to ssr redo.
+fix the adspop up on tablet, the image is fked.
+in popular post there are times when we display two ads next to each other.
+
+In seach we are looking for the input letter and check if it exsist from right to left,we are matching letter by letter which is wrong we have to check for the whole title if the letter exsists. If we type a letter that doesnt exsists on the searchbar and hit enter, BUT if any post have that letter it will be shown. FIX 
 
 
 
-1. Rate limiter, check security
-2. Organize graph queries
+we are passing tag title not the slug
+when we navigate to category we are we are seeing missin slug. 
+http://localhost:3000/tag
+http://localhost:3000/category
+
+here we are not seeing anything?
+http://localhost:3000/author 
+
+1. Rate limiter (Done)  
+2. Organize graph queries (Done)
 3. Add popup
 4. Check the code there are many places that uses <a>, <button> etc. Make sure to use next and shadcn PopupModal(I uploaded a code there try it, and commented out the old one) for example.
 5. Style the whole page
@@ -11,6 +24,7 @@
 7. Make sure all images look are optimized.
 8. Decide what post data will show for the user.
 9. Add robots/sitemap
+10. check security
 
 
 

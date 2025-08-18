@@ -1,4 +1,4 @@
-import { getTagBySlug } from "@/lib/graph_queries/getTagBySlug";
+import { getTagBySlug } from "@/lib/graph_queries/getTag";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

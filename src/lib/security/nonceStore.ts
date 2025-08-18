@@ -1,4 +1,6 @@
 // src/lib/security/nonceStore.ts
+import "server-only"; 
+
 const nonceCache = new Map<string, number>();
 
 export async function seenNonce(nonce: string, ttlSec: number): Promise<boolean> {

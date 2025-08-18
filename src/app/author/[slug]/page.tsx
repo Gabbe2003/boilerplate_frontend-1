@@ -1,4 +1,4 @@
-import { getAuthorBySlug } from '@/lib/graph_queries/getAuthorBySlug';
+import { getAuthorBySlug } from '@/lib/graph_queries/getAuthor';
 import { Sidebar } from "@/app/components/Main-page/SideBar";
 
 import { stripHtml } from '@/lib/helper_functions/strip_html';

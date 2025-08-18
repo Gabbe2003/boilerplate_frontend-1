@@ -22,7 +22,7 @@ export default function AdRotator({
   const [index, setIndex] = useState(safeStart);
 
   useEffect(() => {
-    if (len < 2) return; // skip timer if 0 or 1 ad
+    if (len < 1) return; // skip timer if 0 or 1 ad
 
     const id = setInterval(() => {
       setIndex((i) => (i + 1) % len);

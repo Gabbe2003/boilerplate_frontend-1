@@ -1,21 +1,22 @@
 import type { ReactNode } from 'react';
 import dynamic from 'next/dynamic';
 import { getLogo } from '@/lib/graph_queries/getLogo';
-import { getAllPosts } from '@/lib/graph_queries/getAllPosts';
-import '@/styles/globals.css';
-import { AppProvider, DEFAULT_LINKS } from '@/store/AppContext';
-import HeaderServer from './components/Main-page/HeaderServer';
+ import '@/styles/globals.css';
+import { AppProvider } from '@/store/AppContext';
+import Header from './components/Main-page/Header';
+import { getAllPosts } from '@/lib/graph_queries/getPost';
+import {getTagLine} from '@/lib/graph_queries/getTagline';
 
-const Footer = dynamic(() => import('./components/Main-page/Footer'), {
+const Footer = dynamic(() => import("./components/Main-page/Footer"), {
   loading: () => <div className="w-full h-24 bg-gray-100" />,
 });
 
 export async function generateMetadata() {
   return {
-    title: process.env.NEXT_PUBLIC_HOSTNAME || 'Default Title',
+    title: process.env.NEXT_PUBLIC_HOSTNAME || "Default Title",
     description:
-      'Up-to-date tutorials, deep technical deep dives and thought pieces on web development, React, Next.js, and more.',
-    keywords: ['blog', 'next.js', 'react', 'web development', 'tutorials'],
+      "Up-to-date tutorials, deep technical deep dives and thought pieces on web development, React, Next.js, and more.",
+    keywords: ["blog", "next.js", "react", "web development", "tutorials"],
   };
 }
 
@@ -24,16 +25,17 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const { favicon } = await getLogo();
-  const posts = await getAllPosts();
-
-  
+const [favicon, posts, tagline] = await Promise.all([
+    getLogo(), 
+    getAllPosts(), 
+    getTagLine()
+  ])
 
   return (
     <html lang="en">
       <body className="flex flex-col min-h-screen">
-        <AppProvider links={DEFAULT_LINKS} logo={favicon} posts={posts}>
-          <HeaderServer />
+        <AppProvider logo={favicon} posts={posts} tagline={tagline}>
+          <Header />
             <main className="flex-1">{children}</main>
           <Footer />
         </AppProvider>

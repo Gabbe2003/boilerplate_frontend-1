@@ -1,10 +1,10 @@
-import { getPosts } from "@/lib/graph_queries/getRecommendationPost";
+import { getRecommendation } from "@/lib/graph_queries/getPost";
 import { NextResponse } from "next/server";
 import type { Post } from "@/lib/types";
 
 export async function GET(): Promise<NextResponse<Post[] | { error: string }>> {
   try {
-    const posts = await getPosts();
+    const posts = await getRecommendation();
 
     return NextResponse.json<Post[]>(Array.isArray(posts) ? posts : [], {
       headers: { "Cache-Control": "private, no-store" },

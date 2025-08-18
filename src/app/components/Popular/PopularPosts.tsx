@@ -1,5 +1,5 @@
 // Server Component (no 'use client')
-import { getViews } from '@/lib/graph_queries/getPostByPeriod';
+import { getPostByPeriod } from '@/lib/graph_queries/getPost';
 import PopularNews from './PopularPostsGrid'; // make sure this is the file that default-exports PopularNews
 import { Ad, ADS } from '../ads/adsContent';
 import { Post } from '@/lib/types';
@@ -39,7 +39,7 @@ function shuffleArray<T>(array: T[]): T[] {
 
 export default async function PopularPosts() {
   // Fetch both in parallel for speed
-  const [posts, tagline] = await Promise.all([getViews('week'), getSiteTagline()]);
+  const [posts, tagline] = await Promise.all([getPostByPeriod('week'), getSiteTagline()]);
 
   if (!posts?.length) return <div>No fun posts!</div>;
 

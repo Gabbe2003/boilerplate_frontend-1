@@ -1,4 +1,4 @@
-import { getPostBySlug } from '@/lib/graph_queries/getPostBySlug';
+import { getPostBySlug } from '@/lib/graph_queries/getPost';
 import { load } from 'cheerio';
 import type { ITOCItem, Post } from '@/lib/types';
 import { SinglePost } from './_components/SinglePost';

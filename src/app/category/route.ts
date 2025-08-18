@@ -1,4 +1,4 @@
-import { getCategoryBySlug } from "@/lib/graph_queries/getCategoryBySlug";
+import { getCategoryBySlug } from "@/lib/graph_queries/getCategory";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

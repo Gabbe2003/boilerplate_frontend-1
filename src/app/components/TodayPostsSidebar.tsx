@@ -4,7 +4,7 @@
 
 import Link from "next/link";
 import { getTodaysPosts } from "./todaysPosts";
-import { getAllPosts } from "@/lib/graph_queries/getAllPosts";
+import { getAllPosts } from "@/lib/graph_queries/getPost";
 import type { Post } from "@/lib/types";
 import TickerTapeVisible from "./tickers/tradingviewServer";
 

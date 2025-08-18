@@ -1,4 +1,6 @@
 // src/lib/signedFetch.ts
+import "server-only"; 
+
 import crypto from "node:crypto";
 
 type SignOptions = {

@@ -1,4 +1,5 @@
 import "server-only"; 
+import { signedFetch } from "../security/signedFetch";
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 
@@ -17,14 +18,11 @@ export async function getAllTags() {
     }
   `;
   try {
-    const res = await fetch(GRAPHQL_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query }),
-      next: { revalidate: 86400 },
-    });
+   const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
+    method: 'POST',
+    json: { query },
+    next: { revalidate: 86400 },
+  });
 
     if (!res.ok) {
       throw new Error(`Network response was not ok: ${res.statusText}`);

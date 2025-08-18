@@ -6,6 +6,7 @@ import { GraphQLError, Post } from '../types';
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 // import { loggedFetch } from '../logged-fetch';
 import { normalizeImages } from '../helper_functions/featured_image';
+import { signedFetch } from "../security/signedFetch";
 
 // Fetch a single post by slug
 export async function getPostBySlug(slug: string): Promise<Post | null> {
@@ -49,11 +50,10 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   `;
 
   try {
-    const res = await fetch(GRAPHQL_URL, {
+    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, variables: { slug } }),
-      next: { revalidate: 300, tags: [`post-${slug}`]},
+      json: { query, variables: { slug } },
+      next: { revalidate: 300, tags: [`post-${slug}`] },
     });
 
   

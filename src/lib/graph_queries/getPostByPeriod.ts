@@ -1,5 +1,6 @@
 // lib/getViews.ts
 import "server-only"; 
+import { signedFetch } from "../security/signedFetch";
 
 interface FeaturedImageObject {
   node?: {
@@ -32,8 +33,10 @@ export async function getViews(
 > {
   try {
     
-    const res = await fetch(`${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`, 
-      { cache: 'force-cache', next: { revalidate: 400 }
+    const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`;
+    const res = await signedFetch(url, {
+      cache: 'force-cache',
+      next: { revalidate: 400 },
     });
 
     if (!res.ok) {

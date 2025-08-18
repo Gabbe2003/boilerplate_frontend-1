@@ -124,7 +124,7 @@ function PostSlide({
         </span>
 
         <Link
-          href={post.slug?.startsWith('/') ? post.slug : `/posts/${post.slug}`}
+          href={post.slug?.startsWith('/') ? post.slug : `/${post.slug}`}
           className="block w-full truncate text-sm md:text-base font-medium leading-6 hover:underline focus:outline-none focus:ring-0"
         >
           {post.title}

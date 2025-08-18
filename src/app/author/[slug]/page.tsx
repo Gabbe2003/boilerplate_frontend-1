@@ -104,7 +104,7 @@ export default async function AuthorInfo({
                     className="border rounded-sm shadow-md hover:shadow-lg transition bg-white flex flex-col overflow-hidden group"
                   >
                     <Link
-                      href={`/posts/${post.slug}`}
+                      href={`/${post.slug}`}
                       className="block overflow-hidden"
                     >
                       <Image
@@ -119,7 +119,7 @@ export default async function AuthorInfo({
                     </Link>
                     <div className="p-4 flex flex-col flex-1">
                       <Link
-                        href={`/posts/${post.slug}`}
+                        href={`/${post.slug}`}
                         className="font-bold text-lg mb-1 hover:underline line-clamp-2"
                       >
                         {post.title}

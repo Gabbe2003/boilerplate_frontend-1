@@ -1,4 +1,5 @@
 import "server-only"; 
+import { signedFetch } from "../security/signedFetch";
 
 
 
@@ -45,15 +46,11 @@ export async function getTagBySlug(slug: string, after?: string) {
   `;
 
   try {
-    const res = await fetch(process.env.WP_GRAPHQL_URL!, {
+    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query, variables: { slug, after } }),
-      next: { revalidate: 3600, tags:[`tag-${slug}`] },
+      json: { query, variables: { slug, after } },
+      next: { revalidate: 3600, tags: [`tag-${slug}`] },
     });
-
     if (!res.ok) {
       throw new Error(`Network response was not ok: ${res.statusText}`);
     }

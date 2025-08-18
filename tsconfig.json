@@ -32,7 +32,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/components/tickers/uppcomingEventsTicker.tsx"  ],
+, "src/app/components/tickers/uppcomingEventsTicker.tsx", "scripts/ping-revalidate.js"  ],
   "exclude": [
     "node_modules"
   ]

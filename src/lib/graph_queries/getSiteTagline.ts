@@ -1,5 +1,6 @@
 // lib/graph_queries/getSiteTagline.ts
 import 'server-only';
+import { signedFetch } from '../security/signedFetch';
 
 export async function getSiteTagline(): Promise<string> {
   const endpoint = process.env.WP_GRAPHQL_URL; 
@@ -9,13 +10,12 @@ export async function getSiteTagline(): Promise<string> {
   }
 
   try {
-    const res = await fetch(endpoint, {
+     const res = await signedFetch(endpoint, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
+      json: {
         query: `query { generalSettings { description } }`,
-      }),
-      next: { revalidate: 300 }, // cache on the server for 5 minutes
+      },
+      next: { revalidate: 300 }, 
     });
 
     if (!res.ok) return '';

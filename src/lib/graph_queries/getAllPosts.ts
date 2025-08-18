@@ -3,6 +3,7 @@ import "server-only";
 import { Post, GraphQLError } from '@/lib/types';
 // import { loggedFetch } from '../logged-fetch';
 import { normalizeImages } from '../helper_functions/featured_image';
+import { signedFetch } from "../security/signedFetch";
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 export async function getAllPosts({
@@ -102,14 +103,10 @@ fragment PostFull on Post {
   `;
 
   try {
-    const res = await fetch(GRAPHQL_URL, {
+    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query,
-        variables: { first, after, last, before },
-      }),
-      next: { revalidate: 300, tags: ['posts']},
+      json: { query,  variables: { first, after, last, before } },
+      next: { revalidate: 300, tags: ['posts'] },
     });
 
     const json = (await res.json()) as {

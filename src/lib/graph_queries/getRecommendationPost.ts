@@ -2,6 +2,7 @@ import "server-only";
 
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 import { GraphQLError, Post } from '@/lib/types';
+import { signedFetch } from "../security/signedFetch";
 
 export async function getPosts(): Promise<Post[]> {
   
@@ -26,11 +27,10 @@ export async function getPosts(): Promise<Post[]> {
 
   try {
     
-    const res = await fetch(GRAPHQL_URL, {
+    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query }),
-      next: { revalidate: 604800, tags: [`recommendation`]}, 
+      json: { query },
+      next: { revalidate: 604800, tags: ['recommendation'] },
     });
 
     const json = (await res.json()) as {

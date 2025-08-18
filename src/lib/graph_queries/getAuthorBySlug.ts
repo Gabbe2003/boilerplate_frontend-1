@@ -1,4 +1,5 @@
 import "server-only"; 
+import { signedFetch } from "../security/signedFetch";
 const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
 
 export async function getAuthorBySlug(slug: string) {
@@ -30,12 +31,9 @@ export async function getAuthorBySlug(slug: string) {
   `;
 
   try {
-    const res = await fetch(GRAPHQL_URL, {
+    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query, variables: { slug } }),
+      json: { query, variables: { slug } },
       next: { revalidate: 600, tags: [`author-${slug}`] },
     });
 

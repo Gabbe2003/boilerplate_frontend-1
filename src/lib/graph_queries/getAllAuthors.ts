@@ -1,6 +1,6 @@
 'use server';
 
-const GRAPHQL_URL: string = process.env.WP_GRAPHQL_URL!;
+import { signedFetch } from "../security/signedFetch";
 
 export async function getAllAuthors() {
   const query = `
@@ -19,12 +19,9 @@ export async function getAllAuthors() {
         }
     `;
   try {
-    const res = await fetch(GRAPHQL_URL, {
+    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query }),
+      json: { query },
       next: { revalidate: 86400 },
     });
 

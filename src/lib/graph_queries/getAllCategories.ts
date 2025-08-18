@@ -2,6 +2,7 @@
 import "server-only"; 
 
 import { revalidateTag } from 'next/cache';
+import { signedFetch } from "../security/signedFetch";
 
 export type Category = { id: string; name: string; slug: string }; // export type
 
@@ -67,15 +68,12 @@ export async function getAllCategories({
   const seen = new Set<string>();
 
   async function page(query: string) {
-    const res = await fetch(process.env.WP_GRAPHQL_URL!, {
+    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        query,
-        variables: { first: size, after, hideEmpty, orderby, order },
-      }),
-      next: { revalidate: 60 * 60, tags: ['categories'] },
+      json: { query, variables: { first: size, after, hideEmpty, orderby, order } },
+      next: { revalidate: 86400, tags: ['categories'] },
     });
+    
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     return res.json();
   }

@@ -1,7 +1,6 @@
 // app/api/categories/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { getCategoryBySlug } from '@/lib/graph_queries/getCategory';
-import { getAllCategories } from '@/lib/graph_queries/getAllCategories';
+import { getAllCategories, getCategoryBySlug } from '@/lib/graph_queries/getCategory';
 
 
 // Helper to set CDN + browser caching in one place

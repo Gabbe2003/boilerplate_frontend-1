@@ -50,7 +50,7 @@ export async function signedFetch(
 
   // Prepare body string once
   let bodyStr: string | undefined = undefined;
-  let headers = new Headers(init.headers ?? {});
+  const headers = new Headers(init.headers ?? {});
   const method = (init.method ?? "GET").toUpperCase();
 
   if (init.json !== undefined) {
@@ -59,6 +59,7 @@ export async function signedFetch(
   } else if (init.body !== undefined) {
     if (typeof init.body === "string") bodyStr = init.body;
     else if (init.body instanceof Uint8Array) bodyStr = Buffer.from(init.body).toString("utf8");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     else if (init.body instanceof Blob) bodyStr = await (init.body as any).text();
     else throw new Error("signedFetch: unsupported body type");
   }

@@ -1,11 +1,5 @@
 import "server-only"; 
 
-
-
-// lib/graph_queries/getAllCategories.ts
-import "server-only"; 
-
-import { revalidateTag } from 'next/cache';
 import { signedFetch } from "../security/signedFetch";
 
 export type Category = { id: string; name: string; slug: string }; // export type

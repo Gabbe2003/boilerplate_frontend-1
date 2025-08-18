@@ -1,5 +1,5 @@
 // Server Component (no "use client")
-import { getViews } from '@/lib/graph_queries/graph_queries/getPost';
+import { getPostByPeriod } from '@/lib/graph_queries/getPost';
 import PopularNewsTickerClient from './Popular/featuredPostsTicker';
 
 export type Item = {
@@ -20,7 +20,7 @@ export default async function PopularNewsTicker({
 }) {
   let items: Item[] = [];
   try {
-    const posts = await getViews('month');
+    const posts = await getPostByPeriod('month');
     items = (posts ?? []).slice(0, 12);
   } catch {
     items = [];

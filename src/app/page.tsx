@@ -19,7 +19,7 @@ return (
       <CatsPage />
       <PostsList />
       <FinanstidningSeoText />
-    <AdPopup />
+      <AdPopup />
     </div>
 
   </>

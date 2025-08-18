@@ -3,9 +3,9 @@ import dynamic from 'next/dynamic';
 import { getLogo } from '@/lib/graph_queries/getLogo';
  import '@/styles/globals.css';
 import { AppProvider } from '@/store/AppContext';
-import Header from './components/Main-page/Header';
 import { getAllPosts } from '@/lib/graph_queries/getPost';
 import {getTagLine} from '@/lib/graph_queries/getTagline';
+import HeaderServer from './components/Main-page/HeaderServer';
 
 const Footer = dynamic(() => import("./components/Main-page/Footer"), {
   loading: () => <div className="w-full h-24 bg-gray-100" />,
@@ -35,7 +35,7 @@ const [favicon, posts, tagline] = await Promise.all([
     <html lang="en">
       <body className="flex flex-col min-h-screen">
         <AppProvider logo={favicon} posts={posts} tagline={tagline}>
-          <Header />
+          <HeaderServer  />
             <main className="flex-1">{children}</main>
           <Footer />
         </AppProvider>

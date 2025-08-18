@@ -127,8 +127,6 @@ fragment PostFull on Post {
   }
 }
 
-
-
 export async function get_popular_post(): Promise<Post[]> {
   try {
     const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?popular`;
@@ -148,9 +146,6 @@ export async function get_popular_post(): Promise<Post[]> {
     return [];
   }
 }
-
-
-
 
 
 interface FeaturedImageObject {

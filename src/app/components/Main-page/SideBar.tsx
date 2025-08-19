@@ -6,7 +6,7 @@ import Link from "next/link";
 import { ADS } from "../ads/adsContent";
 import { Button } from "@/components/ui/button";
 import AdRotator from "@/app/components/ads/AdRotator";
-import PopupModal from "../Rule_sub";
+import PopupModal from "../client/newsletter/Rule_sub";
 
 export function Sidebar() {
   const [isModalOpen, setIsModalOpen] = useState(false);

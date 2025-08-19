@@ -25,8 +25,6 @@ function rateLimit(key: string, limit: number, windowMs: number): boolean {
 }
 
 export function middleware(req: Request) {
-    console.log(req);
-    
   const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
   const ok = rateLimit(ip, 5, 2000);
 

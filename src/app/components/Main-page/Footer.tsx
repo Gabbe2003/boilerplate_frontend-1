@@ -1,24 +1,16 @@
-'use client';
 
-import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { useAppContext } from '@/store/AppContext';
-import { Button } from '@/components/ui/button';
 import SocialMediaButtons from '../allSocialMediaButtons';
-import PopupModal from '../Rule_sub';
+import FooterNavItem from '../client/FooterNavItem';
+import { getTagLine } from '@/lib/graph_queries/getTagline';
+import { links } from '../client/constants/links';
+
 
 export default function Footer() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
-  const pathname = usePathname();
-  const { links, tagline } = useAppContext();
   const currentYear = new Date().getFullYear();
-
-  // ✅ mirror header’s API
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenNewsletter = useCallback(() => setIsModalOpen(true), []);
-  const handleCloseNewsletter = useCallback(() => setIsModalOpen(false), []);
+  const tagline = getTagLine(); 
 
   const extraLinks = [
     { type: 'button', title: 'Newsletter' },
@@ -26,63 +18,6 @@ export default function Footer() {
     { type: 'link', title: 'Sitemap', href: '/sitemap' },
   ];
 
-  const baseBtnClasses =
-    'text-base w-full justify-start px-0 break-normal whitespace-normal hyphens-auto text-pretty';
-
-  const renderNavItem = (title: string, href?: string) => {
-    const isActive = href && pathname === href;
-    const isHash = href?.startsWith('#');
-
-    // 🔗 Special case: Newsletter opens modal (same as header)
-    if (title.toLowerCase() === 'newsletter') {
-      return (
-        <Button
-          type="button"
-          variant="link"
-          className={baseBtnClasses}
-          onClick={handleOpenNewsletter}
-          aria-label="Open newsletter signup"
-        >
-          {title}
-        </Button>
-      );
-    }
-
-    if (!href) {
-      return (
-        <Button variant="link" className={baseBtnClasses}>
-          {title}
-        </Button>
-      );
-    }
-
-    if (isHash) {
-      return (
-        <Button
-          type="button"
-          variant="link"
-          className={`${baseBtnClasses} ${isActive ? 'text-yellow-500' : ''}`}
-          onClick={(e) => {
-            e.preventDefault();
-            const el = document.getElementById(href.replace('#', ''));
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
-        >
-          {title}
-        </Button>
-      );
-    }
-
-    return (
-      <Button
-        asChild
-        variant="link"
-        className={`${baseBtnClasses} ${isActive ? 'text-yellow-500' : ''}`}
-      >
-        <Link href={href}>{title}</Link>
-      </Button>
-    );
-  };
 
   return (
     <footer id="footer" className="w-full px-2 border-t border-gray-200 bg-gray-100">
@@ -113,8 +48,8 @@ export default function Footer() {
               <h3 className="mb-4 text-lg font-semibold text-gray-700">Readers favorites</h3>
               <ul className="space-y-2">
                 {extraLinks.map((item, idx) => (
-                  <li key={item.title + idx} className="min-w-0">
-                    {renderNavItem(item.title, item.href)}
+                  <li key={item.title + idx}>
+                    <FooterNavItem title={item.title} href={item.href} />
                   </li>
                 ))}
               </ul>
@@ -123,26 +58,22 @@ export default function Footer() {
             <div className="min-w-0">
               <h3 className="mb-4 text-lg font-semibold text-gray-700">Company</h3>
               <ul className="space-y-2">
-                {links.map((link, idx) =>
-                  idx >= 3 ? (
-                    <li key={link.href} className="min-w-0">
-                      {renderNavItem(link.title, link.href)}
-                    </li>
-                  ) : null
-                )}
+                {links.slice(3).map((link) => (
+                  <li key={link.href}>
+                    <FooterNavItem title={link.title} href={link.href} />
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="min-w-0">
               <h3 className="mb-4 text-lg font-semibold text-gray-700">About us</h3>
               <ul className="space-y-2">
-                {links.map((link, idx) =>
-                  idx < 3 ? (
-                    <li key={link.href} className="min-w-0">
-                      {renderNavItem(link.title, link.href)}
-                    </li>
-                  ) : null
-                )}
+                {links.slice(0, 3).map((link) => (
+                  <li key={link.href}>
+                    <FooterNavItem title={link.title} href={link.href} />
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -161,9 +92,6 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      {/* 📨 Newsletter Modal (same props as header) */}
-      <PopupModal isOpen={isModalOpen} onClose={handleCloseNewsletter} />
     </footer>
   );
 }

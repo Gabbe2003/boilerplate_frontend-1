@@ -6,10 +6,10 @@ import { useAppContext } from '@/store/AppContext';
 import { useState, useCallback } from 'react';
 import DesktopNav from '../Header-navigation/DesktopNav';
 import MobileNav from '../Header-navigation/MobileNav';
-import PopupModal from '../Rule_sub';
 import type { SearchResult } from '../Header-navigation/hooks/useSearchBar';
 import SearchBarInline from '../Header-navigation/SearchBarInline';
 import TickerTapeVisible from '../tickers/tradingviewServer';
+import PopupModal from '../client/newsletter/Rule_sub';
 
 type Category = { id: string; name: string; slug: string };
 

@@ -12,17 +12,17 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
+import { renderNewsletter } from '../client/newsletter/renderNewsletter';
 
 interface LinkItem { title: string; href: string }
 type Category = { id: string; name: string; slug: string };
 
 interface MobileNavProps {
   links: LinkItem[];
-  onNewsletterClick: () => void;
   categories: Category[];
 }
 
-export default function MobileNav({ links, onNewsletterClick, categories }: MobileNavProps) {
+export default function MobileNav({ links, categories }: MobileNavProps) {
   const [open, setOpen] = useState(false);
 
   const linkItems = useMemo(
@@ -32,7 +32,6 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
           <Button
             asChild
             variant="ghost"
-            // CHANGED: shrink button height
             className="h-auto min-h-0 w-full text-left py-2 text-black font-normal"
             onClick={() => setOpen(false)}
           >
@@ -50,7 +49,6 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
           asChild
           key={cat.id}
           variant="ghost"
-          // CHANGED: shrink button height
           className="h-auto min-h-0 w-full text-left py-2 px-2 text-black font-normal hover:bg-transparent hover:underline rounded-none"
           onClick={() => setOpen(false)}
         >
@@ -60,12 +58,12 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
     [categories]
   );
 
+  const btnGhost = 'h-auto min-h-0 w-full text-left py-2 mt-1 text-black font-normal';
+
   return (
-    // (Optional) remove pl-2 if you want the hamburger snug to the edge
     <div className="flex items-center pl-2">
       <Drawer direction="right" open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild>
-          {/* (Optional) smaller tap target: p-1 */}
           <Button variant="ghost" className="p-2">
             <MenuIcon className="h-6 w-6 text-black" />
           </Button>
@@ -88,8 +86,7 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
         >
           <DrawerTitle className="sr-only">Mobile Navigation</DrawerTitle>
 
-          {/* Drawer Header */}
-          {/* CHANGED: p-4 -> p-3, removed mt-6 on the close button */}
+          {/* Header */}
           <div className="flex items-center justify-between border-b p-3">
             <DrawerClose asChild>
               <Button
@@ -102,8 +99,7 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
             </DrawerClose>
           </div>
 
-          {/* Navigation Links */}
-          {/* CHANGED: p-4 -> p-3; space-y-2 -> space-y-1 */}
+          {/* Links */}
           <div className="flex-1 overflow-y-auto p-3" style={{ contain: 'content' }}>
             <ul className="space-y-1">
               {open && (
@@ -113,19 +109,17 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
                   {/* Categories */}
                   {categories.length > 0 && (
                     <li>
-                      {/* CHANGED: my-1 -> my-0.5 */}
                       <div className="border-b my-0.5" />
                       <div className="flex flex-col gap-0.5">{categoryItems}</div>
                     </li>
                   )}
 
                   {/* Advertisement */}
-                  {/* CHANGED: mt-2 -> mt-1 and h-auto */}
                   <li>
                     <Button
                       asChild
                       variant="ghost"
-                      className="h-auto min-h-0 w-full text-left py-2 mt-1 text-black font-normal"
+                      className={btnGhost}
                       onClick={() => setOpen(false)}
                     >
                       <Link href="/advertisement" prefetch={false}>
@@ -134,19 +128,9 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
                     </Button>
                   </li>
 
-                  {/* Newsletter */}
-                  {/* CHANGED: mt-2 -> mt-1 and h-auto */}
-                  <li>
-                    <Button
-                      onClick={() => {
-                        onNewsletterClick();
-                        setOpen(false);
-                      }}
-                      variant="ghost"
-                      className="h-auto min-h-0 w-full text-left py-2 mt-1 text-black font-normal"
-                    >
-                      Newsletter
-                    </Button>
+                  {/* Newsletter via island (close drawer on click) */}
+                  <li onClick={() => setOpen(false)}>
+                    {renderNewsletter(btnGhost, 'Newsletter')}
                   </li>
                 </>
               )}

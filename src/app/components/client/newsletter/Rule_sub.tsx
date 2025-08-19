@@ -1,9 +1,9 @@
 'use client';
 
+import * as React from 'react';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useAppContext } from '@/store/AppContext';
-import {FormEvent, KeyboardEvent, MouseEvent, useEffect, useRef, useState} from "react"; 
 
 declare global {
   interface Window {
@@ -30,15 +30,15 @@ function recently(key: string) {
 }
 
 export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProps) {
-  const modalRef = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(isOpen);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [email, setEmail] = useState('');
-  const [internalOpen, setInternalOpen] = useState(false);
+  const modalRef = React.useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = React.useState(isOpen);
+  const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [email, setEmail] = React.useState('');
+  const [internalOpen, setInternalOpen] = React.useState(false);
   const { logo } = useAppContext();
 
   // Start the 10s timer ONCE per page (dev-safe)
-  useEffect(() => {
+  React.useEffect(() => {
     if (typeof window === 'undefined') return;
 
     // If parent already opens it, or user recently dismissed/submitted, don’t arm timer.
@@ -61,7 +61,7 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
   }, [isOpen]);
 
   // Sync visible with external + internal
-  useEffect(() => {
+  React.useEffect(() => {
     const shouldOpen = isOpen || internalOpen;
     if (shouldOpen && !visible) setVisible(true);
     if (!shouldOpen && visible) {
@@ -71,7 +71,7 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
   }, [isOpen, internalOpen, visible]);
 
   // Singleton guard for the modal itself
-  useEffect(() => {
+  React.useEffect(() => {
     if (typeof window === 'undefined') return;
     if (!visible) return;
 
@@ -89,7 +89,7 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
   }, [visible]);
 
   // Global submit handler (attached once)
-  useEffect(() => {
+  React.useEffect(() => {
     if (typeof window === 'undefined') return;
     window.setRuleSubmitSuccess = () => {
       setIsSubmitted(true);
@@ -108,15 +108,15 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
     localStorage.setItem(MODAL_DISMISS_KEY, new Date().toISOString());
   };
 
-  const handleBackdropClick = (e: MouseEvent) => {
+  const handleBackdropClick = (e: React.MouseEvent) => {
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) closeModal();
   };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') closeModal();
   };
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await fetch('/api/subscribe', {

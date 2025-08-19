@@ -3,8 +3,7 @@
 // Server Component (no "use client")
 
 import Link from "next/link";
-import { getTodaysPosts } from "./todaysPosts";
-import { getAllPosts } from "@/lib/graph_queries/getPost";
+import { getAllPosts, getTodaysPosts } from "@/lib/graph_queries/getPost";
 import type { Post } from "@/lib/types";
 import TickerTapeVisible from "./tickers/tradingviewServer";
 

@@ -1,8 +1,3 @@
-// app/components/FinanstidningSeoText.tsx
-// Next.js Server Component for the main page SEO text section.
-// - Server component by default (no client-side interactivity)
-// - Pure Tailwind (no external UI deps)
-// - Optional JSON-LD helper for structured data
 
 export default function FinanstidningSeoText() {
   return (

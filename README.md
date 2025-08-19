@@ -5,7 +5,10 @@ in popular post there are times when we display two ads next to each other.
 
 In seach we are looking for the input letter and check if it exsist from right to left,we are matching letter by letter which is wrong we have to check for the whole title if the letter exsists. If we type a letter that doesnt exsists on the searchbar and hit enter, BUT if any post have that letter it will be shown. FIX 
 
+Hide the ticker on mobile, it takes to much space, and the search bar?
 
+add pop up, contain is better than cover, at least on mobile?. And the look of it is like my dick, it is really bad, like on tablet and mobile, 
+the newsletter modal is also fuked on mobile.  
 
 we are passing tag title not the slug
 when we navigate to category we are we are seeing missin slug. 

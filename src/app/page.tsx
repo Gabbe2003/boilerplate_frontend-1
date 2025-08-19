@@ -13,8 +13,8 @@ const Page = async () => {
 
 return (
   <>
-    <div className=''>
-      <PopularPosts />
+    <div >
+      <PopularPosts /> {/* NEEDS OPTIMIZZZEEEE */}
       <TradingViewScreener />
       <CatsPage />
       <PostsList />

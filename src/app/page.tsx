@@ -1,6 +1,5 @@
 // app/page.tsx
 import React from 'react';
-
 import PostsList from './components/Main-page/PostsList';
 import PopularPosts from './components/Popular/PopularPosts';
 // import AdPopup from './components/ads/adsPopup';

@@ -22,7 +22,6 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
 
-  // use initial categories directly (no client fetch)
   const categories = initialCategories;
 
   const handleOpenNewsletter = useCallback(() => setIsModalOpen(true), []);

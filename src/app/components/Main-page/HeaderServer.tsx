@@ -4,7 +4,6 @@ import Header from './Header';
 
 export default async function HeaderServer() {
   
-  // uses the caching you set inside getAllCategories (revalidate/tags)
   const initialCategories = await getAllCategories();
   return <Header initialCategories={initialCategories} />;
 }

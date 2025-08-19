@@ -1,14 +1,93 @@
 'use client';
 
-import React from 'react';
+import {useEffect, useState, Key, ReactNode, CSSProperties, useRef} from 'react';
 import Link from 'next/link';
-import {
-  motion,
-  AnimatePresence,
-  useReducedMotion,
-  type Variants,
-} from 'framer-motion';
 import type { Item } from '../PopularNewsTicker';
+
+function usePrefersReducedMotion(): boolean {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = () => setReduced(mql.matches);
+    onChange();
+    mql.addEventListener?.('change', onChange);
+    return () => mql.removeEventListener?.('change', onChange);
+  }, []);
+  return reduced;
+}
+
+ function AnimatedSwitcher({
+  itemKey,
+  children,
+  className = '',
+  fadeDuration = 200,  
+  instantOnMount = true,
+}: {
+  itemKey: Key;
+  reduced: boolean;
+  className?: string;
+  fadeDuration?: number;
+  instantOnMount?: boolean;
+  children: (opts: { role: 'entering' | 'exiting'; style: CSSProperties }) => ReactNode;
+}) {
+  const didMountRef = useRef(false);
+  const [currentKey, setCurrentKey] = useState(itemKey);
+  const [prevKey, setPrevKey] = useState<Key | null>(null);
+  const [fadeIn, setFadeIn] = useState(false);
+
+  const isFirst = instantOnMount && !didMountRef.current;
+
+  useEffect(() => {
+    didMountRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (itemKey === currentKey) return;
+    setPrevKey(currentKey);
+    setCurrentKey(itemKey);
+    setFadeIn(false);
+    const id = requestAnimationFrame(() => setFadeIn(true));
+    return () => cancelAnimationFrame(id);
+  }, [itemKey, currentKey]);
+
+  const base: CSSProperties = {
+    position: 'absolute',
+    inset: 0,
+    display: 'flex',
+    alignItems: 'center',
+    transition: `opacity ${fadeDuration}ms ease`,
+  };
+
+  return (
+    <div className={`relative ${className}`}>
+      {/* Entering */}
+      <div
+        key={`enter-${currentKey}`}
+        style={{
+          ...base,
+          opacity: isFirst ? 1 : fadeIn ? 1 : 0,
+        }}
+      >
+        {children({ role: 'entering', style: { width: '100%' } })}
+      </div>
+
+      {/* Exiting */}
+      {prevKey !== null && (
+        <div
+          key={`exit-${prevKey}`}
+          style={{
+            ...base,
+            opacity: fadeIn ? 0 : 1,
+          }}
+          onTransitionEnd={() => setPrevKey(null)}
+        >
+          {children({ role: 'exiting', style: { width: '100%' } })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function PopularNewsSequenceClient({
   items,
@@ -19,11 +98,11 @@ export default function PopularNewsSequenceClient({
   intervalMs?: number;
   className?: string;
 }) {
-  const [index, setIndex] = React.useState(0);
-  const [paused, setPaused] = React.useState(false);
-  const prefersReducedMotion = useReducedMotion();
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (paused || items.length <= 1) return;
     const t = setTimeout(() => {
       setIndex((i) => (i + 1) % items.length);
@@ -38,7 +117,7 @@ export default function PopularNewsSequenceClient({
 
   return (
     <div
-      className={`group relative w-full overflow-hidden border-0 ${className}`} 
+      className={`group relative w-full overflow-hidden border-0 ${className}`}
       onMouseEnter={onPause}
       onMouseLeave={onResume}
       onFocusCapture={onPause}
@@ -52,16 +131,28 @@ export default function PopularNewsSequenceClient({
           Featured posts
         </span>
 
-        <div className="relative flex-1">
-          <AnimatePresence mode="wait">
-            <PostSlide
-              key={current?.id ?? index}
-              post={current}
-              reduced={prefersReducedMotion}
-            />
-          </AnimatePresence>
-        </div>
-      </div>
+      <AnimatedSwitcher
+        itemKey={current?.id ?? index}
+        reduced={prefersReducedMotion}
+        className="flex-1"
+        fadeDuration={200}   // adjust speed of crossfade
+        instantOnMount
+      >
+        {() => <PostSlide post={current} reduced={prefersReducedMotion} />}
+      </AnimatedSwitcher>
+
+      {/* Local keyframes for the 2s pulse (no external CSS needed) */}
+      <style jsx>{`
+        @keyframes subtlePulse {
+          0%   { transform: scale(1);    opacity: 1; }
+          50%  { transform: scale(1.02); opacity: 0.98; }
+          100% { transform: scale(1);    opacity: 1; }
+        }
+        .pulse-2s {
+          animation: subtlePulse 2s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
     </div>
   );
 }
@@ -73,47 +164,10 @@ function PostSlide({
   post: Item;
   reduced: boolean;
 }) {
-  const variants: Variants = reduced
-    ? {
-        initial: { opacity: 0 },
-        animate: { opacity: 1, transition: { duration: 0.2 } },
-        exit: { opacity: 0, transition: { duration: 0.2 } },
-      }
-    : {
-        // enter from right, leave to left
-        initial: { opacity: 0, x: 24, filter: 'blur(3px)' },
-        animate: {
-          opacity: 1,
-          x: 0,
-          filter: 'blur(0px)',
-          transition: { duration: 0.35, ease: [0.22, 1, 0.36, 1] },
-        },
-        exit: {
-          opacity: 0,
-          x: -24,
-          filter: 'blur(3px)',
-          transition: { duration: 0.35, ease: [0.4, 0, 1, 1] },
-        },
-      };
-
-  const pulseProps = reduced
-    ? {}
-    : {
-        animate: { scale: [1, 1.02, 1], opacity: [1, 0.98, 1] },
-        transition: { duration: 2, ease: 'easeInOut' as const }, // 2s pulse
-      };
-
   return (
-    <motion.div
-      variants={variants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className="absolute inset-0 flex items-center border-0"
-    >
-      <motion.div
-        {...pulseProps}
-        className="flex min-w-0 items-center gap-3"
+    <div className="absolute inset-0 flex items-center border-0">
+      <div
+        className={`flex min-w-0 items-center gap-3 ${reduced ? '' : 'pulse-2s'}`}
         aria-live="polite"
         aria-atomic="true"
       >
@@ -129,7 +183,7 @@ function PostSlide({
         >
           {post.title}
         </Link>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }

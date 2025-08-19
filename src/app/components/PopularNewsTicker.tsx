@@ -1,4 +1,5 @@
-// Server Component (no "use client")
+import "server-only"; 
+
 import { getPostByPeriod } from '@/lib/graph_queries/getPost';
 import PopularNewsTickerClient from './Popular/featuredPostsTicker';
 

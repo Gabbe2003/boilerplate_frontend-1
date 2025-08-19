@@ -27,18 +27,39 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
         <NavigationMenuList className="flex items-center gap-2">
           {categories?.length > 0 && (
             <NavigationMenuItem>
-              <div className="flex items-center gap-1 flex-wrap max-w-[48vw] lg:max-w-[40vw] overflow-hidden">
-                {categories.map((cat) => (
-                  <Link href={`/category/${cat.slug}`} key={cat.id}>
-                    <Button
-                      variant="ghost"
-                      className="px-4 py-2 text-base font-normal min-w-0 text-black hover:bg-transparent hover:underline"
-                    >
-                      {cat.name}
-                    </Button>
+              <div
+                className="
+                  flex items-center gap-1
+                  overflow-x-auto lg:overflow-hidden
+                  flex-nowrap
+                  whitespace-nowrap
+                  scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent
+                  -mx-2 px-2 lg:mx-0 lg:px-0
+                  w-full
+                  max-w-[92vw] md:max-w-[80vw] lg:max-w-[60vw] xl:max-w-[72vw]
+                "
+                aria-label="Categories"
+                role="navigation"
+              >
+              {categories.map((cat) => (
+                <Button
+                  key={cat.id}
+                  asChild
+                  variant="ghost"
+                  className="
+                    px-3 md:px-3.5 lg:px-4
+                    py-1.5 md:py-2
+                    text-sm md:text-[0.95rem] lg:text-base
+                    font-normal min-w-0 shrink-0
+                    text-black hover:bg-transparent hover:underline
+                  "
+                >
+                  <Link href={`/category/${cat.slug}`} className="truncate">
+                    {cat.name}
                   </Link>
-                ))}
-              </div>
+                </Button>
+              ))}
+            </div>
             </NavigationMenuItem>
           )}
         </NavigationMenuList>
@@ -49,7 +70,7 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
         <Button
           asChild
           variant="ghost"
-          className={`px-4 py-2 text-base font-normal min-w-0 text-black ${
+          className={`text-base font-normal min-w-0 text-black p-0${
             pathname === '/advertisement' ? 'ring-2 ring-gray-300' : ''
           }`}
         >
@@ -59,7 +80,7 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
         <Button
           onClick={onNewsletterClick}
           variant="ghost"
-          className="px-4 py-2 text-base font-normal min-w-0 text-black"
+          className="text-base font-normal min-w-0 text-black"
         >
           Newsletter
         </Button>

@@ -1,29 +1,25 @@
-import PostsList from './components/Main-page/PostsList';
+// app/page.tsx
 import React from 'react';
+
+import PostsList from './components/Main-page/PostsList';
 import PopularPosts from './components/Popular/PopularPosts';
-import AdPopup from './components/ads/adsPopup';
 import CatsPage from './[slug]/_components/categoryWrapper';
 import TradingViewScreener from './components/tickers/TradingViewScreener';
 import FinanstidningSeoText from './seoTextMainPage';
+import AdPopup from './components/ads/adsPopup';
 
-
-export const revalidate = 3000;
-
-const Page = async () => {
-
+export default async function Page() {
+ 
 return (
   <>
     <div >
-      <PopularPosts /> {/* NEEDS OPTIMIZZZEEEE */}
+      <PopularPosts /> 
       <TradingViewScreener />
       <CatsPage />
       <PostsList />
       <FinanstidningSeoText />
       <AdPopup />
     </div>
-
-  </>
+    </>
   );
-};
-
-export default Page;
+}

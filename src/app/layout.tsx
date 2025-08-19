@@ -33,8 +33,8 @@ const [favicon, posts, tagline] = await Promise.all([
 
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen">
-        <AppProvider logo={favicon} posts={posts} tagline={tagline}>
+      <body className="flex flex-col min-h-screen ">
+         <AppProvider logo={favicon} posts={posts} tagline={tagline}>
           <HeaderServer  />
             <main className="flex-1">{children}</main>
           <Footer />

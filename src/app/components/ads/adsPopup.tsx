@@ -44,35 +44,33 @@ export default function AdPopup() {
       >
         ✕
       </Button>
-
-      {/* On mobile: row (thumbnail left) | On sm: column w/ centered image | On lg: row */}
-      <div className="flex flex-row sm:flex-col lg:flex-row items-stretch gap-3 sm:gap-4 mt-3 w-full">
-        {/* Image wrapper */}
-        <div
+      <div className="flex flex-row lg:flex-row items-stretch gap-3 sm:gap-4 mt-3 w-full">
+       <div
           className="
             relative shrink-0 overflow-hidden rounded-md
-            w-24 h-20                      /* base: small thumbnail */
-            sm:w-full sm:h-40 sm:mx-auto   /* sm: centered full width */
-            sm:max-w-sm sm:aspect-[4/3]    /* keep proportions */
-            md:max-w-md md:aspect-[16/9]
-            lg:basis-1/2 lg:max-w-none lg:h-auto
+            w-1/4 h-auto            /* phone: 25% width */
+            sm:w-1/4 sm:h-32        /* tablet: also 25%, just taller */
+            md:w-1/4 md:h-40        /* medium: 25%, a bit taller */
+            lg:basis-1/3 lg:h-auto  /* large: 1/3 width */
+            flex items-center justify-center bg-white
           "
         >
-          <span className="absolute top-2 left-2 bg-black text-white text-[10px] px-2 py-1 uppercase tracking-wide z-10">
-            ANNONS
-          </span>
+         <span className="absolute top-2 left-2 bg-black text-white text-[10px] px-1 sm:px-2 py-1 uppercase tracking-wide z-10">
+  ANNONS
+</span>
+
 
           {logo?.sourceUrl ? (
             <Image
               src={logo.sourceUrl}
               alt={logo.altText || 'Logo'}
               fill
-              className="object-cover object-center bg-white"
+              className="object-contain object-center bg-white"
               sizes="
-                (min-width:1024px) 50vw,
-                (min-width:768px) 33vw,
-                (min-width:640px) 100vw,
-                96px
+                (min-width:1024px) 33vw,
+                (min-width:768px) 25vw,
+                (min-width:640px) 25vw,
+                25vw
               "
               priority
             />
@@ -85,7 +83,6 @@ export default function AdPopup() {
           )}
         </div>
 
-        {/* Text + CTA */}
         <div className="flex-1 min-w-0 flex flex-col justify-between text-center sm:text-left">
           <div>
             <span className="block text-[11px] sm:text-[10px] tracking-wide uppercase text-gray-800/90 mb-1">

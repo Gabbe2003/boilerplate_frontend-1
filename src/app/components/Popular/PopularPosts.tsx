@@ -1,6 +1,6 @@
 // Server Component (no 'use client')
 import { getPostByPeriod } from '@/lib/graph_queries/getPost';
-import PopularNews from './PopularPostsGrid'; // make sure this is the file that default-exports PopularNews
+import PopularNews from './PopularPostsGrid';
 import { Ad, ADS } from '../ads/adsContent';
 import { Post } from '@/lib/types';
 import { getSiteTagline } from '@/lib/graph_queries/getSiteTagline';
@@ -38,19 +38,40 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export default async function PopularPosts() {
-  // Fetch both in parallel for speed
-  const [posts, tagline] = await Promise.all([getPostByPeriod('week'), getSiteTagline()]);
+  const [posts, tagline] = await Promise.all([
+    getPostByPeriod('week'),
+    getSiteTagline(),
+  ]);
 
   if (!posts?.length) return <div>No fun posts!</div>;
 
-  // Grid items (mix in two ads)
+  // Build main posts
   const mainPosts: PostItem[] = posts.slice(0, 7).map((p) => ({ ...p, type: 'post' }));
+
+  // Pick ads
   const [adIndex1, adIndex2] = pickTwoUniqueAds(ADS);
   const ad1: AdItem = { type: 'ad', adIndex: adIndex1, id: `ad-${adIndex1}` };
   const ad2: AdItem = { type: 'ad', adIndex: adIndex2, id: `ad-${adIndex2}` };
-  const mixed: FeedItem[] = shuffleArray([...mainPosts, ad1, ad2]);
 
-  // Ticker items (pure posts, up to 12)
+  // Shuffle posts + ads
+  let mixed: FeedItem[] = shuffleArray([...mainPosts, ad1, ad2]);
+
+  // 🔑 Simple fix: ensure ads are not adjacent
+  let safety = 0;
+  while (safety < 20) {
+    let hasAdjacentAds = false;
+    for (let i = 0; i < mixed.length - 1; i++) {
+      if (mixed[i].type === 'ad' && mixed[i + 1].type === 'ad') {
+        hasAdjacentAds = true;
+        break;
+      }
+    }
+    if (!hasAdjacentAds) break;
+    mixed = shuffleArray([...mainPosts, ad1, ad2]); // reshuffle
+    safety++;
+  }
+
+  // Ticker items (pure posts)
   const tickerItems: TickerItem[] = posts.slice(0, 12).map((p) => ({
     id: String(p.id),
     slug: p.slug,

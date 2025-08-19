@@ -31,6 +31,7 @@ export type SeoSettings = {
   readingSettingsPostsPerPage: number | null;
 };
 
+
 /* ----------------------------- Config ---------------------------- */
 
 const WP_GRAPHQL_URL = process.env.WP_GRAPHQL_URL as string;
@@ -395,3 +396,5 @@ export async function getRedirections(): Promise<Redirection[] | null> {
   `;
   const json = await fetchGraphQL<{ data?: { redirections?: { nodes?: Redirection[] } } }>(q);
   return json?.data?.redirections?.nodes ?? null};
+
+

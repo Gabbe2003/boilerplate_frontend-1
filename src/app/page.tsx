@@ -14,7 +14,8 @@ import {
   getUsersSeo,
   getSitemapSettings,
   getRedirections,
-} from '@/lib/graph_queries/generalSettings';
+} from '@/lib/graph_queries/seo/generalSettings';
+import HomePageSEO from '@/lib/graph_queries/seo/homePage';
 
 export default async function Page() {
   // Site-wide settings (for base URL, language, timezone, etc.)
@@ -42,6 +43,15 @@ export default async function Page() {
 
   return (
     <>
+      
+      
+      
+            <HomePageSEO />
+
+      
+      
+      
+      
       {/* Latest post SEO (debug/visual render) */}
       <section style={{ padding: '1rem', borderBottom: '1px solid #eee' }}>
         <h2>Latest Post (GraphQL + Rank Math)</h2>

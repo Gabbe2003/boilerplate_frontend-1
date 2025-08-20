@@ -40,6 +40,7 @@ export async function POST(req: Request) {
   const bumpCategoriesList = () => add.add('categories');
   const bumpTagsList = () => add.add('tags');
   const bumpAuthorsList = () => add.add('authors');
+  const bumpSeoList = () => add.add('seo');
 
   // helpers to avoid ternary statements
   const bumpTermList = () => {
@@ -58,85 +59,96 @@ export async function POST(req: Request) {
     }
   };
 
-  switch (body.type) {
-    case 'post.updated': {
-      if (body.slug) add.add(`post-${body.slug}`);
-      bumpPostsLists();
-      for (const s of body.relatedSlugs ?? []) {
-        add.add(`category-${s}`); add.add(`category-posts-${s}`);
-        add.add(`tag-${s}`);      add.add(`tag-posts-${s}`);
-        add.add(`author-${s}`);   add.add(`author-posts-${s}`);
-      }
-      add.add('recommendation');
-      break;
+ switch (body.type) {
+  case 'post.updated': {
+    if (body.slug) add.add(`post-${body.slug}`);
+    bumpPostsLists();
+    bumpSeoList(); // SEO for this post + lists
+    for (const s of body.relatedSlugs ?? []) {
+      add.add(`category-${s}`); add.add(`category-posts-${s}`);
+      add.add(`tag-${s}`);      add.add(`tag-posts-${s}`);
+      add.add(`author-${s}`);   add.add(`author-posts-${s}`);
     }
-
-    case 'post.published':
-    case 'post.unpublished': {
-      if (body.slug) add.add(`post-${body.slug}`);
-      bumpPostsLists();
-      for (const s of body.relatedSlugs ?? []) {
-        add.add(`category-${s}`); add.add(`category-posts-${s}`);
-        add.add(`tag-${s}`);      add.add(`tag-posts-${s}`);
-        add.add(`author-${s}`);   add.add(`author-posts-${s}`);
-      }
-      break;
-    }
-
-    case 'post.slug_changed': {
-      if (body.oldSlug) add.add(`post-${body.oldSlug}`);
-      if (body.slug) add.add(`post-${body.slug}`);
-      bumpPostsLists();
-      break;
-    }
-
-    case 'term.created':
-    case 'term.deleted': {
-      bumpTermList(); // replaces: body.taxonomy === 'category' ? bumpCategoriesList() : bumpTagsList();
-      break;
-    }
-
-    case 'term.updated': {
-      if (body.slug) {
-        addTermSlugs(body.slug); // replaces the ternary statement
-        bumpTermList();
-      }
-      break;
-    }
-
-    case 'term.slug_changed': {
-      if (body.oldSlug) addTermSlugs(body.oldSlug); // replaces ternary
-      if (body.slug) addTermSlugs(body.slug);       // replaces ternary
-      break;
-    }
-
-    case 'author.updated': {
-      if (body.slug) add.add(`author-${body.slug}`);
-      bumpAuthorsList();
-      break;
-    }
-
-    case 'author.slug_changed': {
-      if (body.oldSlug) add.add(`author-${body.oldSlug}`);
-      if (body.slug) add.add(`author-${body.slug}`);
-      bumpAuthorsList();
-      break;
-    }
-
-    case 'options.updated': {
-      add.add('site-logo');
-      break;
-    }
-
-    case 'popular.updated': {
-      add.add('popular');
-      if (body.period) add.add(`popular-${body.period}`);
-      break;
-    }
-
-    default:
-      return NextResponse.json({ message: 'Unknown type' }, { status: 400 });
+    add.add('recommendation');
+    break;
   }
+
+  case 'post.published':
+  case 'post.unpublished': {
+    if (body.slug) add.add(`post-${body.slug}`);
+    bumpPostsLists();
+    bumpSeoList(); // publishing state can affect meta, canonicals, lists
+    for (const s of body.relatedSlugs ?? []) {
+      add.add(`category-${s}`); add.add(`category-posts-${s}`);
+      add.add(`tag-${s}`);      add.add(`tag-posts-${s}`);
+      add.add(`author-${s}`);   add.add(`author-posts-${s}`);
+    }
+    break;
+  }
+
+  case 'post.slug_changed': {
+    if (body.oldSlug) add.add(`post-${body.oldSlug}`);
+    if (body.slug) add.add(`post-${body.slug}`);
+    bumpPostsLists();
+    bumpSeoList(); // canonical/og:url changes with slug
+    break;
+  }
+
+  case 'term.created':
+  case 'term.deleted': {
+    bumpTermList();
+    bumpSeoList(); // taxonomy pages/lists meta
+    break;
+  }
+
+  case 'term.updated': {
+    if (body.slug) {
+      addTermSlugs(body.slug);
+      bumpTermList();
+      bumpSeoList(); // term meta/breadcrumbs
+    }
+    break;
+  }
+
+  case 'term.slug_changed': {
+    if (body.oldSlug) addTermSlugs(body.oldSlug);
+    if (body.slug) addTermSlugs(body.slug);
+    bumpSeoList(); // canonical/urls for term pages
+    break;
+  }
+
+  case 'author.updated': {
+    if (body.slug) add.add(`author-${body.slug}`);
+    bumpAuthorsList();
+    bumpSeoList(); // author page meta
+    break;
+  }
+
+  case 'author.slug_changed': {
+    if (body.oldSlug) add.add(`author-${body.oldSlug}`);
+    if (body.slug) add.add(`author-${body.slug}`);
+    bumpAuthorsList();
+    bumpSeoList(); // canonical/urls for author pages
+    break;
+  }
+
+  case 'options.updated': {
+    add.add('site-logo');
+    bumpSeoList(); // site title/description, default og, etc.
+    break;
+  }
+
+  case 'popular.updated': {
+    add.add('popular');
+    if (body.period) add.add(`popular-${body.period}`);
+    // likely not SEO-related; leave seo tag alone here
+    break;
+  }
+
+  default:
+    return NextResponse.json({ message: 'Unknown type' }, { status: 400 });
+}
+
 
   for (const t of add) revalidateTag(t);
   return NextResponse.json({ revalidated: true, tags: Array.from(add), now: Date.now() });

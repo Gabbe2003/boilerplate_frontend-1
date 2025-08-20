@@ -164,7 +164,7 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
       {/* Close button */}
       <button
         onClick={closeModal}
-        className="absolute right-4 top-4 z-20 rounded-full p-1 text-white hover:text-gray-200 md:text-gray-500 md:hover:text-black"
+        className="absolute right-4 top-4 z-20 rounded-full p-1  hover:text-gray-200 md:text-gray-500 md:hover:text-black"
         aria-label="Close"
       >
         <X className="h-5 w-5 cursor-pointer" />

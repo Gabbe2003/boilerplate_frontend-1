@@ -1,3 +1,10 @@
+
+SEO almost done, we to recheck that everything is included and everything is working as expected. As of not we are getting error in author, tag, category. So we need to recheck that logic. 
+
+
+
+
+
 remove depedencies that no longer in use
 
 
@@ -10,7 +17,9 @@ the newsletter modal is also fuked on mobile.  (Done)
 
 
 
-In seach we are looking for the input letter and check if it exsist from right to left,we are matching letter by letter which is wrong we have to check for the whole title if the letter exsists. If we type a letter that doesnt exsists on the searchbar and hit enter, BUT if any post have that letter it will be shown. FIX 
+In seach we are looking for the input letter and check if it exsist from right to left,we are matching letter by letter which is wrong we have to check for the whole title if the letter exsists. If we type a letter that doesnt exsists on the searchbar and then hit enter, if any post that have that letter it will be shown. FIX 
+basically bad UI
+
 
 
 we are passing tag title not the slug

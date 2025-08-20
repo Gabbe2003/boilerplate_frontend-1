@@ -13,25 +13,16 @@ import { ChevronRight } from "lucide-react";
 import TagPosts from "./TagPosts";
 import { Post } from "@/lib/types";
 
+import type { Metadata } from 'next';
+import { getBestSeoBySlug } from "@/lib/seo/seo-helpers";
 
+type Params = Promise<{ slug: string }>;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const slug = (await params).slug;
-  const tag = await getTagBySlug(slug);
-
-  if (!tag) return { title: 'Tag not found' };
-
-  return {
-    title: tag.name, // ← show the tag name in the tab/title
-    description: tag.description || undefined,
- 
-  };
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { slug } = await params;
+  const { meta } = await getBestSeoBySlug(slug, 'tag');
+  return meta;
 }
-
 
 interface Tag {
   id: string;

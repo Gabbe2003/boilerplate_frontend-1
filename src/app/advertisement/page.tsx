@@ -3,14 +3,34 @@ import PricingCard from "./_components/PricingCard";
 import Policies from "./_components/Policies";
 import NewsletterHighlight from "./_components/NewsletterHighlight";
 import AdInquiryForm from "./_components/AdInquiryForm";
+import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
 
 const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Our Site";
 
-export const metadata: Metadata = {
-  title: `${SITE} | Advertise`,
-  description:
-    "Advertising, partnerships and collaborations. Pricing, guidelines and request form.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const payload = await getSeo('/advertisement/');
+
+  if (!payload?.nodeByUri) {
+    return {
+      title: `Advertisement | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+      description: "Discover advertising opportunities, partnerships, and collaborations with us.",
+      robots: { index: true, follow: true },
+    };
+  }
+
+  const meta = buildMetadataFromSeo(payload, {
+    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
+    siteName: process.env.NEXT_PUBLIC_SITENAME,
+  });
+
+  // fallback description if empty
+  if (!meta.description) {
+    meta.description = "Discover advertising opportunities, partnerships, and collaborations with us.";
+  }
+
+  return meta;
+}
+
 
 export default async function AdInquiryPage() {
   // All markup below is rendered on the server.

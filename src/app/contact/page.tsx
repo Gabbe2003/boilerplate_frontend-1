@@ -3,10 +3,34 @@ import ContactForm from "./_component/ContactForm";
 
 const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Our Site";
 
-export const metadata: Metadata = {
-  title: `${SITE} | Purchase a Link`,
-  description: `Purchase a link placement on ${SITE}.`,
-};
+import { getSeo, buildMetadataFromSeo } from '@/lib/seo/seo';
+
+
+export async function generateMetadata(): Promise<Metadata> {
+  const payload = await getSeo('/contact/');
+
+  if (!payload?.nodeByUri) {
+    return {
+      title: `Contact | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+      description: "Get in touch with our team for inquiries, support, or collaboration requests.",
+      robots: { index: true, follow: true },
+    };
+  }
+
+  const meta = buildMetadataFromSeo(payload, {
+    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
+    siteName: process.env.NEXT_PUBLIC_SITENAME,
+  });
+
+  // fallback description if empty
+  if (!meta.description) {
+    meta.description = "Get in touch with our team for inquiries, support, or collaboration requests.";
+  }
+
+  return meta;
+}
+
+
 
 export default function ContactPage() {
   return (

@@ -3,6 +3,10 @@ import { load } from 'cheerio';
 import type { ITOCItem, Post } from '@/lib/types';
 import { SinglePost } from './_components/SinglePost';
 import NotFound from '../NotFound';
+import type { Metadata } from 'next';
+import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
+type Params = Promise<{ slug: string[] }>;
+
 
 export const dynamicParams = false;
 
@@ -35,29 +39,73 @@ async function extractHeadings(html: string): Promise<{ updatedHtml: string; toc
   return { updatedHtml, toc };
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+
+interface TwitterMeta {
+  description?: string;
+  [key: string]: unknown;
+}
+
+
+
+
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const post: Post | null = await getPostBySlug(slug);
-  if (!post) {
+  const uri = `/${slug}/`
+
+   console.log(uri);
+  
+  const seoPayload = await getSeo(uri);
+
+  const last = Array.isArray(slug) ? slug.at(-1)! : slug;
+  const post = await getPostBySlug(last);
+
+  if (!seoPayload?.nodeByUri && !post) {
+    const siteUrl = process.env.NEXT_PUBLIC_HOST_URL!;
+    const canonical = new URL(uri.replace(/^\//, ''), siteUrl).toString();
     return {
       title: `Not found - ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: 'Sorry, this post was not found.',
+      description: 'Sorry, this page was not found.',
+      alternates: { canonical },
+      robots: { index: false, follow: false },
+      openGraph: {
+        title: `Not found - ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        description: 'Sorry, this page was not found.',
+        url: canonical,
+        images: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE
+          ? [{ url: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE }]
+          : undefined,
+        type: 'website',
+      },
+      twitter: {
+        card: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE ? 'summary_large_image' : 'summary',
+        title: `Not found - ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        description: 'Sorry, this page was not found.',
+        images: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE
+          ? [process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE]
+          : undefined,
+      },
     };
   }
-  // Optionally, extract plain text from excerpt/content for meta description
-  const description = post.excerpt
-    ? post.excerpt.replace(/<[^>]+>/g, '').trim()
-    : '';
 
-  return {
-    title: post.title,
-    description: description,
-  };
+  const meta = buildMetadataFromSeo(seoPayload, {
+    metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
+    siteName: process.env.NEXT_PUBLIC_HOSTNAME,
+    defaultOgImage: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE,
+  });
+
+  if ((!meta.description || !meta.description.trim()) && post?.excerpt) {
+    const plain = post.excerpt.replace(/<[^>]+>/g, '').trim();
+    if (plain) {
+      meta.description = plain;
+      meta.openGraph = { ...meta.openGraph, description: meta.openGraph?.description ?? plain };
+      const twitter = meta.twitter as TwitterMeta | undefined;
+      meta.twitter = { ...twitter, description: twitter?.description ?? plain }}
+  }
+
+  return meta;
 }
+
 
 export default async function Page({
   params,

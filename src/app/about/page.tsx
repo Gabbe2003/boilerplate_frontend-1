@@ -1,6 +1,30 @@
-export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_HOSTNAME} | About`,
-};
+import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
+import type { Metadata } from 'next';
+
+
+export async function generateMetadata(): Promise<Metadata> {
+  const payload = await getSeo('/about/');
+
+  if (!payload?.nodeByUri) {
+    return {
+      title: `About | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+      description: "Learn more about us.",
+      robots: { index: true, follow: true },
+    };
+  }
+
+  const meta = buildMetadataFromSeo(payload, {
+    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
+    siteName: process.env.NEXT_PUBLIC_SITENAME,
+  });
+
+  // fallback description if empty
+  if (!meta.description) {
+    meta.description = "Learn more about us, our mission, and what we do.";
+  }
+
+  return meta;
+}
 
 const AboutPage = () => {
   return (

@@ -1,6 +1,32 @@
-export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_HOSTNAME} | Work`,
-};
+import type { Metadata } from 'next';
+import { getSeo, buildMetadataFromSeo } from '@/lib/seo/seo';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const payload = await getSeo('/work/');
+
+  if (!payload?.nodeByUri) {
+    return {
+      title: `Work | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+      description: "Explore career opportunities and work with our team.",
+      robots: { index: true, follow: true },
+    };
+  }
+
+  const meta = buildMetadataFromSeo(payload, {
+    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
+    siteName: process.env.NEXT_PUBLIC_SITENAME,
+  });
+
+  // fallback description if empty
+  if (!meta.description) {
+    meta.description = "Explore career opportunities and work with our team.";
+  }
+
+  return meta;
+}
+
+
+
 
 const page = () => {
   return (

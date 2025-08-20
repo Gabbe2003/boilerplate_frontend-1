@@ -19,23 +19,16 @@ import CategoryPosts from "./CategoryPosts";
 type RouteParams = { slug: string };
 type PagePropsPromise = { params: Promise<RouteParams> };
 
-// ---- generateMetadata (Promise params) ----
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const slug = (await params).slug;
-  const category = await getCategoryBySlug(slug);
+import type { Metadata } from 'next';
+import { getBestSeoBySlug } from "@/lib/seo/seo-helpers";
 
-  if (!category) return { title: 'Category not found' };
+type Params = Promise<{ slug: string }>;
 
-  return {
-    title: category.name,
-    description: category.description || undefined,
-  };
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { slug } = await params;
+  const { meta } = await getBestSeoBySlug(slug, 'category');
+  return meta;
 }
-
 
 export default async function CategoryPage({ params }: PagePropsPromise) {
   const { slug } = await params;                

@@ -55,9 +55,9 @@ export default function AdPopup() {
             flex items-center justify-center bg-white
           "
         >
-         <span className="absolute top-2 left-2 bg-black text-white text-[10px] px-1 sm:px-2 py-1 uppercase tracking-wide z-10">
-  ANNONS
-</span>
+        <span className="absolute top-2 left-2 bg-black text-white text-[10px] px-1 sm:px-2 py-1 uppercase tracking-wide z-10">
+          ANNONS
+        </span>
 
 
           {logo?.sourceUrl ? (

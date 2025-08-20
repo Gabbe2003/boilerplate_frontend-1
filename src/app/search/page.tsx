@@ -1,11 +1,34 @@
 import Link from "next/link";
 import SearchPosts from "../api/search/SearchPosts";
 import { Sidebar } from "../components/Main-page/SideBar";
+import type { Metadata } from 'next';
 
+type SearchParams = Promise<{ q?: string }>;
 
-export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_HOSTNAME} | Search`
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}): Promise<Metadata> {
+  const { q } = await searchParams;
+  const searchQuery = (q ?? '').trim();
+
+  if (!searchQuery) {
+    return {
+      title: 'Sökresultat',
+      description: `Sökresultat från ${process.env.NEXT_PUBLIC_HOSTNAME ?? "Home"}`,
+    };
+  }
+
+  const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Home";
+
+  return {
+    title: `Sökresultat för "${searchQuery}" - ${SITE}`,
+    description: `Sökresultat för "${searchQuery}" från ${SITE}`,
+  };
 }
+
+
 
 type GQLPost = {
   id?: string;

@@ -114,16 +114,10 @@ export async function getAllCategories({
     all.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     return all;
   } catch (err) {
-    console.error('Error fetching categories:', err);
+    console.error('Error fetching categories:', err.message);
     throw new Error('Failed to fetch categories');
   }
 }
-
-
-
-
-
-
 
 export async function getCategoryBySlug(slug: string, after?: string) {
   const query = `

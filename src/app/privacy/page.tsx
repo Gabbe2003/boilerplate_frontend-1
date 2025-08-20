@@ -1,6 +1,30 @@
-export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_HOSTNAME} | Privacy`,
-};
+import type { Metadata } from 'next';
+import { getSeo, buildMetadataFromSeo } from '@/lib/seo/seo';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const payload = await getSeo('/privacy/');
+
+  if (!payload?.nodeByUri) {
+    return {
+      title: `Privacy | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+      description: "Read our privacy policy to understand how we collect, use, and protect your information.",
+      robots: { index: true, follow: true },
+    };
+  }
+
+  const meta = buildMetadataFromSeo(payload, {
+    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
+    siteName: process.env.NEXT_PUBLIC_SITENAME,
+  });
+
+  // fallback description if empty
+  if (!meta.description) {
+    meta.description = "Read our privacy policy to understand how we collect, use, and protect your information.";
+  }
+
+  return meta;
+}
+
 
 const PrivacyPage = () => {
   return (

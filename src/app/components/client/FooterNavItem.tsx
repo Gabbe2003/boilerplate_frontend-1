@@ -26,7 +26,7 @@ export default function FooterNavItem({
 
   if (!href) {
     return (
-      <Button variant="navlink" className={baseBtnClasses}>
+      <Button variant="link" className={baseBtnClasses}>
         {title}
       </Button>
     );
@@ -36,7 +36,7 @@ export default function FooterNavItem({
     return (
       <Button
         type="button"
-        variant="navlink"
+        variant="link"
         className={`${baseBtnClasses} ${isActive ? 'text-yellow-500' : ''}`}
         onClick={(e) => {
           e.preventDefault();
@@ -52,7 +52,7 @@ export default function FooterNavItem({
   return (
     <Button
       asChild
-      variant="navlink"
+      variant="link"
       className={`${baseBtnClasses} ${isActive ? 'text-yellow-500' : ''}`}
     >
       <Link href={href}>{title}</Link>

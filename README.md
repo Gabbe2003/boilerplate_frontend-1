@@ -54,21 +54,19 @@ CREATE A TODAYS NEWS MARKET LIKE DI.SE
 
 
 Home/Main page (front page or posts index)
-
 Single Page
-
 Single Post
-
 Category archive
-
 Tag archive
-
 Author archive
-
 404 Not Found
 Date archives (year/month/day): /2025/, /2025/08/, etc.
 Pagination states for all archives (and the posts index): /page/2/, /category/foo/page/3/
 They’re separate URLs, so they need their own <title>, canonical to self, and robots mirrored from Rank Math.
-
 Search results: /search?q=… (or / ?s=).
 Serve meta (title like “Search results for …”) and usually noindex,follow.
+
+
+
+
+//Render SEO data for each Category in WP,

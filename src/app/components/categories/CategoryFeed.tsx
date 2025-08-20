@@ -64,7 +64,7 @@ export default function CategorySections() {
                           "px-3 py-2 text-sm leading-tight font-medium transition",
                           "whitespace-normal break-words md:whitespace-nowrap md:truncate",
                           "max-w-[80vw] md:max-w-[16rem] overflow-hidden",
-                          "rounded-full border",
+                          "rounded-sm border",
                           isActive
                             ? "bg-black text-white border-black shadow-sm"
                             : "bg-white text-gray-800 border-gray-200 hover:bg-gray-100",
@@ -105,7 +105,7 @@ export default function CategorySections() {
                     href={`/category/${selectedCategory.slug}`}
                     prefetch
                     aria-label={`Read more from ${selectedCategory.name}`}
-                    className="cursor-pointer hover:underline border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 px-6 py-2 text-sm font-medium rounded-md break-words max-w-[90vw] text-center"
+                    className="cursor-pointer hover:underline border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 px-6 py-2 text-sm font-medium rounded-sm break-words max-w-[90vw] text-center"
                   >
                     Wanna read more from{" "}
                     <span className="capitalize">{selectedCategory.name}</span>

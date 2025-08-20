@@ -9,12 +9,6 @@ const ensureLeadingTrailingSlash = (p: string) => {
 
 type Kind = 'tag' | 'category' | 'author' | 'auto';
 
-//  Unexpected token '<', "<!DOCTYPE "... is not valid JSON
-
-// I got this error when trying to fetch a non-JSON response from the WordPress API, 
-// for the category becuase the url was wrong, 
-// dubble check the url in the main site and then apply it here
-
 
 function candidateUris(slug: string, kind: Kind): string[] {
   const s = slug.replace(/^\/+|\/+$/g, '');

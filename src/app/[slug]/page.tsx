@@ -47,20 +47,19 @@ interface TwitterMeta {
 
 
 
-
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const uri = `/${slug}/`
 
-   console.log(uri);
   
   const seoPayload = await getSeo(uri);
-
+  
   const last = Array.isArray(slug) ? slug.at(-1)! : slug;
   const post = await getPostBySlug(last);
+  console.log(seoPayload, "you are here");
 
   if (!seoPayload?.nodeByUri && !post) {
+    console.log('Not working')
     const siteUrl = process.env.NEXT_PUBLIC_HOST_URL!;
     const canonical = new URL(uri.replace(/^\//, ''), siteUrl).toString();
     return {

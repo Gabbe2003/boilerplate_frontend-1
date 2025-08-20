@@ -232,6 +232,8 @@ export function buildMetadataFromSeo(
     if (uri) canonicalUrl = new URL(uri.replace(/^\//, ''), base).toString();
   }
 
+  
+
   // ---- KEYWORDS ----
   const focusKeywords: string[] =
     Array.isArray(seo?.focusKeywords)
@@ -244,6 +246,10 @@ export function buildMetadataFromSeo(
     node?.terms?.nodes?.map((t) => t?.name ?? '').filter(Boolean) ?? [];
 
   const keywords = Array.from(new Set([...focusKeywords, ...termKeywords])).filter(Boolean);
+
+
+
+
 
   // ---- ROBOTS ----
   const robotsArr: string[] = Array.isArray(seo?.robots) ? (seo!.robots as string[]) : [];
@@ -260,6 +266,7 @@ export function buildMetadataFromSeo(
     },
   };
 
+  
   // ---- FEATURED IMAGE ----
   const featured =
     node?.featuredImage?.node && node.featuredImage.node.sourceUrl

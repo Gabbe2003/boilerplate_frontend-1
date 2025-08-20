@@ -157,7 +157,7 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
   >
     <div
       ref={modalRef}
-      className={`relative flex w-full max-w-3xl min-h-[60vh] md:min-h-[70vh] transform flex-col rounded-lg bg-white shadow-lg transition-all duration-300 md:flex-row ${
+      className={`relative flex w-full max-w-3xl min-h-[40vh] md:min-h-[00vh] transform flex-col rounded-sm bg-white shadow-lg transition-all duration-300 md:flex-row ${
         isOpen || internalOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
       }`}
     >

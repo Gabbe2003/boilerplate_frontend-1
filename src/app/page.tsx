@@ -4,6 +4,7 @@ import { getSeo, buildMetadataFromSeo } from '@/lib/seo/seo';
 
 import PostsList from './components/Main-page/PostsList';
 import PopularPosts from './components/Popular/PopularPosts';
+// import AdPopup from './components/ads/adsPopup';
 import CatsPage from './[slug]/_components/categoryWrapper';
 import TradingViewScreener from './components/tickers/TradingViewScreener';
 import FinanstidningSeoText from './seoTextMainPage';

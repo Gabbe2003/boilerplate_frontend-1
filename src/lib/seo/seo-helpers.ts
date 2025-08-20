@@ -17,13 +17,13 @@ function candidateUris(slug: string, kind: Kind): string[] {
     case 'tag':
       return [ensureLeadingTrailingSlash(`tag/${s}`), ensureLeadingTrailingSlash(s)];
     case 'category':
-      return [ensureLeadingTrailingSlash(`/${s}`), ensureLeadingTrailingSlash(s)];
+      return [ensureLeadingTrailingSlash(`category/${s}`), ensureLeadingTrailingSlash(s)];
     case 'author':
       return [ensureLeadingTrailingSlash(`author/${s}`), ensureLeadingTrailingSlash(s)];
     case 'auto':
     default:
       return [
-        ensureLeadingTrailingSlash(`/${s}`),
+        ensureLeadingTrailingSlash(`category/${s}`),
         ensureLeadingTrailingSlash(`tag/${s}`),
         ensureLeadingTrailingSlash(`author/${s}`),
         ensureLeadingTrailingSlash(s),

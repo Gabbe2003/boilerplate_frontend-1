@@ -21,6 +21,7 @@ type Params = Promise<{ slug: string }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const { meta } = await getBestSeoBySlug(slug, 'tag');
+  console.log(meta, 'Generated metadata for tag:', slug);
   return meta;
 }
 

@@ -40,7 +40,6 @@ function toOgType(input: string | null | undefined, fallback: OgType): OgType {
     : fallback;
 }
 
-
 type GeneralSettings = {
   title: string;
   description: string;
@@ -96,6 +95,7 @@ type SeoNodeByUri = {
     | 'Category'
     | 'Tag'
     | 'User'
+    | 'slug'
     | 'TermNode'
     | string
     | undefined;
@@ -107,6 +107,7 @@ type SeoNodeByUri = {
   author?: NodeAuthor;
   date?: string | null;
   modified?: string | null;
+  slug?: string | null;
   name?: string | null; // for User
 };
 
@@ -211,6 +212,9 @@ export function buildMetadataFromSeo(
     opts?.metadataBase || process.env.NEXT_PUBLIC_HOST_URL || 'http://localhost'
   );
 
+  // detect taxonomy pages
+  const isTerm = node?.__typename === 'Tag' || node?.__typename === 'Category';
+
   // ---- TITLE ----
   const title =
     seo?.title ??
@@ -232,12 +236,10 @@ export function buildMetadataFromSeo(
     if (uri) canonicalUrl = new URL(uri.replace(/^\//, ''), base).toString();
   }
 
-  
-
   // ---- KEYWORDS ----
   const focusKeywords: string[] =
     Array.isArray(seo?.focusKeywords)
-      ? seo!.focusKeywords!.filter(Boolean) as string[]
+      ? (seo!.focusKeywords!.filter(Boolean) as string[])
       : typeof seo?.focusKeywords === 'string' && seo.focusKeywords
       ? seo.focusKeywords.split(',').map((k) => k.trim()).filter(Boolean)
       : [];
@@ -245,11 +247,12 @@ export function buildMetadataFromSeo(
   const termKeywords: string[] =
     node?.terms?.nodes?.map((t) => t?.name ?? '').filter(Boolean) ?? [];
 
-  const keywords = Array.from(new Set([...focusKeywords, ...termKeywords])).filter(Boolean);
+  // taxonomy fallback for Tag/Category pages
+  const taxonomyFallback: string[] =
+    isTerm ? [node?.name ?? '', node?.slug ?? ''].filter(Boolean) : [];
 
-
-
-
+  const keywords = Array.from(new Set([...focusKeywords, ...termKeywords, ...taxonomyFallback]))
+    .filter(Boolean);
 
   // ---- ROBOTS ----
   const robotsArr: string[] = Array.isArray(seo?.robots) ? (seo!.robots as string[]) : [];
@@ -266,7 +269,6 @@ export function buildMetadataFromSeo(
     },
   };
 
-  
   // ---- FEATURED IMAGE ----
   const featured =
     node?.featuredImage?.node && node.featuredImage.node.sourceUrl
@@ -298,9 +300,9 @@ export function buildMetadataFromSeo(
     process.env.NEXT_PUBLIC_HOSTNAME;
 
   // ---- OPEN GRAPH ----
-    const fallbackType: OgType =
+  const fallbackType: OgType =
     node?.__typename === 'User' ? 'profile'
-    : node?.__typename === 'TermNode' ? 'website'
+    : isTerm ? 'website'
     : 'article';
 
   const openGraph: NonNullable<Metadata['openGraph']> = {
@@ -308,12 +310,12 @@ export function buildMetadataFromSeo(
     description: seo?.openGraph?.description ?? description ?? undefined,
     url: canonicalUrl ?? seo?.openGraph?.url ?? undefined,
     siteName: siteName ?? undefined,
-    type: toOgType(seo?.openGraph?.type ?? undefined, fallbackType),
-    images: ogImageUrl ? [{ url: ogImageUrl }] : undefined,
+    // Force "website" for Tag/Category; otherwise clamp RankMath type to allowed list.
+    type: isTerm ? 'website' : toOgType(seo?.openGraph?.type ?? undefined, fallbackType),
+    images: ogImageUrl ? [ogImageUrl ] : undefined,
     ...(publishedTime ? { publishedTime } : {}),
     ...(modifiedTime ? { modifiedTime } : {}),
   };
-
 
   // ---- TWITTER ----
   const twitter: NonNullable<Metadata['twitter']> = {
@@ -322,10 +324,6 @@ export function buildMetadataFromSeo(
     description: description ?? undefined,
     images: ogImageUrl ? [ogImageUrl] : undefined,
   };
-
-  // ---- BREADCRUMBS ----
-  const breadcrumbs: RankMathBreadcrumb[] =
-    (seo?.breadcrumbs?.filter((b): b is RankMathBreadcrumb => !!b && !b.isHidden)) ?? [];
 
   // ---- FINAL ----
   const metadata: Metadata = {
@@ -337,10 +335,6 @@ export function buildMetadataFromSeo(
     alternates: canonicalUrl ? { canonical: canonicalUrl } : undefined,
     openGraph,
     twitter,
-    other: {
-      rankMathBreadcrumbs: JSON.stringify(breadcrumbs),
-      rankMathBreadcrumbTitle: seo?.breadcrumbTitle ?? undefined,
-    },
     ...(authorName ? { authors: [{ name: authorName }] } : {}),
   };
 

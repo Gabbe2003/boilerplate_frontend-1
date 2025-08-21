@@ -1,34 +1,71 @@
+// app/search/page.tsx
 import Link from "next/link";
 import SearchPosts from "../api/search/SearchPosts";
 import { Sidebar } from "../components/Main-page/SideBar";
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 
-type SearchParams = Promise<{ q?: string }>;
+/* ------------------------- Logging utilities ------------------------- */
+
+const DEBUG_SEARCH =
+  process.env.NODE_ENV !== "production" || process.env.DEBUG_SEARCH === "1";
+
+function stripHtml(s?: string) {
+  return s ? s.replace(/<[^>]*>/g, "") : "";
+}
+
+function sanitize(s?: string) {
+  return s ? stripHtml(s).replace(/[\r\n\t]/g, " ").trim() : "";
+}
+
+function logSearch(payload: Record<string, unknown>) {
+  if (!DEBUG_SEARCH) return;
+  try {
+    console.log("[search]", JSON.stringify(payload));
+  } catch {
+    console.log("[search]", payload);
+  }
+}
+
+/* ------------------------------ Helpers ------------------------------ */
+
+type SearchDict = { [key: string]: string | string[] | undefined };
+
+function getQ(sp?: SearchDict): string {
+  const raw = sp?.q;
+  const val = Array.isArray(raw) ? raw[0] : raw || "";
+  return val.trim();
+}
+
+/* ------------------------------ Metadata ----------------------------- */
 
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchDict>;
 }): Promise<Metadata> {
-  const { q } = await searchParams;
-  const searchQuery = (q ?? '').trim();
+  const sp = await searchParams;
+  const q = getQ(sp);
+  const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Home";
 
-  if (!searchQuery) {
+  // Best practice: noindex search results
+  const robots = { index: false, follow: true as const };
+
+  if (!q) {
     return {
-      title: 'Sökresultat',
-      description: `Sökresultat från ${process.env.NEXT_PUBLIC_HOSTNAME ?? "Home"}`,
+      title: "Sökresultat",
+      description: `Sökresultat från ${SITE}`,
+      robots,
     };
   }
 
-  const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Home";
-
   return {
-    title: `Sökresultat för "${searchQuery}" - ${SITE}`,
-    description: `Sökresultat för "${searchQuery}" från ${SITE}`,
+    title: `Sökresultat för "${q}" - ${SITE}`,
+    description: `Sökresultat för "${q}" från ${SITE}`,
+    robots,
   };
 }
 
-
+/* ------------------------------- Types -------------------------------- */
 
 type GQLPost = {
   id?: string;
@@ -43,11 +80,12 @@ type GQLPost = {
 
 type PageInfo = { hasNextPage: boolean; endCursor?: string | null };
 
-// Server-side fetch for initial 6 + pageInfo
-async function fetchSearchResultsWithPageInfo(q: string, first = 6): Promise<{
-  nodes: GQLPost[];
-  pageInfo: PageInfo;
-}> {
+/* --------------------------- Server-side fetch ------------------------ */
+
+async function fetchSearchResultsWithPageInfo(
+  q: string,
+  first = 6
+): Promise<{ nodes: GQLPost[]; pageInfo: PageInfo }> {
   const GRAPHQL_URL = process.env.WP_GRAPHQL_URL!;
   const gql = `
     query SearchPostsFull($search: String!, $first: Int!) {
@@ -70,31 +108,57 @@ async function fetchSearchResultsWithPageInfo(q: string, first = 6): Promise<{
     }
   `;
 
+  const started = Date.now();
   const res = await fetch(GRAPHQL_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    cache: "no-store", // fresh search
+    cache: "no-store", // fresh search results
     body: JSON.stringify({ query: gql, variables: { search: q, first } }),
   });
+  const durationMs = Date.now() - started;
 
-  if (!res.ok) throw new Error(`GraphQL request failed: ${res.statusText}`);
+  if (!res.ok) {
+    logSearch({ q: sanitize(q), first, error: res.statusText, durationMs });
+    throw new Error(`GraphQL request failed: ${res.statusText}`);
+  }
+
   const json = await res.json();
-
   const nodes = (json?.data?.posts?.nodes ?? []) as GQLPost[];
   const pageInfo =
     (json?.data?.posts?.pageInfo ?? { hasNextPage: false, endCursor: null }) as PageInfo;
 
+  // Compact log (query, counts, pagination, timing, sample)
+  logSearch({
+    q: sanitize(q),
+    first,
+    count: nodes.length,
+    hasNextPage: !!pageInfo?.hasNextPage,
+    endCursor: pageInfo?.endCursor ?? null,
+    durationMs,
+    sample: nodes.slice(0, 3).map((n) => ({
+      id: n.id ?? n.databaseId,
+      slug: n.slug,
+      title: sanitize(n.title),
+      date: n.date,
+      author: n.author?.node?.name,
+    })),
+  });
+
   return { nodes, pageInfo };
 }
+
+/* -------------------------------- Page -------------------------------- */
 
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams?: { q?: string };
+  searchParams: Promise<SearchDict>;
 }) {
-  const q = (searchParams?.q || "").trim();
+  const sp = await searchParams;
+  const q = getQ(sp);
 
   if (!q) {
+    logSearch({ q: "", count: 0, reason: "empty-query" });
     return (
       <div className="container mx-auto py-10 px-4">
         <h1 className="text-3xl font-bold mb-4">Search</h1>
@@ -107,6 +171,10 @@ export default async function SearchPage({
 
   // Fetch the first 6 results + pageInfo for button-based pagination
   const { nodes, pageInfo } = await fetchSearchResultsWithPageInfo(q, 6);
+
+  if (nodes.length === 0) {
+    logSearch({ q: sanitize(q), count: 0, hasNextPage: false, reason: "no-results" });
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -121,9 +189,7 @@ export default async function SearchPage({
         <div className="lg:col-span-2 flex flex-col">
           {nodes.length === 0 ? (
             <div className="mb-8 p-6 rounded-sm border border-gray-200 bg-gray-50 text-center">
-              <p className="text-lg font-semibold text-gray-600 mb-4">
-                No results found.
-              </p>
+              <p className="text-lg font-semibold text-gray-600 mb-4">No results found.</p>
               <div className="text-gray-500 mb-2">
                 Try a different keyword or browse our{" "}
                 <Link href="/" className="underline">

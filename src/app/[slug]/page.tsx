@@ -7,7 +7,6 @@ import type { Metadata } from 'next';
 import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
 type Params = Promise<{ slug: string[] }>;
 
-
 export const dynamicParams = false;
 
 async function extractHeadings(html: string): Promise<{ updatedHtml: string; toc: ITOCItem[] }> {
@@ -46,20 +45,16 @@ interface TwitterMeta {
 }
 
 
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const uri = `/${slug}/`
 
-  
   const seoPayload = await getSeo(uri);
   
   const last = Array.isArray(slug) ? slug.at(-1)! : slug;
   const post = await getPostBySlug(last);
-  console.log(seoPayload, "you are here");
 
   if (!seoPayload?.nodeByUri && !post) {
-    console.log('Not working')
     const siteUrl = process.env.NEXT_PUBLIC_HOST_URL!;
     const canonical = new URL(uri.replace(/^\//, ''), siteUrl).toString();
     return {
@@ -101,7 +96,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       const twitter = meta.twitter as TwitterMeta | undefined;
       meta.twitter = { ...twitter, description: twitter?.description ?? plain }}
   }
-
+console.log('meta data for single post', meta)
   return meta;
 }
 

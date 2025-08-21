@@ -22,12 +22,6 @@ export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
       .map((n) => n?.name)
       .filter((v): v is string => Boolean(v)) || [];
 
-  // Optional: debug logs (dev only)
-  if (process.env.NODE_ENV !== "production") {
-    // console.log("SinglePost category names:", categoryNames);
-    // console.log("SinglePost tag names:", tagNames);
-    // console.log("SinglePost received initialPost:", initialPost);
-  }
 
   update_viewed_post(String(initialPost.databaseId));
 

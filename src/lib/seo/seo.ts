@@ -312,7 +312,7 @@ export function buildMetadataFromSeo(
     siteName: siteName ?? undefined,
     // Force "website" for Tag/Category; otherwise clamp RankMath type to allowed list.
     type: isTerm ? 'website' : toOgType(seo?.openGraph?.type ?? undefined, fallbackType),
-    images: ogImageUrl ? [ogImageUrl ] : undefined,
+    images: ogImageUrl ? [{ url: ogImageUrl }] : undefined,
     ...(publishedTime ? { publishedTime } : {}),
     ...(modifiedTime ? { modifiedTime } : {}),
   };
@@ -325,6 +325,110 @@ export function buildMetadataFromSeo(
     images: ogImageUrl ? [ogImageUrl] : undefined,
   };
 
+  // ---- BREADCRUMBS (filter hidden) ----
+  const breadcrumbs: RankMathBreadcrumb[] =
+    (seo?.breadcrumbs?.filter((b): b is RankMathBreadcrumb => !!b && !b.isHidden)) ?? [];
+
+  // ----------------- JSON-LD -----------------
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const jsonLd: any[] = [];
+
+  // Identify homepage
+  const isHomepage =
+    (node?.__typename === 'Page' && ((node?.uri ?? '') === '/' || (payload.__requestedUri ?? '') === '/')) ||
+    (!node && (payload.__requestedUri ?? '') === '/');
+
+  // Organization (homepage only)
+  if (isHomepage) {
+    const sameAs =
+      (process.env.NEXT_PUBLIC_ORG_SAME_AS || '')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+    jsonLd.push({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: siteName,
+      url: new URL('/', base).toString(),
+      ...(process.env.NEXT_PUBLIC_ORG_LOGO ? { logo: process.env.NEXT_PUBLIC_ORG_LOGO } : {}),
+      ...(sameAs.length ? { sameAs } : {}),
+    });
+
+    // Optional: WebSite + SiteLinks Search
+    if (process.env.NEXT_PUBLIC_SEARCH_URL) {
+      jsonLd.push({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        url: new URL('/', base).toString(),
+        name: siteName,
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: `${process.env.NEXT_PUBLIC_SEARCH_URL}?q={search_term_string}`,
+          'query-input': 'required name=search_term_string',
+        },
+      });
+    }
+  }
+
+  // BreadcrumbList (when available)
+  if (breadcrumbs.length) {
+    jsonLd.push({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((b, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: b.text,
+        item: new URL((b.url || '').replace(/^\//, ''), base).toString(),
+      })),
+    });
+  }
+
+  // Article / WebPage per route type
+  if (node?.__typename === 'Post') {
+    jsonLd.push({
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      mainEntityOfPage: canonicalUrl,
+      ...(ogImageUrl ? { image: [ogImageUrl] } : {}),
+      ...(publishedTime ? { datePublished: publishedTime } : {}),
+      ...(modifiedTime ? { dateModified: modifiedTime } : {}),
+      ...(authorName ? { author: { '@type': 'Person', name: authorName } } : {}),
+      publisher: {
+        '@type': 'Organization',
+        name: siteName,
+        ...(process.env.NEXT_PUBLIC_ORG_LOGO
+          ? { logo: { '@type': 'ImageObject', url: process.env.NEXT_PUBLIC_ORG_LOGO } }
+          : {}),
+      },
+    });
+  } else if (node?.__typename === 'Page' || node?.__typename === 'TermNode' || isTerm) {
+    jsonLd.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: title,
+      description,
+      url: canonicalUrl,
+    });
+  }
+
+  // Person (author profile page)
+if (node?.__typename === 'User') {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: authorName || title,
+    url: canonicalUrl,
+    // If you later expose avatar or social links for users in WPGraphQL,
+    // you can add: image, sameAs, jobTitle, description, etc.
+  });
+}
+
+
+
   // ---- FINAL ----
   const metadata: Metadata = {
     metadataBase: base,
@@ -335,8 +439,17 @@ export function buildMetadataFromSeo(
     alternates: canonicalUrl ? { canonical: canonicalUrl } : undefined,
     openGraph,
     twitter,
+    other: {
+      // keep breadcrumbs available to the app if you want them
+      rankMathBreadcrumbs: JSON.stringify(breadcrumbs),
+      rankMathBreadcrumbTitle: seo?.breadcrumbTitle ?? undefined,
+      // expose JSON-LD to render via a script tag in your layout/page
+      jsonLd: jsonLd.length ? JSON.stringify(jsonLd) : undefined,
+    },
     ...(authorName ? { authors: [{ name: authorName }] } : {}),
   };
 
   return metadata;
 }
+
+

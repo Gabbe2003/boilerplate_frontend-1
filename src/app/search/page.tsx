@@ -1,11 +1,9 @@
-// app/search/page.tsx
 import Link from "next/link";
 import SearchPosts from "../api/search/SearchPosts";
 import { Sidebar } from "../components/Main-page/SideBar";
 import type { Metadata } from "next";
 
 /* ------------------------- Logging utilities ------------------------- */
-
 const DEBUG_SEARCH =
   process.env.NODE_ENV !== "production" || process.env.DEBUG_SEARCH === "1";
 
@@ -27,7 +25,6 @@ function logSearch(payload: Record<string, unknown>) {
 }
 
 /* ------------------------------ Helpers ------------------------------ */
-
 type SearchDict = { [key: string]: string | string[] | undefined };
 
 function getQ(sp?: SearchDict): string {
@@ -37,7 +34,6 @@ function getQ(sp?: SearchDict): string {
 }
 
 /* ------------------------------ Metadata ----------------------------- */
-
 export async function generateMetadata({
   searchParams,
 }: {
@@ -47,7 +43,6 @@ export async function generateMetadata({
   const q = getQ(sp);
   const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Home";
 
-  // Best practice: noindex search results
   const robots = { index: false, follow: true as const };
 
   if (!q) {
@@ -62,11 +57,23 @@ export async function generateMetadata({
     title: `Sökresultat för "${q}" - ${SITE}`,
     description: `Sökresultat för "${q}" från ${SITE}`,
     robots,
+    other: {
+      // Build JSON-LD for search results page
+      jsonLd: JSON.stringify([
+        {
+          "@context": "https://schema.org",
+          "@type": "SearchResultsPage",
+          name: `Sökresultat för "${q}"`,
+          description: `Sökresultat för "${q}" från ${SITE}`,
+          url: `${process.env.NEXT_PUBLIC_HOST_URL || "http://localhost"}/search?q=${encodeURIComponent(q)}`,
+          query: q,
+        },
+      ]),
+    },
   };
 }
 
 /* ------------------------------- Types -------------------------------- */
-
 type GQLPost = {
   id?: string;
   databaseId?: number;
@@ -81,7 +88,6 @@ type GQLPost = {
 type PageInfo = { hasNextPage: boolean; endCursor?: string | null };
 
 /* --------------------------- Server-side fetch ------------------------ */
-
 async function fetchSearchResultsWithPageInfo(
   q: string,
   first = 6
@@ -112,7 +118,7 @@ async function fetchSearchResultsWithPageInfo(
   const res = await fetch(GRAPHQL_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    cache: "no-store", // fresh search results
+    cache: "no-store",
     body: JSON.stringify({ query: gql, variables: { search: q, first } }),
   });
   const durationMs = Date.now() - started;
@@ -127,7 +133,6 @@ async function fetchSearchResultsWithPageInfo(
   const pageInfo =
     (json?.data?.posts?.pageInfo ?? { hasNextPage: false, endCursor: null }) as PageInfo;
 
-  // Compact log (query, counts, pagination, timing, sample)
   logSearch({
     q: sanitize(q),
     first,
@@ -148,7 +153,6 @@ async function fetchSearchResultsWithPageInfo(
 }
 
 /* -------------------------------- Page -------------------------------- */
-
 export default async function SearchPage({
   searchParams,
 }: {
@@ -169,7 +173,6 @@ export default async function SearchPage({
     );
   }
 
-  // Fetch the first 6 results + pageInfo for button-based pagination
   const { nodes, pageInfo } = await fetchSearchResultsWithPageInfo(q, 6);
 
   if (nodes.length === 0) {
@@ -178,18 +181,35 @@ export default async function SearchPage({
 
   return (
     <div className="container mx-auto py-8 px-4">
+      {/* Inject JSON-LD script from metadata.other */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SearchResultsPage",
+            name: `Sökresultat för "${q}"`,
+            description: `Sökresultat för "${q}" från ${
+              process.env.NEXT_PUBLIC_HOSTNAME ?? "Home"
+            }`,
+            url: `${process.env.NEXT_PUBLIC_HOST_URL || "http://localhost"}/search?q=${encodeURIComponent(q)}`,
+            query: q,
+          }),
+        }}
+      />
+
       <h1 className="text-3xl font-bold mb-2">Search results for “{q}”</h1>
       <div className="text-sm text-muted-foreground mb-6">
         Showing {nodes.length} result{nodes.length === 1 ? "" : "s"}.
       </div>
 
-      {/* Main grid: posts and sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-        {/* Posts */}
         <div className="lg:col-span-2 flex flex-col">
           {nodes.length === 0 ? (
             <div className="mb-8 p-6 rounded-sm border border-gray-200 bg-gray-50 text-center">
-              <p className="text-lg font-semibold text-gray-600 mb-4">No results found.</p>
+              <p className="text-lg font-semibold text-gray-600 mb-4">
+                No results found.
+              </p>
               <div className="text-gray-500 mb-2">
                 Try a different keyword or browse our{" "}
                 <Link href="/" className="underline">
@@ -209,7 +229,6 @@ export default async function SearchPage({
           )}
         </div>
 
-        {/* Sidebar (sticky on large screens) */}
         <aside className="w-full h-full hidden lg:block">
           <div className="sticky top-24 w-[60%]">
             <Sidebar />

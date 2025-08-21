@@ -10,20 +10,16 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { ChevronRight } from "lucide-react";
-import TagPosts from "./TagPosts";
+import Image from "next/image";
 import { Post } from "@/lib/types";
-
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
 import { getBestSeoBySlug } from "@/lib/seo/seo-helpers";
+import { stripHtml } from "@/lib/helper_functions/strip_html";
+import { truncateWords } from "@/lib/utils";
+import { JSX } from "react/jsx-runtime";
 
+// ---- Types ----
 type Params = Promise<{ slug: string }>;
-
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { slug } = await params;
-  const { meta } = await getBestSeoBySlug(slug, 'tag');
-  console.log(meta, 'meta data for tag page:', slug);
-  return meta;
-}
 
 interface Tag {
   id: string;
@@ -40,18 +36,32 @@ interface Tag {
   };
 }
 
-interface TagPageProps {
-  params: Promise<{ slug: string }>;
+// ---------- helper (safe JSON parse) ----------
+function safeParse<T = unknown>(raw?: string): T | null {
+  if (!raw) return null;
+  try { return JSON.parse(raw) as T; } catch { return null; }
 }
 
-export default async function TagPage({ params }: TagPageProps) {
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { slug } = await params;
+  const { meta } = await getBestSeoBySlug(slug, "tag");
+
+  // TEMP: log parsed JSON-LD for verification
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const jsonLdRaw = (meta.other as any)?.jsonLd as string | undefined;
+  const parsed = safeParse(jsonLdRaw);
+  if (parsed) console.log("[tag/generateMetadata] JSON-LD parsed:", parsed);
+
+  return meta;
+}
+
+export default async function TagPage({ params }: { params: Params }) {
   const { slug } = await params;
 
   let tag: Tag | null = null;
-
   try {
     tag = await getTagBySlug(slug);
-  } catch (e: unknown) {
+  } catch (e) {
     console.error(e);
     return (
       <div className="max-w-2xl mx-auto py-8">
@@ -65,6 +75,13 @@ export default async function TagPage({ params }: TagPageProps) {
     notFound();
   }
 
+  // Fetch SEO again for JSON-LD injection on the page
+  const { meta: seoMeta } = await getBestSeoBySlug(slug, "tag");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const jsonLdRaw = (seoMeta.other as any)?.jsonLd as string | undefined;
+  const parsed = safeParse(jsonLdRaw);
+  if (parsed) console.log("[tag/page] JSON-LD parsed:", parsed);
+
   const breadcrumbItems = [
     { href: "/", label: "Home" },
     { href: `/tags/${tag.slug}`, label: tag.name, current: true },
@@ -72,6 +89,14 @@ export default async function TagPage({ params }: TagPageProps) {
 
   return (
     <div className="container mx-auto py-8 px-4">
+      {/* Emit JSON-LD script (server-rendered) */}
+      {jsonLdRaw ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdRaw }}
+        />
+      ) : null}
+
       <h1 className="text-3xl font-bold mb-2">{tag.name}</h1>
 
       <Breadcrumb>
@@ -127,11 +152,51 @@ export default async function TagPage({ params }: TagPageProps) {
               </div>
             </div>
           ) : (
-            <TagPosts
-              slug={tag.slug}
-              initialPosts={tag.posts.nodes}
-              initialPageInfo={tag.posts.pageInfo}
-            />
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {(tag.posts.nodes as Post[]).map((post): JSX.Element => {
+                const imgSrc = post.featuredImage?.node?.sourceUrl || "/favicon_logo.png";
+                const imgAlt = post.featuredImage?.node?.altText || post.title || tag.name;
+
+                return (
+                  <li
+                    key={post.id}
+                    className="rounded-sm cursor-pointer hover:shadow-none transition flex flex-col overflow-hidden group"
+                  >
+                    <Link href={`/${post.slug}`} className="block overflow-hidden">
+                      <Image
+                        src={imgSrc}
+                        alt={imgAlt}
+                        width={600}
+                        height={176}
+                        className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-200"
+                        style={{ background: "#f5f5f5" }}
+                        priority={false}
+                      />
+                    </Link>
+
+                    <div className="p-4 flex flex-col flex-1">
+                      {/* Title + Date in one row */}
+                      <div className="flex items-center justify-between gap-2">
+                        <Link
+                          href={`/${post.slug}`}
+                          className="font-bold text-lg hover:underline line-clamp-1"
+                        >
+                          {post.title}
+                        </Link>
+                        <div className="text-xs text-gray-500 whitespace-nowrap">
+                          {new Date(post.date).toLocaleDateString()}
+                        </div>
+                      </div>
+
+                      {/* Excerpt (first 15 words) */}
+                      <div className="prose prose-sm text-gray-700 mt-2 flex-1">
+                        {truncateWords(stripHtml(post.excerpt!) || "", 15)}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           )}
         </div>
 

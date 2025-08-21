@@ -5,7 +5,8 @@ import { SinglePost } from './_components/SinglePost';
 import NotFound from '../NotFound';
 import type { Metadata } from 'next';
 import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
-type Params = Promise<{ slug: string[] }>;
+
+type Params = Promise<{ slug: string | string[] }>;
 
 export const dynamicParams = false;
 
@@ -13,14 +14,12 @@ async function extractHeadings(html: string): Promise<{ updatedHtml: string; toc
   const $ = load(html);
   const toc: ITOCItem[] = [];
 
-  // Find all heading tags, generate IDs, and build TOC
   $('h2, h3, h4, h5, h6').each((_, el) => {
     const $el = $(el);
-    const tag = el.tagName.toLowerCase(); // e.g. "h2"
-    const level = parseInt(tag.charAt(1), 10); // heading level
+    const tag = el.tagName.toLowerCase();
+    const level = parseInt(tag.charAt(1), 10);
     const text = $el.text().trim();
 
-    // generate or reuse ID
     const id =
       $el.attr('id') ||
       text
@@ -32,25 +31,24 @@ async function extractHeadings(html: string): Promise<{ updatedHtml: string; toc
     toc.push({ text, id, level });
   });
 
-  // Get back the updated <body> HTML for dangerouslySetInnerHTML
   const updatedHtml = $('body').html() ?? $.root().html() ?? '';
-
   return { updatedHtml, toc };
 }
-
 
 interface TwitterMeta {
   description?: string;
   [key: string]: unknown;
 }
 
-
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const uri = `/${slug}/`
+
+  // build a clean WP uri regardless of catch-all or single segment
+  const segments = Array.isArray(slug) ? slug : [slug];
+  const uri = `/${segments.join('/')}/`;
 
   const seoPayload = await getSeo(uri);
-  
+
   const last = Array.isArray(slug) ? slug.at(-1)! : slug;
   const post = await getPostBySlug(last);
 
@@ -88,33 +86,58 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     defaultOgImage: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE,
   });
 
+  // fallback description from WP excerpt if RankMath description missing
   if ((!meta.description || !meta.description.trim()) && post?.excerpt) {
     const plain = post.excerpt.replace(/<[^>]+>/g, '').trim();
     if (plain) {
       meta.description = plain;
       meta.openGraph = { ...meta.openGraph, description: meta.openGraph?.description ?? plain };
       const twitter = meta.twitter as TwitterMeta | undefined;
-      meta.twitter = { ...twitter, description: twitter?.description ?? plain }}
+      meta.twitter = { ...twitter, description: twitter?.description ?? plain };
+    }
   }
-console.log('meta data for single post', meta)
+
+  // no console logs; JSON-LD is already in meta.other.jsonLd by buildMetadataFromSeo
   return meta;
 }
-
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string | string[] }>;
 }) {
   try {
     const { slug } = await params;
-    const post: Post | null = await getPostBySlug(slug);
-    if (!post) {
-      return <NotFound />
-    }
+    const last = Array.isArray(slug) ? slug.at(-1)! : slug;
+
+    const post: Post | null = await getPostBySlug(last);
+    if (!post) return <NotFound />;
+
     const { updatedHtml, toc } = await extractHeadings(String(post.content));
 
-    return <SinglePost initialPost={{ ...post, updatedHtml, toc }} />;
+    // Inject JSON-LD for crawlers (rebuild from seo to read jsonLd string)
+    const segments = Array.isArray(slug) ? slug : [slug];
+    const uri = `/${segments.join('/')}/`;
+    const seoPayload = await getSeo(uri);
+    const metaForScript = buildMetadataFromSeo(seoPayload, {
+      metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
+      siteName: process.env.NEXT_PUBLIC_HOSTNAME,
+      defaultOgImage: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const jsonLdRaw = (metaForScript.other as any)?.jsonLd as string | undefined;
+
+    return (
+      <>
+        {jsonLdRaw ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: jsonLdRaw }}
+          />
+        ) : null}
+        <SinglePost initialPost={{ ...post, updatedHtml, toc }} />
+      </>
+    );
   } catch (e) {
     console.error('Error in PostPage:', e);
     return <NotFound />;

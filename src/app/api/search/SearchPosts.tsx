@@ -92,7 +92,7 @@ export default function SearchPosts({
         {posts.map((post) => (
           <li
             key={post.id ?? post.databaseId ?? post.slug}
-            className="border rounded-sm shadow-md hover:shadow-lg transition bg-white flex flex-col overflow-hidden group"
+            className=" rounded-sm hover:cursor-pointer transitio flex flex-col overflow-hidden group"
           >
             {/* Image */}
             {post.featuredImage?.node?.sourceUrl ? (
@@ -115,7 +115,7 @@ export default function SearchPosts({
             )}
 
             {/* Content */}
-            <div className="p-4 flex flex-col flex-1">
+            <div className="pt-4 flex flex-col flex-1">
               <Link
                 href={`/${post.slug}`}
                 className="font-bold text-lg mb-1 hover:underline line-clamp-2"

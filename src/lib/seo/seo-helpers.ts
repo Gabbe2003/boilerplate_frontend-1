@@ -37,7 +37,7 @@ function candidateUris(slugOrPath: string, kind: Kind): string[] {
         ensureLeadingTrailingSlash(`tag/${s}`),
         ensureLeadingTrailingSlash(`author/${s}`),
         ensureLeadingTrailingSlash(s),
-        '/', // last resort: homepage
+        '/',
       ];
   }
 }

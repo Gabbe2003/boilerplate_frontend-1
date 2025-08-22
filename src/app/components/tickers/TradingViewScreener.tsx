@@ -115,9 +115,6 @@ function TradingViewScreener({
         height: "100%",
       });
 
-      container
-        .querySelector(".tradingview-widget-container__widget")
-        ?.appendChild(script);
     },
     [defaultColumn, displayCurrency, locale]
   );

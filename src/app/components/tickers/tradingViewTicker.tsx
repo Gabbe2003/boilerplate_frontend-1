@@ -30,22 +30,16 @@ function TradingViewTickerTapeImpl() {
     const container = containerRef.current;
     if (!container) return;
 
-    // Clean slate (handles Strict Mode double-invoke in dev, remounts, etc.)
     container.replaceChildren();
 
     const script = document.createElement('script');
     script.src = SRC;
     script.type = 'text/javascript';
     script.async = true;
-    // TradingView supports reading JSON from the <script> contents:
     script.innerHTML = JSON.stringify(CONFIG);
-
     container.appendChild(script);
 
-    return () => {
-      // Ensure widget is torn down on unmount/remount
-      container.replaceChildren();
-    };
+    return () => container.replaceChildren();
   }, []);
 
   return (
@@ -55,13 +49,38 @@ function TradingViewTickerTapeImpl() {
     >
       <div className="tradingview-widget-container__widget" ref={containerRef} />
       <div className="tradingview-widget-copyright">
+        {/* Accessible copyright/attribution link */}
         <a
           href="https://www.tradingview.com/"
-          rel="noopener nofollow"
           target="_blank"
+          rel="noopener noreferrer nofollow"
+          aria-label="Quotes by TradingView. Open TradingView website in a new tab."
+          className="tv-attrib-link"
         >
+          <span className="visually-hidden">
+            Quotes by TradingView — visit TradingView
+          </span>
         </a>
       </div>
+
+      {/* Optional inline CSS if you’re not using a global utility like Tailwind’s sr-only */}
+      <style jsx>{`
+        .visually-hidden {
+          position: absolute !important;
+          width: 1px !important;
+          height: 1px !important;
+          padding: 0 !important;
+          margin: -1px !important;
+          overflow: hidden !important;
+          clip: rect(0 0 0 0) !important;
+          white-space: nowrap !important;
+          border: 0 !important;
+        }
+        .tv-attrib-link:focus {
+          outline: 2px solid;
+          outline-offset: 2px;
+        }
+      `}</style>
     </div>
   );
 }

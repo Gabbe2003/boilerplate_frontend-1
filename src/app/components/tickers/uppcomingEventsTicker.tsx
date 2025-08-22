@@ -81,9 +81,6 @@ function TradingViewWidget({
         height,
       });
 
-      container
-        .querySelector(".tradingview-widget-container__widget")
-        ?.appendChild(script);
     },
     [theme, transparent, locale, country, importance]
   );

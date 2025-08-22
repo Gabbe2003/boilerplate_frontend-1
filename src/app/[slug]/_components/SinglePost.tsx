@@ -25,26 +25,27 @@ export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
 
   update_viewed_post(String(initialPost.databaseId));
 
-  return (
-    <div className="space-y-16 mx-auto py-12 px-4 mb-10 s">
-      <div
-        className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
-        data-index={0}
-      >
-        <div className="col-span-1 lg:col-span-2 flex flex-col gap-8">
-          <ArticleContent
-            post={initialPost}
-            postUrl={postUrl}
-            postExcerpt={postExcerpt}
-            index={0}
-            categoryNames={categoryNames}
-            tagNames={tagNames}
-          />
-          <RecommendationList currentSlug={initialPost.slug} />
-        </div>
+return (
+  <div className="space-y-16 mx-auto py-12 mb-10 ">
+    <div
+      className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
+      data-index={0}
+    >
+      <div className="col-span-1 lg:col-span-2 flex flex-col gap-8 w-full">
+        <ArticleContent
+          post={initialPost}
+          postUrl={postUrl}
+          postExcerpt={postExcerpt}
+          index={0}
+          categoryNames={categoryNames}
+          tagNames={tagNames}
+        />
+        <RecommendationList currentSlug={initialPost.slug} />
       </div>
-      {/* The client-only infinite scroll lives here */}
-      <InfiniteScrollClient initialPost={initialPost} />
     </div>
-  );
+
+    {/* The client-only infinite scroll lives here */}
+    <InfiniteScrollClient initialPost={initialPost} />
+  </div>
+);
 }

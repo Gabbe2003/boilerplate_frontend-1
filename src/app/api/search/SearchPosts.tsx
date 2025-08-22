@@ -75,11 +75,13 @@ export default function SearchPosts({
       const nextPosts: Post[] = data.posts ?? [];
       setPosts((prev) => mergeUniquePosts(prev, nextPosts));
       setPageInfo(data.pageInfo ?? { hasNextPage: false, endCursor: undefined });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       if (e?.name !== "AbortError") {
         console.error(e);
-        setError("Something went wrong while loading more results. Please try again.");
+        setError(
+          "Something went wrong while loading more results. Please try again."
+        );
       }
     } finally {
       setLoading(false);
@@ -89,72 +91,87 @@ export default function SearchPosts({
   return (
     <>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {posts.map((post) => (
-          <li
-            key={post.id ?? post.databaseId ?? post.slug}
-            className=" rounded-sm hover:cursor-pointer transitio flex flex-col overflow-hidden group"
-          >
-            {/* Image */}
-            {post.featuredImage?.node?.sourceUrl ? (
-              <Link href={`/${post.slug}`} className="block overflow-hidden">
-                <Image
-                  src={post.featuredImage.node.sourceUrl}
-                  alt={post.featuredImage.node.altText || stripHtml(post.title)}
-                  width={1200}
-                  height={450}
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-200"
-                  style={{ background: "#f5f5f5" }}
-                  priority={false}
-                />
-              </Link>
-            ) : (
-              <div className="w-full h-44 bg-gray-100 flex items-center justify-center text-gray-400">
-                No image
-              </div>
-            )}
+        {posts.map((post, idx) => {
+          const imgSrc = post.featuredImage?.node?.sourceUrl;
+          const imgAlt =
+            post.featuredImage?.node?.altText || stripHtml(post.title);
+          const isLCP = idx === 0; // Boost first result
 
-            {/* Content */}
-            <div className="pt-4 flex flex-col flex-1">
-              <Link
-                href={`/${post.slug}`}
-                className="font-bold text-lg mb-1 hover:underline line-clamp-2"
-                dangerouslySetInnerHTML={{ __html: post.title }}
-              />
-              <div className="flex items-center justify-between mb-2">
-                {/* Author info left */}
-                <div className="flex items-center gap-2">
-                  {post.author?.node?.avatar?.url && (
-                    <Image
-                      src={post.author.node.avatar.url}
-                      alt={post.author.node.name || "Author"}
-                      width={24}
-                      height={24}
-                      className="rounded-full"
-                    />
-                  )}
-                  {post.author?.node && (
-                    <Link
-                      href={`/author/${post.author.node.slug}`}
-                      className="text-xs text-gray-700 hover:underline"
-                    >
-                      {post.author.node.name}
-                    </Link>
+          return (
+            <li
+              key={post.id ?? post.databaseId ?? post.slug}
+              className="rounded-sm hover:cursor-pointer transition flex flex-col overflow-hidden group"
+            >
+              {/* Image */}
+              {imgSrc ? (
+                <Link href={`/${post.slug}`} className="block overflow-hidden">
+                  <div className="relative w-full aspect-[1200/450]">
+                  <Image
+                  src={imgSrc || "/favicon_logo.png"}
+                  alt={imgAlt}
+                  fill
+                  sizes="(max-width: 640px) 100vw,
+                        (max-width: 1024px) 60vw,
+                        75vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-200 bg-[#f5f5f5]"
+                  quality={85}
+                  priority={isLCP}
+                  fetchPriority={isLCP ? "high" : "auto"}
+                  loading={isLCP ? "eager" : "lazy"}
+                  placeholder={isLCP ? "empty" : "blur"}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  blurDataURL={!isLCP ? (post as any)?.featuredImage?.node?.blurDataURL || "/favicon_logo.png" : undefined}
+                />
+                  </div>
+                </Link>
+              ) : (
+                <div className="w-full h-44 bg-gray-100 flex items-center justify-center text-gray-400">
+                  No image
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="pt-4 flex flex-col flex-1">
+                <Link
+                  href={`/${post.slug}`}
+                  className="font-bold text-lg mb-1 hover:underline line-clamp-2"
+                  dangerouslySetInnerHTML={{ __html: post.title }}
+                />
+                <div className="flex items-center justify-between mb-2">
+                  {/* Author info left */}
+                  <div className="flex items-center gap-2">
+                    {post.author?.node?.avatar?.url && (
+                      <Image
+                        src={post.author.node.avatar.url}
+                        alt={post.author.node.name || "Author"}
+                        width={24}
+                        height={24}
+                        className="rounded-full"
+                      />
+                    )}
+                    {post.author?.node && (
+                      <Link
+                        href={`/author/${post.author.node.slug}`}
+                        className="text-xs text-gray-700 hover:underline"
+                      >
+                        {post.author.node.name}
+                      </Link>
+                    )}
+                  </div>
+                  {/* Date right */}
+                  {post.date && (
+                    <span className="text-xs text-gray-500 mr-2">
+                      {new Date(post.date).toLocaleDateString()}
+                    </span>
                   )}
                 </div>
-                {/* Date right */}
-                {post.date && (
-                  <span className="text-xs text-gray-500 mr-2">
-                    {new Date(post.date).toLocaleDateString()}
-                  </span>
-                )}
+                <div className="prose prose-sm text-gray-700 flex-1 line-clamp-4">
+                  {getFirstWords(post.excerpt ?? "", 20)}
+                </div>
               </div>
-              <div className="prose prose-sm text-gray-700 flex-1 line-clamp-4">
-                {getFirstWords(post.excerpt ?? "", 20)}
-              </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
 
       {/* Load more button */}
@@ -169,7 +186,11 @@ export default function SearchPosts({
             {loading ? "Loading…" : "Load more"}
           </Button>
           {error && (
-            <div className="text-xs text-red-600/80" role="status" aria-live="polite">
+            <div
+              className="text-xs text-red-600/80"
+              role="status"
+              aria-live="polite"
+            >
               {error}
             </div>
           )}

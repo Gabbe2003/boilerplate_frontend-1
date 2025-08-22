@@ -14,7 +14,7 @@ export default function RecommendationListMarquee({ currentSlug }: Props) {
 
   const [speed, setSpeed] = useState(30); // default for desktop
 
-  // detect viewport and adjust speed
+  // detect viewport and adjust speed (client-only)
   useEffect(() => {
     const check = () => {
       if (window.innerWidth < 640) setSpeed(15); // sm
@@ -31,27 +31,34 @@ export default function RecommendationListMarquee({ currentSlug }: Props) {
     [posts, currentSlug]
   );
 
+  // Keyframes and base class (no shorthand here)
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
-      @keyframes marqueeLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-      @keyframes marqueeRight { 0% { transform: translateX(-50%); } 100% { transform: translateX(0); } }
+      @keyframes marqueeLeft  { 0% { transform: translateX(0)    } 100% { transform: translateX(-50%) } }
+      @keyframes marqueeRight { 0% { transform: translateX(-50%) } 100% { transform: translateX(0)    } }
+
+      .marquee-anim { will-change: transform; }
 
       @media (prefers-reduced-motion: reduce) {
-        .marquee-anim { animation: none !important; transform: translateX(0) !important; }
+        .marquee-anim {
+          animation-name: none !important;
+          transform: translateX(0) !important;
+        }
       }
     `;
     document.head.appendChild(style);
     return () => { document.head.removeChild(style); };
   }, []);
 
+  // Pause/resume via longhand only (safe)
   const pause = useCallback((yes: boolean) => {
     const state = yes ? "paused" : "running";
     if (row1Ref.current) row1Ref.current.style.animationPlayState = state;
     if (row2Ref.current) row2Ref.current.style.animationPlayState = state;
   }, []);
 
-  const row = [...items, ...items]; // duplicate
+  const row = [...items, ...items]; // duplicate for seamless marquee
 
   return (
     <div
@@ -71,7 +78,14 @@ export default function RecommendationListMarquee({ currentSlug }: Props) {
           <div
             ref={row1Ref}
             className="marquee-anim flex w-[200%] gap-10 py-4"
-            style={{ animation: `marqueeLeft ${speed}s linear infinite` }}
+            style={{
+              // ✅ Only longhands; no 'animation' shorthand
+              animationName: "marqueeLeft",
+              animationDuration: `${speed}s`,
+              animationTimingFunction: "linear",
+              animationIterationCount: "infinite",
+              animationPlayState: "running",
+            }}
           >
             {row.map((p, i) => (
               <Link
@@ -79,13 +93,17 @@ export default function RecommendationListMarquee({ currentSlug }: Props) {
                 href={`/${p.slug}`}
                 className="inline-flex items-center gap-4 whitespace-nowrap hover:underline"
               >
-                <span className="relative block h-24 w-40 overflow-hidden rounded-md shadow-md flex-shrink-0">
+                <span
+                  className="relative block h-24 w-40 overflow-hidden rounded-md shadow-md flex-shrink-0"
+                  aria-hidden="true"
+                >
                   <Image
-                    src={p.featuredImage?.node.sourceUrl || "/placeholder.png"}
-                    alt={p.title}
+                    src={p.featuredImage?.node.sourceUrl || "/favicon_logo.png"}
+                    alt=""               // decorative; title follows
                     fill
                     className="object-cover"
                     sizes="160px"
+                    priority={false}
                   />
                 </span>
                 <span className="font-semibold text-xl truncate max-w-[40ch]">
@@ -101,7 +119,13 @@ export default function RecommendationListMarquee({ currentSlug }: Props) {
           <div
             ref={row2Ref}
             className="marquee-anim flex w-[200%] gap-10 py-4"
-            style={{ animation: `marqueeRight ${speed}s linear infinite` }}
+            style={{
+              animationName: "marqueeRight",
+              animationDuration: `${speed}s`,
+              animationTimingFunction: "linear",
+              animationIterationCount: "infinite",
+              animationPlayState: "running",
+            }}
           >
             {row.map((p, i) => (
               <Link
@@ -109,10 +133,13 @@ export default function RecommendationListMarquee({ currentSlug }: Props) {
                 href={`/${p.slug}`}
                 className="inline-flex items-center gap-4 whitespace-nowrap hover:underline"
               >
-                <span className="relative block h-24 w-40 overflow-hidden rounded-md shadow-md flex-shrink-0">
+                <span
+                  className="relative block h-24 w-40 overflow-hidden rounded-md shadow-md flex-shrink-0"
+                  aria-hidden="true"
+                >
                   <Image
                     src={p.featuredImage?.node.sourceUrl || "/placeholder.png"}
-                    alt={p.title}
+                    alt=""               // decorative; title follows
                     fill
                     className="object-cover"
                     sizes="160px"

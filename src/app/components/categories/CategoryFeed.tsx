@@ -105,7 +105,7 @@ export default function CategorySections() {
                     href={`/category/${selectedCategory.slug}`}
                     prefetch
                     aria-label={`Read more from ${selectedCategory.name}`}
-                    className="cursor-pointer hover:underline border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 px-6 py-2 text-sm font-medium rounded-sm break-words max-w-[90vw] text-center"
+                    className="cursor-pointer hover:underline border shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 px-6 py-2 text-sm font-medium rounded-sm break-words max-w-[90vw] text-center"
                   >
                     Wanna read more from{" "}
                     <span className="capitalize">{selectedCategory.name}</span>

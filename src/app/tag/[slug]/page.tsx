@@ -46,12 +46,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   const { meta } = await getBestSeoBySlug(slug, "tag");
 
-  // TEMP: log parsed JSON-LD for verification
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (meta.other as any)?.jsonLd as string | undefined;
-  const parsed = safeParse(jsonLdRaw);
-  if (parsed) console.log("[tag/generateMetadata] JSON-LD parsed:", parsed);
-
+  safeParse(jsonLdRaw);
+  
   return meta;
 }
 
@@ -79,11 +77,11 @@ export default async function TagPage({ params }: { params: Params }) {
   const { meta: seoMeta } = await getBestSeoBySlug(slug, "tag");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (seoMeta.other as any)?.jsonLd as string | undefined;
-  const parsed = safeParse(jsonLdRaw);
-  if (parsed) console.log("[tag/page] JSON-LD parsed:", parsed);
+  safeParse(jsonLdRaw);
 
   const breadcrumbItems = [
     { href: "/", label: "Home" },
+    { href: null, label: "Tags" },
     { href: `/tags/${tag.slug}`, label: tag.name, current: true },
   ];
 
@@ -101,31 +99,43 @@ export default async function TagPage({ params }: { params: Params }) {
 
       <Breadcrumb>
         <BreadcrumbList className="flex items-center gap-1 text-sm">
-          {breadcrumbItems.map((item, idx) => (
-            <span key={item.href} className="flex items-center gap-1">
-              {idx !== 0 && (
-                <BreadcrumbSeparator>
+          {breadcrumbItems.flatMap((item, idx) => {
+            const isLast = idx === breadcrumbItems.length - 1;
+
+            return [
+              idx !== 0 ? (
+                <BreadcrumbSeparator key={`sep-${idx}`}>
                   <ChevronRight className="w-4 h-4 text-gray-400" />
                 </BreadcrumbSeparator>
-              )}
-              <BreadcrumbItem>
-                {item.current ? (
-                  <BreadcrumbLink className="font-semibold text-primary underline underline-offset-4 cursor-default">
-                    {item.label}
-                  </BreadcrumbLink>
-                ) : (
-                  <BreadcrumbLink asChild>
-                    <Link
-                      href={item.href}
-                      className="text-blue-700 underline underline-offset-4 hover:text-blue-900 transition-colors"
+              ) : null,
+              (
+                <BreadcrumbItem key={item.href || item.label}>
+                  {item.href && !isLast ? (
+                    <BreadcrumbLink asChild>
+                      <Link
+                        href={item.href}
+                        className="text-gray-700 underline underline-offset-4 hover:text-gray-900 transition-colors"
+                        prefetch={false}
+                      >
+                        {item.label}
+                      </Link>
+                    </BreadcrumbLink>
+                  ) : (
+                    <span
+                      aria-current={isLast ? "page" : undefined}
+                      className={`${
+                        isLast
+                          ? "font-semibold text-primary cursor-default"
+                          : "text-gray-500 cursor-default"
+                      }`}
                     >
                       {item.label}
-                    </Link>
-                  </BreadcrumbLink>
-                )}
-              </BreadcrumbItem>
-            </span>
-          ))}
+                    </span>
+                  )}
+                </BreadcrumbItem>
+              ),
+            ];
+          })}
         </BreadcrumbList>
       </Breadcrumb>
 
@@ -152,34 +162,53 @@ export default async function TagPage({ params }: { params: Params }) {
               </div>
             </div>
           ) : (
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {(tag.posts.nodes as Post[]).map((post): JSX.Element => {
+            <ul
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              // keep below-the-fold cheap
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              style={{ contentVisibility: "auto", containIntrinsicSize: "1px 800px" as any }}
+            >
+              {(tag.posts.nodes as Post[]).map((post, idx): JSX.Element => {
                 const imgSrc = post.featuredImage?.node?.sourceUrl || "/favicon_logo.png";
                 const imgAlt = post.featuredImage?.node?.altText || post.title || tag.name;
+
+                // Only the first card should be LCP if it's actually above the fold
+                const isLCP = idx === 0;
 
                 return (
                   <li
                     key={post.id}
                     className="rounded-sm cursor-pointer hover:shadow-none transition flex flex-col overflow-hidden group"
                   >
-                    <Link href={`/${post.slug}`} className="block overflow-hidden">
-                      <Image
-                        src={imgSrc}
-                        alt={imgAlt}
-                        width={600}
-                        height={176}
-                        className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-200"
-                        style={{ background: "#f5f5f5" }}
-                        priority={false}
-                      />
+                    <Link href={`/${post.slug}`} className="block overflow-hidden" prefetch={false}>
+                      {/* Reserve exact aspect ratio: 600 / 300 = 2:1 */}
+                      <div className="relative w-full aspect-[600/300]">
+                        <Image
+                          src={imgSrc}
+                          alt={imgAlt}
+                          fill
+                          sizes="(max-width: 640px) 100vw,
+                                 (max-width: 1024px) 60vw,
+                                 70vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-200 bg-[#f5f5f5]"
+                          quality={85}
+                          priority={isLCP}
+                          fetchPriority={isLCP ? "high" : "auto"}
+                          loading={isLCP ? "eager" : "lazy"}
+                          placeholder="blur"
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          blurDataURL={(post as any)?.featuredImage?.node?.blurDataURL || "/favicon_logo.png"}
+                        />
+                      </div>
                     </Link>
 
-                    <div className="p-4 flex flex-col flex-1">
+                    <div className="pt-4 flex flex-col flex-1">
                       {/* Title + Date in one row */}
                       <div className="flex items-center justify-between gap-2">
                         <Link
                           href={`/${post.slug}`}
                           className="font-bold text-lg hover:underline line-clamp-1"
+                          prefetch={false}
                         >
                           {post.title}
                         </Link>
@@ -190,7 +219,7 @@ export default async function TagPage({ params }: { params: Params }) {
 
                       {/* Excerpt (first 15 words) */}
                       <div className="prose prose-sm text-gray-700 mt-2 flex-1">
-                        {truncateWords(stripHtml(post.excerpt!) || "", 15)}
+                        {truncateWords(stripHtml(post.excerpt || "") || "", 15)}
                       </div>
                     </div>
                   </li>

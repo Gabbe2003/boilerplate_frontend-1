@@ -427,8 +427,6 @@ if (node?.__typename === 'User') {
   });
 }
 
-
-
   // ---- FINAL ----
   const metadata: Metadata = {
     metadataBase: base,
@@ -451,5 +449,3 @@ if (node?.__typename === 'User') {
 
   return metadata;
 }
-
-

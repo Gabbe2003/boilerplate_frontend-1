@@ -97,7 +97,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     }
   }
 
-  // no console logs; JSON-LD is already in meta.other.jsonLd by buildMetadataFromSeo
+  console.log(meta)
   return meta;
 }
 

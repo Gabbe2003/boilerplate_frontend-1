@@ -248,14 +248,14 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
           }
         }
         author {
-          node {
-            name
-            url
-            avatar {
-              url
-            }
-          }
+      node {
+        name
+        description
+        avatar {
+          url
         }
+      }
+}
         categories {
           nodes {
             name

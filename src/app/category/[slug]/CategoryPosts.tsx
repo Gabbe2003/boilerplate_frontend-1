@@ -77,7 +77,7 @@ export default function CategoryPosts({ slug, initialPosts, initialPageInfo }: C
               No image
             </div>
           )}
-          <div className="p-4 flex flex-col flex-1">
+          <div className="pt-4 flex flex-col flex-1">
             <Link
               href={`/${post.slug}`}
               className="font-bold text-lg mb-1 hover:underline line-clamp-2"

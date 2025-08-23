@@ -14,7 +14,7 @@ type TickerItem = {
   slug: string;
   title: string;
   date?: string;
-  author_name?: string;
+  category?: string; 
   featuredImage?: string | { node?: { sourceUrl?: string } };
 };
 
@@ -56,7 +56,7 @@ export default async function PopularPosts() {
   // Shuffle posts + ads
   let mixed: FeedItem[] = shuffleArray([...mainPosts, ad1, ad2]);
 
-  // 🔑 Simple fix: ensure ads are not adjacent
+  // 🔑 Ensure ads are not adjacent
   let safety = 0;
   while (safety < 20) {
     let hasAdjacentAds = false;
@@ -71,14 +71,14 @@ export default async function PopularPosts() {
     safety++;
   }
 
-  // Ticker items (pure posts)
+  // Ticker items (pure posts) — replace author with category
   const tickerItems: TickerItem[] = posts.slice(0, 12).map((p) => ({
     id: String(p.id),
     slug: p.slug,
     title: p.title,
     date: p.date,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    author_name: (p as any).author_name,
+    category: (p as any).category, // ← pass category
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     featuredImage: (p as any).featuredImage,
   }));

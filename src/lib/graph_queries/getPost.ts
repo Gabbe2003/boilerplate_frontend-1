@@ -164,68 +164,94 @@ interface RawView {
   excerpt?: string;
 }
 
-export async function getPostByPeriod(
-  period: "week" | "month"
-): Promise<
-   Array<{
+
+
+type PostByPeriod = Array<{
   id: string;
   title: string;
   slug: string;
+  category?: string; // ⟵ added
   featuredImage?: { node: { sourceUrl: string } };
   date: string;
-  author_name: string;
   excerpt?: string;
-}>
-> {
+}>;
+
+export async function getPostByPeriod(
+  period: "week" | "month"
+): Promise<PostByPeriod> {
   try {
-    
     const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`;
     const res = await signedFetch(url, {
-      cache: 'force-cache',
+      cache: "force-cache",
       next: { revalidate: 400 },
     });
 
     if (!res.ok) {
-      console.error('[getViews] non-OK response:', await res.text());
+      console.error("[getViews] non-OK response:", await res.text());
       return [];
     }
-    
+
     const data = await res.json();
+    console.log("[getPostByPeriod] Fetched data:", data);
+
     if (!Array.isArray(data)) {
-      console.error('[getViews] payload is not an array:', data);
+      console.error("[getViews] payload is not an array:", data);
       return [];
     }
+
     const raw = data as RawView[];
 
-    // Single-pass mapping and normalization
-    return raw.map((item) => {
-    let normalizedImage: string | undefined;
-    if (typeof item.featuredImage === "string" && item.featuredImage) {
-        normalizedImage = item.featuredImage;
-    } else if (item.featuredImage && typeof item.featuredImage === "object" && typeof item.featuredImage.node?.sourceUrl === "string") {
-        normalizedImage = item.featuredImage.node.sourceUrl;
-    } else {
-        normalizedImage = undefined;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const getCategory = (item: any): string | undefined => {
+      // Prefer flat `category` if present
+      if (typeof item.category === "string" && item.category.trim()) {
+        return item.category.trim();
+      }
+      // Fallback to categories.nodes array (take the first or join)
+      const nodes = item?.categories?.nodes;
+      if (Array.isArray(nodes) && nodes.length > 0) {
+        // Take first name; change to join if you prefer multiple
+        const first = nodes[0]?.name;
+        if (typeof first === "string" && first.trim()) return first.trim();
+      }
+      return undefined;
+    };
 
-    return {
+    return raw.map((item) => {
+      let normalizedImage: string | undefined;
+      if (typeof item.featuredImage === "string" && item.featuredImage) {
+        normalizedImage = item.featuredImage;
+      } else if (
+        item.featuredImage &&
+        typeof item.featuredImage === "object" &&
+        typeof item.featuredImage.node?.sourceUrl === "string"
+      ) {
+        normalizedImage = item.featuredImage.node.sourceUrl;
+      } else {
+        normalizedImage = undefined;
+      }
+
+      return {
         id: String(item.id),
         title: item.title?.trim() ?? "",
         slug: item.slug,
-        featuredImage: normalizedImage ? { node: { sourceUrl: normalizedImage } } : undefined,
+        category: getCategory(item),            // ⟵ added
+        featuredImage: normalizedImage
+          ? { node: { sourceUrl: normalizedImage } }
+          : undefined,
         date: item.date,
-        author_name: item.author_name,
+        // author_name: item.author_name,       // ⟵ removed
         excerpt: item.excerpt ?? "",
-        type: 'post',
-    };
+        // type: "post",                        // keep/remove as you prefer
+      };
     });
-
-   
   } catch (err) {
-    console.error('[getViews] fetch failed:', err);
+    console.error("[getViews] fetch failed:", err);
     return [];
   }
 }
+
+
 
 
 

@@ -51,14 +51,16 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
             {/* Left: Logo */}
             <div className="flex items-center min-h-[40px]">
               <Link href="/" aria-label="Go to homepage" className="flex-shrink-0">
+                <div className="relative w-[100px] h-auto">
                 <Image
                   src="/full_logo_with_slogan.png"
                   alt="Logo"
-                  width={100}
-                  height={60}
-                  className="object-cover"
+                  fill
+                  className="object-contain"
+                  sizes="100px"
                   priority
                 />
+              </div>
               </Link>
             </div>
 

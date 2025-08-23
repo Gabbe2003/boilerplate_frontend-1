@@ -112,9 +112,9 @@ function TradingViewScreener({
         isTransparent: false,
         locale,
         width: "100%",
-        height: "100%",
+        height: "50%",
       });
-
+      container.appendChild(script); 
     },
     [defaultColumn, displayCurrency, locale]
   );

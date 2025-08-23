@@ -46,20 +46,21 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
       <TickerTapeVisible height={0} preloadOffset="0px" />
       
         {/* Inner container: truly 70% on lg, and the only place with horizontal padding */}
-        <div className="mx-auto w-full lg:w-[70%] px-2 sm:px-4 md:px-6">
+        <div className="mx-auto w-full lg:w-[90%] xl:w-[70%] px-2 sm:px-4 md:px-6">
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 py-0">
             {/* Left: Logo */}
             <div className="flex items-center min-h-[40px]">
               <Link href="/" aria-label="Go to homepage" className="flex-shrink-0">
                 <div className="relative w-[100px] h-auto">
-                <Image
-                  src="/full_logo_with_slogan.png"
-                  alt="Logo"
-                  fill
-                  className="object-contain"
-                  sizes="100px"
-                  priority
-                />
+           <Image
+  src="/full_logo_with_slogan.png"
+  alt="Logo"
+  width={100}
+  height={60}
+  className="!w-[100px] !h-[60px] object-contain"
+  priority
+/>
+
               </div>
               </Link>
             </div>

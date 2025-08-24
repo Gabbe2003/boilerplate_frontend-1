@@ -64,7 +64,7 @@ export function AdCard({ ad }: { ad: Ad }) {
       </div>
 
       {/* Content — matches PostCard styles */}
-      <div className="pt-2">
+      <div className="p-0">
         <span className="inline-block text-xl text-[11px] font-semibold uppercase tracking-wide text-[#990000]">
           Sponsored
         </span>

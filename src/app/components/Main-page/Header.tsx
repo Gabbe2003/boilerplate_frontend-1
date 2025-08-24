@@ -43,7 +43,6 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
     <>
       {/* Outer layer: full-width background & border */}
       <header className="sticky top-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
-      <TickerTapeVisible height={0} preloadOffset="0px" />
       
         {/* Inner container: truly 70% on lg, and the only place with horizontal padding */}
         <div className="mx-auto w-full lg:w-[90%] xl:w-[70%] px-2 sm:px-4 md:px-6">
@@ -101,6 +100,7 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
       </header>
 
       <PopupModal isOpen={isModalOpen} onClose={handleCloseNewsletter} />
+      <TickerTapeVisible height={0} preloadOffset="0px" />
     </>
   );
 }

@@ -44,7 +44,7 @@ export default async function Page() {
       <CatsPage />
       <PostsList />
       <FinanstidningSeoText />
-      <AdPopup />
+      {/* <AdPopup /> */}
     </div>
   );
 }

@@ -34,6 +34,7 @@ export default function Footer() {
                 height={60}
                 priority
               />
+
             </Link>
             {tagline && (
               <p className="mt-2 text-sm pr-5 text-gray-500 break-normal whitespace-normal hyphens-auto text-pretty">

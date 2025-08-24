@@ -46,8 +46,9 @@ function TradingViewScreener({
     const head = document.head;
 
     const ensure = (el: HTMLLinkElement) => {
-      const exists = head.querySelector(
-        `link[rel="${el.rel}"][href="${el.href}"]`
+      const links = Array.from(head.getElementsByTagName("link"));
+      const exists = links.some(
+        (link) => link.rel === el.rel && link.href === el.href
       );
       if (!exists) head.appendChild(el);
     };
@@ -114,7 +115,7 @@ function TradingViewScreener({
         width: "100%",
         height: "50%",
       });
-      container.appendChild(script); 
+      container.appendChild(script);
     },
     [defaultColumn, displayCurrency, locale]
   );

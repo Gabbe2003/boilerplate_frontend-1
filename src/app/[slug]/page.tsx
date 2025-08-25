@@ -97,7 +97,6 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     }
   }
 
-  console.log(meta)
   return meta;
 }
 

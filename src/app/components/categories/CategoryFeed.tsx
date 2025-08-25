@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCategorySections } from "./herlper.useCategoryFeed"; // (Confirm the 'herlper' spelling)
+import { useCategorySections } from "./herlper.useCategoryFeed"; 
 import CategoryDesktopGrid from "./CategoryDesktopGrid";
 import CategoryMobileCarousel from "./CategoryMobileCarousel";
 import { Button } from "@/components/ui/button";
@@ -94,7 +94,7 @@ export default function CategorySections() {
               <>
                 {/* MOBILE */}
                 <CategoryMobileCarousel posts={selectedCategoryPosts} />
-
+              
                 {/* DESKTOP */}
                 <CategoryDesktopGrid posts={selectedCategoryPosts} />
 

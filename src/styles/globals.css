@@ -45,7 +45,7 @@
 
 
 body {
-  background: #fcf6f0;
+  background: #FFFFFF;
 }
 
 html {
@@ -67,7 +67,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Helvetica', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 700;
   line-height: 1.2;
   color: #222;

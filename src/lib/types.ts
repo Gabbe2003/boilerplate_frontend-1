@@ -111,7 +111,7 @@ export interface Post {
   uri?: string;
   status?: string;
   isSticky?: boolean;
-  author_name: string;
+  author_name?: string;
   category?: string;
   title: string; 
   excerpt?: string;

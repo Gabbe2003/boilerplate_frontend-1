@@ -42,7 +42,7 @@ export function useCategorySections() {
     let alive = true;
     (async () => {
       try {
-        const res = await fetch('/api/categories', { cache: 'force-cache' });
+        const res = await fetch('/api/categories', { cache: 'no-store' });
         if (!res.ok) throw new Error('Failed to fetch categories');
         const data = await res.json();
         const allCats: Category[] = Array.isArray(data) ? data : data?.categories ?? [];
@@ -207,6 +207,6 @@ export function useCategorySections() {
     hasNextPage,
     handleCategoryClick,
     loadMorePosts,
-    prefetchCategory, // (optional) use on hover in your buttons
+    prefetchCategory,
   };
 }

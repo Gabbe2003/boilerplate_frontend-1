@@ -80,12 +80,13 @@ function TradingViewWidget({
         width: "100%",
         height,
       });
+      container.appendChild(script); 
 
     },
     [theme, transparent, locale, country, importance]
   );
 
-  useEffect(() => {
+  useEffect(() => { 
     // Helpers scoped to the effect so they aren't deps
     const getBucket = () => {
       const w = window.innerWidth;

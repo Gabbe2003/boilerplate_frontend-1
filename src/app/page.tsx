@@ -8,7 +8,7 @@ import PopularPosts from './components/Popular/PopularPosts';
 import CatsPage from './[slug]/_components/categoryWrapper';
 import TradingViewScreener from './components/tickers/TradingViewScreener';
 import FinanstidningSeoText from './seoTextMainPage';
-import AdPopup from './components/ads/adsPopup';
+import AdsSection from './components/ads/AdsSection';
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getSeo('/');
@@ -39,12 +39,17 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
   return (
     <div>
+      <AdsSection />
       <PopularPosts />
+      <AdsSection />
       <TradingViewScreener />
+      <AdsSection />
       <CatsPage />
+      <AdsSection />
       <PostsList />
+      <AdsSection />
       <FinanstidningSeoText />
-      <AdPopup />
+      {/* <AdPopup /> */}
     </div>
   );
 }

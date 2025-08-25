@@ -29,7 +29,7 @@ export default function PostsList() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto w/full lg:w-[70%] px-2 sm:px-4 md:px-6">
+      <div className="mx-auto w/full xl:w-[70%] px-2 sm:px-4 md:px-6">
         <p className="text-center text-gray-500 text-sm">No posts found</p>
       </div>
     );
@@ -37,7 +37,7 @@ export default function PostsList() {
 
 return (
   <div className="bg-[#f6e4d3]/50">
-  <div className="mx-auto w-full px-2 lg:w-[70%] sm:px-4">
+  <div className="mx-auto w-full px-2 lg:w-[90%] xl:w-[70%] sm:px-4">
      {/* 1 col on mobile; 70/30 split on lg+ */}
       <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-6 py-4">
         {/* Main feed (≈70%) */}

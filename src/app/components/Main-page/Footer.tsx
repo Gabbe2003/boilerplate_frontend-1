@@ -21,7 +21,7 @@ export default function Footer() {
 
   return (
     <footer id="footer" className="w-full px-2 border-t border-gray-200 bg-gray-100">
-      <div className="w-[100%] px-2 lg:w-[70%] mx-auto py-6">
+      <div className="w-[100%] px-2 lg:w-[90%] xl:w-[70%] mx-auto py-6">
         {/* Logo and Links */}
         <div className="flex flex-col md:flex-row mb-8 gap-8">
           {/* Logo/Tagline */}
@@ -34,6 +34,7 @@ export default function Footer() {
                 height={60}
                 priority
               />
+
             </Link>
             {tagline && (
               <p className="mt-2 text-sm pr-5 text-gray-500 break-normal whitespace-normal hyphens-auto text-pretty">

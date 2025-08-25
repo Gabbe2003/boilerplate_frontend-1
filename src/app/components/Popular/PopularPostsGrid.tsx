@@ -1,35 +1,11 @@
-
 import Link from 'next/link';
 import { Post } from '@/lib/types';
-import { AdCard } from '../ads/adcard';
 import { PostCard } from './PopularPostsCard';
-import { Ad, ADS } from '../ads/adsContent';
 import PopularNewsSequenceClient from './featuredPostsTicker';
+import TodayPostsSidebar from '../TodayPostsSidebar';
 
-type AdItem = { type: 'ad'; adIndex: number; id: string | number };
-type PostItem = Post & { type: 'post' };
-type FeedItem = AdItem | PostItem;
-
-function AdGridCard({ ad, className = '' }: { ad: Ad; className?: string }) {
-  const getExcerpt = (text: string, words = 15) => {
-    const wordArray = text.trim().split(/\s+/);
-    return wordArray.length > words ? `${wordArray.slice(0, words).join(' ')}…` : text;
-  };
-
-  return (
-    <div className={`flex flex-col shadow bg-[#FFF8F2] w-full overflow-hidden ${className}`}>
-      <div className="relative w-full h-[180px] overflow-hidden">
-        <AdCard ad={ad} />
-      </div>
-      <div className="p-4 flex flex-col justify-between flex-grow">
-        <span className="block text-xs font-semibold text-neutral-500 uppercase tracking-wide text-start mb-2">
-          Sponsored
-        </span>
-        {ad.text && <p className="text-sm text-gray-700 leading-snug mb-1 break-words">{getExcerpt(ad.text)}</p>}
-      </div>
-    </div>
-  );
-}
+type PostItem = Post & { type?: 'post' };
+type FeedItem = PostItem;
 
 export default function PopularNews({
   items = [],
@@ -49,12 +25,13 @@ export default function PopularNews({
 }) {
   if (!items.length) return <div className="py-8 text-center">No popular posts found.</div>;
 
-  const topItems = items.slice(0, 4);
-  const bottomItems = items.slice(4, 8);
-  const lastItem = items[8];
+  // Left column gets 4 posts; middle (hero) gets 2
+  const leftCol = items.slice(0, 4);
+  const midCol = items.slice(4, 6);
 
   return (
-    <section className="w-[100%] px-2 lg:w-[70%] mx-auto py-8">
+    <section className="w-[100%] lg:w-[90%] xl:w-[70%] px-2 mx-auto py-8">
+
       {tagline ? (
         <h1 className="mt-1 text-sm text-gray-500 block mb-4">{tagline}</h1>
       ) : (
@@ -62,68 +39,81 @@ export default function PopularNews({
       )}
 
       {tickerItems?.length ? (
-        <div>
+        <div className="mb-6">
           <PopularNewsSequenceClient items={tickerItems} />
         </div>
       ) : null}
 
-      <div className="flex flex-col gap-8">
-        {/* Mobile grid */}
-        <div className="grid grid-cols-2 gap-4 lg:hidden">
-          {items.slice(0, 8).map((item, idx) =>
-            item.type === 'ad' ? (
-              <AdGridCard key={`ad-m-${idx}`} ad={ADS[item.adIndex]} />
-            ) : (
-              <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
-                <PostCard post={item} />
-              </Link>
-            )
-          )}
-          {items[8] && (
-            <div className="col-span-2 mt-2">
-              {items[8].type === 'ad' ? (
-                <AdGridCard ad={ADS[items[8].adIndex]} />
-              ) : (
-                <Link href={`/${items[8].slug}`} prefetch={false}>
-                  <PostCard post={items[8]} />
-                </Link>
-              )}
-            </div>
-          )}
+      {/* Horizontal separator */}
+      <hr className="my-6 border-gray-200" />
+
+      {/* MOBILE FIRST: show MIDDLE (hero), then LEFT compact grid, then sidebar */}
+      <div className="lg:hidden space-y-6">
+        {/* Middle hero posts first */}
+        <div className="flex flex-col gap-6">
+          {midCol.map((item) => (
+            <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
+              <PostCard
+                post={item}
+                variant="hero"
+                className="h-[420px]" // slightly smaller hero for mobile
+              />
+            </Link>
+          ))}
         </div>
 
-        {/* Desktop rows */}
-        <div className="hidden lg:grid grid-cols-4 gap-2">
-          {topItems.map((item, idx) =>
-            item.type === 'ad' ? (
-              <AdGridCard key={`ad-top-${idx}`} ad={ADS[item.adIndex]} />
-            ) : (
-              <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
-                <PostCard post={item} />
-              </Link>
-            )
-          )}
+        {/* Separator */}
+        <hr className="my-4 border-gray-300" />
+
+        {/* Left posts after hero — smaller images, 2-column grid */}
+        <div className="grid grid-cols-2 gap-4">
+          {leftCol.map((item) => (
+            <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
+              <PostCard
+                post={item}
+                className="h-full" // Removed problematic data-h targeting
+              />
+            </Link>
+          ))}
         </div>
 
-        <div className="hidden lg:grid grid-cols-5 gap-2">
-          {bottomItems.map((item, idx) =>
-            item.type === 'ad' ? (
-              <AdGridCard key={`ad-bot-${idx}`} ad={ADS[item.adIndex]} />
-            ) : (
-              <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
-                <PostCard post={item} />
-              </Link>
-            )
-          )}
-          {lastItem &&
-            (lastItem.type === 'ad' ? (
-              <AdGridCard key="ad-last" ad={ADS[lastItem.adIndex]} />
-            ) : (
-              <Link href={`/${lastItem.slug}`} key={lastItem.id} prefetch={false}>
-                <PostCard post={lastItem} />
-              </Link>
-            ))}
+        {/* Separator before sidebar */}
+        <hr className="my-4 border-gray-300" />
+
+        {/* RIGHT column (sidebar) — now also visible on mobile */}
+        <aside>
+          <TodayPostsSidebar />
+        </aside>
+      </div>
+
+      {/* DESKTOP: 3-column layout */}
+      <div className="hidden lg:grid lg:grid-cols-12 gap-6 mt-8">
+        {/* LEFT column (4 smaller stacked posts) */}
+        <div className="col-span-12 lg:col-span-3 flex flex-col gap-6 border-r border-gray-200 pr-4">
+          {leftCol.map((item) => (
+            <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
+              <PostCard post={item} />
+            </Link>
+          ))}
         </div>
+
+        {/* MIDDLE column (2 hero cards) */}
+        <div className="col-span-12 lg:col-span-6 flex flex-col gap-6 px-4">
+          {midCol.map((item) => (
+            <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
+              <PostCard
+                post={item}
+                variant="hero"
+                className="h-[460px] xl:h-[540px]"
+              />
+            </Link>
+          ))}
+        </div>
+
+        {/* RIGHT column (sidebar) */}
+        <aside className="col-span-12 lg:col-span-3 border-l border-gray-200 pl-4">
+          <TodayPostsSidebar />
+        </aside>
       </div>
     </section>
   );

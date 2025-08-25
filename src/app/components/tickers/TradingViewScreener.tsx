@@ -46,8 +46,9 @@ function TradingViewScreener({
     const head = document.head;
 
     const ensure = (el: HTMLLinkElement) => {
-      const exists = head.querySelector(
-        `link[rel="${el.rel}"][href="${el.href}"]`
+      const links = Array.from(head.getElementsByTagName("link"));
+      const exists = links.some(
+        (link) => link.rel === el.rel && link.href === el.href
       );
       if (!exists) head.appendChild(el);
     };
@@ -112,9 +113,9 @@ function TradingViewScreener({
         isTransparent: false,
         locale,
         width: "100%",
-        height: "100%",
+        height: "50%",
       });
-
+      container.appendChild(script);
     },
     [defaultColumn, displayCurrency, locale]
   );
@@ -161,7 +162,7 @@ function TradingViewScreener({
 
   return (
     <div className={`flex justify-center bg-[#f6e4d3]/50 ${className}`}>
-      <div className="w-full px-1 sm:px-2 lg:w-[70%]">
+      <div className="w-full px-1 sm:px-2 lg:w-[90%] xl:w-[70%]">
         <div className="flex items-center justify-between gap-2 mb-2">
           <h4 className="text-sm sm:text-base font-semibold text-center w-full md:w-auto md:text-left">
             {title}

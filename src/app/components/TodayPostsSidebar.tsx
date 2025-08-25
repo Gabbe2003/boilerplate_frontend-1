@@ -72,26 +72,26 @@ function toSidebarPost(p: Post): SidebarPost {
 
 export default async function TodayPostsSidebar({ heading = "Today’s Posts" }: Props) {
   let posts: SidebarPost[] = [];
-  let usedFallback = false; // <-- add
+  let usedFallback = false;
 
   try {
-    const todays = (await getTodaysPosts(5)) as Post[];
+    // Fetch up to 12
+    const todays = (await getTodaysPosts(12)) as Post[];
     posts = todays.map(toSidebarPost);
 
     if (!posts.length) {
-      const latest = (await getAllPosts({ first: 5 })) as Post[];
+      const latest = (await getAllPosts({ first: 12 })) as Post[];
       posts = latest.map(toSidebarPost);
-      usedFallback = true; // <-- mark that we’re showing older posts
+      usedFallback = true;
     }
   } catch {
     posts = [];
   }
 
-  // If we’re showing older posts, change the title
   const finalHeading = usedFallback ? "Popular news" : heading;
 
   return (
-    <div className="overflow-hidden bg-white">
+    <div className="overflow-visible bg-white">
       <div className="rounded-sm">
         <div className="p-3 space-y-4 flex flex-col items-start rounded-sm">
           <section className="w-full bg-muted flex flex-col">
@@ -101,58 +101,59 @@ export default async function TodayPostsSidebar({ heading = "Today’s Posts" }:
             </h2>
 
             <div className="rounded-md overflow-hidden border border-gray-200 dark:border-gray-800 shadow-sm">
-              {/* Responsive reserved height, no CLS */}
               <TickerTapeVisible className="min-h-10 sm:min-h-12" height={0} preloadOffset="200px" />
             </div>
 
             {posts.length === 0 ? (
               <div className="text-sm text-zinc-600">Nothing to show right now.</div>
             ) : (
-              <ul className="space-y-3 w-full" style={{ contain: "content" }}>
-                {posts.map((p) => {
-                  const date = formatDateStockholm(p.date);
-                  const excerpt = truncate(stripHtml(p.excerpt), 70);
-                  const category = getCategory(p);
+              // Show all on mobile; cap to ~6 items and make scrollable on md+
+              <div className="w-full overflow-visible md:overflow-y-auto md:max-h-[444px]">
+                <ul className="space-y-3 w-full" style={{ contain: "content" }}>
+                  {posts.slice(0, 12).map((p) => {
+                    const date = formatDateStockholm(p.date);
+                    const excerpt = truncate(stripHtml(p.excerpt), 70);
+                    const category = getCategory(p);
 
-                  return (
-                    <li
-                      key={p.id}
-                      className="group bg-white dark:bg-black-800 rounded-sm p-3 shadow-sm hover:shadow-sm transition-shadow flex items-start gap-2"
-                    >
-                      {/* Red pulsing dot (motion-safe) */}
-                      <span className="relative inline-flex flex-shrink-0 h-2.5 w-2.5 mt-1">
-                        <span className="absolute inline-flex h-2.5 w-2.5 rounded-full bg-red-500 opacity-75 motion-safe:animate-ping" />
-                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />
-                      </span>
-
-                      <Link
-                        href={`/${p.slug}`}
-                        prefetch={false}
-                        className="block flex-1 min-w-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg"
+                    return (
+                      <li
+                        key={p.id}
+                        className="group bg-white dark:bg-black-800 rounded-sm p-3 shadow-sm hover:shadow-sm transition-shadow flex items-start gap-2 min-h-[64px]"
                       >
-                        {(category || date) && (
-                          <div className="text-[11px] sm:text-xs text-red-700 flex items-center gap-1">
-                            {category && <span className="font-medium truncate">{category}</span>}
-                            {category && date && <span aria-hidden>•</span>}
-                            {date && <span className="shrink-0">{date}</span>}
+                        {/* Red pulsing dot */}
+                        <span className="relative inline-flex flex-shrink-0 h-2.5 w-2.5 mt-1">
+                          <span className="absolute inline-flex h-2.5 w-2.5 rounded-full bg-red-500 opacity-75 motion-safe:animate-ping" />
+                          <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />
+                        </span>
+
+                        <Link
+                          href={`/${p.slug}`}
+                          prefetch={false}
+                          className="block flex-1 min-w-0 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg"
+                        >
+                          {(category || date) && (
+                            <div className="text-[11px] sm:text-xs text-red-700 flex items-center gap-1">
+                              {category && <span className="font-medium truncate">{category}</span>}
+                              {category && date && <span aria-hidden>•</span>}
+                              {date && <span className="shrink-0">{date}</span>}
+                            </div>
+                          )}
+
+                          <div className="mt-0.5 font-medium leading-snug group-hover:underline line-clamp-2 sm:line-clamp-2 break-words">
+                            {p.title}
                           </div>
-                        )}
 
-                        {/* Clamp title to 2 lines on mobile, 1–2 on larger screens */}
-                        <div className="mt-0.5 font-medium leading-snug group-hover:underline line-clamp-2 sm:line-clamp-2 break-words">
-                          {p.title}
-                        </div>
-
-                        {excerpt && (
-                          <p className="mt-1 text-xs sm:text-sm text-black-600 dark:text-black-300 line-clamp-2 break-words">
-                            {excerpt}
-                          </p>
-                        )}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+                          {excerpt && (
+                            <p className="mt-1 text-xs sm:text-sm text-black-600 dark:text-black-300 line-clamp-2 break-words">
+                              {excerpt}
+                            </p>
+                          )}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             )}
           </section>
         </div>

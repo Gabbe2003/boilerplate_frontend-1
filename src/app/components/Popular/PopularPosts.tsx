@@ -1,5 +1,5 @@
 // Server Component (no 'use client')
-import { getPostByPeriod } from '@/lib/graph_queries/getPost';
+import { getPostByPeriod, getAllPosts } from '@/lib/graph_queries/getPost';
 import PopularNews from './PopularPostsGrid';
 import { Post } from '@/lib/types';
 import { getSiteTagline } from '@/lib/graph_queries/getSiteTagline';
@@ -14,10 +14,27 @@ type TickerItem = {
 };
 
 export default async function PopularPosts() {
-  const [posts, tagline] = await Promise.all([
-    getPostByPeriod('week'),
-    getSiteTagline(),
-  ]);
+  const taglinePromise = getSiteTagline();
+
+  // Try week → month → all
+  let source: 'week' | 'month' | 'all' = 'week';
+  let posts = await getPostByPeriod('week');
+
+  if (!posts?.length) {
+    source = 'month';
+    posts = await getPostByPeriod('month');
+  }
+
+  if (!posts?.length) {
+    source = 'all';
+    posts = await getAllPosts();
+  }
+
+  console.log(
+    `[PopularPosts] Using source: ${source} | count: ${Array.isArray(posts) ? posts.length : 0}`
+  );
+
+  const tagline = await taglinePromise;
 
   if (!posts?.length) return <div>No fun posts!</div>;
 

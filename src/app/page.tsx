@@ -30,9 +30,9 @@ export async function generateMetadata(): Promise<Metadata> {
     meta.description = 'Latest news, insights and updates from our site.';
   }
   
+  console.log(meta, 'meta in generateMetadata for home page');
   return {
-    ...meta, 
-    title: 'Home',
+    ...meta
   };
 }
 

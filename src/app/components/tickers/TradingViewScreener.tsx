@@ -161,7 +161,7 @@ function TradingViewScreener({
   }, [buildWidget, getHeightForBucket]);
 
   return (
-    <div className={`flex justify-center bg-[#f6e4d3]/50 ${className}`}>
+    <div className={`flex justify-center bg-[var(--secBG)] ${className}`}>
       <div className="w-full px-1 sm:px-2 lg:w-[90%] xl:w-[70%]">
         <div className="flex items-center justify-between gap-2 mb-2">
           <h4 className="text-sm sm:text-base font-semibold text-center w-full md:w-auto md:text-left">

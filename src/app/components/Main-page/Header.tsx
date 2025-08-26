@@ -41,7 +41,7 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
   return (
     <>
       {/* Outer layer: full-width background & border */}
-      <header className="sticky top-0 z-50 w-full border-b bg-[#f6e4d3]/50 backdrop-blur-md">
+      <header className="sticky top-0 z-50 w-full border-b bg-[#F3F8F7/80] backdrop-blur-md">
 
 
         {/* Inner container: truly 70% on lg, and the only place with horizontal padding */}

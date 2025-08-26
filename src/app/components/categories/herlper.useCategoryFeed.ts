@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback, } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import type { Post } from '@/lib/types';
 
 interface Category {
@@ -13,12 +13,18 @@ type PageInfo = { hasNextPage: boolean; endCursor: string | null };
 type PostsResponse = { posts: Post[]; pageInfo: PageInfo };
 type CacheEntry = { posts: Post[]; pageInfo: PageInfo };
 
+/** Soft revalidation window (seconds). No env — fixed to 5 minutes. */
+const REVALIDATE_SECONDS = 300;
+
+/** Version stamp that changes every REVALIDATE_SECONDS */
+function versionStamp() {
+  return String(Math.floor(Date.now() / (REVALIDATE_SECONDS * 1000)));
+}
+
 const idle = (cb: () => void) => {
   if (typeof window === 'undefined') return;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const ric: any =
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).requestIdleCallback || ((fn: any) => setTimeout(fn, 1));
+  const ric: any = (window as any).requestIdleCallback || ((fn: any) => setTimeout(fn, 1));
   ric(cb);
 };
 
@@ -33,21 +39,29 @@ export function useCategorySections() {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [endCursor, setEndCursor] = useState<string | null>(null);
 
-  // NEW: per-category in-memory cache + abort handle
+  // per-category in-memory cache + abort handle
   const cacheRef = useRef<Map<string, CacheEntry>>(new Map());
   const abortRef = useRef<AbortController | null>(null);
 
-  // 1) Load all categories (use server cache)
+  // Track current version; when it rolls over, we can refresh silently
+  const currentVersionRef = useRef<string>(versionStamp());
+
+  // 1) Load all categories (soft-revalidate via versioned URL)
+  const fetchCategories = useCallback(async (signal?: AbortSignal) => {
+    const url = `/api/categories?v=${versionStamp()}`;
+    const res = await fetch(url, { cache: 'force-cache', signal });
+    if (!res.ok) throw new Error('Failed to fetch categories');
+    const data = await res.json();
+    const allCats: Category[] = Array.isArray(data) ? data : data?.categories ?? [];
+    return allCats;
+  }, []);
+
   useEffect(() => {
     let alive = true;
     (async () => {
       try {
-        const res = await fetch('/api/categories', { cache: 'no-store' });
-        if (!res.ok) throw new Error('Failed to fetch categories');
-        const data = await res.json();
-        const allCats: Category[] = Array.isArray(data) ? data : data?.categories ?? [];
+        const allCats = await fetchCategories();
         if (!alive) return;
-
         setCategories(allCats);
         setSelectedCategorySlug((prev) => prev ?? allCats[0]?.slug ?? null);
       } catch (error) {
@@ -60,21 +74,32 @@ export function useCategorySections() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [fetchCategories]);
 
   const fetchPosts = useCallback(
     async (slug: string, after?: string | null, signal?: AbortSignal) => {
       const qs = new URLSearchParams();
       qs.set('slug', slug);
-      if (after) qs.set('after', after);
 
-      const res = await fetch(`/api/categories?${qs.toString()}`, {
-        signal,
-        // For first page, allow server cache; for pagination we pass `after`
-        cache: after ? 'no-store' : 'force-cache',
-      });
-      if (!res.ok) throw new Error('Failed to fetch posts');
-      return (await res.json()) as PostsResponse;
+      if (after) {
+        // Pagination: always network
+        qs.set('after', after);
+        const res = await fetch(`/api/categories?${qs.toString()}`, {
+          signal,
+          cache: 'no-store',
+        });
+        if (!res.ok) throw new Error('Failed to fetch posts');
+        return (await res.json()) as PostsResponse;
+      } else {
+        // First page: soft revalidate by versioned URL
+        qs.set('v', versionStamp());
+        const res = await fetch(`/api/categories?${qs.toString()}`, {
+          signal,
+          cache: 'force-cache',
+        });
+        if (!res.ok) throw new Error('Failed to fetch posts');
+        return (await res.json()) as PostsResponse;
+      }
     },
     []
   );
@@ -197,6 +222,49 @@ export function useCategorySections() {
       });
     });
   }, [categories, selectedCategorySlug, prefetchCategory]);
+
+  // Soft revalidate while the tab stays open:
+  // When the version window rolls over, refresh categories and the selected category's first page.
+  useEffect(() => {
+    const tickMs = 60_000; // check every 60s
+    let alive = true;
+
+    const runRefresh = async () => {
+      try {
+        // categories
+        const cats = await fetchCategories();
+        if (!alive) return;
+        setCategories(cats);
+
+        // selected category first page
+        if (selectedCategorySlug) {
+          const { posts, pageInfo } = await fetchPosts(selectedCategorySlug);
+          if (!alive) return;
+
+          cacheRef.current.set(selectedCategorySlug, { posts: posts ?? [], pageInfo });
+          setSelectedCategoryPosts(posts ?? []);
+          setEndCursor(pageInfo?.endCursor ?? null);
+          setHasNextPage(!!pageInfo?.hasNextPage);
+        }
+      } catch {
+        // ignore background errors
+      }
+    };
+
+    const interval = setInterval(() => {
+      const v = versionStamp();
+      if (v !== currentVersionRef.current) {
+        currentVersionRef.current = v;
+        // do a gentle, background refresh
+        idle(runRefresh);
+      }
+    }, tickMs);
+
+    return () => {
+      alive = false;
+      clearInterval(interval);
+    };
+  }, [fetchCategories, fetchPosts, selectedCategorySlug]);
 
   return {
     categories,

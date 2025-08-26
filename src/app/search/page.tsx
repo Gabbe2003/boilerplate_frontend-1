@@ -18,9 +18,17 @@ function sanitize(s?: string) {
 function logSearch(payload: Record<string, unknown>) {
   if (!DEBUG_SEARCH) return;
   try {
-    console.log("[search]", JSON.stringify(payload));
+    // Pretty-print in development mode
+    console.groupCollapsed(
+      `%c[Search Debug]`,
+      "color:#3B82F6; font-weight:bold;",
+      payload?.["q"] ? `Query: "${payload["q"]}"` : ""
+    );
+    console.table(payload);
+    console.groupEnd();
   } catch {
-    console.log("[search]", payload);
+    // Fallback if console.table fails
+    console.log("[Search Debug]", payload);
   }
 }
 
@@ -58,14 +66,15 @@ export async function generateMetadata({
     description: `Sökresultat för "${q}" från ${SITE}`,
     robots,
     other: {
-      // Build JSON-LD for search results page
       jsonLd: JSON.stringify([
         {
           "@context": "https://schema.org",
           "@type": "SearchResultsPage",
           name: `Sökresultat för "${q}"`,
           description: `Sökresultat för "${q}" från ${SITE}`,
-          url: `${process.env.NEXT_PUBLIC_HOST_URL || "http://localhost"}/search?q=${encodeURIComponent(q)}`,
+          url: `${process.env.NEXT_PUBLIC_HOST_URL || "http://localhost"}/search?q=${encodeURIComponent(
+            q
+          )}`,
           query: q,
         },
       ]),
@@ -82,7 +91,9 @@ type GQLPost = {
   excerpt?: string;
   date?: string;
   featuredImage?: { node?: { sourceUrl?: string; altText?: string } };
-  author?: { node?: { name?: string; slug?: string; avatar?: { url?: string } } };
+  author?: {
+    node?: { name?: string; slug?: string; avatar?: { url?: string } };
+  };
 };
 
 type PageInfo = { hasNextPage: boolean; endCursor?: string | null };
@@ -131,7 +142,10 @@ async function fetchSearchResultsWithPageInfo(
   const json = await res.json();
   const nodes = (json?.data?.posts?.nodes ?? []) as GQLPost[];
   const pageInfo =
-    (json?.data?.posts?.pageInfo ?? { hasNextPage: false, endCursor: null }) as PageInfo;
+    (json?.data?.posts?.pageInfo ?? {
+      hasNextPage: false,
+      endCursor: null,
+    }) as PageInfo;
 
   logSearch({
     q: sanitize(q),
@@ -192,7 +206,9 @@ export default async function SearchPage({
             description: `Sökresultat för "${q}" från ${
               process.env.NEXT_PUBLIC_HOSTNAME ?? "Home"
             }`,
-            url: `${process.env.NEXT_PUBLIC_HOST_URL || "http://localhost"}/search?q=${encodeURIComponent(q)}`,
+            url: `${
+              process.env.NEXT_PUBLIC_HOST_URL || "http://localhost"
+            }/search?q=${encodeURIComponent(q)}`,
             query: q,
           }),
         }}

@@ -40,7 +40,7 @@ export interface PostWithTOC extends Post {
 
 /** --- Author / User --- */
 export interface AuthorAvatar {
-  url: string;
+  url?: string;
   width?: number;
   height?: number;
 }
@@ -53,8 +53,10 @@ export interface AuthorNode {
   avatar?: AuthorAvatar;
   description?: string;
   featuredImage?: string;
-  posts: {
-    node: Post[];
+
+  // Optional, and correct plural "nodes"
+  posts?: {
+    nodes: Post[];
   };
 }
 

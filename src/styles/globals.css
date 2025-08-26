@@ -27,7 +27,8 @@
   --border: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --input: oklch(0.922 0 0);
-  --secBG: #f6e4d3;
+  --firstBG: #FFFFFF;
+  --secBG: #F8F9FA;
 
 }
 

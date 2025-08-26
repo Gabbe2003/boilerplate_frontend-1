@@ -192,7 +192,6 @@ export async function getPostByPeriod(
     }
 
     const data = await res.json();
-    console.log("[getPostByPeriod] Fetched data:", data);
 
     if (!Array.isArray(data)) {
       console.error("[getViews] payload is not an array:", data);
@@ -235,14 +234,13 @@ export async function getPostByPeriod(
         id: String(item.id),
         title: item.title?.trim() ?? "",
         slug: item.slug,
-        category: getCategory(item),            // ⟵ added
+        category: getCategory(item),           
         featuredImage: normalizedImage
           ? { node: { sourceUrl: normalizedImage } }
           : undefined,
         date: item.date,
-        // author_name: item.author_name,       // ⟵ removed
         excerpt: item.excerpt ?? "",
-        // type: "post",                        // keep/remove as you prefer
+        type: "post",
       };
     });
   } catch (err) {

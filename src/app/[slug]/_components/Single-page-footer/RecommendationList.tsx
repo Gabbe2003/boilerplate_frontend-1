@@ -12,14 +12,13 @@ export default function RecommendationListMarquee({ currentSlug }: Props) {
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
 
-  const [speed, setSpeed] = useState(30); // default for desktop
+  const [speed, setSpeed] = useState(30); 
 
-  // detect viewport and adjust speed (client-only)
   useEffect(() => {
     const check = () => {
-      if (window.innerWidth < 640) setSpeed(15); // sm
-      else if (window.innerWidth < 1024) setSpeed(20); // md
-      else setSpeed(30); // lg+
+      if (window.innerWidth < 640) setSpeed(15);
+      else if (window.innerWidth < 1024) setSpeed(20);
+      else setSpeed(30);
     };
     check();
     window.addEventListener("resize", check);

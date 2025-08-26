@@ -108,7 +108,7 @@ export default async function TodayPostsSidebar({ heading = "Today’s Posts" }:
               <div className="text-sm text-zinc-600">Nothing to show right now.</div>
             ) : (
               // Show all on mobile; cap to ~6 items and make scrollable on md+
-              <div className="w-full overflow-visible md:overflow-y-auto md:max-h-[444px]">
+              <div className="w-full overflow-visible md:overflow-y-auto md:max-h-[544px]">
                 <ul className="space-y-3 w-full" style={{ contain: "content" }}>
                   {posts.slice(0, 12).map((p) => {
                     const date = formatDateStockholm(p.date);

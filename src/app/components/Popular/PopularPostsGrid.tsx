@@ -56,7 +56,7 @@ export default function PopularNews({
               <PostCard
                 post={item}
                 variant="hero"
-                className="h-[420px]" // slightly smaller hero for mobile
+                className="h-[420px]" 
               />
             </Link>
           ))}
@@ -71,7 +71,7 @@ export default function PopularNews({
             <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
               <PostCard
                 post={item}
-                className="h-full" // Removed problematic data-h targeting
+                className="h-full" 
               />
             </Link>
           ))}
@@ -104,7 +104,7 @@ export default function PopularNews({
               <PostCard
                 post={item}
                 variant="hero"
-                className="h-[460px] xl:h-[540px]"
+                className="h-[460px] xl:h-[500px]"
               />
             </Link>
           ))}

@@ -34,7 +34,7 @@ export function ShareButtons({
   postExcerpt: string;
 }) {
   return (
-    <div className="flex items-center justify-start gap-1 py-2 border border-neutral-100 rounded-xs">
+    <div className="flex items-center justify-start gap-1 py-2 border-neutral-100 rounded-xs">
       {/* Native share/copy */}
       <Button
         variant="ghost"

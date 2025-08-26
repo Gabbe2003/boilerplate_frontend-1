@@ -24,7 +24,7 @@ export default function CategoryMobileCarousel({ posts }: Props) {
         className="w-full"
       >
         {/* Track + fade wrapper */}
-        <div className="relative px-4 sm:px-6"> {/* Added padding here */}
+        <div className="relative px-4 sm:px-6"> 
           <CarouselContent className="-ml-4">
             {posts.map((post) => (
               <CarouselItem
@@ -59,14 +59,14 @@ export default function CategoryMobileCarousel({ posts }: Props) {
           </CarouselContent>
 
           {/* Right edge fade */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10"
-            style={{
-              background:
-                "linear-gradient(to left, rgba(246,228,211,0.95) 35%, rgba(246,228,211,0) 100%)",
-            }}
-          />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10"
+          style={{
+            background:
+              "linear-gradient(to left, rgba(241,246,244,0.95) 35%, rgba(241,246,244,0) 100%)",
+          }}
+        />
         </div>
 
         {/* Arrows UNDER the posts */}

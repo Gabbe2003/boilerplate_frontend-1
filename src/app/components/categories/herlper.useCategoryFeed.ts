@@ -13,7 +13,7 @@ type PageInfo = { hasNextPage: boolean; endCursor: string | null };
 type PostsResponse = { posts: Post[]; pageInfo: PageInfo };
 type CacheEntry = { posts: Post[]; pageInfo: PageInfo };
 
-/** Soft revalidation window (seconds). No env — fixed to 5 minutes. */
+/** Mjuk revalidationsperiod (sekunder). Ingen env — fast till 5 minuter. */
 const REVALIDATE_SECONDS = 300;
 
 /** Version stamp that changes every REVALIDATE_SECONDS */

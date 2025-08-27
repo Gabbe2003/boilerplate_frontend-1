@@ -124,7 +124,7 @@ export function useSearchBar({
       return;
     }
 
-    // No remote search: use local binary prefix results
+    // Ingen fjärrsökning: använd lokala binära prefixresultat
     if (!searchFn) {
       setError(null);
       setLoading(false);
@@ -160,7 +160,7 @@ export function useSearchBar({
         if (!alive || ac.signal.aborted) return;
         cacheSet(debounced, []); // negative caching avoids repeated failing calls
         setResultsIfChanged(localResults);
-        setError(e?.message || 'Search failed');
+        setError(e?.message || 'Sökning misslyckades');
       } finally {
         if (alive) setLoading(false);
       }
@@ -285,11 +285,11 @@ export function useSearchBar({
 
   const emptyState =
     !debounced || debounced.length < minChars
-      ? `Type at least ${minChars} character${minChars > 1 ? 's' : ''}…`
+      ? `Skriv minst ${minChars} tecken${minChars > 1 ? 'er' : ''}…`
       : (posts && posts.length === 0 && !searchFn)
-      ? 'Indexing posts…'
+      ? 'Indexerar inlägg…'
       : results.length === 0 && !loading
-      ? 'No results found.'
+      ? 'Inga resultat hittades.'
       : null;
 
   const close = useCallback(() => {

@@ -64,7 +64,7 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
               </Link>
             </div>
 
-            {/* Center: Search (desktop) */}
+            {/* Center: Sök (desktop) */}
             <div className="hidden [@media(min-width:1100px)]:flex justify-center">
               <SearchBarInline
                 value={searchValue}

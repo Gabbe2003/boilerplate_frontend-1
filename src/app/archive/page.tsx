@@ -27,7 +27,7 @@ export default function PostsList() {
   if (items.length === 0) {
     return (
       <div className="mx-auto w/full xl:w-[70%] px-2 sm:px-4 md:px-6">
-        <p className="text-center text-gray-500 text-sm">No posts found</p>
+        <p className="text-center text-gray-500 text-sm">Inga inlägg hittades</p>
       </div>
     );
   }
@@ -35,14 +35,14 @@ export default function PostsList() {
   return (
     <div className="bg-[var(--secBG)]">
       <div className="mx-auto w-full px-2 lg:w-[90%] xl:w-[60%] sm:px-4">
-        {/* 1 col on mobile; 70/30 split on lg+ */}
+        {/* 1 kolumn på mobil; 70/30-delning på lg+ */}
         <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-6 py-4">
-          {/* Main feed (≈70%) */}
+          {/* Huvudflöde (≈70%) */}
           <main>
-            <h1 className="text-xl sm:px-2 font-bold mb-3">Archive</h1>
+            <h1 className="text-xl sm:px-2 font-bold mb-3">Arkiv</h1>
             <hr className="border-gray-200 mb-4" />
 
-            {/* Cards grid styled like the reference */}
+            {/* Kortgrid stylad som referensen */}
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {items.map((post, idx) => {
                 const imgSrc = post?.featuredImage?.node?.sourceUrl;
@@ -56,7 +56,7 @@ export default function PostsList() {
                     key={post.id ?? post.databaseId ?? post.slug}
                     className="rounded-sm hover:cursor-pointer transition flex flex-col overflow-hidden group"
                   >
-                    {/* Image */}
+                    {/* Bild */}
                     {imgSrc ? (
                       <Link href={`/${post.slug}`} className="block overflow-hidden">
                         <div className="relative w-full aspect-[1200/450]">
@@ -85,11 +85,11 @@ export default function PostsList() {
                       </Link>
                     ) : (
                       <div className="w-full h-44 bg-gray-100 flex items-center justify-center text-gray-400">
-                        No image
+                        Ingen bild
                       </div>
                     )}
 
-                    {/* Content */}
+                    {/* Innehåll */}
                     <div className="pt-4 flex flex-col flex-1">
                       <Link
                         href={`/${post.slug}`}
@@ -97,7 +97,7 @@ export default function PostsList() {
                         dangerouslySetInnerHTML={{ __html: post.title }}
                       />
                       <div className="flex items-center justify-between mb-2">
-                        {/* Author info left */}
+                        {/* Författarinformation vänster */}
                         <div className="flex items-center gap-2">
                           {post.author?.node?.avatar?.url && (
                             <Image
@@ -117,7 +117,7 @@ export default function PostsList() {
                             </Link>
                           )}
                         </div>
-                        {/* Date right */}
+                        {/* Datum höger */}
                         {post.date && (
                           <span className="text-xs text-gray-500 mr-2">
                             {new Date(post.date).toLocaleDateString()}
@@ -134,22 +134,22 @@ export default function PostsList() {
               })}
             </ul>
 
-            {/* Load more button (styled per reference) */}
+            {/* Ladda mer-knapp (stylad enligt referens) */}
             {visibleCount < filtered.length && (
               <div className="mt-6 flex flex-col items-center gap-2">
                 <Button
                   onClick={() => setVisibleCount((prev) => prev + 8)}
                   className="bg-black hover:bg-primary-600 text-white"
                 >
-                  Load more
+                  Ladda mer
                 </Button>
               </div>
             )}
           </main>
 
-          {/* Aside (≈30%) */}
+          {/* Sidokolumn (≈30%) */}
           <aside className="lg:pt-12 mt-12 self-start text-sm rounded-sm">
-            {/* Mobile separator above sidebar */}
+            {/* Mobil separator över sidofältet */}
             <div className="border-t border-gray-200 mb-4 lg:hidden" />
             <Sidebar />
           </aside>

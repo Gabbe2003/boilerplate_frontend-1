@@ -29,7 +29,7 @@ export default function PostsList() {
   if (items.length === 0) {
     return (
       <div className="mx-auto w/full xl:w-[70%] px-2 sm:px-4 md:px-6">
-        <p className="text-center text-gray-500 text-sm">No posts found</p>
+        <p className="text-center text-gray-500 text-sm">Inga inlägg hittades</p>
       </div>
     );
   }

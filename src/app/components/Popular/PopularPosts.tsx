@@ -1,4 +1,4 @@
-// Server Component (no 'use client')
+// Serverkomponent (ingen 'use client')
 import { getPostByPeriod, getAllPosts } from '@/lib/graph_queries/getPost';
 import PopularNews from './PopularPostsGrid';
 import { Post } from '@/lib/types';
@@ -29,7 +29,7 @@ export default async function PopularPosts() {
 
   const tagline = await taglinePromise;
 
-  if (!posts?.length) return <div>No fun posts!</div>;
+  if (!posts?.length) return <div>Inga roliga inlägg!</div>;
 
   // Use only posts (no ads). Keep up to 9 items to match the grid layout.
   const items: Post[] = posts.slice(0, 9);

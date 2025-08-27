@@ -20,15 +20,15 @@ function logSearch(payload: Record<string, unknown>) {
   try {
     // Pretty-print in development mode
     console.groupCollapsed(
-      `%c[Search Debug]`,
+      `%c[Sökdebugg]`,
       "color:#3B82F6; font-weight:bold;",
-      payload?.["q"] ? `Query: "${payload["q"]}"` : ""
+      payload?.["q"] ? `Fråga: "${payload["q"]}"` : ""
     );
     console.table(payload);
     console.groupEnd();
   } catch {
     // Fallback if console.table fails
-    console.log("[Search Debug]", payload);
+    console.log("[Sökdebugg]", payload);
   }
 }
 
@@ -179,9 +179,9 @@ export default async function SearchPage({
     logSearch({ q: "", count: 0, reason: "empty-query" });
     return (
       <div className="container mx-auto py-10 px-4">
-        <h1 className="text-3xl font-bold mb-4">Search</h1>
+        <h1 className="text-3xl font-bold mb-4">Sök</h1>
         <p className="text-muted-foreground">
-          Type a query in the search bar above to see results.
+          Skriv in en sökfråga i sökfältet ovan för att se resultat.
         </p>
       </div>
     );
@@ -214,9 +214,9 @@ export default async function SearchPage({
         }}
       />
 
-      <h1 className="text-3xl font-bold mb-2">Search results for “{q}”</h1>
+      <h1 className="text-3xl font-bold mb-2">Sökresultat för ”{q}”</h1>
       <div className="text-sm text-muted-foreground mb-6">
-        Showing {nodes.length} result{nodes.length === 1 ? "" : "s"}.
+        Visar {nodes.length} resultat.
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
@@ -224,12 +224,12 @@ export default async function SearchPage({
           {nodes.length === 0 ? (
             <div className="mb-8 p-6 rounded-sm border border-gray-200 bg-gray-50 text-center">
               <p className="text-lg font-semibold text-gray-600 mb-4">
-                No results found.
+                Inga resultat hittades.
               </p>
               <div className="text-gray-500 mb-2">
-                Try a different keyword or browse our{" "}
+                Prova ett annat sökord eller bläddra bland våra{" "}
                 <Link href="/" className="underline">
-                  latest posts
+                  senaste inlägg
                 </Link>
                 .
               </div>

@@ -88,7 +88,7 @@ export default function CategorySections() {
               <p className="text-center">Loading posts...</p>
             ) : selectedCategoryPosts.length === 0 ? (
               <p className="text-sm text-gray-500 text-start">
-                No posts in this category.
+                Inga inlägg i denna kategori.
               </p>
             ) : (
               <>

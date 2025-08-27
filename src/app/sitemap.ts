@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next'
 
 const BASE_URL = process.env.NEXT_PUBLIC_HOST_URL!;        // e.g., https://example.com
 const WP_GRAPHQL_ENDPOINT = process.env.WP_GRAPHQL_URL!;
-export const revalidate = 60 * 60; // 1 hour
+export const revalidate = 3600; // 1 hour
 
 const CHUNK_SIZE = 45_000;
 

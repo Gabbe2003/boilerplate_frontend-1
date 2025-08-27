@@ -8,7 +8,7 @@ import PopularPosts from './components/Popular/PopularPosts';
 import CatsPage from './[slug]/_components/categoryWrapper';
 import TradingViewScreener from './components/tickers/TradingViewScreener';
 import FinanstidningSeoText from './seoTextMainPage';
-import AdsSection from './components/ads/AdsSection';
+// import AdsSection from './components/ads/AdsSection';
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getSeo('/');
@@ -30,7 +30,6 @@ export async function generateMetadata(): Promise<Metadata> {
     meta.description = 'Latest news, insights and updates from our site.';
   }
   
-  console.log(meta, 'meta in generateMetadata for home page');
   return {
     ...meta
   };
@@ -39,15 +38,15 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Page() {
   return (
     <div>
-      <AdsSection />
+      {/* <AdsSection /> */}
       <PopularPosts />
-      <AdsSection />
+      {/* <AdsSection /> */}
       <TradingViewScreener />
-      <AdsSection />
+      {/* <AdsSection /> */}
       <CatsPage />
-      <AdsSection />
+      {/* <AdsSection /> */}
       <PostsList />
-      <AdsSection />
+      {/* <AdsSection /> */}
       <FinanstidningSeoText />
       {/* <AdPopup /> */}
     </div>

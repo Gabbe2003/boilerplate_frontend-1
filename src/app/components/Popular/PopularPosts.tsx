@@ -17,22 +17,15 @@ export default async function PopularPosts() {
   const taglinePromise = getSiteTagline();
 
   // Try week → month → all
-  let source: 'week' | 'month' | 'all' = 'week';
   let posts = await getPostByPeriod('week');
 
   if (!posts?.length) {
-    source = 'month';
     posts = await getPostByPeriod('month');
   }
 
   if (!posts?.length) {
-    source = 'all';
     posts = await getAllPosts();
   }
-
-  console.log(
-    `[PopularPosts] Using source: ${source} | count: ${Array.isArray(posts) ? posts.length : 0}`
-  );
 
   const tagline = await taglinePromise;
 

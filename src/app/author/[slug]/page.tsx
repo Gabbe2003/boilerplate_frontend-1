@@ -34,7 +34,6 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const jsonLdRaw = (meta.other as any)?.jsonLd as string | undefined;
   safeParse(jsonLdRaw); // parsed but not logged
 
-  console.log(meta)
   return meta;
 }
 

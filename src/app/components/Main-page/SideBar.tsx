@@ -82,7 +82,7 @@ export function Sidebar() {
             ) : null}
 
             {/* Subscribe Section */}
-            <section className="w-full p-3 flex flex-col gap-2">
+            <section className="w-full pt-3 flex flex-col gap-2">
               <span className="text-sm font-medium">DAILY NEWS IN YOUR INBOX!</span>
               <span className="text-sm font-medium">
                 Receive daily news with the most recent updates.

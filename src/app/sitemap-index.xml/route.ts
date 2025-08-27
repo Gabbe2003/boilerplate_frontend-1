@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 const BASE_URL = process.env.NEXT_PUBLIC_HOST_URL!;
 const WP_GRAPHQL_ENDPOINT = process.env.WP_GRAPHQL_URL!;
-export const revalidate = 60 * 60;
+export const revalidate = 3600;
 const CHUNK_SIZE = 45_000;
 
 const staticRoutes = ['/', '/about', '/contact'];
@@ -31,9 +31,7 @@ async function getTotals(): Promise<number> {
     if ([posts, pages, cats].every(v => Number.isFinite(v))) return posts + pages + cats;
   } catch { /* ignore */ }
 
-  // Fallback: rough count with two passes (content + categories)
   let total = 0;
-  // content
   {
     let after: string | null = null;
     const first = 500;

@@ -28,8 +28,10 @@ function safeParse<T = unknown>(raw?: string): T | null {
   }
 }
 
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
-  const { slug } = params;
+export async function generateMetadata(
+  { params }: { params: Promise<Params> }
+): Promise<Metadata> {
+  const { slug } = await params;
   const { meta } = await getBestSeoBySlug(slug, "category");
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,8 +41,10 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   return meta;
 }
 
-export default async function CategoryPage({ params }: { params: Params }) {
-  const { slug } = params;
+export default async function CategoryPage(
+  { params }: { params: Promise<Params> }
+) {
+  const { slug } = await params;
 
   let category: ICategory | null = null;
   try {
@@ -57,11 +61,10 @@ export default async function CategoryPage({ params }: { params: Params }) {
 
   if (!category) notFound();
 
-  // fetch seo again for JSON-LD injection
   const { meta: seoMeta } = await getBestSeoBySlug(slug, "category");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (seoMeta.other as any)?.jsonLd as string | undefined;
-  safeParse(jsonLdRaw); // parsed but not logged
+  safeParse(jsonLdRaw);
 
   // Breadcrumb items
   const breadcrumbItems = [

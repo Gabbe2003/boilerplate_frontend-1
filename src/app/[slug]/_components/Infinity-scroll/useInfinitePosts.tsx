@@ -18,21 +18,31 @@ async function loadPost(nextSlug: string) {
 
 function extractHeadingsClient(html: string): { updatedHtml: string; toc: ITOCItem[] } {
   const doc = new DOMParser().parseFromString(html || "", "text/html");
-  const toc: ITOCItem[] = [];
-  const headings = doc.querySelectorAll("h2, h3, h4, h5, h6");
 
-  headings.forEach((el) => {
-    const level = Number(el.tagName.slice(1));
-    const text = (el.textContent || "").trim();
-    const id =
-      el.id ||
-      text
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^\w-]+/g, "");
-    el.id = id;
-    toc.push({ text, id, level });
-  });
+  const toc: ITOCItem[] = [];
+
+  // Walk the DOM instead of querySelectorAll
+  const walker = doc.createTreeWalker(doc.body, NodeFilter.SHOW_ELEMENT);
+  let node = walker.currentNode as Element | null;
+
+  while ((node = walker.nextNode() as Element | null)) {
+    const tag = node.tagName;
+    if (tag.length === 2 && tag[0] === "H") {
+      const levelNum = Number(tag[1]);
+      if (levelNum >= 2 && levelNum <= 6) {
+        const text = (node.textContent || "").trim();
+        const id =
+          (node as HTMLElement).id ||
+          text
+            .toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^\w-]+/g, "");
+
+        (node as HTMLElement).id = id;
+        toc.push({ text, id, level: levelNum });
+      }
+    }
+  }
 
   return { updatedHtml: doc.body.innerHTML, toc };
 }

@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!payload?.nodeByUri) {
     return {
       title: `Privacy | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Read our privacy policy to understand how we collect, use, and protect your information.",
+      description: "Läs vår integritetspolicy för att förstå hur vi samlar in, använder och skyddar din information.",
       robots: { index: true, follow: true },
     };
   }
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   // fallback description if empty
   if (!meta.description) {
-    meta.description = "Read our privacy policy to understand how we collect, use, and protect your information.";
+    meta.description = "Läs vår integritetspolicy för att förstå hur vi samlar in, använder och skyddar din information.";
   }
 
   return meta;
@@ -29,48 +29,48 @@ export async function generateMetadata(): Promise<Metadata> {
 const PrivacyPage = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
-      <h1 className="text-4xl font-bold mb-8 text-center">Privacy Policy</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">Integritetspolicy</h1>
 
       <section className="space-y-6 text-lg leading-relaxed text-gray-800">
         <p>
-          At <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, your privacy
-          is important to us. We are fully committed to protecting your personal
-          information and ensuring that your experience with our platform is
-          both safe and secure.
+          På <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong> är din integritet
+          viktig för oss. Vi är fullt engagerade i att skydda din personliga
+          information och säkerställa att din upplevelse med vår plattform är
+          både trygg och säker.
         </p>
 
         <p>
-          We only collect the data that is necessary to provide you with the
-          best possible experience. This may include your email address for
-          newsletter subscriptions or preferences that help tailor our content
-          to your interests.
+          Vi samlar bara in de data som är nödvändiga för att ge dig den
+          bästa möjliga upplevelsen. Detta kan inkludera din e-postadress för
+          nyhetsbrevsprenumerationer eller preferenser som hjälper oss att anpassa vårt innehåll
+          efter dina intressen.
         </p>
 
         <p>
-          You are always in control of your data. If at any point you no longer
-          wish to receive our newsletter or communications, you can easily
-          unsubscribe with just one click using the link provided in every email
-          we send.
+          Du har alltid kontroll över dina data. Om du vid något tillfälle inte längre
+          vill få vårt nyhetsbrev eller våra utskick kan du enkelt
+          avsluta prenumerationen med ett klick via länken i varje e-post
+          vi skickar.
         </p>
 
         <p>
-          Our platform uses advanced data protection systems and follows strict
-          security protocols to prevent unauthorized access, breaches, or leaks.
-          We continuously monitor and update our infrastructure to stay
-          compliant with modern standards of information security.
+          Vår plattform använder avancerade dataskyddssystem och följer strikta
+          säkerhetsprotokoll för att förhindra obehörig åtkomst, intrång eller läckor.
+          Vi övervakar och uppdaterar kontinuerligt vår infrastruktur för att följa
+          moderna standarder för informationssäkerhet.
         </p>
 
         <p>
-          We do not sell, rent, or share your personal data with third parties
-          without your explicit consent. Your information stays with us, and its
-          integrity is our responsibility.
+          Vi säljer, hyr ut eller delar inte dina personuppgifter med tredje part
+          utan ditt uttryckliga samtycke. Din information stannar hos oss och dess
+          integritet är vårt ansvar.
         </p>
 
         <p>
-          By using <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, you
-          agree to the practices described in this privacy policy. We encourage
-          you to reach out to us if you have any questions or concerns regarding
-          your data or how it is handled.
+          Genom att använda <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>
+          godkänner du de metoder som beskrivs i denna integritetspolicy. Vi uppmuntrar
+          dig att kontakta oss om du har några frågor eller funderingar kring
+          dina data eller hur de hanteras.
         </p>
       </section>
     </div>

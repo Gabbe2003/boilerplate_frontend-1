@@ -26,7 +26,7 @@ function SubmitButton() {
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
         </svg>
       )}
-      {pending ? "Submitting..." : "Send Request"}
+      {pending ? "Skickar..." : "Skicka förfrågan"}
     </button>
   );
 }
@@ -39,21 +39,21 @@ export default function AdInquiryForm() {
       {state.status === "success" && (
         <div className="bg-green-50 text-green-700 px-4 py-3 rounded-md border border-green-200 shadow-sm flex flex-col items-center justify-center gap-2">
           <span className="text-2xl">✅</span>
-          <span className="text-base font-semibold">Your request has been submitted!</span>
-          <span className="text-sm text-green-800">Keep an eye on your email, we will be in touch in 1–2 days.</span>
+          <span className="text-base font-semibold">Din förfrågan har skickats!</span>
+          <span className="text-sm text-green-800">Håll utkik i din e‑post, vi hör av oss inom 1–2 dagar.</span>
         </div>
       )}
       {state.status === "error" && (
         <div className="bg-red-50 text-red-700 px-4 py-3 rounded-md border border-red-200 shadow-sm flex items-center justify-center gap-2">
           <span className="text-2xl">❌</span>
-          <span>{state.message ?? "Something went wrong. Please try again."}</span>
+          <span>{state.message ?? "Något gick fel. Försök igen."}</span>
         </div>
       )}
 
       <form action={formAction} className="space-y-5" noValidate>
         {/* Name */}
         <div className="relative">
-          <label htmlFor="name" className="block font-medium text-gray-700 mb-1">Your Name</label>
+          <label htmlFor="name" className="block font-medium text-gray-700 mb-1">Ditt namn</label>
           <div className="flex items-center">
             <span className="mr-2 text-gray-400 flex items-center">
               <User width={20} color="#a3a3a3" />
@@ -75,7 +75,7 @@ export default function AdInquiryForm() {
 
         {/* Email */}
         <div className="relative">
-          <label htmlFor="email" className="block font-medium text-gray-700 mb-1">Email Address</label>
+          <label htmlFor="email" className="block font-medium text-gray-700 mb-1">E-postadress</label>
           <div className="flex items-center">
             <span className="mr-2 text-gray-400 flex items-center">
               <Email width={20} color="#a3a3a3" />
@@ -95,10 +95,10 @@ export default function AdInquiryForm() {
           )}
         </div>
 
-        {/* Message */}
+        {/* Meddelande */}
         <div className="relative">
           <label htmlFor="message" className="block font-medium text-gray-700 mb-1">
-            Tell us about your campaign or request. Please include all the links here.
+            Berätta om din kampanj eller förfrågan. Inkludera alla länkar här.
           </label>
           <div className="flex items-start">
             <span className="mr-2 text-gray-400 pt-2 flex items-center">

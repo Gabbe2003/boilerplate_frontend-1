@@ -208,7 +208,7 @@ return (
               })
             ) : (
               <li className="col-span-full text-gray-500 text-center mt-8">
-                No posts found for this author.
+                Inga inlägg hittades för denna författare.
               </li>
             )}
           </ul>

@@ -90,7 +90,7 @@ export function MarketTicker({
       setItems(data);
     } catch (e) {
       console.error("quotes error", e);
-      // No hard crash; keep whatever we had before
+      // Ingen hård krasch; behåll det vi hade tidigare
     }
   };
 

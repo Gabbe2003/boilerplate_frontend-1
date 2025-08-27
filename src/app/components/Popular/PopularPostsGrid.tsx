@@ -23,9 +23,9 @@ export default function PopularNews({
   }[];
   tagline?: string;
 }) {
-  if (!items.length) return <div className="py-8 text-center">No popular posts found.</div>;
+  if (!items.length) return <div className="py-8 text-center">Inga populära inlägg hittades.</div>;
 
-  // Left column gets 4 posts; middle (hero) gets 2
+  // Vänster kolumn får 4 inlägg; mitten (hero) får 2
   const leftCol = items.slice(0, 4);
   const midCol = items.slice(4, 6);
 
@@ -44,12 +44,12 @@ export default function PopularNews({
         </div>
       ) : null}
 
-      {/* Horizontal separator */}
+      {/* Horisontell avgränsare */}
       <hr className="my-6 border-gray-200" />
 
-      {/* MOBILE FIRST: show MIDDLE (hero), then LEFT compact grid, then sidebar */}
+      {/* MOBILE FIRST: visa MITTEN (hero), sedan VÄNSTER kompakt grid och sidofält */}
       <div className="lg:hidden space-y-6">
-        {/* Middle hero posts first */}
+        {/* Mittens hero-inlägg först */}
         <div className="flex flex-col gap-6">
           {midCol.map((item) => (
             <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
@@ -62,10 +62,10 @@ export default function PopularNews({
           ))}
         </div>
 
-        {/* Separator */}
+        {/* Avgränsare */}
         <hr className="my-4 border-gray-300" />
 
-        {/* Left posts after hero — smaller images, 2-column grid */}
+        {/* Vänstra inlägg efter hero — mindre bilder, 2-kolumners grid */}
         <div className="grid grid-cols-2 gap-4">
           {leftCol.map((item) => (
             <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
@@ -77,18 +77,18 @@ export default function PopularNews({
           ))}
         </div>
 
-        {/* Separator before sidebar */}
+        {/* Avgränsare före sidofältet */}
         <hr className="my-4 border-gray-300" />
 
-        {/* RIGHT column (sidebar) — now also visible on mobile */}
+        {/* HÖGER kolumn (sidofält) — nu också synlig på mobil */}
         <aside>
           <TodayPostsSidebar />
         </aside>
       </div>
 
-      {/* DESKTOP: 3-column layout */}
+      {/* DESKTOP: layout med 3 kolumner */}
       <div className="hidden lg:grid lg:grid-cols-12 gap-6 mt-8">
-        {/* LEFT column (4 smaller stacked posts) */}
+        {/* VÄNSTER kolumn (4 mindre staplade inlägg) */}
         <div className="col-span-12 lg:col-span-3 flex flex-col gap-6 border-r border-gray-200 pr-4">
           {leftCol.map((item) => (
             <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
@@ -97,7 +97,7 @@ export default function PopularNews({
           ))}
         </div>
 
-        {/* MIDDLE column (2 hero cards) */}
+        {/* MITTERSTA kolumn (2 hero-kort) */}
         <div className="col-span-12 lg:col-span-6 flex flex-col gap-6 px-4">
           {midCol.map((item) => (
             <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
@@ -110,7 +110,7 @@ export default function PopularNews({
           ))}
         </div>
 
-        {/* RIGHT column (sidebar) */}
+        {/* HÖGER kolumn (sidofält) */}
         <aside className="col-span-12 lg:col-span-3 border-l border-gray-200 pl-4">
           <TodayPostsSidebar />
         </aside>

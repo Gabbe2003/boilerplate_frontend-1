@@ -3,9 +3,9 @@ import Link from 'next/link'
 export default function NotFound() {
   return (
     <div>
-      <h2>Not Found</h2>
-      <p>Could not find requested resource</p>
-      <Link href="/">Return Home</Link>
+      <h2>Hittades inte</h2>
+      <p>Kunde inte hitta efterfrågad resurs</p>
+      <Link href="/">Gå tillbaka till startsidan</Link>
     </div>
   )
 }

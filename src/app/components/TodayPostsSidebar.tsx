@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // app/components/TodayPostsSidebar.tsx
-// Server Component (no "use client")
+// Serverkomponent (ingen "use client")
 
 import Link from "next/link";
 import { getAllPosts, getTodaysPosts } from "@/lib/graph_queries/getPost";
@@ -70,12 +70,12 @@ function toSidebarPost(p: Post): SidebarPost {
   };
 }
 
-export default async function TodayPostsSidebar({ heading = "Today’s Posts" }: Props) {
+export default async function TodayPostsSidebar({ heading = "Dagens inlägg" }: Props) {
   let posts: SidebarPost[] = [];
   let usedFallback = false;
 
   try {
-    // Fetch up to 12
+    // Hämta upp till 12
     const todays = (await getTodaysPosts(12)) as Post[];
     posts = todays.map(toSidebarPost);
 
@@ -105,9 +105,9 @@ export default async function TodayPostsSidebar({ heading = "Today’s Posts" }:
             </div>
 
             {posts.length === 0 ? (
-              <div className="text-sm text-zinc-600">Nothing to show right now.</div>
+      <div className="text-sm text-zinc-600">Inget att visa just nu.</div>
             ) : (
-              // Show all on mobile; cap to ~6 items and make scrollable on md+
+              // Visa alla på mobil; begränsa till ~6 objekt och gör scrollbart på md+
               <div className="w-full overflow-visible md:overflow-y-auto md:max-h-[544px]">
                 <ul className="space-y-3 w-full" style={{ contain: "content" }}>
                   {posts.slice(0, 12).map((p) => {
@@ -120,7 +120,7 @@ export default async function TodayPostsSidebar({ heading = "Today’s Posts" }:
                         key={p.id}
                         className="group bg-white dark:bg-black-800 rounded-sm p-3 shadow-sm hover:shadow-sm transition-shadow flex items-start gap-2 min-h-[64px]"
                       >
-                        {/* Red pulsing dot */}
+                        {/* Röd pulserande punkt */}
                         <span className="relative inline-flex flex-shrink-0 h-2.5 w-2.5 mt-1">
                           <span className="absolute inline-flex h-2.5 w-2.5 rounded-full bg-red-500 opacity-75 motion-safe:animate-ping" />
                           <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />

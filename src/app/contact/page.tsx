@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!payload?.nodeByUri) {
     return {
       title: `Contact | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Get in touch with our team for inquiries, support, or collaboration requests.",
+      description: "Kontakta vårt team för förfrågningar, support eller samarbeten.",
       robots: { index: true, follow: true },
     };
   }
@@ -24,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   // fallback description if empty
   if (!meta.description) {
-    meta.description = "Get in touch with our team for inquiries, support, or collaboration requests.";
+    meta.description = "Kontakta vårt team för förfrågningar, support eller samarbeten.";
   }
 
   return meta;
@@ -35,28 +35,27 @@ export async function generateMetadata(): Promise<Metadata> {
 export default function ContactPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
-      <h1 className="text-4xl font-bold mb-8 text-center">Purchase a Link</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">Köp en länk</h1>
 
       <section className="space-y-6 text-lg leading-relaxed text-gray-800">
         <p>
-          Interested in publishing a link on <strong>{SITE}</strong>? We’re happy to
-          offer link placements for businesses, agencies, and individuals looking to
-          enhance their visibility through our platform.
+          Är du intresserad av att publicera en länk på <strong>{SITE}</strong>? Vi erbjuder gärna
+          länkplaceringar för företag, byråer och privatpersoner som vill öka sin synlighet via vår plattform.
         </p>
         <p>
-          <strong>Pricing:</strong> Each link placement costs <span className="font-semibold">$250 USD</span>.
-          This includes permanent placement, relevant categorization, and editorial formatting.
+          <strong>Pris:</strong> Varje länkplacering kostar <span className="font-semibold">$250 USD</span>.
+          Detta inkluderar permanent placering, relevant kategorisering och redaktionell formatering.
         </p>
         <p>
-          Please note: Links related to <strong>casino or gaming content</strong> are subject to a higher rate
-          due to industry sensitivity and editorial handling. These are priced at <span className="font-semibold">$500 USD</span> per link.
+          Observera: Länkar relaterade till <strong>casino- eller spelinnehåll</strong> har ett högre pris
+          på grund av branschens känslighet och redaktionell hantering. Dessa kostar <span className="font-semibold">$500 USD</span> per länk.
         </p>
         <p>
-          After purchasing, our team will review your request and schedule your link for publication.
-          We reserve the right to reject submissions that do not meet our quality or compliance standards.
+          Efter köpet kommer vårt team att granska din förfrågan och schemalägga din länk för publicering.
+          Vi förbehåller oss rätten att avvisa inlämningar som inte uppfyller våra kvalitets- eller efterlevnadsstandarder.
         </p>
         <p>
-          Use the form below and we’ll guide you through invoice, content requirements, and timelines.
+          Använd formuläret nedan så guidar vi dig genom faktura, innehållskrav och tidslinjer.
         </p>
 
         <ContactForm />

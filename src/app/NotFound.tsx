@@ -6,7 +6,7 @@ export default function NotFound({}) {
   return (
     <div className="flex h-screen items-center justify-center">
       <p className="text-center font-medium text-xl">
-        The requested page <code>{pathname}</code> does not exsits
+        Den begärda sidan <code>{pathname}</code> finns inte
       </p>
     </div>
   );

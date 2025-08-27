@@ -27,7 +27,7 @@ const TV_SRC =
 const TV_HOST = "https://s3.tradingview.com";
 
 function TradingViewScreener({
-  title = "Crypto Screener",
+  title = "Crypto idag",
   heights = { base: 320, sm: 380, md: 480, lg: 560 },
   className = "",
 }: Props) {

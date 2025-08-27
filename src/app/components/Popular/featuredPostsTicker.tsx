@@ -44,12 +44,12 @@ export default function PopularNewsSequenceClient({
       onFocusCapture={onPause}
       onBlurCapture={onResume}
       role="region"
-      aria-label="Featured posts"
+      aria-label="Trendig inlägg just nu"
     >
       {/* Row: badge + animated post */}
       <div className="flex h-12 items-center gap-3 border-0">
         <span className="text-sm font-bold text-[#1b3d32] shrink-0">
-          Featured posts
+          Trendig inlägg just nu
         </span>
 
         <div className="relative flex-1">

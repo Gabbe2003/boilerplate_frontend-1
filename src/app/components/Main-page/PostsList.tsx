@@ -41,7 +41,7 @@ export default function PostsList() {
         <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] gap-6 py-4">
           {/* Main feed (≈70%) */}
           <main>
-            <h2 className="text-xl sm:px-2 font-bold mb-3">Latest News</h2>
+            <h2 className="text-xl sm:px-2 font-bold mb-3">Senaste nyheterna</h2>
 
             {/* Separator below heading */}
             <hr className="border-gray-200 mb-4" />
@@ -125,7 +125,7 @@ export default function PostsList() {
             <div className="border-t border-gray-200 mb-4 lg:hidden" />
 
             <TradingViewWidget
-              title="Upcoming Events"
+              title="Kommande händelser"
               heights={{ base: 360, sm: 420, md: 500, lg: 560 }}
               className="rounded-md overflow-hidden border"
             />

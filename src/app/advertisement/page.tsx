@@ -5,15 +5,15 @@ import NewsletterHighlight from "./_components/NewsletterHighlight";
 import AdInquiryForm from "./_components/AdInquiryForm";
 import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
 
-const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Our Site";
+const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Vår Webbplats";
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getSeo('/advertisement/');
 
   if (!payload?.nodeByUri) {
     return {
-      title: `Advertisement | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Discover advertising opportunities, partnerships, and collaborations with us.",
+      title: `Annonsering | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+      description: "Upptäck annonseringsmöjligheter, partnerskap och samarbeten med oss.",
       robots: { index: true, follow: true },
     };
   }
@@ -23,22 +23,21 @@ export async function generateMetadata(): Promise<Metadata> {
     siteName: process.env.NEXT_PUBLIC_SITENAME,
   });
 
-  // fallback description if empty
+  // fallback-beskrivning om den saknas
   if (!meta.description) {
-    meta.description = "Discover advertising opportunities, partnerships, and collaborations with us.";
+    meta.description = "Upptäck annonseringsmöjligheter, partnerskap och samarbeten med oss.";
   }
 
   return meta;
 }
 
-
 export default async function AdInquiryPage() {
-  // All markup below is rendered on the server.
+  // All markup nedan renderas på servern.
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center px-2 py-10">
       <div className="w-full max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row gap-8">
-          {/* Left column (pure server) */}
+          {/* Vänster kolumn (server-renderad) */}
           <div className="flex-1 mb-8 md:mb-0 rounded-2xl bg-white border border-blue-100 shadow-lg p-6 flex flex-col justify-between">
             <div>
               <PricingCard site={SITE} />
@@ -49,21 +48,21 @@ export default async function AdInquiryPage() {
             </div>
           </div>
 
-          {/* Right column: the form (small client island) */}
+          {/* Höger kolumn: formuläret (client island) */}
           <div className="flex-1 bg-white border border-gray-100 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow duration-300 p-8">
             <div className="mb-5 text-center">
               <h1 className="text-3xl font-extrabold text-indigo-700 mb-2">
-                Advertise / Partner With Us
+                Annonsera / Samarbeta Med Oss
               </h1>
               <p className="text-gray-500 text-base">
-                For advertising, partnerships or collaborations. Let’s make something great together.
+                För annonsering, partnerskap eller samarbeten. Låt oss skapa något fantastiskt tillsammans.
                 <br />
-                <span className="font-medium text-gray-400 text-sm">All prices are in EUR.</span>
+                <span className="font-medium text-gray-400 text-sm">Alla priser är i EUR.</span>
               </p>
             </div>
             <AdInquiryForm />
             <p className="text-xs text-gray-400 text-center mt-2">
-              Need support? Email us at{" "}
+              Behöver du support? Mejla oss på{" "}
               <a href="mailto:publisheradsquestions@gmail.com" className="text-indigo-600 underline">
                 publisheradsquestions@gmail.com
               </a>

@@ -88,7 +88,7 @@ export default async function TodayPostsSidebar({ heading = "Today’s Posts" }:
     posts = [];
   }
 
-  const finalHeading = usedFallback ? "Popular news" : heading;
+  const finalHeading = usedFallback ? "Populära inlägg" : heading;
 
   return (
     <div className="overflow-visible bg-white">

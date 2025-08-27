@@ -22,7 +22,7 @@ type Props = {
 };
 
 function TradingViewWidget({
-  title = "Upcoming Events",
+  title = "Kommande händelser",
   theme = "light",
   transparent = false,
   locale = "sv_SE",

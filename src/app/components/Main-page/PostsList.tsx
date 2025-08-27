@@ -29,7 +29,7 @@ export default function PostsList() {
   if (items.length === 0) {
     return (
       <div className="mx-auto w/full xl:w-[70%] px-2 sm:px-4 md:px-6">
-        <p className="text-center text-gray-500 text-sm">No posts found</p>
+        <p className="text-center text-gray-500 text-sm">Inga inlägg hittades</p>
       </div>
     );
   }
@@ -113,7 +113,7 @@ export default function PostsList() {
                   onClick={() => setVisibleCount((prev) => prev + 8)}
                   className="px-4 py-2 bg-blue-600 text-black text-sm font-medium rounded hover:bg-blue-700 transition hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Load more
+                  Ladda mer
                 </Button>
               </div>
             )}

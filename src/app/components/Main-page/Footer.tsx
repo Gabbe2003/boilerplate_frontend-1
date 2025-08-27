@@ -10,12 +10,12 @@ import { links } from '../client/constants/links';
 export default function Footer() {
   const host = process.env.NEXT_PUBLIC_HOSTNAME;
   const currentYear = new Date().getFullYear();
-  const tagline = getTagLine(); 
+  const tagline = getTagLine();
 
   const extraLinks = [
-    { type: 'button', title: 'Newsletter' },
-    { type: 'link', title: 'Work with us', href: '/work' },
-    { type: 'link', title: 'Sitemap', href: '/sitemap-index.xml' },
+    { type: 'button', title: 'Nyhetsbrev' },
+    { type: 'link', title: 'Jobba med oss', href: '/work' },
+    { type: 'link', title: 'Webbplatskarta', href: '/sitemap-index.xml' },
   ];
 
 
@@ -26,10 +26,10 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row mb-8 gap-8">
           {/* Logo/Tagline */}
           <div className="flex flex-col items-start min-w-[170px]">
-            <Link href="/" className="mb-4 flex-shrink-0 flex items-center py-6" aria-label="Go to homepage">
+            <Link href="/" className="mb-4 flex-shrink-0 flex items-center py-6" aria-label="Gå till startsidan">
               <Image
                 src="/full_logo_with_slogan.png"
-                alt="Logo"
+                alt="Logotyp"
                 width={150}
                 height={60}
                 priority
@@ -46,7 +46,7 @@ export default function Footer() {
           {/* Links in columns */}
           <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4 justify-end md:items-start min-w-0">
             <div className="min-w-0">
-              <h3 className="mb-4 text-lg font-semibold text-gray-700">Readers favorites</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-700">Läsarnas favoriter</h3>
               <ul className="space-y-2">
                 {extraLinks.map((item, idx) => (
                   <li key={item.title + idx}>
@@ -57,7 +57,7 @@ export default function Footer() {
             </div>
 
             <div className="min-w-0">
-              <h3 className="mb-4 text-lg font-semibold text-gray-700">Company</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-700">Företag</h3>
               <ul className="space-y-2">
                 {links.slice(3).map((link) => (
                   <li key={link.href}>
@@ -68,7 +68,7 @@ export default function Footer() {
             </div>
 
             <div className="min-w-0">
-              <h3 className="mb-4 text-lg font-semibold text-gray-700">About us</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-700">Om oss</h3>
               <ul className="space-y-2">
                 {links.slice(0, 3).map((link) => (
                   <li key={link.href}>
@@ -86,7 +86,7 @@ export default function Footer() {
         {/* Bottom row */}
         <div className="flex flex-col gap-4 pt-8 md:flex-row md:items-center md:justify-between">
           <p className="text-center text-xs text-gray-500 md:text-left break-normal whitespace-normal hyphens-auto text-pretty">
-            &copy; {currentYear} {host}. All rights reserved.
+            &copy; {currentYear} {host}. Alla rättigheter förbehållna.
           </p>
           <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center md:justify-end">
             <SocialMediaButtons className="flex-wrap flex-col sm:flex-row sm:flex-nowrap" />

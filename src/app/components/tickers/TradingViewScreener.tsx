@@ -175,7 +175,7 @@ function TradingViewScreener({
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
           >
-            <span className="sr-only">Toggle options</span>
+            <span className="sr-only">Växla alternativ</span>
             <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
               <rect x="3" y="6" width="18" height="2" rx="1"></rect>
               <rect x="3" y="11" width="18" height="2" rx="1"></rect>

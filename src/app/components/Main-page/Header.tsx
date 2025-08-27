@@ -49,11 +49,11 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 py-0">
             {/* Left: Logo */}
             <div className="flex items-center min-h-[40px]">
-              <Link href="/" aria-label="Go to homepage" className="flex-shrink-0">
+              <Link href="/" aria-label="Gå till startsidan" className="flex-shrink-0">
                 <div className="relative w-[100px] h-auto">
            <Image
           src="/full_logo_with_slogan.png"
-          alt="Logo"
+          alt="Logotyp"
           width={100}
           height={60}
           className="!w-[100px] !h-[60px] object-contain"
@@ -64,7 +64,7 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
               </Link>
             </div>
 
-            {/* Center: Search (desktop) */}
+            {/* Center: Sök (desktop) */}
             <div className="hidden [@media(min-width:1100px)]:flex justify-center">
               <SearchBarInline
                 value={searchValue}

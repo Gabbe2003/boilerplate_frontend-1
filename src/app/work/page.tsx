@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!payload?.nodeByUri) {
     return {
       title: `Work | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Explore career opportunities and work with our team.",
+      description: "Utforska karriärmöjligheter och arbeta med vårt team.",
       robots: { index: true, follow: true },
     };
   }
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   // fallback description if empty
   if (!meta.description) {
-    meta.description = "Explore career opportunities and work with our team.";
+    meta.description = "Utforska karriärmöjligheter och arbeta med vårt team.";
   }
 
   return meta;
@@ -33,23 +33,23 @@ const page = () => {
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-blue-50">
       <div className="bg-white shadow-2xl rounded-2xl p-8 max-w-lg w-full text-center">
         <h1 className="text-3xl font-bold text-blue-800 mb-4">
-          Work Submissions
+          Jobbansökningar
         </h1>
         <p className="text-lg text-gray-600 mb-6">
-          Thank you for your interest in joining our team!
+          Tack för ditt intresse att ansluta till vårt team!
           <br />
           <span className="block mt-2 font-semibold text-red-500">
-            We are not hiring at the moment.
+            Vi anställer inte för tillfället.
           </span>
         </p>
         <div className="flex flex-col items-center gap-2 mb-6">
           <span className="text-4xl mb-2">🚫</span>
           <p className="text-gray-500">
-            No open positions right now. But dont go far!
+            Inga lediga tjänster just nu. Men gå inte långt!
           </p>
           <p className="text-gray-500">
-            Keep an eye on this page for future opportunities. We update this
-            page weekly
+            Håll ett öga på den här sidan för framtida möjligheter. Vi uppdaterar denna
+            sida varje vecka
           </p>
         </div>
       </div>

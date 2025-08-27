@@ -126,7 +126,7 @@ export default function SearchPosts({
                 </Link>
               ) : (
                 <div className="w-full h-44 bg-gray-100 flex items-center justify-center text-gray-400">
-                  No image
+                  Ingen bild
                 </div>
               )}
 
@@ -183,7 +183,7 @@ export default function SearchPosts({
             aria-busy={loading}
             className="bg-black hover:bg-primary-600 text-white"
           >
-            {loading ? "Loading…" : "Load more"}
+            {loading ? "Laddar…" : "Ladda mer"}
           </Button>
           {error && (
             <div

@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!payload?.nodeByUri) {
     return {
       title: `About | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Learn more about us.",
+      description: "Lär dig mer om oss.",
       robots: { index: true, follow: true },
     };
   }
@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   // fallback description if empty
   if (!meta.description) {
-    meta.description = "Learn more about us, our mission, and what we do.";
+    meta.description = "Lär dig mer om oss, vårt uppdrag och vad vi gör.";
   }
 
   return meta;
@@ -29,51 +29,50 @@ export async function generateMetadata(): Promise<Metadata> {
 const AboutPage = () => {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
-      <h1 className="text-4xl font-bold mb-8 text-center">About Us</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">Om oss</h1>
 
       <section className="space-y-6 text-lg leading-relaxed text-gray-800">
         <p>
-          Welcome to <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, a
-          digital destination for timely, factual, and insightful reporting. Our
-          team is driven by a shared passion for delivering high-quality news
-          and analysis that keeps our audience informed, engaged, and ahead of
-          the curve.
+          Välkommen till <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, en
+          digital destination för aktuell, faktabaserad och insiktsfull rapportering. Vårt
+          team drivs av en gemensam passion för att leverera nyheter
+          och analyser av hög kvalitet som håller vår publik informerad, engagerad och steget före.
         </p>
 
         <p>
-          We believe in the power of journalism to shape understanding and
-          promote clarity in a rapidly evolving world. At{' '}
-          <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, we prioritize
-          accuracy, integrity, and relevance in everything we publish—whether
-          it’s breaking stories, in-depth reports, or feature coverage.
+          Vi tror på journalistikens kraft att forma förståelse och
+          skapa klarhet i en snabbt föränderlig värld. På{' '}
+          <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong> prioriterar vi
+          noggrannhet, integritet och relevans i allt vi publicerar—oavsett
+          om det är nyheter, fördjupande reportage eller featureartiklar.
         </p>
 
         <p>
-          Our mission is straightforward: to be a trusted, comprehensive source
-          for the latest news and developments. We explore key issues with depth
-          and context, helping our readers navigate today’s fast-paced
-          information landscape.
+          Vårt uppdrag är enkelt: att vara en pålitlig och heltäckande källa
+          till de senaste nyheterna och utvecklingarna. Vi utforskar viktiga frågor med djup
+          och sammanhang för att hjälpa våra läsare navigera i dagens snabbrörliga
+          informationslandskap.
         </p>
 
         <p>
-          Our editorial team is composed of experienced reporters, researchers,
-          and editors who bring a broad range of expertise and perspectives to
-          our coverage. We closely monitor global events, trends, and stories,
-          ensuring that what matters most reaches you without noise or bias.
+          Vårt redaktionella team består av erfarna reportrar, forskare
+          och redaktörer som bidrar med en bred uppsättning kompetenser och perspektiv till
+          vår bevakning. Vi följer noggrant globala händelser, trender och berättelser,
+          så att det som är viktigast når dig utan brus eller partiskhet.
         </p>
 
         <p>
-          Through clear and engaging storytelling, we aim to make complex topics
-          accessible to everyone—from curious readers to seasoned professionals.
-          We are committed to providing content that informs decisions, sparks
-          conversation, and builds awareness in a connected world.
+          Genom tydligt och engagerande berättande vill vi göra komplexa ämnen
+          tillgängliga för alla—från nyfikna läsare till erfarna yrkespersoner.
+          Vi är engagerade i att tillhandahålla innehåll som informerar beslut, väcker
+          samtal och bygger medvetenhet i en sammankopplad värld.
         </p>
 
         <p>
-          At <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong>, we view
-          knowledge as empowerment—and we are here to support our readers with
-          the information they need to stay informed and confident in their
-          understanding of the world around them.
+          På <strong>{process.env.NEXT_PUBLIC_HOSTNAME}</strong> ser vi
+          kunskap som makt—och vi finns här för att stödja våra läsare med
+          den information de behöver för att hålla sig informerade och trygga i sin
+          förståelse av världen omkring dem.
         </p>
       </section>
     </div>

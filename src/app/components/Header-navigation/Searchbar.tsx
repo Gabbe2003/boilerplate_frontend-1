@@ -97,7 +97,7 @@ export default function SearchDrawer({
             >
               <span className="inline-flex items-center gap-2">
                 <Search className="h-4 w-4 text-gray-400" />
-                <span>Search…</span>
+                <span>Sök…</span>
               </span>
             </button>
           )}
@@ -114,7 +114,7 @@ export default function SearchDrawer({
           data-[vaul-drawer-direction=right]:border-l
         "
       >
-        <DrawerTitle className="sr-only">Search</DrawerTitle>
+        <DrawerTitle className="sr-only">Sök</DrawerTitle>
 
         {/* Header */}
         <div className="flex items-center text-lg mt-5 justify-between border-b p-4">
@@ -131,8 +131,8 @@ export default function SearchDrawer({
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <Input
               autoFocus
-              placeholder="Search..."
-              aria-label="Search"
+              placeholder="Sök..."
+              aria-label="Sök"
               value={value}
               onChange={onChange}
               className="pl-10 bg-transparent w-full"
@@ -148,12 +148,12 @@ export default function SearchDrawer({
                 <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25" />
                 <path d="M4 12a8 8 0 018-8v8H4z" fill="currentColor" opacity="0.75" />
               </svg>
-              <span className="text-sm text-gray-500">Loading...</span>
+              <span className="text-sm text-gray-500">Laddar...</span>
             </div>
           ) : !debouncedSearchValue ? (
-            <p className="px-3 py-3 text-sm text-gray-500">Start typing to see results.</p>
+            <p className="px-3 py-3 text-sm text-gray-500">Börja skriva för att se resultat.</p>
           ) : filteredPosts.length === 0 ? (
-            <p className="px-3 py-3 text-sm text-gray-500">No results found.</p>
+            <p className="px-3 py-3 text-sm text-gray-500">Inga resultat hittades.</p>
           ) : (
             <>
               <ul className="divide-y">
@@ -180,7 +180,7 @@ export default function SearchDrawer({
               {visibleCount < filteredPosts.length && (
                 <div className="flex justify-center p-3">
                   <Button size="sm" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
-                    Load more
+                    Ladda mer
                   </Button>
                 </div>
               )}

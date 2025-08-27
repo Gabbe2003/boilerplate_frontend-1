@@ -1,72 +1,55 @@
+SEO nästan klar, vi måste kontrollera att allt är inkluderat och fungerar som förväntat. För närvarande får vi fel i author, tag och category. Vi måste se över den logiken igen.
 
-SEO almost done, we to recheck that everything is included and everything is working as expected. As of not we are getting error in author, tag, category. So we need to recheck that logic. 
+ta bort beroenden som inte längre används
 
+fixa annons-popup på surfplatta, bilden är trasig. (Klart)
+i populära inlägg visas ibland två annonser bredvid varandra. (Klart)
+Dölj tickern på mobil, den tar för mycket plats, och sökfältet? (Klart, och fixad kategorivisning på stora brytpunkter)
+lägg till popup, contain är bättre än cover, åtminstone på mobil? Och utseendet är riktigt dåligt på surfplatta och mobil. (Klart)
+nyhetsbrevsmodalen är också trasig på mobil. (Klart)
 
+I sökfunktionen tittar vi på inmatade bokstäver och kontrollerar om de finns från höger till vänster; vi matchar bokstav för bokstav vilket är fel. Vi måste kontrollera hela titeln om bokstaven finns. Om vi skriver en bokstav som inte finns i sökfältet och sedan trycker enter, visas alla inlägg som innehåller den bokstaven. ÅTGÄRDA.
+grundläggande dålig UI
 
-
-
-remove depedencies that no longer in use
-
-
-fix the adspop up on tablet, the image is fked.(Done)
-in popular post there are times when we display two ads next to each other.(Done)
-Hide the ticker on mobile, it takes to much space, and the search bar?(Done, and fixed category display on large breaking point)
-add pop up, contain is better than cover, at least on mobile?. And the look of it is like my dick, it is really bad, like on tablet and mobile, (Done)
-the newsletter modal is also fuked on mobile.  (Done)
-
-
-
-
-In seach we are looking for the input letter and check if it exsist from right to left,we are matching letter by letter which is wrong we have to check for the whole title if the letter exsists. If we type a letter that doesnt exsists on the searchbar and then hit enter, if any post that have that letter it will be shown. FIX 
-basically bad UI
-
-
-
-we are passing tag title not the slug
-when we navigate to category we are we are seeing missin slug. 
+vi skickar taggtiteln och inte sluggen
+när vi navigerar till kategori ser vi saknad slug.
 http://localhost:3000/tag
 http://localhost:3000/category
 
-here we are not seeing anything?
-http://localhost:3000/author 
+här ser vi ingenting?
+http://localhost:3000/author
 
-1. Rate limiter (Done)  
-2. Organize graph queries (Done)
-3. Add popup
-4. Check the code there are many places that uses <a>, <button> etc. Make sure to use next and shadcn PopupModal(I uploaded a code there try it, and commented out the old one) for example.
-5. Style the whole page(centrelize the style for all pages, right now everthing is making its own shit)
-6. SEO. meta tags opengraph and double check everything.
-7. Make sure all images look are optimized.
-8. Decide what post data will show for the user.
-9. Add robots/sitemap
-10. check security
-
-
+1. Rate limiter (Klart)
+2. Organisera GraphQL-frågor (Klart)
+3. Lägg till popup
+4. Kontrollera koden, det finns många ställen som använder <a>, <button> etc. Se till att använda next och shadcn PopupModal (jag laddade upp en kod där, testa den, och kommenterade ut den gamla) exempelvis.
+5. Styla hela sidan (centralisera stilen för alla sidor, just nu gör varje sida sin egen grej)
+6. SEO. meta-taggar, Open Graph och dubbelkolla allt.
+7. Se till att alla bilder är optimerade.
+8. Bestäm vilken postdata som ska visas för användaren.
+9. Lägg till robots/sitemap
+10. kontrollera säkerhet
 
 INFO
-Server and client components can be used together but as a recommendation for seo, performance and security. Using client components inside of a server compoment is much better. Also when using "use client" all imports/children becomes client too, so becareful with the imports, place "use server where it needs". There is something called fetch memoization which basically cache the request that you have sent as long as the parameters, query, url and everything matches and it only applies on get request, if the response changes the result will be the first version until the revalidate. I believe using fetch memoization is better for performance, we have to look it up.
+Server- och klientkomponenter kan användas tillsammans men för seo, prestanda och säkerhet rekommenderas att använda klientkomponenter inom en serverkomponent. När du använder "use client" blir alla importer/barn också klienter, så var försiktig med importerna och placera "use server" där det behövs. Det finns något som kallas fetch-memorisering som i princip cachelagrar begäran du har skickat så länge parametrar, fråga, url och allt matchar och det gäller endast för GET-begäran; om svaret ändras kommer resultatet vara den första versionen tills revalidate. Jag tror att användning av fetch-memorisering är bättre för prestanda, vi måste kolla upp det.
 
-\***\* TO DOOO \*\***
+*** ATT GÖRA ***
 
-Check later:
+Kolla senare:
 
-CREATE A TODAYS NEWS MARKET LIKE DI.SE
+SKAPA EN DAGENS NYHETER MARKNAD SOM DI.SE
 
+Start/Huvudsida (förstasida eller inläggsindex)
+Enskild sida
+Enskilt inlägg
+Kategoriarkiv
+Taggarkiv
+Författararkiv
+404 Hittades inte
+Datumarkiv (år/månad/dag): /2025/, /2025/08/, etc.
+Pagineringslägen för alla arkiv (och inläggsindex): /page/2/, /category/foo/page/3/
+De är separata URL:er, så de behöver egen <title>, canonical till sig själv och robots speglade från Rank Math.
+Sökresultat: /search?q=… (eller / ?s=).
+Servera meta (titel som "Sökresultat för …") och vanligtvis noindex, follow.
 
-Home/Main page (front page or posts index)
-Single Page
-Single Post
-Category archive
-Tag archive
-Author archive
-404 Not Found
-Date archives (year/month/day): /2025/, /2025/08/, etc.
-Pagination states for all archives (and the posts index): /page/2/, /category/foo/page/3/
-They’re separate URLs, so they need their own <title>, canonical to self, and robots mirrored from Rank Math.
-Search results: /search?q=… (or / ?s=).
-Serve meta (title like “Search results for …”) and usually noindex,follow.
-
-
-
-
-//Render SEO data for each Category in WP,
+//Rendera SEO-data för varje kategori i WP,

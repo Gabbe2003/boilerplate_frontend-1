@@ -30,7 +30,7 @@ export default async function PopularNewsTicker({
   if (items.length === 0) {
     return (
       <div className={`w-full overflow-hidden border bg-secondary/40 p-3 ${className}`}>
-        <div className="text-sm text-secondary-foreground">No popular posts for this month yet.</div>
+        <div className="text-sm text-secondary-foreground">Inga populära inlägg för den här månaden ännu.</div>
       </div>
     );
   }

@@ -80,8 +80,8 @@ export default async function TagPage({ params }: { params: Params }) {
 
   // Breadcrumb items (mirror category page pattern)
   const breadcrumbItems = [
-    { href: "/", label: "Home" },
-    { href: null, label: "Tags" },
+    { href: "/", label: "Hem" },
+    { href: null, label: "Taggar" },
     { href: `/tags/${tag.slug}`, label: tag.name, current: true },
   ];
 

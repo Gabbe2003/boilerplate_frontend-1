@@ -68,8 +68,8 @@ export default async function CategoryPage(
 
   // Breadcrumb items
   const breadcrumbItems = [
-    { href: "/", label: "Home" },
-    { href: null as string | null, label: "Categories" },
+    { href: "/", label: "Hem" },
+    { href: null as string | null, label: "Kategorier" },
     ...(category.parent?.node
       ? [{ href: `/category/${category.parent.node.slug}`, label: category.parent.node.name }]
       : []),

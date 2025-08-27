@@ -68,7 +68,7 @@ export function ArticleContent({
       {categoryNames?.length ? (
         <div className="space-y-2 mb-4">
           <h4 className="text-xs uppercase tracking-wide text-gray-500">
-            Categories
+            Kategori
           </h4>
           <div className="flex flex-wrap gap-2">
             {categoryNames.map((name, i) => (
@@ -91,7 +91,7 @@ export function ArticleContent({
         <Breadcrumb>
           <BreadcrumbItem>
             <Link href="/" className="text-gray-700 underline lg:px-0">
-              {process.env.NEXT_PUBLIC_HOSTNAME || "Home"}
+              {process.env.NEXT_PUBLIC_HOSTNAME || "Hem"}
             </Link>
             <span className="mx-1">/</span>
           </BreadcrumbItem>
@@ -166,7 +166,7 @@ export function ArticleContent({
 
           {/* Published date */}
           <div className="text-sm text-muted-foreground my-2 text-gray-950 px-10">
-            Published:{" "}
+            Publicerad:{" "}
             <time dateTime={post.date}>
               {new Date(post.date).toISOString().slice(0, 10)}
             </time>
@@ -192,7 +192,7 @@ export function ArticleContent({
           {tagNames?.length ? (
             <div className="space-y-2">
               <h4 className="text-xs uppercase tracking-wide text-gray-500">
-                Tags
+                Taggar
               </h4>
               <span className="flex flex-wrap gap-2">
                 {tagNames.map((name, i) => (

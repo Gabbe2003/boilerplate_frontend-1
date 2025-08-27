@@ -68,7 +68,7 @@ export default function RecommendationListMarquee({ currentSlug }: Props) {
       onTouchEnd={() => pause(false)}
     >
       <div className="pt-6 pb-4 text-sm uppercase tracking-wide text-gray-600 font-semibold">
-        Recommended for you
+        Rekommenderat för dig
       </div>
 
       <div className="space-y-4">

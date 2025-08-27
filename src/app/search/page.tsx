@@ -49,7 +49,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const sp = await searchParams;
   const q = getQ(sp);
-  const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Home";
+  const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Hem";
 
   const robots = { index: false, follow: true as const };
 
@@ -204,7 +204,7 @@ export default async function SearchPage({
             "@type": "SearchResultsPage",
             name: `Sökresultat för "${q}"`,
             description: `Sökresultat för "${q}" från ${
-              process.env.NEXT_PUBLIC_HOSTNAME ?? "Home"
+              process.env.NEXT_PUBLIC_HOSTNAME ?? "Hem"
             }`,
             url: `${
               process.env.NEXT_PUBLIC_HOST_URL || "http://localhost"

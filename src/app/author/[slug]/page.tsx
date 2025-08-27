@@ -66,8 +66,8 @@ export default async function AuthorInfo({
 
 
 const breadcrumbItems = [
-  { href: "/", label: "Home" },
-  { href: null, label: "Authors" }, 
+  { href: "/", label: "Hem" },
+  { href: null, label: "Författare" }, 
   { href: `/author/${slug}`, label: `${author.name}`, current: true },
 ];
 

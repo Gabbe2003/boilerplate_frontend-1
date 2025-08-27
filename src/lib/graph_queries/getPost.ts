@@ -15,117 +15,78 @@ export async function getAllPosts({
   last?: number;
   before?: string;
 } = {}): Promise<Post[]> {
-  const query = `
-  query AllPostsFull(
-  $first:  Int
-  $after:  String
-  $last:   Int
-  $before: String
-) {
-  posts(first: $first, after: $after, last: $last, before: $before) {
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-      startCursor
-      endCursor
+  const query =  `
+    query AllPostsFull($first: Int, $after: String, $last: Int, $before: String) {
+      posts(first: $first, after: $after, last: $last, before: $before) {
+        pageInfo { hasNextPage hasPreviousPage startCursor endCursor }
+        nodes { ...PostFull }
+      }
     }
-    nodes {
-      ...PostFull
+
+    fragment MediaFields on MediaItem {
+      id altText sourceUrl mimeType
+      mediaDetails { width height file sizes { name sourceUrl width height } }
     }
-  }
-}
 
-fragment MediaFields on MediaItem {
-  id
-  altText
-  sourceUrl
-  mimeType
-  mediaDetails {
-    width
-    height
-    file
-    sizes {
-      name
-      sourceUrl
-      width
-      height
+    fragment TermFields on TermNode { id name slug uri description }
+
+    fragment AuthorFields on User {
+      id name slug uri
+      avatar { url width height }
     }
-  }
-}
 
-fragment TermFields on TermNode {
-  id
-  name
-  slug
-  uri
-  description
-}
-
-fragment AuthorFields on User {
-  id
-  name
-  slug
-  uri
-  avatar {
-    url
-    width
-    height
-  }
-}
-
-fragment PostFull on Post {
-  id
-  databaseId
-  slug
-  uri
-  status
-  isSticky
-  title(format: RENDERED)
-  excerpt(format: RENDERED)
-  content(format: RENDERED)
-  date
-  modified
-
-  featuredImage {
-    node { ...MediaFields }
-  }
-
-  author { node { ...AuthorFields } }
-  categories { nodes { ...TermFields } }
-  tags       { nodes { ...TermFields } }
-
-  # — SEO removed until plugin exposes matching fields —
-}
-
-    
+    fragment PostFull on Post {
+      id databaseId slug uri status isSticky
+      title(format: RENDERED) excerpt(format: RENDERED) content(format: RENDERED)
+      date modified
+      featuredImage { node { ...MediaFields } }
+      author { node { ...AuthorFields } }
+      categories { nodes { ...TermFields } }
+      tags       { nodes { ...TermFields } }
+    }
   `;
 
   try {
     const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
       method: 'POST',
-      json: { query,  variables: { first, after, last, before } },
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ query, variables: { first, after, last, before } }),
       next: { revalidate: 300, tags: ['posts'] },
     });
+
+    if (!res.ok) {
+      const peek = await res.text();
+      throw new Error(`Request failed: ${res.status} ${res.statusText} — ${peek.slice(0, 160)}…`);
+    }
+
+    // Ensure we actually got JSON
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      const peek = await res.text();
+      throw new Error(`Expected JSON, got ${contentType || 'unknown'} — ${peek.slice(0, 160)}…`);
+    }
 
     const json = (await res.json()) as {
       data?: { posts?: { nodes: Post[] } };
       errors?: GraphQLError[];
     };
 
-    if (json.errors) {
-      console.error('getAllPosts errors:', json.errors);
+    if (json.errors?.length) {
+      console.error('getAllPosts GraphQL errors:', json.errors);
       return [];
     }
 
     const rawPosts = json.data?.posts?.nodes ?? [];
-    const posts = normalizeImages(rawPosts);
-   
-    return posts;
+    return normalizeImages(rawPosts);
   } catch (error) {
     console.error('getAllPosts failed:', error);
     return [];
   }
 }
+
 
 export async function get_popular_post(): Promise<Post[]> {
   try {

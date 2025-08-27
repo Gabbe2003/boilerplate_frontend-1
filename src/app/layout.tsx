@@ -15,8 +15,8 @@ export async function generateMetadata() {
   return {
     title: process.env.NEXT_PUBLIC_HOSTNAME || "Default Title",
     description:
-      "Up-to-date tutorials, deep technical deep dives and thought pieces on web development, React, Next.js, and more.",
-    keywords: ["blog", "next.js", "react", "web development", "tutorials"],
+      "DAGLIGA NYHETER INOM FINANS,AKITER OCH BÖRSEN",
+    keywords: ["nyheter, ekonominyheter, aktier, börsen, finans"],
   };
 }
 

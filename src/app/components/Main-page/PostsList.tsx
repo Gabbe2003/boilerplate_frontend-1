@@ -91,10 +91,18 @@ export default function PostsList() {
                       </Link>
                     )}
 
-                    {/* Title */}
-                    <h3 className="text-base lg:text-lg font-semibold leading-snug mt-2">
-                      {post.title}
-                    </h3>
+                  {/* Category */}
+                  {post.categories?.nodes?.[0] && (
+                    <p className="text-xs font-medium text-[#990000] mt-2">
+                      {post.categories.nodes[0].name}
+                    </p>
+                  )}
+
+                   {/* Title */}
+                  <h3 className="text-base lg:text-lg font-semibold leading-snug mb-1">
+                    {post.title}
+                  </h3>
+
 
                     {/* Excerpt */}
                     <p className="text-gray-700 text-xs leading-relaxed">

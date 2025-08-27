@@ -6,7 +6,7 @@ const WP_GRAPHQL_ENDPOINT = process.env.WP_GRAPHQL_URL!;
 export const revalidate = 3600;
 const CHUNK_SIZE = 45_000;
 
-const staticRoutes = ['/', '/about', '/contact'];
+const staticRoutes = ['/', '/about', '/contact', '/work', 'privacy'];
 
 const CONTENT_COUNT_QUERY = `
   query Counts {

@@ -1,14 +1,14 @@
 // app/sitemap.ts
 import type { MetadataRoute } from 'next'
 
-const BASE_URL = process.env.NEXT_PUBLIC_HOST_URL!;        // e.g., https://example.com
+const BASE_URL = process.env.NEXT_PUBLIC_HOST_URL!;    
 const WP_GRAPHQL_ENDPOINT = process.env.WP_GRAPHQL_URL!;
 export const revalidate = 3600; // 1 hour
 
 const CHUNK_SIZE = 45_000;
 
-type WpNode = { uri: string; modifiedGmt?: string | null };   // for posts/pages
-type TermNode = { uri: string };                               // for categories
+type WpNode = { uri: string; modifiedGmt?: string | null };  
+type TermNode = { uri: string };                            
 
 // POSTS + PAGES together
 const CONTENT_QUERY = `

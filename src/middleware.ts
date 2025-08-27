@@ -31,7 +31,7 @@ export function middleware(req: Request) {
   if (!ok) {
     return NextResponse.json(
       { message: 'Too many requests' },
-      { status: 401 }
+      { status: 429 }
     );
   }
 

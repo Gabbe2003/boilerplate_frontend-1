@@ -15,7 +15,7 @@ export default function Footer() {
   const extraLinks = [
     { type: 'button', title: 'Newsletter' },
     { type: 'link', title: 'Work with us', href: '/work' },
-    { type: 'link', title: 'Sitemap', href: '/sitemap' },
+    { type: 'link', title: 'Sitemap', href: '/sitemap-index.xml' },
   ];
 
 

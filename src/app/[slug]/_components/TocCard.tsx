@@ -13,14 +13,14 @@ export function TocCard({ toc }: { toc: ITOCItem[] }) {
   return (
     <Card className="mt-2 overflow-hidden shadow-none rounded-sm">
       <CardHeader className="flex items-center justify-between px-6">
-        <nav className="text-lg font-semibold">Table of Content</nav>
+        <nav className="text-lg font-semibold">Innehållsförteckning</nav>
         <Button
           variant="outline"
           size="sm"
           onClick={() => setOpen((o) => !o)}
           className="cursor-pointer"
         >
-          {open ? 'Hide' : 'Show'}
+          {open ? 'Dölj' : 'Visa'}
         </Button>
       </CardHeader>
 

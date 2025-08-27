@@ -7,12 +7,12 @@ import PopupModal from "./Rule_sub";
 
 
 type NewsletterIslandProps = {
-className: string; // pass the exact button classes to preserve style
-label?: string; // default: "Newsletter"
+className: string; // behåll exakta knappklasser för stilen
+label?: string; // standard: "Nyhetsbrev"
 };
 
 
-export default function NewsletterIsland({ className, label = "Newsletter" }: NewsletterIslandProps) {
+export default function NewsletterIsland({ className, label = "Nyhetsbrev" }: NewsletterIslandProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpen = useCallback(() => setIsModalOpen(true), []);
   const handleClose = useCallback(() => setIsModalOpen(false), []);
@@ -25,7 +25,7 @@ export default function NewsletterIsland({ className, label = "Newsletter" }: Ne
         variant="link"
         className={className}
         onClick={handleOpen}
-        aria-label="Open newsletter signup"
+        aria-label="Öppna nyhetsbrevsanmälan"
       >
       {label}
       </Button>

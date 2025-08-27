@@ -52,11 +52,11 @@ export function ShareButtons({
             }
           } else if (typeof window !== 'undefined' && navigator.clipboard) {
             await navigator.clipboard.writeText(postUrl);
-            alert('Link Copied!');
+            alert('Länk kopierad!');
           }
         }}
       >
-        Share
+        Dela
       </Button>
 
       {/* Facebook */}
@@ -70,10 +70,10 @@ export function ShareButtons({
           href={getShareUrl('facebook', { url: postUrl, title: postTitle })}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Share on Facebook"
+          aria-label="Dela på Facebook"
         >
           <Facebook className="w-5 h-5 text-neutral-500" aria-hidden="true" />
-          <span className="sr-only">Share on Facebook</span>
+          <span className="sr-only">Dela på Facebook</span>
         </a>
       </Button>
 
@@ -90,10 +90,10 @@ export function ShareButtons({
           )}&text=${encodeURIComponent(`${postTitle}\n\n${postExcerpt}`)}`}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Share on X"
+          aria-label="Dela på X"
         >
           <Twitter className="w-5 h-5 text-neutral-500" aria-hidden="true" />
-          <span className="sr-only">Share on X</span>
+          <span className="sr-only">Dela på X</span>
         </a>
       </Button>
 
@@ -108,10 +108,10 @@ export function ShareButtons({
           href={getShareUrl('linkedin', { url: postUrl, title: postTitle })}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Share on LinkedIn"
+          aria-label="Dela på LinkedIn"
         >
           <Linkedin className="w-5 h-5 text-neutral-500" aria-hidden="true" />
-          <span className="sr-only">Share on LinkedIn</span>
+          <span className="sr-only">Dela på LinkedIn</span>
         </a>
       </Button>
 
@@ -128,10 +128,10 @@ export function ShareButtons({
           )}&body=${encodeURIComponent(
             `${postTitle}\n\n${postExcerpt}\n\n${postUrl}`
           )}`}
-          aria-label="Share via email"
+          aria-label="Dela via e-post"
         >
           <Email className="w-5 h-5 text-neutral-500" aria-hidden="true" />
-          <span className="sr-only">Share via email</span>
+          <span className="sr-only">Dela via e-post</span>
         </a>
       </Button>
     </div>

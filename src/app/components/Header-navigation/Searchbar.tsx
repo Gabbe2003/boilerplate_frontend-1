@@ -148,10 +148,10 @@ export default function SearchDrawer({
                 <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25" />
                 <path d="M4 12a8 8 0 018-8v8H4z" fill="currentColor" opacity="0.75" />
               </svg>
-              <span className="text-sm text-gray-500">Loading...</span>
+              <span className="text-sm text-gray-500">Laddar...</span>
             </div>
           ) : !debouncedSearchValue ? (
-            <p className="px-3 py-3 text-sm text-gray-500">Start typing to see results.</p>
+            <p className="px-3 py-3 text-sm text-gray-500">Börja skriva för att se resultat.</p>
           ) : filteredPosts.length === 0 ? (
             <p className="px-3 py-3 text-sm text-gray-500">Inga resultat hittades.</p>
           ) : (
@@ -180,7 +180,7 @@ export default function SearchDrawer({
               {visibleCount < filteredPosts.length && (
                 <div className="flex justify-center p-3">
                   <Button size="sm" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
-                    Load more
+                    Ladda mer
                   </Button>
                 </div>
               )}

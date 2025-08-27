@@ -19,7 +19,7 @@ export default function FooterNavItem({
     'text-base w-full justify-start px-0 break-normal whitespace-normal hyphens-auto text-pretty';
 
     
-  if (title.toLowerCase() === "newsletter") {
+  if (title.toLowerCase() === "nyhetsbrev") {
     return renderNewsletter(baseBtnClasses, title);
   }
 

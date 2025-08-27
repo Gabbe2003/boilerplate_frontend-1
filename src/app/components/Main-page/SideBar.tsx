@@ -62,11 +62,11 @@ export function Sidebar() {
             {/* Newsletter CTA */}
             <section className="w-full p-3 bg-muted flex flex-col gap-2">
               <span className="text-sm font-medium">
-                Want to get noticed by over 20,000 users? Reach out to us and
-                feature your brand in our newsletter!
+                Vill du bli uppmärksammad av över 20 000 användare? Kontakta oss och
+                synliggör ditt varumärke i vårt nyhetsbrev!
               </span>
               <Button asChild size="default" className="text-[#fcf6f0] bg-black w-full">
-                <Link href="/advertisement">Advertise Now</Link>
+                <Link href="/advertisement">Annonsera nu</Link>
               </Button>
             </section>
 
@@ -83,16 +83,16 @@ export function Sidebar() {
 
             {/* Subscribe Section */}
             <section className="w-full pt-3 flex flex-col gap-2">
-              <span className="text-sm font-medium">DAILY NEWS IN YOUR INBOX!</span>
+              <span className="text-sm font-medium">DAGLIGA NYHETER I DIN INKORG!</span>
               <span className="text-sm font-medium">
-                Receive daily news with the most recent updates.
+                Få dagliga nyheter med de senaste uppdateringarna.
               </span>
               <Button
                 className="bg-black text-[#fcf6f0] w-full"
                 size="default"
                 onClick={handleOpenNewsletter}
               >
-                Subscribe Now
+                Prenumerera nu
               </Button>
             </section>
           </div>

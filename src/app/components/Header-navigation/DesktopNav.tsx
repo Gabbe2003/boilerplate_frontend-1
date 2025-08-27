@@ -38,7 +38,7 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
                   w-full
                   max-w-[92vw] md:max-w-[80vw] lg:max-w-[60vw] xl:max-w-[72vw]
                 "
-                aria-label="Categories"
+                aria-label="Kategorier"
                 role="navigation"
               >
               {categories.map((cat) => (
@@ -74,7 +74,7 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
             pathname === '/advertisement' ? 'ring-2 ring-gray-300' : ''
           }`}
         >
-          <Link href="/advertisement">Advertisement</Link>
+          <Link href="/advertisement">Annonsera</Link>
         </Button>
 
         <Button
@@ -82,7 +82,7 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
           variant="ghost"
           className="text-base font-normal min-w-0 text-black"
         >
-          Newsletter
+          Nyhetsbrev
         </Button>
       </div>
     </div>

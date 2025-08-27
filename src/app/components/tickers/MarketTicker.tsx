@@ -167,14 +167,14 @@ export function MarketTicker({
               <button
                 className="rounded-full p-2 hover:bg-zinc-800 border border-zinc-800"
                 onClick={() => api?.scrollPrev()}
-                aria-label="Scroll left"
+                aria-label="Skrolla åt vänster"
               >
                 <ChevronLeft size={16} />
               </button>
               <button
                 className="rounded-full p-2 hover:bg-zinc-800 border border-zinc-800"
                 onClick={() => api?.scrollNext()}
-                aria-label="Scroll right"
+                aria-label="Skrolla åt höger"
               >
                 <ChevronRight size={16} />
               </button>

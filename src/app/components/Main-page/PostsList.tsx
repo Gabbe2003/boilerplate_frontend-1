@@ -113,7 +113,7 @@ export default function PostsList() {
                   onClick={() => setVisibleCount((prev) => prev + 8)}
                   className="px-4 py-2 bg-blue-600 text-black text-sm font-medium rounded hover:bg-blue-700 transition hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Load more
+                  Ladda mer
                 </Button>
               </div>
             )}

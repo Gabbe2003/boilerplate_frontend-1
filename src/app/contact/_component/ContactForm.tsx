@@ -16,7 +16,7 @@ function SubmitButton() {
         pending ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
       }`}
     >
-      {pending ? "Submitting..." : "Submit Request"}
+      {pending ? "Skickar..." : "Skicka förfrågan"}
     </button>
   );
 }
@@ -29,12 +29,12 @@ export default function ContactForm() {
     <>
       {state.status === "success" && (
         <div className="bg-green-100 text-green-800 px-4 py-3 rounded-md border border-green-300 shadow-sm">
-          ✅ Your request has been successfully submitted!
+          ✅ Din förfrågan har skickats!
         </div>
       )}
       {state.status === "error" && (
         <div className="bg-red-100 text-red-800 px-4 py-3 rounded-md border border-red-300 shadow-sm">
-          ❌ {state.message ?? "Something went wrong. Please try again."}
+          ❌ {state.message ?? "Något gick fel. Försök igen."}
         </div>
       )}
 
@@ -43,7 +43,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="name" className="block font-medium text-gray-700 mb-1">
-            Your Name
+            Ditt namn
           </label>
           <input
             type="text"
@@ -63,7 +63,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="email" className="block font-medium text-gray-700 mb-1">
-            Email Address
+            E-postadress
           </label>
           <input
             type="email"
@@ -84,7 +84,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="link" className="block font-medium text-gray-700 mb-1">
-            Link URL
+            Länk-URL
           </label>
           <input
             type="url"
@@ -104,7 +104,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="message" className="block font-medium text-gray-700 mb-1">
-            What do you want to purchase
+            Vad vill du köpa?
           </label>
           <textarea
             id="message"

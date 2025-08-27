@@ -183,7 +183,7 @@ export default function SearchPosts({
             aria-busy={loading}
             className="bg-black hover:bg-primary-600 text-white"
           >
-            {loading ? "Loading…" : "Load more"}
+            {loading ? "Laddar…" : "Ladda mer"}
           </Button>
           {error && (
             <div

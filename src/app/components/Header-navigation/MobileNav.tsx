@@ -86,7 +86,7 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
           "
           style={{ willChange: 'transform' }}
         >
-          <DrawerTitle className="sr-only">Mobile Navigation</DrawerTitle>
+          <DrawerTitle className="sr-only">Mobilnavigering</DrawerTitle>
 
           {/* Drawer Header */}
           {/* CHANGED: p-4 -> p-3, removed mt-6 on the close button */}
@@ -129,7 +129,7 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
                       onClick={() => setOpen(false)}
                     >
                       <Link href="/advertisement" prefetch={false}>
-                        Advertisement
+                        Annonsering
                       </Link>
                     </Button>
                   </li>
@@ -145,7 +145,7 @@ export default function MobileNav({ links, onNewsletterClick, categories }: Mobi
                       variant="ghost"
                       className="h-auto min-h-0 w-full text-left py-2 mt-1 text-black font-normal"
                     >
-                      Newsletter
+                      Nyhetsbrev
                     </Button>
                   </li>
                 </>

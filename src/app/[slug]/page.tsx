@@ -8,8 +8,6 @@ import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
 
 type Params = Promise<{ slug: string | string[] }>;
 
-export const dynamicParams = false;
-
 async function extractHeadings(html: string): Promise<{ updatedHtml: string; toc: ITOCItem[] }> {
   const $ = load(html);
   const toc: ITOCItem[] = [];

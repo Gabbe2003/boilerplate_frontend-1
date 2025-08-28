@@ -43,7 +43,6 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
       {/* Outer layer: full-width background & border */}
       <header className="sticky top-0 z-50 w-full border-b bg-[#F3F8F7/80] backdrop-blur-md">
 
-
         {/* Inner container: truly 70% on lg, and the only place with horizontal padding */}
         <div className="mx-auto w-full lg:w-[90%] xl:w-[70%] px-2 sm:px-4 md:px-6">
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 py-0">

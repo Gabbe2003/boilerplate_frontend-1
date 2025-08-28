@@ -1,22 +1,33 @@
-import type { ReactNode } from 'react';
-import dynamic from 'next/dynamic';
-import { getLogo } from '@/lib/graph_queries/getLogo';
-import '@/styles/globals.css';
-import { AppProvider } from '@/store/AppContext';
-import { getAllPosts } from '@/lib/graph_queries/getPost';
-import { getTagLine } from '@/lib/graph_queries/getTagline';
-import HeaderServer from './components/Main-page/HeaderServer';
+// app/layout.tsx (or wherever this file lives)
+import type { ReactNode } from "react";
+import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+
+import "@/styles/globals.css";
+
+import { AppProvider } from "@/store/AppContext";
+import { getLogo } from "@/lib/graph_queries/getLogo";
+import { getAllPosts } from "@/lib/graph_queries/getPost";
+import { getTagLine } from "@/lib/graph_queries/getTagline";
+
+import HeaderServer from "./components/Main-page/HeaderServer";
 
 const Footer = dynamic(() => import("./components/Main-page/Footer"), {
   loading: () => <div className="w-full h-24 bg-gray-100" />,
 });
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
+  // If getLogo fails or returns nothing, fall back to the public asset
+  const logo = await getLogo().catch(() => null);
+
   return {
-    title: process.env.NEXT_PUBLIC_HOSTNAME || "Default Title",
+    title: process.env.NEXT_PUBLIC_HOSTNAME ?? "Default Title",
     description:
-      "Up-to-date tutorials, deep technical deep dives and thought pieces on web development, React, Next.js, and more.",
-    keywords: ["blog", "next.js", "react", "web development", "tutorials"],
+      "Dina dagliga nyheter inom finans, aktier och börsen",
+    keywords: ["ekonominyheter", "börsen", "aktier", "ekonomi", "finans"],
+    icons: {
+      icon: (typeof logo === "string" && logo) || "./full_logo_with_slogan.png",
+    },
   };
 }
 
@@ -26,14 +37,24 @@ interface RootLayoutProps {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const [favicon, posts, tagline] = await Promise.all([
-    getLogo(),
+    getLogo().catch(() => null),
     getAllPosts(),
-    getTagLine()
+    getTagLine(),
   ]);
 
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen ">
+      <head>
+        <link
+          rel="icon"
+          href={
+            (typeof favicon === "string" && favicon) ||
+            "./full_logo_with_slogan.png"
+          }
+          type="image/png"
+        />
+      </head>
+      <body className="flex min-h-screen flex-col">
         <AppProvider logo={favicon} posts={posts} tagline={tagline}>
           <HeaderServer />
           <main className="flex-1">{children}</main>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Post } from '@/lib/types';
-import { PostCard } from './PopularPostsCard';
+import PostCard from './PopularPostsCard';
 import PopularNewsSequenceClient from './featuredPostsTicker';
 import TodayPostsSidebar from '../TodayPostsSidebar';
 

@@ -21,8 +21,18 @@ export interface PostCardProps {
 
 function getExcerpt(text?: string, words = 10) {
   if (!text) return '';
-  const arr = text.split(/\s+/);
-  return arr.length > words ? arr.slice(0, words).join(' ') + '…' : text;
+  // Strip HTML tags and normalize whitespace/entities so "<p>...</p>" doesn't render
+  const withoutTags = text
+    .replace(/<\/?[^>]+>/g, ' ')         // remove HTML tags
+    .replace(/&nbsp;/g, ' ')             // common entity
+    .replace(/&(amp|quot|#39|apos|lt|gt);/g, (m) =>
+      ({ '&amp;': '&', '&quot;': '"', '&#39;': "'", '&apos;': "'", '&lt;': '<', '&gt;': '>' } as Record<string, string>)[m] ?? m
+    )
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const arr = withoutTags.split(/\s+/);
+  return arr.length > words ? arr.slice(0, words).join(' ') + '…' : withoutTags;
 }
 
 function getFirstCategory(post: PostCardProps['post']): string | undefined {
@@ -51,7 +61,7 @@ function getFirstCategory(post: PostCardProps['post']): string | undefined {
   return undefined;
 }
 
-export function PostCard({ post, className = '', variant = 'default' }: PostCardProps) {
+export default function PostCard({ post, className = '', variant = 'default' }: PostCardProps) {
   const featuredImageUrl = post.featuredImage?.node?.sourceUrl ?? '';
   const firstCategory = getFirstCategory(post);
 
@@ -68,7 +78,7 @@ export function PostCard({ post, className = '', variant = 'default' }: PostCard
               alt={post.title}
               fill
               quality={100}
-              sizes="(max-width:1024px) 100vw, 66vw"
+              sizes="100vw"  // ensure high-quality source for full-width hero
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               priority
             />
@@ -91,9 +101,9 @@ export function PostCard({ post, className = '', variant = 'default' }: PostCard
             {post.title}
           </p>
           {post.excerpt && (
-            <p className="mt-3 text-white/90 text-sm md:text-base leading-snug line-clamp-2">
+            <span className="mt-3 text-white/90 text-sm md:text-base leading-snug line-clamp-2 block">
               {getExcerpt(post.excerpt, 22)}
-            </p>
+            </span>
           )}
         </div>
       </div>
@@ -132,9 +142,9 @@ export function PostCard({ post, className = '', variant = 'default' }: PostCard
           {post.title}
         </p>
         {post.excerpt && (
-          <p className="text-base text-gray-800 leading-snug break-words">
+          <span className="text-base text-gray-800 leading-snug break-words block">
             {getExcerpt(post.excerpt, 10)}
-          </p>
+          </span>
         )}
       </div>
     </div>

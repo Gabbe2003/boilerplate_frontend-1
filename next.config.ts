@@ -9,7 +9,7 @@ const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL || 'boilerplate.local';
 
 const nextConfig = {
   env: {
-    WP_GRAPHQL_URL: process.env.WP_GRAPHQL_URL || 'http://localhost:8888/graphql',
+    WP_GRAPHQL_URL: process.env.WP_GRAPHQL_URL || 'http://localhost:3000G/graphql',
   },
   images: {
     remotePatterns: [

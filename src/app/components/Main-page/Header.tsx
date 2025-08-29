@@ -6,7 +6,7 @@ import { useAppContext } from '@/store/AppContext';
 import { useState, useCallback } from 'react';
 import DesktopNav from '../Header-navigation/DesktopNav';
 import MobileNav from '../Header-navigation/MobileNav';
-import type { SearchResult } from '../Header-navigation/hooks/useSearchBar';
+import { SearchResult } from '../Header-navigation/hooks/useSearchBar';
 import SearchBarInline from '../Header-navigation/SearchBarInline';
 import PopupModal from '../client/newsletter/Rule_sub';
 

@@ -10,7 +10,7 @@ const TradingViewTickerTape = dynamic(() => import('./tradingViewTicker'), {
 
 type Props = {
   preloadOffset?: string;
-  height?: number;
+  height: number;
   className?: string;
 };
 

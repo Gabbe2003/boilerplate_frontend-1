@@ -78,7 +78,7 @@ export default function PostCard({ post, className = '', variant = 'default' }: 
               alt={post.title}
               fill
               quality={100}
-              sizes="100vw"  // ensure high-quality source for full-width hero
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 1920px"
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               priority
             />

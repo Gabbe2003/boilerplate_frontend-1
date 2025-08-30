@@ -76,30 +76,21 @@ export function useCategorySections() {
     };
   }, [fetchCategories]);
 
+
+
   const fetchPosts = useCallback(
     async (slug: string, after?: string | null, signal?: AbortSignal) => {
       const qs = new URLSearchParams();
       qs.set('slug', slug);
+      if (after) qs.set('after', after);
 
-      if (after) {
-        // Pagination: always network
-        qs.set('after', after);
-        const res = await fetch(`/api/categories?${qs.toString()}`, {
-          signal,
-          cache: 'no-store',
-        });
-        if (!res.ok) throw new Error('Failed to fetch posts');
-        return (await res.json()) as PostsResponse;
-      } else {
-        // First page: soft revalidate by versioned URL
-        qs.set('v', versionStamp());
-        const res = await fetch(`/api/categories?${qs.toString()}`, {
-          signal,
-          cache: 'force-cache',
-        });
-        if (!res.ok) throw new Error('Failed to fetch posts');
-        return (await res.json()) as PostsResponse;
-      }
+      const res = await fetch(`/api/categories?${qs.toString()}`, {
+        signal,
+        // For first page, allow server cache; for pagination we pass `after`
+        cache: after ? 'no-store' : 'force-cache',
+      });
+      if (!res.ok) throw new Error('Failed to fetch posts');
+      return (await res.json()) as PostsResponse;
     },
     []
   );

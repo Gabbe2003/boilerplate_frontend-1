@@ -50,15 +50,14 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
             <div className="flex items-center min-h-[40px]">
               <Link href="/" aria-label="Gå till startsidan" className="flex-shrink-0">
                 <div className="relative w-[100px] h-auto">
-           <Image
-          src="/full_logo_with_slogan.png"
-          alt="Logotyp"
-          width={100}
-          height={60}
-          className="!w-[100px] !h-[60px] object-contain"
-          priority
-        />
-
+              <Image
+              src="/full_logo_with_slogan.png"
+              alt="Logotyp"
+              width={100}
+              height={60}
+              className="!w-[100px] !h-[60px] object-contain"
+              priority
+            />
               </div>
               </Link>
             </div>

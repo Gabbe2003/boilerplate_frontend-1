@@ -146,6 +146,9 @@ export function useCategorySections() {
     };
   }, [selectedCategorySlug, fetchPosts]);
 
+
+  
+
   // Hover/idle prefetch for smoother switches
   const prefetchCategory = useCallback(
     (slug: string) => {
@@ -203,16 +206,6 @@ export function useCategorySections() {
       setPostsLoading(false);
     }
   }
-
-  // Prefetch first few categories on idle
-  useEffect(() => {
-    if (!categories.length) return;
-    idle(() => {
-      categories.slice(0, 3).forEach((c) => {
-        if (c.slug !== selectedCategorySlug) prefetchCategory(c.slug);
-      });
-    });
-  }, [categories, selectedCategorySlug, prefetchCategory]);
 
   // Soft revalidate while the tab stays open:
   // When the version window rolls over, refresh categories and the selected category's first page.

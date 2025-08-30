@@ -54,7 +54,7 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
                     text-black hover:bg-transparent hover:underline
                   "
                 >
-                  <Link href={`/category/${cat.slug}`} className="truncate">
+                  <Link href={`/category/${cat.slug}`} className="truncate" prefetch={false}>
                     {cat.name}
                   </Link>
                 </Button>
@@ -74,7 +74,7 @@ export default function DesktopNav({ onNewsletterClick, categories }: DesktopNav
             pathname === '/advertisement' ? 'ring-2 ring-gray-300' : ''
           }`}
         >
-          <Link href="/advertisement">Annonsera</Link>
+          <Link href="/advertisement" prefetch={false}>Annonsera</Link>
         </Button>
 
         <Button

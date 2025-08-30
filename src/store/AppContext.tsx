@@ -32,7 +32,7 @@ export const DEFAULT_LINKS = [
 export interface AppContextType {
   links: LinkItem[];
   logo: Logo | null;
-  posts: Post[];
+  posts?: Post[];
   searchBarHeader: string;
   setSearchBarHeader: Dispatch<SetStateAction<string>>;
   tagline: string;
@@ -51,7 +51,7 @@ export interface AppProviderProps {
   children: ReactNode;
   links?: LinkItem[];
   logo?: Logo | null;
-  posts: Post[];
+  posts?: Post[];
   tagline?: string;
 }
 
@@ -59,7 +59,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({
   children,
   links = DEFAULT_LINKS,
   logo = null,
-  posts,
+  posts = [],
   tagline = '',
 }) => {
   const [searchBarHeader, setSearchBarHeader] = useState('');

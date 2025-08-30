@@ -1,5 +1,5 @@
 // Serverkomponent (ingen 'use client')
-import { getPostByPeriod, getAllPosts } from '@/lib/graph_queries/getPost';
+import { getPostByPeriod } from '@/lib/graph_queries/getPost';
 import PopularNews from './PopularPostsGrid';
 import { Post } from '@/lib/types';
 import { getSiteTagline } from '@/lib/graph_queries/getSiteTagline';
@@ -42,7 +42,7 @@ function appendWithoutDupes(base: Post[], extra: Post[], seen: Set<string>): Pos
   return out;
 }
 
-export default async function PopularPosts() {
+export default async function PopularPosts({ posts = [] }: { posts?: Post[] }) {
   const taglinePromise = getSiteTagline();
 
   // 1) Week
@@ -56,10 +56,9 @@ export default async function PopularPosts() {
     merged = appendWithoutDupes(merged, month, seen);
   }
 
-  // 3) Top up from Latest (guaranteed to have posts)
-  if (merged.length < 9) {
-    const latest = (await getAllPosts()) ?? [];
-    merged = appendWithoutDupes(merged, latest, seen);
+  // 3) Top up from Latest (using existing posts)
+  if (merged.length < 9 && posts.length > 0) {
+    merged = appendWithoutDupes(merged, posts, seen);
   }
 
   const tagline = await taglinePromise;

@@ -7,7 +7,6 @@ import "@/styles/globals.css";
 
 import { AppProvider } from "@/store/AppContext";
 import { getLogo } from "@/lib/graph_queries/getLogo";
-import { getAllPosts } from "@/lib/graph_queries/getPost";
 import { getTagLine } from "@/lib/graph_queries/getTagline";
 
 import HeaderServer from "./components/Main-page/HeaderServer";
@@ -36,9 +35,8 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const [favicon, posts, tagline] = await Promise.all([
+  const [favicon, tagline] = await Promise.all([
     getLogo().catch(() => null),
-    getAllPosts(),
     getTagLine(),
   ]);
 
@@ -55,7 +53,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body className="flex min-h-screen flex-col">
-        <AppProvider logo={favicon} posts={posts} tagline={tagline}>
+        <AppProvider logo={favicon} tagline={tagline}>
           <HeaderServer />
           <main className="flex-1">{children}</main>
           <Footer />

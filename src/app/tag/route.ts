@@ -1,4 +1,4 @@
-import { getTagBySlug } from "@/lib/graph_queries/getTag";
+import { getTagPosts } from "@/lib/graph_queries/getTag";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -11,10 +11,10 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const tag = await getTagBySlug(slug, after);
+    const posts = await getTagPosts(slug, after);
     return NextResponse.json({
-      posts: tag.posts.nodes,
-      pageInfo: tag.posts.pageInfo,
+      posts: posts.nodes,
+      pageInfo: posts.pageInfo,
     });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {

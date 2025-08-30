@@ -12,6 +12,7 @@ import {
 import { ChevronRight } from "lucide-react";
 import type { Metadata } from "next";
 import { getBestSeoBySlug } from "@/lib/seo/seo-helpers";
+import { cache } from "react";
 import { Post } from "@/lib/types";
 import TagPosts from "./TagPosts";
 
@@ -43,9 +44,13 @@ function safeParse<T = unknown>(raw?: string): T | null {
   }
 }
 
+const getTagSeo = cache(async (slug: string) => {
+  return getBestSeoBySlug(slug, "tag");
+});
+
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const { meta } = await getBestSeoBySlug(slug, "tag");
+  const { meta } = await getTagSeo(slug);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (meta.other as any)?.jsonLd as string | undefined;
@@ -72,8 +77,8 @@ export default async function TagPage({ params }: { params: Params }) {
 
   if (!tag) notFound();
 
-  // Fetch SEO again for JSON-LD injection (server-rendered)
-  const { meta: seoMeta } = await getBestSeoBySlug(slug, "tag");
+  // Fetch SEO once and reuse for JSON-LD injection
+  const { meta: seoMeta } = await getTagSeo(slug);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (seoMeta.other as any)?.jsonLd as string | undefined;
   safeParse(jsonLdRaw);

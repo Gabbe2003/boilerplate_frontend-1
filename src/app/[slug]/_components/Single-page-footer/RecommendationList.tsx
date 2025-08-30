@@ -8,7 +8,7 @@ import Image from "next/image";
 interface Props { currentSlug: string }
 
 export default function RecommendationListMarquee({ currentSlug }: Props) {
-  const { posts } = useAppContext();
+  const { posts = [] } = useAppContext();
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
 

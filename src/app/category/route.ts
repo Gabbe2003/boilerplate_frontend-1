@@ -1,4 +1,4 @@
-import { getCategoryBySlug } from "@/lib/graph_queries/getCategory";
+import { getCategoryPosts } from "@/lib/graph_queries/getCategory";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -11,10 +11,10 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const category = await getCategoryBySlug(slug, after);
+    const posts = await getCategoryPosts(slug, after);
     return NextResponse.json({
-      posts: category.posts.nodes,
-      pageInfo: category.posts.pageInfo,
+      posts: posts.nodes,
+      pageInfo: posts.pageInfo,
     });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err:any) {

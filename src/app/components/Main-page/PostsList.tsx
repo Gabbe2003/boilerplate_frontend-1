@@ -8,9 +8,10 @@ import { stripHtml } from '@/lib/helper_functions/strip_html';
 import { Sidebar } from './SideBar';
 import { Button } from '@/components/ui/button';
 import TradingViewWidget from '../tickers/uppcomingEventsTicker';
+import type { Post } from '@/lib/types';
 
-export default function PostsList() {
-  const { searchBarHeader, posts } = useAppContext();
+export default function PostsList({ posts }: { posts: Post[] }) {
+  const { searchBarHeader } = useAppContext();
   const term = searchBarHeader.trim().toLowerCase();
   const filtered = term
     ? posts.filter((p) => p.title.toLowerCase().includes(term))

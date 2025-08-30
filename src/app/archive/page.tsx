@@ -15,7 +15,7 @@ function getFirstWords(htmlOrText: string, count: number) {
 }
 
 export default function PostsList() {
-  const { searchBarHeader, posts } = useAppContext();
+  const { searchBarHeader, posts = [] } = useAppContext();
   const term = searchBarHeader.trim().toLowerCase();
   const filtered = term
     ? posts.filter((p) => stripHtml(p.title).toLowerCase().includes(term))

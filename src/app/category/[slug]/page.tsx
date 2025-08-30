@@ -14,6 +14,7 @@ import Image from "next/image";
 import { ICategory, Post } from "@/lib/types";
 import type { Metadata } from "next";
 import { getBestSeoBySlug } from "@/lib/seo/seo-helpers";
+import { cache } from "react";
 import CategoryPosts from "./CategoryPosts";
 
 type Params = { slug: string };
@@ -28,11 +29,15 @@ function safeParse<T = unknown>(raw?: string): T | null {
   }
 }
 
+const getCategorySeo = cache(async (slug: string) => {
+  return getBestSeoBySlug(slug, "category");
+});
+
 export async function generateMetadata(
   { params }: { params: Promise<Params> }
 ): Promise<Metadata> {
   const { slug } = await params;
-  const { meta } = await getBestSeoBySlug(slug, "category");
+  const { meta } = await getCategorySeo(slug);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (meta.other as any)?.jsonLd as string | undefined;
@@ -61,7 +66,7 @@ export default async function CategoryPage(
 
   if (!category) notFound();
 
-  const { meta: seoMeta } = await getBestSeoBySlug(slug, "category");
+  const { meta: seoMeta } = await getCategorySeo(slug);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (seoMeta.other as any)?.jsonLd as string | undefined;
   safeParse(jsonLdRaw);

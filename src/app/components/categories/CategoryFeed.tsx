@@ -107,7 +107,7 @@ export default function CategorySections() {
                     aria-label={`Read more from ${selectedCategory.name}`}
                     className="cursor-pointer hover:underline border shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 px-6 py-2 text-sm font-medium rounded-sm break-words max-w-[90vw] text-center"
                   >
-                    Wanna read more from{" "}
+                    Vill du läsa mer från{" "}
                     <span className="capitalize">{selectedCategory.name}</span>
                   </Link>
                 </div>

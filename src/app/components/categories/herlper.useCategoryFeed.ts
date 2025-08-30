@@ -21,6 +21,13 @@ function versionStamp() {
   return String(Math.floor(Date.now() / (REVALIDATE_SECONDS * 1000)));
 }
 
+const idle = (cb: () => void) => {
+  if (typeof window === 'undefined') return;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ric: any = (window as any).requestIdleCallback || ((fn: any) => setTimeout(fn, 1));
+  ric(cb);
+};
+
 export function useCategorySections() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategorySlug, setSelectedCategorySlug] = useState<string | null>(null);
@@ -37,6 +44,7 @@ export function useCategorySections() {
   const abortRef = useRef<AbortController | null>(null);
 
   // Track current version; when it rolls over, we can refresh silently
+  const currentVersionRef = useRef<string>(versionStamp());
 
   // 1) Load all categories (soft-revalidate via versioned URL)
   const fetchCategories = useCallback(async (signal?: AbortSignal) => {
@@ -139,6 +147,23 @@ export function useCategorySections() {
   }, [selectedCategorySlug, fetchPosts]);
 
 
+  
+
+  // Hover/idle prefetch for smoother switches
+  const prefetchCategory = useCallback(
+    (slug: string) => {
+      if (!slug || cacheRef.current.has(slug)) return;
+      idle(async () => {
+        try {
+          const { posts, pageInfo } = await fetchPosts(slug);
+          cacheRef.current.set(slug, { posts: posts ?? [], pageInfo });
+        } catch {
+          /* ignore idle errors */
+        }
+      });
+    },
+    [fetchPosts]
+  );
 
   function handleCategoryClick(slug: string) {
     if (slug === selectedCategorySlug) return;
@@ -148,7 +173,7 @@ export function useCategorySections() {
     if (cached) {
       setSelectedCategorySlug(slug);
       // kick an idle refresh in the background
-      // prefetchCategory(slug); // disabled
+      prefetchCategory(slug);
       return;
     }
     // Not cached: switch (effect will fetch) and show spinner
@@ -182,6 +207,59 @@ export function useCategorySections() {
     }
   }
 
+  // Prefetch first few categories on idle
+  useEffect(() => {
+    if (!categories.length) return;
+    idle(() => {
+      categories.slice(0, 3).forEach((c) => {
+        if (c.slug !== selectedCategorySlug) prefetchCategory(c.slug);
+      });
+    });
+  }, [categories, selectedCategorySlug, prefetchCategory]);
+
+  // Soft revalidate while the tab stays open:
+  // When the version window rolls over, refresh categories and the selected category's first page.
+  useEffect(() => {
+    const tickMs = 60_000; // check every 60s
+    let alive = true;
+
+    const runRefresh = async () => {
+      try {
+        // categories
+        const cats = await fetchCategories();
+        if (!alive) return;
+        setCategories(cats);
+
+        // selected category first page
+        if (selectedCategorySlug) {
+          const { posts, pageInfo } = await fetchPosts(selectedCategorySlug);
+          if (!alive) return;
+
+          cacheRef.current.set(selectedCategorySlug, { posts: posts ?? [], pageInfo });
+          setSelectedCategoryPosts(posts ?? []);
+          setEndCursor(pageInfo?.endCursor ?? null);
+          setHasNextPage(!!pageInfo?.hasNextPage);
+        }
+      } catch {
+        // ignore background errors
+      }
+    };
+
+    const interval = setInterval(() => {
+      const v = versionStamp();
+      if (v !== currentVersionRef.current) {
+        currentVersionRef.current = v;
+        // do a gentle, background refresh
+        idle(runRefresh);
+      }
+    }, tickMs);
+
+    return () => {
+      alive = false;
+      clearInterval(interval);
+    };
+  }, [fetchCategories, fetchPosts, selectedCategorySlug]);
+
   return {
     categories,
     selectedCategorySlug,
@@ -191,5 +269,6 @@ export function useCategorySections() {
     hasNextPage,
     handleCategoryClick,
     loadMorePosts,
+    prefetchCategory,
   };
 }

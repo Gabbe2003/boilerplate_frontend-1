@@ -26,7 +26,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row mb-8 gap-8">
           {/* Logo/Tagline */}
           <div className="flex flex-col items-start min-w-[170px]">
-            <Link href="/" className="mb-4 flex-shrink-0 flex items-center py-6" aria-label="Gå till startsidan">
+            <Link href="/" className="mb-4 flex-shrink-0 flex items-center py-6" aria-label="Gå till startsidan" prefetch={false}>
               <Image
                 src="/full_logo_with_slogan.png"
                 alt="Logotyp"

@@ -35,7 +35,7 @@ const SocialMediaButtons = ({ className }: { className?: string }) => (
         asChild
         aria-label={label}
       >
-        <Link href={url} target="_blank" rel="noopener noreferrer">
+        <Link href={url} target="_blank" rel="noopener noreferrer" prefetch={false}>
           <Icon className="w-5 h-5 text-neutral-500" />
         </Link>
       </Button>

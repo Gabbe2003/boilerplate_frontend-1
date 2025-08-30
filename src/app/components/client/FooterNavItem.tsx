@@ -55,7 +55,7 @@ export default function FooterNavItem({
       variant="link"
       className={`${baseBtnClasses} ${isActive ? 'text-yellow-500' : ''}`}
     >
-      <Link href={href}>{title}</Link>
+      <Link prefetch={false} href={href}>{title}</Link >
     </Button>
   );
 }

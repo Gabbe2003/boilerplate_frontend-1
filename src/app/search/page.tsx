@@ -228,7 +228,7 @@ export default async function SearchPage({
               </p>
               <div className="text-gray-500 mb-2">
                 Prova ett annat sökord eller bläddra bland våra{" "}
-                <Link href="/" className="underline">
+                <Link href="/" className="underline" prefetch={false}>
                   senaste inlägg
                 </Link>
                 .

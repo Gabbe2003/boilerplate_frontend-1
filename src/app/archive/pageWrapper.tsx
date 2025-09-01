@@ -65,7 +65,7 @@ export default function Archive({posts}) {
                   >
                     {/* Bild */}
                     {imgSrc ? (
-                      <Link href={`/${post.slug}`} className="block overflow-hidden">
+                      <Link href={`/${post.slug}`} className="block overflow-hidden" prefetch={false}>
                         <div className="relative w-full aspect-[1200/450]">
                           <Image
                             src={imgSrc || '/favicon_logo.png'}
@@ -99,6 +99,7 @@ export default function Archive({posts}) {
                     {/* Innehåll */}
                     <div className="pt-4 flex flex-col flex-1">
                       <Link
+                        prefetch={false}
                         href={`/${post.slug}`}
                         className="font-bold text-lg mb-1 hover:underline line-clamp-2"
                         dangerouslySetInnerHTML={{ __html: post.title }}
@@ -117,6 +118,7 @@ export default function Archive({posts}) {
                           )}
                           {post.author?.node && (
                             <Link
+                              prefetch={false}
                               href={`/author/${post.author.node.slug}`}
                               className="text-xs text-gray-700 hover:underline"
                             >

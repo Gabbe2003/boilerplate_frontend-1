@@ -1,4 +1,3 @@
-// app/api/categories/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllCategories, getCategoryBySlug } from '@/lib/graph_queries/getCategory';
 

@@ -16,7 +16,6 @@ interface CategoryPostsProps {
 }
 
 async function fetchMorePosts(slug: string, after: string) {
-  // Adjust this route to your actual API route if needed, e.g. /api/category
   const res = await fetch(`/category?slug=${encodeURIComponent(slug)}&after=${encodeURIComponent(after)}`, {
     method: "GET",
     headers: { "Content-Type": "application/json" },
@@ -76,7 +75,7 @@ export default function CategoryPosts({ slug, initialPosts, initialPageInfo }: C
               key={post.id}
               className="rounded-sm cursor-pointer hover:shadow-none transition flex flex-col overflow-hidden group"
             >
-              <Link href={`/${post.slug}`} className="block overflow-hidden">
+              <Link prefetch={false} href={`/${post.slug}`} className="block overflow-hidden">
                 {/* Match old aspect ratio: 600/300 = 2:1 */}
                 <div className="relative w-full aspect-[600/300]">
                   <Image
@@ -105,6 +104,7 @@ export default function CategoryPosts({ slug, initialPosts, initialPageInfo }: C
                 {/* Title + Date row */}
                 <div className="flex items-center justify-between gap-2">
                   <Link
+                   prefetch={false}
                     href={`/${post.slug}`}
                     className="font-bold text-lg hover:underline line-clamp-1"
                   >

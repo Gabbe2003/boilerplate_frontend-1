@@ -8,19 +8,18 @@ import { ITOCItem } from '@/lib/types';
 import Link from 'next/link';
 
 export function TocCard({ toc }: { toc: ITOCItem[] }) {
-  const [open, setOpen] = useState(true); 
+  const [open, setOpen] = useState(true);
 
   return (
     <Card className="mt-2 overflow-hidden shadow-none rounded-sm">
-      <CardHeader className="flex items-center justify-between px-6">
-        <nav className="text-lg font-semibold">Innehållsförteckning</nav>
+      <CardHeader className="flex justify-start lg:justify-center px-6">
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={() => setOpen((o) => !o)}
-          className="cursor-pointer"
+          className="text-lg text-start lg:text-center items-start lg:items-center justify-start lg:justify-center font-semibold cursor-pointer px-4 py-2 underline"
         >
-          {open ? 'Dölj' : 'Visa'}
+          Innehållsförteckning
         </Button>
       </CardHeader>
 

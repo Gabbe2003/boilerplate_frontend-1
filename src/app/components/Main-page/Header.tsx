@@ -48,7 +48,7 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 py-0">
             {/* Left: Logo */}
             <div className="flex items-center min-h-[40px]">
-              <Link href="/" aria-label="Gå till startsidan" className="flex-shrink-0">
+              <Link prefetch={false} href="/" aria-label="Gå till startsidan" className="flex-shrink-0">
                 <div className="relative w-[100px] h-auto">
               <Image
               src="/full_logo_with_slogan.png"

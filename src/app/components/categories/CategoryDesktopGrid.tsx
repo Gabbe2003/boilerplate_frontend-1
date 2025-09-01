@@ -44,17 +44,18 @@ export default function CategoryDesktopGrid({ posts }: Props) {
               key={post.id}
               className={`group block ${index < top.length - 1 ? 'border-r border-gray-200 pr-6' : ''}`}
             >
-              <Link href={`/${post.slug}`}>
+              <Link href={`/${post.slug}`} prefetch={false} >
                 {img && (
                   <div className="relative w-full aspect-[4/3] overflow-hidden">
                     <Image
-                      src={img}
+                    src={img || '/full_logo_with_slogan.png'}
                       alt={alt}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
                 )}
+                
                 <div className="mt-3">
                   {cat && (
                     <span className="block text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
@@ -94,12 +95,12 @@ export default function CategoryDesktopGrid({ posts }: Props) {
               key={post.id}
               className={`group grid grid-cols-5 gap-6 items-center ${index === 0 ? 'border-r border-gray-200 pr-8' : ''}`}
             >
-              <Link href={`/${post.slug}`} className="contents">
+              <Link href={`/${post.slug}`}  prefetch={false} className="contents">
                 {/* Image left */}
                 <div className="relative col-span-2 aspect-[16/10] overflow-hidden">
                   {img && (
                     <Image
-                      src={img}
+                      src={img || '/full_logo_with_slogan.png'}
                       alt={alt}
                       fill
                       className="object-cover transition-transform duration-300 group-hover:scale-105"

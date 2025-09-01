@@ -71,7 +71,7 @@ export default function TagPosts({ slug, initialPosts, initialPageInfo }: TagPos
         style={{ contentVisibility: "auto", containIntrinsicSize: "1px 800px" as any }}
       >
         {posts.map((post: Post, idx: number) => {
-          const imgSrc = post.featuredImage?.node?.sourceUrl || "./full_logo_with_slogan.png";
+          const imgSrc = post.featuredImage?.node?.sourceUrl || "/full_logo_with_slogan.png";
           const imgAlt = post.featuredImage?.node?.altText || post.title || "Post image";
 
           // First card can be LCP if above fold
@@ -101,7 +101,7 @@ export default function TagPosts({ slug, initialPosts, initialPageInfo }: TagPos
                     placeholder="blur"
                     // prefer per-image blur, fallback to favicon
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    blurDataURL={(post as any)?.featuredImage?.node?.blurDataURL || "./full_logo_with_slogan.png"}
+                    blurDataURL={(post as any)?.featuredImage?.node?.blurDataURL || "/full_logo_with_slogan.png"}
                   />
                 </div>
               </Link>

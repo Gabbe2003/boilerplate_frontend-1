@@ -38,7 +38,7 @@ export default function CategoryMobileCarousel({ posts }: Props) {
                   {post.featuredImage?.node?.sourceUrl && (
                     <div className="relative w-full aspect-[16/9] overflow-hidden rounded-md shadow-sm">
                       <Image
-                        src={post.featuredImage.node.sourceUrl}
+                        src={post.featuredImage.node.sourceUrl || '/full_logo_with_slogan.png'}
                         alt={
                           post.featuredImage.node.altText ||
                           post.title ||

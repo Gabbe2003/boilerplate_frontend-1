@@ -98,7 +98,7 @@ export default function RecommendationListMarquee({ currentSlug, posts }: Props)
                   aria-hidden="true"
                 >
                   <Image
-                    src={p.featuredImage?.node.sourceUrl || "./full_logo_with_slogan.png"}
+                    src={p.featuredImage?.node.sourceUrl || "/full_logo_with_slogan.png"}
                     alt=""               // decorative; title follows
                     fill
                     className="object-cover"
@@ -139,7 +139,7 @@ export default function RecommendationListMarquee({ currentSlug, posts }: Props)
                   aria-hidden="true"
                 >
                   <Image
-                    src={p.featuredImage?.node.sourceUrl || "./full_logo_with_slogan.png"}
+                    src={p.featuredImage?.node.sourceUrl || "/full_logo_with_slogan.png"}
                     alt=""             
                     fill
                     className="object-cover"

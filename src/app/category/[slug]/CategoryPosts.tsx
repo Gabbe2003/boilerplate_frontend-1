@@ -64,7 +64,7 @@ export default function CategoryPosts({ slug, initialPosts, initialPageInfo }: C
           style={{ contentVisibility: "auto", containIntrinsicSize: "1px 800px" as any }}
       >
         {posts.map((post: Post, idx) => {
-          const imgSrc = post.featuredImage?.node?.sourceUrl || "/favicon_logo.png";
+          const imgSrc = post.featuredImage?.node?.sourceUrl || "./full_logo_with_slogan.png";
           const imgAlt = post.featuredImage?.node?.altText || post.title || "Post image";
 
           // First image gets LCP optimization
@@ -94,7 +94,7 @@ export default function CategoryPosts({ slug, initialPosts, initialPageInfo }: C
                     blurDataURL={
                       // Prefer a per-image blur if available, fallback to favicon
                       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (post as any)?.featuredImage?.node?.blurDataURL || "/favicon_logo.png"
+                      (post as any)?.featuredImage?.node?.blurDataURL || "./full_logo_with_slogan.png"
                     }
                   />
                 </div>

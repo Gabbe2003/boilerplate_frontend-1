@@ -148,7 +148,7 @@ return (
                 const imgSrc =
                   post.featuredImage?.node?.sourceUrl ||
                   author.avatar?.url ||
-                  '/favicon_logo.png';
+                  './full_logo_with_slogan.png';
                 const imgAlt =
                   post.featuredImage?.node?.altText || post.title || author.name;
 
@@ -179,7 +179,7 @@ return (
                     loading={isLCP ? 'eager' : 'lazy'}
                     placeholder="blur"
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    blurDataURL={(post as any)?.featuredImage?.node?.blurDataURL || "/favicon_logo.png"}
+                    blurDataURL={(post as any)?.featuredImage?.node?.blurDataURL || "./full_logo_with_slogan.png"}
                     quality={85} // 🔹 increase from 70 → 85 for sharper images
                   />
                 </div>

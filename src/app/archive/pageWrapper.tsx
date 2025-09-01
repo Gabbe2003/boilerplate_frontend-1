@@ -68,7 +68,7 @@ export default function Archive({posts}) {
                       <Link href={`/${post.slug}`} className="block overflow-hidden" prefetch={false}>
                         <div className="relative w-full aspect-[1200/450]">
                           <Image
-                            src={imgSrc || '/favicon_logo.png'}
+                            src={imgSrc || './full_logo_with_slogan.png'}
                             alt={imgAlt}
                             fill
                             sizes="(max-width: 640px) 100vw,
@@ -84,7 +84,7 @@ export default function Archive({posts}) {
                               !isLCP
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 ? (post as any)?.featuredImage?.node?.blurDataURL ||
-                                  '/favicon_logo.png'
+                                  './full_logo_with_slogan.png'
                                 : undefined
                             }
                           />

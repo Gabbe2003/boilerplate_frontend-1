@@ -90,6 +90,7 @@ export default function RecommendationListMarquee({ currentSlug, posts }: Props)
               <Link
                 key={`${p.slug}-1-${i}`}
                 href={`/${p.slug}`}
+                prefetch={false}
                 className="inline-flex items-center gap-4 whitespace-nowrap hover:underline"
               >
                 <span
@@ -97,7 +98,7 @@ export default function RecommendationListMarquee({ currentSlug, posts }: Props)
                   aria-hidden="true"
                 >
                   <Image
-                    src={p.featuredImage?.node.sourceUrl || "/favicon_logo.png"}
+                    src={p.featuredImage?.node.sourceUrl || "./full_logo_with_slogan.png"}
                     alt=""               // decorative; title follows
                     fill
                     className="object-cover"
@@ -128,6 +129,7 @@ export default function RecommendationListMarquee({ currentSlug, posts }: Props)
           >
             {row.map((p, i) => (
               <Link
+                prefetch={false}
                 key={`${p.slug}-2-${i}`}
                 href={`/${p.slug}`}
                 className="inline-flex items-center gap-4 whitespace-nowrap hover:underline"
@@ -137,8 +139,8 @@ export default function RecommendationListMarquee({ currentSlug, posts }: Props)
                   aria-hidden="true"
                 >
                   <Image
-                    src={p.featuredImage?.node.sourceUrl || "/placeholder.png"}
-                    alt=""               // decorative; title follows
+                    src={p.featuredImage?.node.sourceUrl || "./full_logo_with_slogan.png"}
+                    alt=""             
                     fill
                     className="object-cover"
                     sizes="160px"

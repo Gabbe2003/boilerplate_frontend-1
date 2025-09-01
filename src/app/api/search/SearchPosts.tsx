@@ -107,7 +107,7 @@ export default function SearchPosts({
                 <Link href={`/${post.slug}`} className="block overflow-hidden">
                   <div className="relative w-full aspect-[1200/450]">
                   <Image
-                  src={imgSrc || "/favicon_logo.png"}
+                  src={imgSrc || "./full_logo_with_slogan.png"}
                   alt={imgAlt}
                   fill
                   sizes="(max-width: 640px) 100vw,
@@ -120,7 +120,7 @@ export default function SearchPosts({
                   loading={isLCP ? "eager" : "lazy"}
                   placeholder={isLCP ? "empty" : "blur"}
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  blurDataURL={!isLCP ? (post as any)?.featuredImage?.node?.blurDataURL || "/favicon_logo.png" : undefined}
+                  blurDataURL={!isLCP ? (post as any)?.featuredImage?.node?.blurDataURL || "./full_logo_with_slogan.png" : undefined}
                 />
                   </div>
                 </Link>

@@ -133,7 +133,7 @@ export function ArticleContent({
                   ? undefined
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   : (post as any)?.featuredImage?.node?.blurDataURL) ||
-                "/favicon_logo.png"
+                "./full_logo_with_slogan.png"
               }
             />
           </div>

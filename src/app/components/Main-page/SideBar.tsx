@@ -66,7 +66,7 @@ export function Sidebar() {
                 synliggör ditt varumärke i vårt nyhetsbrev!
               </span>
               <Button asChild size="default" className="text-[#fcf6f0] bg-black w-full">
-                <Link href="/advertisement">Annonsera nu</Link>
+                <Link href="/advertisement" prefetch={false}>Annonsera nu</Link>
               </Button>
             </section>
 

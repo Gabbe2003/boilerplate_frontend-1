@@ -10,15 +10,14 @@ const nextConfig = {
   env: {
     WP_GRAPHQL_URL: process.env.WP_GRAPHQL_URL || 'http://localhost:3000/graphql',
   },
+
   images: {
     remotePatterns: [
-      // Ad images
       {
         protocol: 'https',
         hostname: 'track.adtraction.com',
         pathname: '/t/**',
       },
-      // Your site(s)
       {
         protocol: 'https',
         hostname: 'newfinanstid.kinsta.cloud',
@@ -26,10 +25,9 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'staging6.finanstidning.se', // <- fixed (no scheme, no slash)
+        hostname: 'staging6.finanstidning.se',
         pathname: '/**',
       },
-      // Local/dev hosts (note: these are http; update to https if applicable)
       {
         protocol: 'http',
         hostname: HOSTNAME,
@@ -40,13 +38,53 @@ const nextConfig = {
         hostname: HOST_URL,
         pathname: '/**',
       },
-      // Gravatar
       {
         protocol: 'https',
         hostname: 'secure.gravatar.com',
         pathname: '/**',
       },
     ],
+  },
+
+  async headers() {
+    return [
+      {
+        source: '/full_logo_with_slogan.png',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/favicon.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/icon.png',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
   },
 };
 

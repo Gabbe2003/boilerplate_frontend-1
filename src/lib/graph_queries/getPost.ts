@@ -1,5 +1,4 @@
 import "server-only"; 
-
 import { Post, GraphQLError } from '@/lib/types';
 import { normalizeImages } from '../helper_functions/featured_image';
 import { wpGraphQLCached, wpRestCached } from "../wpCached";
@@ -158,7 +157,7 @@ export async function get_popular_post(): Promise<Post[]> {
 
     const json = await wpRestCached<PopularAPIResponse>(
       url,
-      { revalidate: 300, tags: ['popular'] }
+      { revalidate: 450, tags: ['popular'] }
     );
 
     const rawPosts: RawView[] = Array.isArray(json)
@@ -218,7 +217,7 @@ export async function getPostByPeriod(
   try {
     const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`;
 
-    const data = await wpRestCached<unknown>(url, { revalidate: 400, tags: ['views'] });
+    const data = await wpRestCached<unknown>(url, { revalidate: 450, tags: ['views'] });
 
     if (!Array.isArray(data)) {
       console.error('[getViews] payload is not an array:', data);
@@ -266,6 +265,22 @@ export async function getPostByPeriod(
   }
 }
 
+// Dynamically decide cache TTL based on post age
+const ttlForPost = (isoDate?: string): number => {
+  if (!isoDate) return 3600; // Fallback: 1 hour
+
+  const ageMs = Date.now() - new Date(isoDate).getTime();
+
+  // ⏱️ Very fresh (< 6h) → cache for 10 minutes
+  if (ageMs < 6 * 3600_000) return 600;
+
+  // ⏱️ Recent (< 24h) → cache for 30 minutes
+  if (ageMs < 24 * 3600_000) return 1800;
+
+  // 📰 Older posts (≥ 24h) → cache for 24 hours
+  return 86400;
+};
+
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   const query = `
     query GetPostBySlug($slug: String!) {
@@ -284,14 +299,14 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
           }
         }
         author {
-      node {
-        name
-        description
-        avatar {
-          url
+          node {
+            name
+            description
+            avatar {
+              url
+            }
+          }
         }
-      }
-}
         categories {
           nodes {
             name
@@ -307,24 +322,35 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   `;
 
   try {
+    // 1. Fetch the post first without setting a strict TTL
     const json = await wpGraphQLCached<{
+      data?: { postBy?: Post };
+      errors?: GraphQLError;
+    }>(query, { slug });
+
+    const post = json?.data?.postBy;
+    if (!post) return null;
+
+    // 2. Calculate TTL based on the post's publication date
+    const ttl = ttlForPost(post.date);
+
+    // 3. Re-fetch with proper cache config only if not cached yet
+    const cachedJson = await wpGraphQLCached<{
       data?: { postBy?: Post };
       errors?: GraphQLError;
     }>(
       query,
       { slug },
-      { revalidate: 300, tags: [`post-${slug}`] }
+      { revalidate: ttl, tags: [`post-${slug}`] }
     );
 
-    const post = json?.data?.postBy;
-    if (!post) return null;
+    const cachedPost = cachedJson?.data?.postBy;
+    if (!cachedPost) return null;
 
-    const normalized = normalizeImages(post);
-    if (Array.isArray(normalized)) return null;
-
-    return normalized;
+    const normalized = normalizeImages(cachedPost);
+    return Array.isArray(normalized) ? null : normalized;
   } catch (error) {
-    console.error('Failed to fetch post:', error);
+    console.error("Failed to fetch post:", error);
     return null;
   }
 }

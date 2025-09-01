@@ -67,7 +67,7 @@ const nextConfig = {
         ],
       },
       {
-        source: '/favicon.ico',
+        source: '/full_logo_with_slogan.png',
         headers: [
           {
             key: 'Cache-Control',

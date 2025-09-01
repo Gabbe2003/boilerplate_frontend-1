@@ -40,7 +40,7 @@ export function sign(opts: SignOptions) {
  * Signed fetch to WordPress (server-only).
  * - You pass JSON or any string body; this function signs and sets headers.
  */
-export async function signedFetch(
+export async function fetch(
   url: string,
   init: RequestInit & { json?: unknown } = {},
   cfg: { secret?: string; keyId?: string } = {}

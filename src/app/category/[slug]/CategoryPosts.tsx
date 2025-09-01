@@ -86,7 +86,7 @@ export default function CategoryPosts({ slug, initialPosts, initialPageInfo }: C
                            (max-width: 1024px) 60vw,
                            70vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-200 bg-[#f5f5f5]"
-                    quality={85}
+                    quality={100}
                     priority={isLCP}
                     fetchPriority={isLCP ? "high" : "auto"}
                     loading={isLCP ? "eager" : "lazy"}

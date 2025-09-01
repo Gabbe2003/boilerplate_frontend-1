@@ -2,22 +2,23 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useAppContext } from '@/store/AppContext';
 import { useState, useCallback } from 'react';
 import DesktopNav from '../Header-navigation/DesktopNav';
 import MobileNav from '../Header-navigation/MobileNav';
 import { SearchResult } from '../Header-navigation/hooks/useSearchBar';
 import SearchBarInline from '../Header-navigation/SearchBarInline';
 import PopupModal from '../client/newsletter/Rule_sub';
+import { DEFAULT_LINKS } from '../client/constants/links';
+import { Post } from '@/lib/types';
 
 type Category = { id: string; name: string; slug: string };
 
 type HeaderProps = {
+  posts: Post[],
   initialCategories?: Category[];
 };
 
-export default function Header({ initialCategories = [] }: HeaderProps) {
-  const { links, posts } = useAppContext();
+export default function Header({ initialCategories = [], posts }: HeaderProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
 
@@ -48,7 +49,7 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 py-0">
             {/* Left: Logo */}
             <div className="flex items-center min-h-[40px]">
-              <Link prefetch={false} href="/" aria-label="Gå till startsidan" className="flex-shrink-0">
+              <Link href="/" aria-label="Gå till startsidan" className="flex-shrink-0">
                 <div className="relative w-[100px] h-auto">
               <Image
               src="/full_logo_with_slogan.png"
@@ -76,10 +77,10 @@ export default function Header({ initialCategories = [] }: HeaderProps) {
             {/* Right: Nav */}
             <div className="flex items-center gap-2 min-h-[40px] justify-end">
               <div className="hidden [@media(min-width:1100px)]:flex">
-                <DesktopNav links={links} onNewsletterClick={handleOpenNewsletter} categories={categories} />
+                <DesktopNav links={DEFAULT_LINKS} onNewsletterClick={handleOpenNewsletter} categories={categories} />
               </div>
               <div className="[@media(min-width:1100px)]:hidden flex items-center gap-1">
-                <MobileNav links={links} onNewsletterClick={handleOpenNewsletter} categories={categories} />
+                <MobileNav links={DEFAULT_LINKS} onNewsletterClick={handleOpenNewsletter} categories={categories} />
               </div>
             </div>
 

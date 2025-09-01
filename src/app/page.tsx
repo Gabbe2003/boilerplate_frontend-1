@@ -8,6 +8,8 @@ import PopularPosts from './components/Popular/PopularPosts';
 import CatsPage from './[slug]/_components/categoryWrapper';
 import TradingViewScreener from './components/tickers/TradingViewScreener';
 import FinanstidningSeoText from './seoTextMainPage';
+// import { getLogo } from '@/lib/graph_queries/getLogo';
+import { getAllPosts } from '@/lib/graph_queries/getPost';
 // import AdsSection from './components/ads/AdsSection';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -36,6 +38,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
+  // const logo = await getLogo();
+  const posts = await getAllPosts();
+
   return (
     <div>
       {/* <AdsSection /> */}
@@ -45,10 +50,10 @@ export default async function Page() {
       {/* <AdsSection /> */}
       <CatsPage />
       {/* <AdsSection /> */}
-      <PostsList />
+      <PostsList posts={posts}/>
       {/* <AdsSection /> */}
       <FinanstidningSeoText />
-      {/* <AdPopup /> */}
+      {/* <AdPopup logo={logo}/> */}
     </div>
   );
 }

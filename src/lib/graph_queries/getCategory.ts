@@ -1,11 +1,11 @@
-import "server-only"; 
+// src/lib/graph_queries/categories.ts
+import "server-only";
+import { wpGraphQLCached } from "@/lib/wpCached";
+import { ICategory } from "../types";
 
-import { signedFetch } from "../security/signedFetch";
+export type Category = { id: string; name: string; slug: string };
 
-export type Category = { id: string; name: string; slug: string }; // export type
-
-// Include databaseId (optional) if you want numeric ids
-const CATEGORY_QUERY = `
+const CATEGORY_QUERY = /* GraphQL */ `
   query AllCategories(
     $first: Int!
     $after: String
@@ -20,7 +20,6 @@ const CATEGORY_QUERY = `
     ) {
       nodes {
         id
-        # databaseId
         name
         slug
       }
@@ -29,8 +28,7 @@ const CATEGORY_QUERY = `
   }
 `;
 
-// Legacy shape used by some WPGraphQL versions (fallback only)
-const CATEGORY_QUERY_LEGACY = `
+const CATEGORY_QUERY_LEGACY = /* GraphQL */ `
   query AllCategoriesLegacy(
     $first: Int!
     $after: String
@@ -49,52 +47,65 @@ const CATEGORY_QUERY_LEGACY = `
   }
 `;
 
+// --- Types for responses (no `any`) ---
+type GQLError = { message: string };
+
+type CatsPage = {
+  data?: {
+    categories?: {
+      nodes?: Array<{ id: string; name: string; slug: string | null }>;
+      pageInfo?: { hasNextPage: boolean; endCursor?: string | null };
+    };
+  };
+  errors?: GQLError[];
+};
+
+// ============================
+// All categories (paginated)
+// ============================
 export async function getAllCategories({
-  pageSize = 15,      
+  pageSize = 15,
   hideEmpty = true,
-  orderby = 'NAME',
-  order = 'ASC',
+  orderby = "NAME",
+  order = "ASC",
 }: {
   pageSize?: number;
   hideEmpty?: boolean;
-  orderby?: 'NAME' | 'COUNT' | 'TERM_ORDER' | 'SLUG';
-  order?: 'ASC' | 'DESC';
+  orderby?: "NAME" | "COUNT" | "TERM_ORDER" | "SLUG";
+  order?: "ASC" | "DESC";
 } = {}): Promise<Category[]> {
   const size = Math.max(1, Math.min(pageSize, 100));
   let after: string | null = null;
   const all: Category[] = [];
   const seen = new Set<string>();
+  let useLegacy = false;
 
-  async function page(query: string) {
-    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
-      method: 'POST',
-      json: { query, variables: { first: size, after, hideEmpty, orderby, order } },
-      next: { revalidate: 86400, tags: ['categories'] },
-    });
-    
-    if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-    return res.json();
-  }
+  const runPage = async (query: string): Promise<CatsPage> =>
+    wpGraphQLCached<CatsPage>(
+      query,
+      { first: size, after, hideEmpty, orderby, order },
+      { revalidate: 86400, tags: ["categories"] } // 24h + tag for webhook invalidation
+    );
 
   try {
-    let useLegacy = false;
-
     do {
-      let json = await page(useLegacy ? CATEGORY_QUERY_LEGACY : CATEGORY_QUERY);
+      let json = await runPage(useLegacy ? CATEGORY_QUERY_LEGACY : CATEGORY_QUERY);
 
-      // If we hit the enum/object error, retry once with legacy shape
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if (!useLegacy && json?.errors?.some((e: any) =>
-        String(e.message).includes('TermObjectsConnectionOrderbyEnum') &&
-        String(e.message).includes('cannot represent non-enum value')
-      )) {
+      // Retry once with legacy shape if enum/object mismatch appears
+      if (
+        !useLegacy &&
+        json?.errors?.some(
+          (e) =>
+            String(e.message).includes("TermObjectsConnectionOrderbyEnum") &&
+            String(e.message).includes("cannot represent non-enum value")
+        )
+      ) {
         useLegacy = true;
-        json = await page(CATEGORY_QUERY_LEGACY);
+        json = await runPage(CATEGORY_QUERY_LEGACY);
       }
 
       if (json.errors?.length) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const msg = json.errors.map((e: any) => e.message).join(' | ');
+        const msg = json.errors.map((e) => e.message).join(" | ");
         throw new Error(`GraphQL error(s): ${msg}`);
       }
 
@@ -110,17 +121,102 @@ export async function getAllCategories({
       after = pageInfo?.hasNextPage ? pageInfo?.endCursor ?? null : null;
     } while (after);
 
-    // Optional: ensure stable ordering
-    all.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+    // Optional: stable A–Z
+    all.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: "base" }));
     return all;
   } catch (err) {
-    console.error('Error fetching categories:', err.message);
-    throw new Error('Failed to fetch categories');
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Error fetching categories:", message);
+    throw new Error("Failed to fetch categories");
   }
 }
 
-export async function getCategoryBySlug(slug: string, after?: string) {
-  const query = `
+// ======================================
+// Single category (slug) + first posts
+// ======================================
+
+type GqlMaybe<T> = T | null | undefined;
+
+type GqlImageNode = {
+  sourceUrl: string;
+  altText?: string | null;
+};
+
+type GqlAuthorNode = {
+  id: string;
+  name: string;
+  slug: string;
+  avatar?: { url: string } | null;
+};
+
+type GqlPost = {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string | null;
+  date: string;
+  featuredImage?: { node?: GqlImageNode | null } | null;
+  author?: { node?: GqlAuthorNode | null } | null;
+};
+
+type GqlCategory = {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string | null;
+  count?: number | null;
+  parent?: { node?: { id: string; name: string; slug: string } | null } | null;
+  posts?: {
+    pageInfo?: { hasNextPage?: boolean | null; endCursor?: string | null } | null;
+    nodes?: GqlMaybe<GqlPost[]>; // could be undefined or null
+  } | null;
+};
+
+type CategoryBySlugResp = {
+  data?: { category?: GqlCategory | null } | null;
+  errors?: Array<{ message: string }>;
+};
+
+
+function toICategory(raw: GqlCategory): ICategory {
+  return {
+    id: raw.id,
+    name: raw.name,
+    slug: raw.slug,
+    description: raw.description ?? "",
+    count: raw.count ?? 0,
+
+    // ✅ Enforce { node: ... } | null (no optional node)
+    parent: raw.parent?.node
+      ? { node: { id: raw.parent.node.id, name: raw.parent.node.name, slug: raw.parent.node.slug } }
+      : null,
+
+    // ✅ Normalize posts shape
+    posts: {
+      pageInfo: {
+        hasNextPage: Boolean(raw.posts?.pageInfo?.hasNextPage),
+        endCursor: raw.posts?.pageInfo?.endCursor ?? null,
+      },
+      nodes: (raw.posts?.nodes ?? []).map((n) => ({
+        id: n.id,
+        title: n.title,
+        slug: n.slug,
+        excerpt: n.excerpt ?? "",
+        date: n.date,
+        featuredImage: n.featuredImage?.node
+          ? { node: { sourceUrl: n.featuredImage.node.sourceUrl, altText: n.featuredImage.node.altText ?? "" } }
+          : null,
+        author: n.author?.node
+          ? { node: { id: n.author.node.id, name: n.author.node.name, slug: n.author.node.slug, avatar: n.author.node.avatar ?? null } }
+          : null,
+      })),
+    },
+  };
+}
+
+
+export async function getCategoryBySlug(slug: string, after?: string): Promise<ICategory | null> {
+  const query = /* GraphQL */ `
     query CategoryBySlug($slug: ID!, $after: String) {
       category(id: $slug, idType: SLUG) {
         id
@@ -128,40 +224,17 @@ export async function getCategoryBySlug(slug: string, after?: string) {
         slug
         description
         count
-        parent {
-          node {
-            id
-            name
-            slug
-          }
-        }
+        parent { node { id name slug } }
         posts(first: 6, after: $after) {
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
+          pageInfo { hasNextPage endCursor }
           nodes {
             id
             title
             slug
             excerpt
             date
-            featuredImage {
-              node {
-                sourceUrl
-                altText
-              }
-            }
-            author {
-              node {
-                id
-                name
-                slug
-                avatar {
-                  url
-                }
-              }
-            }
+            featuredImage { node { sourceUrl altText } }
+            author { node { id name slug avatar { url } } }
           }
         }
       }
@@ -169,35 +242,25 @@ export async function getCategoryBySlug(slug: string, after?: string) {
   `;
 
   try {
-    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
-      method: 'POST',
-      json: { query, variables: { slug, after } },
-      next: { revalidate: 15 * 60 },
-    });
+    const json = await wpGraphQLCached<CategoryBySlugResp>(
+      query,
+      { slug, after },
+      { revalidate: 15 * 60, tags: ["categories", `category-${slug}`] }
+    );
 
-    if (!res.ok) {
-      throw new Error(`Network response was not ok: ${res.statusText}`);
+    if (json.errors?.length) {
+      const msg = json.errors.map((e) => e.message).join(" | ");
+      throw new Error(`GraphQL error(s): ${msg}`);
     }
 
-    const json = await res.json();
+    const category = json.data?.category ?? null;
+    if (!category) return null;
 
-    // Check for errors in GraphQL response
-    if (json.errors) {
-      console.error('GraphQL errors:', json.errors);
-      throw new Error(json.errors[0]?.message || 'GraphQL error');
-    }
-
-    if (!json.data || typeof json.data.category === 'undefined') {
-      return null;
-    }
-
-    return json.data.category;
+    // 🔒 Single source of truth: normalize here
+    return toICategory(category);
   } catch (error) {
-    console.error('Error fetching category:', error);
-    throw new Error('Failed to fetch category');
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Error fetching category:", message);
+    throw new Error("Failed to fetch category");
   }
 }
-
-
-
-

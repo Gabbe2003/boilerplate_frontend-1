@@ -3,8 +3,11 @@ import { ArticleContent } from "./ArticleContent";
 import InfiniteScrollClient from "./Infinity-scroll/InfinitePost";
 import { update_viewed_post } from "@/lib/graph_queries/update_viewed_post";
 import RecommendationList from "./Single-page-footer/RecommendationList";
+import { getAllPosts } from "@/lib/graph_queries/getPost";
 
-export function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
+export async function SinglePost({ initialPost }: { initialPost: PostWithTOC }) {
+
+  const posts = await getAllPosts(); 
   const postUrl = `${
     process.env.NEXT_PUBLIC_HOST_URL || process.env.NEXT_PUBLIC_HOST_URL
   }/${initialPost.slug}`;
@@ -40,12 +43,12 @@ return (
           categoryNames={categoryNames}
           tagNames={tagNames}
         />
-        <RecommendationList currentSlug={initialPost.slug} />
+        <RecommendationList currentSlug={initialPost.slug} posts={posts} />
       </div>
     </div>
 
     {/* The client-only infinite scroll lives here */}
-    <InfiniteScrollClient initialPost={initialPost} />
+    <InfiniteScrollClient initialPost={initialPost} posts={posts}/>
   </div>
 );
 }

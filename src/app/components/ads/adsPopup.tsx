@@ -3,7 +3,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useAppContext } from '@/store/AppContext';
 import { Button } from '@/components/ui/button';
 
 export type AdPopupVariant =
@@ -28,8 +27,8 @@ type Theme = {
 };
 
 interface AdPopupProps {
+  logo?: { sourceUrl?: string; altText?: string } | null;
   variant?: AdPopupVariant;
-  /** Storage key so multiple popups don't collide */
   sessionKey?: string;
   onClose?: () => void;
 }
@@ -152,13 +151,13 @@ function getTheme(variant: AdPopupVariant): Theme {
 }
 
 export default function AdPopup({
+  logo, 
   variant,
   sessionKey = 'adPopupClosed',
   onClose,
 }: AdPopupProps) {
   const [visible, setVisible] = useState(false);
   const [randomVariant, setRandomVariant] = useState<AdPopupVariant>('current');
-  const { logo } = useAppContext();
 
   // Pick a random variant on first load (unless an explicit variant is provided)
   useEffect(() => {

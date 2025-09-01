@@ -9,9 +9,10 @@ import { Sidebar } from './SideBar';
 import { Button } from '@/components/ui/button';
 import TradingViewWidget from '../tickers/uppcomingEventsTicker';
 
-export default function PostsList() {
-  const { searchBarHeader, posts } = useAppContext();
+export default function PostsList({posts}) {
+  const { searchBarHeader } = useAppContext();
   const term = searchBarHeader.trim().toLowerCase();
+  
   const filtered = term
     ? posts.filter((p) => p.title.toLowerCase().includes(term))
     : posts;

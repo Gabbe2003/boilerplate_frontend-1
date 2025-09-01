@@ -1,10 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // app/components/TodayPostsSidebar.tsx
-// Serverkomponent (ingen "use client")
-
 import Link from "next/link";
 import { getAllPosts, getTodaysPosts } from "@/lib/graph_queries/getPost";
-import type { Post } from "@/lib/types";
 import TickerTapeVisible from "./tickers/tradingviewServer";
 
 type SidebarPost = {
@@ -18,6 +14,19 @@ type SidebarPost = {
 };
 
 type Props = { heading?: string };
+
+/** 👇 A minimal shape that both Post and TodayPost can conform to */
+type MinimalPost = {
+  id?: string | number;
+  title?: string;
+  date?: string;
+  excerpt?: string;
+  slug?: string;
+  category?: string;
+  categories?:
+    | { nodes?: Array<{ name?: string | null } | null> }
+    | Array<{ name?: string | null } | null>;
+};
 
 const stockholmFmt = new Intl.DateTimeFormat("sv-SE", {
   timeZone: "Europe/Stockholm",
@@ -48,23 +57,28 @@ function getCategory(p: SidebarPost): string {
   return first ?? "";
 }
 
-function toSidebarPost(p: Post): SidebarPost {
-  const cats =
-    (p as any)?.categories && "nodes" in (p as any).categories
-      ? ((p as any).categories.nodes as Array<{ name?: string }>)
-      : Array.isArray((p as any).categories)
-      ? ((p as any).categories as Array<{ name?: string }>)
+/** Accepts either Post or TodayPost (or anything matching MinimalPost) */
+function toSidebarPost(p: MinimalPost): SidebarPost {
+  const catsRaw =
+    p.categories && !Array.isArray(p.categories) && "nodes" in p.categories
+      ? p.categories.nodes ?? []
+      : Array.isArray(p.categories)
+      ? p.categories
       : [];
 
-  const catArray = Array.isArray(cats) ? cats.map((c) => ({ name: c?.name })) : [];
-  const primary = (p as any).category ?? catArray[0]?.name;
+  const catArray = catsRaw
+    .filter(Boolean)
+    .map((c) => ({ name: c?.name ?? undefined }));
+
+  const primary = p.category ?? catArray[0]?.name;
 
   return {
-    id: p.id as any,
-    title: (p as any).title,
-    date: (p as any).date,
-    excerpt: (p as any).excerpt,
-    slug: (p as any).slug,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    id: (p.id as any) ?? "", 
+    title: p.title ?? "",
+    date: p.date,
+    excerpt: p.excerpt,
+    slug: p.slug,
     category: primary,
     categories: catArray,
   };
@@ -75,13 +89,13 @@ export default async function TodayPostsSidebar({ heading = "Dagens inlägg" }: 
   let usedFallback = false;
 
   try {
-    // Hämta upp till 12
-    const todays = (await getTodaysPosts(12)) as Post[];
-    posts = todays.map(toSidebarPost);
+    // Hämta upp till 12 (no cast to Post[] here)
+    const todays = await getTodaysPosts(12); // TodayPost[] (or similar)
+    posts = (todays as MinimalPost[]).map(toSidebarPost);
 
     if (!posts.length) {
-      const latest = (await getAllPosts({ first: 12 })) as Post[];
-      posts = latest.map(toSidebarPost);
+      const latest = await getAllPosts({ first: 12 }); // Post[]
+      posts = (latest as MinimalPost[]).map(toSidebarPost);
       usedFallback = true;
     }
   } catch {
@@ -105,9 +119,8 @@ export default async function TodayPostsSidebar({ heading = "Dagens inlägg" }: 
             </div>
 
             {posts.length === 0 ? (
-      <div className="text-sm text-zinc-600">Inget att visa just nu.</div>
+              <div className="text-sm text-zinc-600">Inget att visa just nu.</div>
             ) : (
-              // Visa alla på mobil; begränsa till ~6 objekt och gör scrollbart på md+
               <div className="w-full overflow-visible md:overflow-y-auto md:max-h-[544px]">
                 <ul className="space-y-3 w-full" style={{ contain: "content" }}>
                   {posts.slice(0, 12).map((p) => {
@@ -120,7 +133,6 @@ export default async function TodayPostsSidebar({ heading = "Dagens inlägg" }: 
                         key={p.id}
                         className="group bg-white dark:bg-black-800 rounded-sm p-3 shadow-sm hover:shadow-sm transition-shadow flex items-start gap-2 min-h-[64px]"
                       >
-                        {/* Röd pulserande punkt */}
                         <span className="relative inline-flex flex-shrink-0 h-2.5 w-2.5 mt-1">
                           <span className="absolute inline-flex h-2.5 w-2.5 rounded-full bg-red-500 opacity-75 motion-safe:animate-ping" />
                           <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-600" />

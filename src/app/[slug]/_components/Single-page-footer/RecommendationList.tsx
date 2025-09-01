@@ -1,14 +1,13 @@
 "use client";
 
 import { useMemo, useEffect, useRef, useCallback, useState } from "react";
-import { useAppContext } from "@/store/AppContext";
 import Link from "next/link";
 import Image from "next/image";
+import { Post } from "@/lib/types";
 
-interface Props { currentSlug: string }
+interface Props { currentSlug: string, posts: Post[] }
 
-export default function RecommendationListMarquee({ currentSlug }: Props) {
-  const { posts } = useAppContext();
+export default function RecommendationListMarquee({ currentSlug, posts }: Props) {
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
 
@@ -24,6 +23,7 @@ export default function RecommendationListMarquee({ currentSlug }: Props) {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
 
   const items = useMemo(
     () => posts.filter(p => p.slug !== currentSlug).slice(0, 20),

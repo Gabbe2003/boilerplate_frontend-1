@@ -7,12 +7,6 @@ import "@/styles/globals.css";
 
 import { AppProvider } from "@/store/AppContext";
 import { getLogo } from "@/lib/graph_queries/getLogo";
-import { getAllPosts } from "@/lib/graph_queries/getPost";
-import { getTagLine } from "@/lib/graph_queries/getTagline";
-import { Analytics } from "@vercel/analytics/next"
-import { SpeedInsights } from "@vercel/speed-insights/next"
-
-
 
 import HeaderServer from "./components/Main-page/HeaderServer";
 
@@ -40,10 +34,8 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const [favicon, posts, tagline] = await Promise.all([
+  const [favicon] = await Promise.all([
     getLogo().catch(() => null),
-    getAllPosts(),
-    getTagLine(),
   ]);
 
   return (
@@ -59,9 +51,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body className="flex min-h-screen flex-col">
-        <AppProvider logo={favicon} posts={posts} tagline={tagline}>
-          <SpeedInsights />
-          <Analytics />
+        <AppProvider logo={favicon} >
           <HeaderServer />
           <main className="flex-1">{children}</main>
           <Footer />

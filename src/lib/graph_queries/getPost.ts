@@ -1,8 +1,8 @@
 import "server-only"; 
 
 import { Post, GraphQLError } from '@/lib/types';
-import { normalizeImages, normalizeFlatImages } from '../helper_functions/featured_image';
-import { signedFetch } from "../security/signedFetch";
+import { normalizeImages } from '../helper_functions/featured_image';
+import { wpGraphQLCached, wpRestCached } from "../wpCached";
 
 export async function getAllPosts({
   first = 100,
@@ -101,52 +101,33 @@ fragment PostFull on Post {
   `;
 
   try {
-    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
-      method: 'POST',
-      json: { query,  variables: { first, after, last, before } },
-      next: { revalidate: 300, tags: ['posts'] },
-    });
-
-    const json = (await res.json()) as {
+     const data = await wpGraphQLCached<{
       data?: { posts?: { nodes: Post[] } };
       errors?: GraphQLError[];
-    };
+    }>(
+      query,
+      { first, after, last, before },
+      { revalidate: 300, tags: ['posts'] }
+    );
 
-    if (json.errors) {
-      console.error('getAllPosts errors:', json.errors);
+    if (data?.errors) {
+      console.error('getAllPosts errors:', data.errors);
       return [];
     }
 
-    const rawPosts = json.data?.posts?.nodes ?? [];
-    const posts = normalizeImages(rawPosts);
+    const rawPosts = data?.data?.posts?.nodes ?? [];
+    return normalizeImages(rawPosts);
    
-    return posts;
   } catch (error) {
     console.error('getAllPosts failed:', error);
     return [];
   }
 }
 
-export async function get_popular_post(): Promise<Post[]> {
-  try {
-    const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?popular`;
-    const res = await signedFetch(url, {
-      cache: 'force-cache',
-      next: { revalidate: 300, tags: ['popular'] },
-    });
-    const json = await res.json();
-    const rawPosts = Array.isArray(json)
-      ? json
-      : (json.data?.posts?.nodes ?? []);
-
-    const normalizedList = normalizeFlatImages(rawPosts);
-    return normalizedList ?? [];
-  } catch (error) {
-    console.log('An error occured', error);
-    return [];
-  }
-}
-
+/** ─────────────────────────────
+ * Types/guards to avoid `any`
+ * ───────────────────────────── */
+type WPPostNodes<T> = { data?: { posts?: { nodes?: T[] } } };
 
 interface FeaturedImageObject {
   node?: {
@@ -164,95 +145,126 @@ interface RawView {
   excerpt?: string;
 }
 
+/** Response for /top-posts?popular: can be array or a {data.posts.nodes} wrapper */
+type PopularAPIResponse = RawView[] | WPPostNodes<RawView>;
 
+function isWPPostNodes<T>(v: unknown): v is WPPostNodes<T> {
+  return typeof v === 'object' && v !== null && 'data' in v;
+}
+
+export async function get_popular_post(): Promise<Post[]> {
+  try {
+    const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?popular`;
+
+    const json = await wpRestCached<PopularAPIResponse>(
+      url,
+      { revalidate: 300, tags: ['popular'] }
+    );
+
+    const rawPosts: RawView[] = Array.isArray(json)
+      ? json
+      : (isWPPostNodes<RawView>(json) ? (json.data?.posts?.nodes ?? []) : []);
+
+    // Convert RawView[] to Post[] and ensure id is string and featuredImage is normalized
+    return normalizeImages(
+      rawPosts.map((item) => {
+        let normalizedImage;
+        if (typeof item.featuredImage === 'string' && item.featuredImage) {
+          normalizedImage = { node: { sourceUrl: item.featuredImage } };
+        } else if (
+          typeof item.featuredImage === 'object' &&
+          item.featuredImage?.node?.sourceUrl
+        ) {
+          normalizedImage = { node: { sourceUrl: item.featuredImage.node.sourceUrl } };
+        } else {
+          normalizedImage = undefined;
+        }
+
+        return {
+          ...item,
+          id: String(item.id),
+          featuredImage: normalizedImage,
+        };
+      })
+    );
+  } catch (error) {
+    console.log('An error occured', error);
+    return [];
+  }
+}
 
 type PostByPeriod = Array<{
   id: string;
   title: string;
   slug: string;
-  category?: string; // ⟵ added
+  category?: string;
   featuredImage?: { node: { sourceUrl: string } };
   date: string;
   excerpt?: string;
 }>;
+
+/** Shape used to derive category when present */
+type Categoryish = {
+  category?: string;
+  categories?: { nodes?: Array<{ name?: string }> };
+};
+
+/** Union the view with optional category/cats for safe access */
+type ViewLike = RawView & Categoryish;
 
 export async function getPostByPeriod(
   period: "week" | "month"
 ): Promise<PostByPeriod> {
   try {
     const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`;
-    const res = await signedFetch(url, {
-      cache: "force-cache",
-      next: { revalidate: 400 },
-    });
 
-    if (!res.ok) {
-      console.error("[getViews] non-OK response:", await res.text());
-      return [];
-    }
-
-    const data = await res.json();
+    const data = await wpRestCached<unknown>(url, { revalidate: 400, tags: ['views'] });
 
     if (!Array.isArray(data)) {
-      console.error("[getViews] payload is not an array:", data);
+      console.error('[getViews] payload is not an array:', data);
       return [];
     }
 
-    const raw = data as RawView[];
+    const raw = data as ViewLike[];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const getCategory = (item: any): string | undefined => {
-      // Prefer flat `category` if present
-      if (typeof item.category === "string" && item.category.trim()) {
-        return item.category.trim();
-      }
-      // Fallback to categories.nodes array (take the first or join)
-      const nodes = item?.categories?.nodes;
+    const getCategory = (item: ViewLike): string | undefined => {
+      if (typeof item.category === 'string' && item.category.trim()) return item.category.trim();
+      const nodes = item.categories?.nodes;
       if (Array.isArray(nodes) && nodes.length > 0) {
-        // Take first name; change to join if you prefer multiple
         const first = nodes[0]?.name;
-        if (typeof first === "string" && first.trim()) return first.trim();
+        if (typeof first === 'string' && first.trim()) return first.trim();
       }
       return undefined;
     };
 
     return raw.map((item) => {
       let normalizedImage: string | undefined;
-      if (typeof item.featuredImage === "string" && item.featuredImage) {
+      if (typeof item.featuredImage === 'string' && item.featuredImage) {
         normalizedImage = item.featuredImage;
       } else if (
-        item.featuredImage &&
-        typeof item.featuredImage === "object" &&
-        typeof item.featuredImage.node?.sourceUrl === "string"
+        typeof item.featuredImage !== 'string' &&
+        item.featuredImage?.node?.sourceUrl
       ) {
-        normalizedImage = item.featuredImage.node.sourceUrl;
-      } else {
-        normalizedImage = undefined;
+        normalizedImage = item.featuredImage.node.sourceUrl as string;
       }
 
       return {
         id: String(item.id),
-        title: item.title?.trim() ?? "",
+        title: item.title?.trim() ?? '',
         slug: item.slug,
-        category: getCategory(item),           
-        featuredImage: normalizedImage
-          ? { node: { sourceUrl: normalizedImage } }
-          : undefined,
+        category: getCategory(item),
+        featuredImage: normalizedImage ? { node: { sourceUrl: normalizedImage } } : undefined,
         date: item.date,
-        excerpt: item.excerpt ?? "",
-        type: "post",
+        excerpt: item.excerpt ?? '',
+        // extra field kept as-is in your mapping:
+        // type: 'post',
       };
     });
   } catch (err) {
-    console.error("[getViews] fetch failed:", err);
+    console.error('[getViews] fetch failed:', err);
     return [];
   }
 }
-
-
-
-
-
 
 export async function getPostBySlug(slug: string): Promise<Post | null> {
   const query = `
@@ -295,25 +307,22 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
   `;
 
   try {
-    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
-      method: 'POST',
-      json: { query, variables: { slug } },
-      next: { revalidate: 300, tags: [`post-${slug}`] },
-    });
-
-
-    const json = (await res.json()) as {
+    const json = await wpGraphQLCached<{
       data?: { postBy?: Post };
       errors?: GraphQLError;
-    };
+    }>(
+      query,
+      { slug },
+      { revalidate: 300, tags: [`post-${slug}`] }
+    );
 
-    const post = json.data?.postBy;
+    const post = json?.data?.postBy;
     if (!post) return null;
 
     const normalized = normalizeImages(post);
-    if (Array.isArray(normalized)) return null; // Defensive, shouldn't happen
+    if (Array.isArray(normalized)) return null;
 
-    return normalized; // Is a Post
+    return normalized;
   } catch (error) {
     console.error('Failed to fetch post:', error);
     return null;
@@ -342,41 +351,26 @@ export async function getRecommendation(): Promise<Post[]> {
 
   try {
     
-    const res = await signedFetch(process.env.WP_GRAPHQL_URL!, {
-      method: 'POST',
-      json: { query },
-      next: { revalidate: 604800, tags: ['recommendation'] },
-    });
-
-    const json = (await res.json()) as {
+   const json = await wpGraphQLCached<{
       data?: { posts?: { nodes: Post[] } };
       errors?: GraphQLError;
-    };
+    }>(
+      query,
+      {},
+      { revalidate: 604800, tags: ['recommendation'] } // 7 days
+    );
 
-    
-    return json.data?.posts?.nodes ?? [];
+    return json?.data?.posts?.nodes ?? [];
   } catch (error) {
     console.error('Failed to fetch posts:', error);
     return [];
   }
 }
 
-
-const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL!;
+type TodayPost = Record<string, unknown>;
 
 export async function getTodaysPosts(limit: number = 5) {
-  const url = `${HOST_URL}/wp-json/hpv/v1/today-posts`;
-
-  const res = await fetch(url, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-    next: { revalidate: 60 * 60 }, 
-  });
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch today's posts: ${res.status} ${res.statusText}`);
-  }
-
-  const data = await res.json();
-  return data.slice(0, limit);
+  const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/today-posts`;
+  const data = await wpRestCached<TodayPost[]>(url, { revalidate: 60 * 60, tags: ['today-posts'] });
+  return Array.isArray(data) ? data.slice(0, limit) : [];
 }

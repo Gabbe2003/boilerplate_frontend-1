@@ -2,13 +2,13 @@
 
 import { ArticleContent } from "../ArticleContent";
 import { stripHtml } from "@/lib/helper_functions/strip_html";
-import type { PostWithTOC } from "@/lib/types";
+import type { Post, PostWithTOC } from "@/lib/types";
 import { InfinitePosts } from "./useInfinitePosts";
 import RecommendationList from "../Single-page-footer/RecommendationList";
  
-export default function InfiniteScrollClient({ initialPost }: { initialPost: PostWithTOC }) {
+export default function InfiniteScrollClient({ initialPost, posts }: { initialPost: PostWithTOC, posts?: Post[] }) {
   const { rendered, loading, sentinelRef, setArticleRef } = InfinitePosts(initialPost);
-
+  
   if (rendered.length <= 1) {
     return <div ref={sentinelRef} style={{ height: 1 }} />;
   }
@@ -33,7 +33,7 @@ export default function InfiniteScrollClient({ initialPost }: { initialPost: Pos
                 postExcerpt={postExcerpt}
                 index={i + 1}
               />
-              <RecommendationList currentSlug={post.slug} />
+              <RecommendationList currentSlug={post.slug} posts={posts}/>
             </div>
             <aside className="hidden lg:block space-y-8 lg:col-span-1 bg-[var(--secBG)] px-0 sm:px-2">
             <div

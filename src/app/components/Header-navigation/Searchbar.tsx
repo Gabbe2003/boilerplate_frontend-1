@@ -11,12 +11,13 @@ import {
 } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAppContext } from '@/store/AppContext';
 import Link from 'next/link';
 import Search from '../icons/search';
 import clsx from 'clsx';
+import { Post } from '@/lib/types';
 
 interface SearchDrawerProps {
+  posts: Post[];
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   /** 'icon' = small icon button (mobile), 'input' = full-width fake input (desktop) */
@@ -28,6 +29,7 @@ interface SearchDrawerProps {
 const PAGE_SIZE = 20;
 
 export default function SearchDrawer({
+  posts,
   value,
   onChange,
   variant = 'icon',
@@ -39,7 +41,6 @@ export default function SearchDrawer({
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const { posts } = useAppContext();
 
   useEffect(() => {
     setMounted(true);

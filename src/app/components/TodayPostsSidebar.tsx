@@ -1,4 +1,3 @@
-// app/components/TodayPostsSidebar.tsx
 import Link from "next/link";
 import { getAllPosts, getTodaysPosts } from "@/lib/graph_queries/getPost";
 import TickerTapeVisible from "./tickers/tradingviewServer";

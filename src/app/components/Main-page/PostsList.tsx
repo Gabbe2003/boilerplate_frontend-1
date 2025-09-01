@@ -78,7 +78,7 @@ export default function PostsList({posts}) {
 
                     {/* Featured image */}
                     {post.featuredImage?.node?.sourceUrl && (
-                      <Link href={`/${post.slug}`} className="block">
+                      <Link href={`/${post.slug}`} className="block" prefetch={false}>
                         <div className="relative w-full aspect-[2/1] overflow-hidden">
                           <Image
                             src={post.featuredImage.node.sourceUrl}

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Script from "next/script";
@@ -61,7 +61,9 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       <body className="flex min-h-screen flex-col">
         <AppProvider logo={logo} >
           <HeaderServer />
+          <Suspense fallback={null}>
           <Analytics />
+        </Suspense>
           <main className="flex-1">{children}</main>
           <Footer />
         </AppProvider>

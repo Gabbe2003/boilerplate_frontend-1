@@ -1,7 +1,7 @@
 // types.ts
 
 import { Post } from '@/lib/types';
-import FEATURED_IMAGE from '../../../public/next.svg';
+import FEATURED_IMAGE from '../../../public/full_logo_with_slogan.png';
 const FEATURED_ALT = 'Default featured image';
 
 export function normalizeFlatImages(posts: Post[]): Post[] {
@@ -25,7 +25,8 @@ export function normalizeFlatFeaturedImage(post: Post): Post {
       ...updated,
       featuredImage: {
         node: {
-          sourceUrl: FEATURED_IMAGE as string,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          sourceUrl: FEATURED_IMAGE as any,
           altText: FEATURED_ALT,
         },
       },
@@ -66,7 +67,8 @@ export function normalizeFeaturedImage(post: Post): Post {
     // Set to default
     updated.featuredImage = {
       node: {
-        sourceUrl: FEATURED_IMAGE as string,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        sourceUrl: FEATURED_IMAGE as any,
         altText: FEATURED_ALT,
       },
     };

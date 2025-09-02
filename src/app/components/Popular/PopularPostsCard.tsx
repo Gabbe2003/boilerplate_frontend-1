@@ -19,14 +19,22 @@ export interface PostCardProps {
   variant?: 'default' | 'hero';
 }
 
+const FALLBACK_IMAGE = "/full_logo_with_slogan.png";
+
 function getExcerpt(text?: string, words = 10) {
   if (!text) return '';
-  // Strip HTML tags and normalize whitespace/entities so "<p>...</p>" doesn't render
   const withoutTags = text
-    .replace(/<\/?[^>]+>/g, ' ')         // remove HTML tags
-    .replace(/&nbsp;/g, ' ')             // common entity
+    .replace(/<\/?[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
     .replace(/&(amp|quot|#39|apos|lt|gt);/g, (m) =>
-      ({ '&amp;': '&', '&quot;': '"', '&#39;': "'", '&apos;': "'", '&lt;': '<', '&gt;': '>' } as Record<string, string>)[m] ?? m
+      ({
+        '&amp;': '&',
+        '&quot;': '"',
+        '&#39;': "'",
+        '&apos;': "'",
+        '&lt;': '<',
+        '&gt;': '>'
+      } as Record<string, string>)[m] ?? m
     )
     .replace(/\s+/g, ' ')
     .trim();
@@ -62,29 +70,26 @@ function getFirstCategory(post: PostCardProps['post']): string | undefined {
 }
 
 export default function PostCard({ post, className = '', variant = 'default' }: PostCardProps) {
-  const featuredImageUrl = post.featuredImage?.node?.sourceUrl ?? '';
+  const featuredImageUrl = post.featuredImage?.node?.sourceUrl || FALLBACK_IMAGE;
   const firstCategory = getFirstCategory(post);
 
+  // HERO VARIANT
   if (variant === 'hero') {
     return (
       <div
-        className={`relative w-full overflow-hidden group ${className || 'h-[420px] xl:h-[500px]'}`}
+        className={`relative w-full overflow-hidden group ${className || 'h-[520px] xl:h-[500px]'}`}
       >
-        {/* Image */}
+        {/* Image with fallback */}
         <div className="absolute inset-0">
-          {featuredImageUrl ? (
-            <Image
-              src={featuredImageUrl}
-              alt={post.title}
-              fill
-              quality={100}
-              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 1920px"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-              priority
-            />
-          ) : (
-            <div className="w-full h-full bg-gray-200" />
-          )}
+          <Image
+            src={featuredImageUrl}
+            alt={post.title || 'Post image'}
+            fill
+            quality={100}
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 1920px"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            priority
+          />
         </div>
 
         {/* Gradient for readability */}
@@ -110,25 +115,22 @@ export default function PostCard({ post, className = '', variant = 'default' }: 
     );
   }
 
-  // DEFAULT card
+  // DEFAULT VARIANT
   return (
     <div className={`flex flex-col w-full overflow-hidden ${className}`}>
-      {/* Image */}
+      {/* Image with fallback */}
       <div className="relative w-full h-[150px] overflow-hidden transition-transform duration-200 ease-in-out hover:scale-105">
-        {featuredImageUrl && (
-          <Image
-            src={featuredImageUrl}
-            alt={post.title}
-            fill
-            quality={100}
-            sizes="(max-width: 640px) 100vw,
-                   (max-width: 1024px) 50vw,
-                   33vw"
-            className="object-cover w-full h-full"
-            priority
-          />
-        )}
-        {!featuredImageUrl && <div className="w-full h-full bg-gray-200" />}
+        <Image
+          src={featuredImageUrl}
+          alt={post.title || 'Post image'}
+          fill
+          quality={100}
+          sizes="(max-width: 640px) 100vw,
+                 (max-width: 1024px) 50vw,
+                 33vw"
+          className="w-full h-full"
+          priority
+        />
       </div>
 
       {/* Content */}

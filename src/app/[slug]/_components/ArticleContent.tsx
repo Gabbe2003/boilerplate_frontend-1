@@ -117,7 +117,7 @@ export function ArticleContent({
           {post.featuredImage?.node.sourceUrl && (
           <div className="relative mb-4 -mx-2 sm:mx-0">
             <Image
-              src={post.featuredImage.node.sourceUrl}
+              src={post.featuredImage.node.sourceUrl || "./full_logo_with_slogan.png"}
               alt={post.featuredImage.node.altText || ""}
               width={intrinsicW}
               height={intrinsicH}

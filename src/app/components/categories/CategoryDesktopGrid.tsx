@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Post } from '@/lib/types';
 import Link from 'next/link';
+import fallbackLogo from '../../../../public/full_logo_with_slogan.png';
 
 interface Props {
   posts: Post[];
@@ -18,7 +19,11 @@ const formatDate = (dateStr?: string) => {
   if (!dateStr) return '';
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return '';
-  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  return d.toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
 };
 
 export default function CategoryDesktopGrid({ posts }: Props) {
@@ -32,7 +37,7 @@ export default function CategoryDesktopGrid({ posts }: Props) {
       {/* Top divider */}
       <div className="border-t border-gray-200" />
 
-      {/* Row 1: 4-up cards with vertical separators */}
+      {/* Row 1: 4-up cards */}
       <div className="grid grid-cols-4 gap-10 py-8">
         {top.map((post, index) => {
           const img = post.featuredImage?.node?.sourceUrl;
@@ -42,20 +47,24 @@ export default function CategoryDesktopGrid({ posts }: Props) {
           return (
             <div
               key={post.id}
-              className={`group block ${index < top.length - 1 ? 'border-r border-gray-200 pr-6' : ''}`}
+              className={`group block ${
+                index < top.length - 1 ? 'border-r border-gray-200 pr-6' : ''
+              }`}
             >
-              <Link href={`/${post.slug}`} prefetch={false} >
-                {img && (
-                  <div className="relative w-full aspect-[4/3] overflow-hidden">
-                    <Image
-                    src={img || '/full_logo_with_slogan.png'}
-                      alt={alt}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </div>
-                )}
-                
+              <Link href={`/${post.slug}`} prefetch={false}>
+                <div className="relative w-full aspect-[4/3] overflow-hidden">
+                  <Image
+                    src={img || fallbackLogo}
+                    alt={alt}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, 100vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.src = fallbackLogo.src;
+                    }}
+                  />
+                </div>
+
                 <div className="mt-3">
                   {cat && (
                     <span className="block text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
@@ -80,7 +89,7 @@ export default function CategoryDesktopGrid({ posts }: Props) {
       {/* Middle divider */}
       <div className="border-t border-gray-200" />
 
-      {/* Row 2: 2 feature media cards with separator */}
+      {/* Row 2: 2 feature media cards */}
       <div className="grid grid-cols-2 gap-12 py-8">
         {feature.map((post, index) => {
           const img = post.featuredImage?.node?.sourceUrl;
@@ -93,19 +102,23 @@ export default function CategoryDesktopGrid({ posts }: Props) {
           return (
             <div
               key={post.id}
-              className={`group grid grid-cols-5 gap-6 items-center ${index === 0 ? 'border-r border-gray-200 pr-8' : ''}`}
+              className={`group grid grid-cols-5 gap-6 items-center ${
+                index === 0 ? 'border-r border-gray-200 pr-8' : ''
+              }`}
             >
-              <Link href={`/${post.slug}`}  prefetch={false} className="contents">
+              <Link href={`/${post.slug}`} prefetch={false} className="contents">
                 {/* Image left */}
                 <div className="relative col-span-2 aspect-[16/10] overflow-hidden">
-                  {img && (
-                    <Image
-                      src={img || '/full_logo_with_slogan.png'}
-                      alt={alt}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  )}
+                  <Image
+                    src={img || fallbackLogo}
+                    alt={alt}
+                    fill
+                    sizes="(min-width: 1024px) 40vw, 100vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    onError={(e) => {
+                      e.currentTarget.src = fallbackLogo.src;
+                    }}
+                  />
                 </div>
 
                 {/* Text right */}

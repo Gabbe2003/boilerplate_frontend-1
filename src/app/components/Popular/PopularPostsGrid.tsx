@@ -98,7 +98,7 @@ export default function PopularNews({
         </div>
 
         {/* MITTERSTA kolumn (2 hero-kort) */}
-        <div className="col-span-12 lg:col-span-6 flex flex-col gap-6 px-4">
+        <div className="col-span-12 lg:col-span-5 flex flex-col gap-6 px-4">
           {midCol.map((item) => (
             <Link href={`/${item.slug}`} key={item.id} prefetch={false}>
               <PostCard
@@ -111,7 +111,7 @@ export default function PopularNews({
         </div>
 
         {/* HÖGER kolumn (sidofält) */}
-        <aside className="col-span-12 lg:col-span-3 border-l border-gray-200 pl-4">
+        <aside className="col-span-12 lg:col-span-4 border-l border-gray-200 pl-4">
           <TodayPostsSidebar />
         </aside>
       </div>

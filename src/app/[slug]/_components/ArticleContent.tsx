@@ -7,6 +7,24 @@ import { PostTOC } from "../wrapper/TOCWrapper";
 import { Sidebar } from "@/app/components/Main-page/SideBar";
 import { Separator } from "@/components/ui/separator";
 
+
+function snippetFromHtml(html: string | undefined, words = 10): string {
+  if (!html) return "";
+
+  // Remove scripts/styles, strip tags, and normalize whitespace
+  const text = html
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const parts = text.split(/\s+/);
+  const first = parts.slice(0, words).join(" ");
+  return parts.length > words ? `${first}…` : first;
+}
+
 function AuthorInfo({ author }: { author?: { node: AuthorNode } }) {
   if (!author) return null;
 
@@ -162,15 +180,10 @@ export function ArticleContent({
                   <strong>{post.author?.node.name || "Admin"}</strong>
                 </Link>
               </div>
-              <div
-                className="prose prose-sm prose-neutral dark:prose-invert mt-1 max-w-full"
-                dangerouslySetInnerHTML={{
-                  __html:
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    ((post.author as any)?.node?.description as string) || "",
-                }}
-              />
-            </div>
+              <p className="prose prose-sm prose-neutral dark:prose-invert mt-1 max-w-full">
+              {snippetFromHtml(post.author?.node.description, 10)}
+              </p>
+              </div>
           </div>
 
           {/* Published date */}

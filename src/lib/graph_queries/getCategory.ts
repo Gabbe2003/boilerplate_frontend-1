@@ -245,7 +245,7 @@ export async function getCategoryBySlug(slug: string, after?: string): Promise<I
     const json = await wpGraphQLCached<CategoryBySlugResp>(
       query,
       { slug, after },
-      { revalidate: 15 * 60, tags: ["categories", `category-${slug}`] }
+      { revalidate: 5 * 60, tags: ["categories", `category-${slug}`] }
     );
 
     if (json.errors?.length) {

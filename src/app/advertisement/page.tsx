@@ -4,6 +4,7 @@ import Policies from "./_components/Policies";
 import NewsletterHighlight from "./_components/NewsletterHighlight";
 import AdInquiryForm from "./_components/AdInquiryForm";
 import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
+import { enforceApex } from '@/lib/seo/enforceApex';
 
 const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Vår Webbplats";
 
@@ -11,16 +12,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const payload = await getSeo('/advertisement/');
 
   if (!payload?.nodeByUri) {
-    return {
-      title: `Annonsering | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Upptäck annonseringsmöjligheter, partnerskap och samarbeten med oss.",
-      robots: { index: true, follow: true },
-    };
+    return enforceApex(
+      {
+        title: `Annonsering | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        description: "Upptäck annonseringsmöjligheter, partnerskap och samarbeten med oss.",
+        robots: { index: true, follow: true },
+      },
+      '/advertisement/',
+    );
   }
 
   const meta = buildMetadataFromSeo(payload, {
-    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
-    siteName: process.env.NEXT_PUBLIC_SITENAME,
+    metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
+    siteName: process.env.NEXT_PUBLIC_HOSTNAME,
   });
 
   // fallback-beskrivning om den saknas
@@ -28,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
     meta.description = "Upptäck annonseringsmöjligheter, partnerskap och samarbeten med oss.";
   }
 
-  return meta;
+  return enforceApex(meta, '/advertisement/');
 }
 
 export default async function AdInquiryPage() {

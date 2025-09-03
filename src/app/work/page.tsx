@@ -1,20 +1,24 @@
 import type { Metadata } from 'next';
 import { getSeo, buildMetadataFromSeo } from '@/lib/seo/seo';
+import { enforceApex } from '@/lib/seo/enforceApex';
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getSeo('/work/');
 
   if (!payload?.nodeByUri) {
-    return {
-      title: `Work | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Utforska karriärmöjligheter och arbeta med vårt team.",
-      robots: { index: true, follow: true },
-    };
+    return enforceApex(
+      {
+        title: `Work | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        description: "Utforska karriärmöjligheter och arbeta med vårt team.",
+        robots: { index: true, follow: true },
+      },
+      '/work/',
+    );
   }
 
   const meta = buildMetadataFromSeo(payload, {
-    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
-    siteName: process.env.NEXT_PUBLIC_SITENAME,
+    metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
+    siteName: process.env.NEXT_PUBLIC_HOSTNAME,
   });
 
   // fallback description if empty
@@ -22,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
     meta.description = "Utforska karriärmöjligheter och arbeta med vårt team.";
   }
 
-  return meta;
+  return enforceApex(meta, '/work/');
 }
 
 

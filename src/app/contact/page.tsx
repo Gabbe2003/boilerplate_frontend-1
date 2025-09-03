@@ -1,25 +1,28 @@
 import type { Metadata } from "next";
 import ContactForm from "./_component/ContactForm";
+import { getSeo, buildMetadataFromSeo } from '@/lib/seo/seo';
+import { enforceApex } from '@/lib/seo/enforceApex';
 
 const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Our Site";
-
-import { getSeo, buildMetadataFromSeo } from '@/lib/seo/seo';
 
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getSeo('/contact/');
 
   if (!payload?.nodeByUri) {
-    return {
-      title: `Contact | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Kontakta vårt team för förfrågningar, support eller samarbeten.",
-      robots: { index: true, follow: true },
-    };
+    return enforceApex(
+      {
+        title: `Contact | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        description: "Kontakta vårt team för förfrågningar, support eller samarbeten.",
+        robots: { index: true, follow: true },
+      },
+      '/contact/',
+    );
   }
 
   const meta = buildMetadataFromSeo(payload, {
-    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
-    siteName: process.env.NEXT_PUBLIC_SITENAME,
+    metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
+    siteName: process.env.NEXT_PUBLIC_HOSTNAME,
   });
 
   // fallback description if empty
@@ -27,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
     meta.description = "Kontakta vårt team för förfrågningar, support eller samarbeten.";
   }
 
-  return meta;
+  return enforceApex(meta, '/contact/');
 }
 
 

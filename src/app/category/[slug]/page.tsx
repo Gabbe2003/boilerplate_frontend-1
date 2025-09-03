@@ -35,9 +35,10 @@ function buildCanonicalForCategory(slug: string | string[]) {
   const s = Array.isArray(slug) ? slug.map(encodeURIComponent).join("/") : encodeURIComponent(slug);
   return `${getBaseUrl()}/category/${s}/`;
 }
-// (valfritt) om JSON-LD råkar innehålla cms.-domänen
+// Replace any CMS domain references with the public host URL
 function replaceCmsWithApex(json: string) {
-  return json.replaceAll("https://cms.finanstidning.se", getBaseUrl());
+  const cmsUrl = process.env.NEXT_PUBLIC_CMS_URL?.replace(/\/$/, "");
+  return cmsUrl ? json.replaceAll(cmsUrl, getBaseUrl()) : json;
 }
 
 export async function generateMetadata(

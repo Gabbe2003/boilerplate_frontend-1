@@ -54,7 +54,8 @@ function buildCanonicalForTag(slug: string | string[]) {
 }
 
 function replaceCmsWithApex(json: string) {
-  return json.replaceAll("https://cms.finanstidning.se", getBaseUrl());
+  const cmsUrl = process.env.NEXT_PUBLIC_CMS_URL?.replace(/\/$/, "");
+  return cmsUrl ? json.replaceAll(cmsUrl, getBaseUrl()) : json;
 }
 
 export async function generateMetadata(

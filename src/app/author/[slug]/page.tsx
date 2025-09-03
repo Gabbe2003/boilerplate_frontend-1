@@ -34,9 +34,10 @@ function buildCanonicalForAuthor(slug: string) {
   // konsekvent trailing slash
   return `${base}/author/${encodeURIComponent(slug)}/`;
 }
-// (valfritt) om JSON-LD råkar ha cms.-URL:er
+// Replace any CMS domain references with the public host URL
 function replaceCmsWithApex(json: string) {
-  return json.replaceAll('https://cms.finanstidning.se', getBaseUrl());
+  const cmsUrl = process.env.NEXT_PUBLIC_CMS_URL?.replace(/\/$/, '');
+  return cmsUrl ? json.replaceAll(cmsUrl, getBaseUrl()) : json;
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {

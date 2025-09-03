@@ -1,20 +1,24 @@
 import type { Metadata } from 'next';
 import { getSeo, buildMetadataFromSeo } from '@/lib/seo/seo';
+import { enforceApex } from '@/lib/seo/enforceApex';
 
 export async function generateMetadata(): Promise<Metadata> {
   const payload = await getSeo('/privacy/');
 
   if (!payload?.nodeByUri) {
-    return {
-      title: `Privacy | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Läs vår integritetspolicy för att förstå hur vi samlar in, använder och skyddar din information.",
-      robots: { index: true, follow: true },
-    };
+    return enforceApex(
+      {
+        title: `Privacy | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        description: "Läs vår integritetspolicy för att förstå hur vi samlar in, använder och skyddar din information.",
+        robots: { index: true, follow: true },
+      },
+      '/privacy/',
+    );
   }
 
   const meta = buildMetadataFromSeo(payload, {
-    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
-    siteName: process.env.NEXT_PUBLIC_SITENAME,
+    metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
+    siteName: process.env.NEXT_PUBLIC_HOSTNAME,
   });
 
   // fallback description if empty
@@ -22,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
     meta.description = "Läs vår integritetspolicy för att förstå hur vi samlar in, använder och skyddar din information.";
   }
 
-  return meta;
+  return enforceApex(meta, '/privacy/');
 }
 
 

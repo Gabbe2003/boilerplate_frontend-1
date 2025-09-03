@@ -1,4 +1,5 @@
 import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
+import { enforceApex } from '@/lib/seo/enforceApex';
 import type { Metadata } from 'next';
 
 
@@ -6,16 +7,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const payload = await getSeo('/about/');
 
   if (!payload?.nodeByUri) {
-    return {
-      title: `About | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
-      description: "Lär dig mer om oss.",
-      robots: { index: true, follow: true },
-    };
+    return enforceApex(
+      {
+        title: `About | ${process.env.NEXT_PUBLIC_HOSTNAME}`,
+        description: "Lär dig mer om oss.",
+        robots: { index: true, follow: true },
+      },
+      '/about/',
+    );
   }
 
   const meta = buildMetadataFromSeo(payload, {
-    metadataBase: process.env.NEXT_PUBLIC_SITE_URL,
-    siteName: process.env.NEXT_PUBLIC_SITENAME,
+    metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
+    siteName: process.env.NEXT_PUBLIC_HOSTNAME,
   });
 
   // fallback description if empty
@@ -23,7 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     meta.description = "Lär dig mer om oss, vårt uppdrag och vad vi gör.";
   }
 
-  return meta;
+  return enforceApex(meta, '/about/');
 }
 
 const AboutPage = () => {

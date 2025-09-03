@@ -5,6 +5,7 @@ import { SinglePost } from './_components/SinglePost';
 import NotFound from '../NotFound';
 import type { Metadata } from 'next';
 import { buildMetadataFromSeo, getSeo } from '@/lib/seo/seo';
+import { enforceApex } from '@/lib/seo/enforceApex';
 
 type Params = Promise<{ slug: string | string[] }>;
 
@@ -45,8 +46,8 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const segments = Array.isArray(slug) ? slug : [slug];
   const uri = `/${segments.join('/')}/`;
 
-  // Här bygger vi canonical direkt från env + slug
-  const canonical = `${process.env.NEXT_PUBLIC_HOST_URL!.replace(/\/$/, '')}${uri}`;
+  const base = (process.env.NEXT_PUBLIC_HOST_URL || '').replace(/\/$/, '');
+  const canonical = `${base}${uri}`;
 
   const seoPayload = await getSeo(uri);
   const last = Array.isArray(slug) ? slug.at(-1)! : slug;
@@ -86,10 +87,6 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     defaultOgImage: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE,
   });
 
-  // 🔒 Override canonical + og:url → alltid vår publika URL
-  meta.alternates = { ...(meta.alternates ?? {}), canonical };
-  meta.openGraph = { ...(meta.openGraph ?? {}), url: canonical };
-
   // Fallback description från WP-excerpt om RankMath saknas
   if ((!meta.description || !meta.description.trim()) && post?.excerpt) {
     const plain = post.excerpt.replace(/<[^>]+>/g, '').trim();
@@ -101,7 +98,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     }
   }
 
-  return meta;
+  return enforceApex(meta, uri);
 }
 
 export default async function Page({
@@ -122,11 +119,14 @@ export default async function Page({
     const segments = Array.isArray(slug) ? slug : [slug];
     const uri = `/${segments.join('/')}/`;
     const seoPayload = await getSeo(uri);
-    const metaForScript = buildMetadataFromSeo(seoPayload, {
-      metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
-      siteName: process.env.NEXT_PUBLIC_HOSTNAME,
-      defaultOgImage: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE,
-    });
+    const metaForScript = enforceApex(
+      buildMetadataFromSeo(seoPayload, {
+        metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
+        siteName: process.env.NEXT_PUBLIC_HOSTNAME,
+        defaultOgImage: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE,
+      }),
+      uri,
+    );
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const jsonLdRaw = (metaForScript.other as any)?.jsonLd as string | undefined;
 

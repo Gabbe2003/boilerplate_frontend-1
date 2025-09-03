@@ -26,13 +26,41 @@ function safeParse<T = unknown>(raw?: string): T | null {
   try { return JSON.parse(raw) as T; } catch { return null; }
 }
 
+function getBaseUrl() {
+  return (process.env.NEXT_PUBLIC_HOST_URL ?? 'https://finanstidning.se').replace(/\/$/, '');
+}
+function buildCanonicalForAuthor(slug: string) {
+  const base = getBaseUrl();
+  // konsekvent trailing slash
+  return `${base}/author/${encodeURIComponent(slug)}/`;
+}
+// (valfritt) om JSON-LD råkar ha cms.-URL:er
+function replaceCmsWithApex(json: string) {
+  return json.replaceAll('https://cms.finanstidning.se', getBaseUrl());
+}
+
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
+
+  // hämta RankMath/SEO
   const { meta } = await getBestSeoBySlug(slug, 'author');
 
+  // 🔒 OVERRIDE: canonical + og:url
+  const canonical = buildCanonicalForAuthor(slug);
+  meta.alternates = { ...(meta.alternates ?? {}), canonical };
+  meta.openGraph = { ...(meta.openGraph ?? {}), url: canonical };
+
+  // (valfritt) om din SEO-builder inte redan sätter metadataBase korrekt
+  // meta.metadataBase = new URL(getBaseUrl());
+
+  // JSON-LD: parsea/sanera (om du vill)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (meta.other as any)?.jsonLd as string | undefined;
-  safeParse(jsonLdRaw); // parsed but not logged
+  if (jsonLdRaw) {
+    safeParse(jsonLdRaw); 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (meta.other as any).jsonLd = replaceCmsWithApex(jsonLdRaw);
+  }
 
   return meta;
 }
@@ -44,16 +72,22 @@ export default async function AuthorInfo({
 }) {
   const { slug } = await params;
 
-  // Fetch content in parallel to reduce server time (helps TTFB)
+  // parallellhämtning
   const [author, seo] = await Promise.all([
     getAuthorBySlug(slug),
     getBestSeoBySlug(slug, 'author'),
   ]);
 
   const { meta: seoMeta } = seo;
+
+  // Sanera JSON-LD även här om du injicerar scriptet i rendern
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (seoMeta.other as any)?.jsonLd as string | undefined;
-  safeParse(jsonLdRaw); // parsed but not logged
+  if (jsonLdRaw) {
+    safeParse(jsonLdRaw);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (seoMeta.other as any).jsonLd = replaceCmsWithApex(jsonLdRaw);
+  }
 
   if (!author) {
     return (

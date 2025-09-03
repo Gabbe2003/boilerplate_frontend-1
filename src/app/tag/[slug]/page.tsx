@@ -43,17 +43,42 @@ function safeParse<T = unknown>(raw?: string): T | null {
   }
 }
 
-export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+
+function getBaseUrl() {
+  return (process.env.NEXT_PUBLIC_HOST_URL ?? "https://finanstidning.se").replace(/\/$/, "");
+}
+
+function buildCanonicalForTag(slug: string | string[]) {
+  const s = Array.isArray(slug) ? slug.map(encodeURIComponent).join("/") : encodeURIComponent(slug);
+  return `${getBaseUrl()}/tag/${s}/`;
+}
+
+function replaceCmsWithApex(json: string) {
+  return json.replaceAll("https://cms.finanstidning.se", getBaseUrl());
+}
+
+export async function generateMetadata(
+  { params }: { params: Promise<Params> }
+): Promise<Metadata> {
   const { slug } = await params;
+
   const { meta } = await getBestSeoBySlug(slug, "tag");
+
+  // 🔒 Override canonical + og:url → alltid publika domänen
+  const canonical = buildCanonicalForTag(slug);
+  meta.alternates = { ...(meta.alternates ?? {}), canonical };
+  meta.openGraph = { ...(meta.openGraph ?? {}), url: canonical };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (meta.other as any)?.jsonLd as string | undefined;
-  safeParse(jsonLdRaw);
+  if (jsonLdRaw) {
+    safeParse(jsonLdRaw);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (meta.other as any).jsonLd = replaceCmsWithApex(jsonLdRaw);
+  }
 
   return meta;
 }
-
 export default async function TagPage({ params }: { params: Params }) {
   const { slug } = await params;
 

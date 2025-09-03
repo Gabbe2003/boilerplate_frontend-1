@@ -41,18 +41,19 @@ interface TwitterMeta {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
 
-  // build a clean WP uri regardless of catch-all or single segment
+  // Hantera slug (catch-all vs single)
   const segments = Array.isArray(slug) ? slug : [slug];
   const uri = `/${segments.join('/')}/`;
 
-  const seoPayload = await getSeo(uri);
+  // Här bygger vi canonical direkt från env + slug
+  const canonical = `${process.env.NEXT_PUBLIC_HOST_URL!.replace(/\/$/, '')}${uri}`;
 
+  const seoPayload = await getSeo(uri);
   const last = Array.isArray(slug) ? slug.at(-1)! : slug;
   const post = await getPostBySlug(last);
 
+  // Fallback om sidan inte finns
   if (!seoPayload?.nodeByUri && !post) {
-    const siteUrl = process.env.NEXT_PUBLIC_HOST_URL!;
-    const canonical = new URL(uri.replace(/^\//, ''), siteUrl).toString();
     return {
       title: `Not found - ${process.env.NEXT_PUBLIC_HOSTNAME}`,
       description: 'Sorry, this page was not found.',
@@ -78,13 +79,18 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     };
   }
 
+  // Bygg meta från RankMath/SEO
   const meta = buildMetadataFromSeo(seoPayload, {
     metadataBase: process.env.NEXT_PUBLIC_HOST_URL,
     siteName: process.env.NEXT_PUBLIC_HOSTNAME,
     defaultOgImage: process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE,
   });
 
-  // fallback description from WP excerpt if RankMath description missing
+  // 🔒 Override canonical + og:url → alltid vår publika URL
+  meta.alternates = { ...(meta.alternates ?? {}), canonical };
+  meta.openGraph = { ...(meta.openGraph ?? {}), url: canonical };
+
+  // Fallback description från WP-excerpt om RankMath saknas
   if ((!meta.description || !meta.description.trim()) && post?.excerpt) {
     const plain = post.excerpt.replace(/<[^>]+>/g, '').trim();
     if (plain) {

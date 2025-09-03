@@ -28,15 +28,43 @@ function safeParse<T = unknown>(raw?: string): T | null {
   }
 }
 
+function getBaseUrl() {
+  return (process.env.NEXT_PUBLIC_HOST_URL ?? "https://finanstidning.se").replace(/\/$/, "");
+}
+function buildCanonicalForCategory(slug: string | string[]) {
+  const s = Array.isArray(slug) ? slug.map(encodeURIComponent).join("/") : encodeURIComponent(slug);
+  return `${getBaseUrl()}/category/${s}/`;
+}
+// (valfritt) om JSON-LD råkar innehålla cms.-domänen
+function replaceCmsWithApex(json: string) {
+  return json.replaceAll("https://cms.finanstidning.se", getBaseUrl());
+}
+
 export async function generateMetadata(
   { params }: { params: Promise<Params> }
 ): Promise<Metadata> {
-  const { slug } = await params;
+  const slugParam = await params;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const slug = (typeof slugParam === "string" ? slugParam : (slugParam as any).slug) as string;
+
   const { meta } = await getBestSeoBySlug(slug, "category");
 
+  // 🔒 Override: canonical + og:url -> alltid publika domänen
+  const canonical = buildCanonicalForCategory(slug);
+  meta.alternates = { ...(meta.alternates ?? {}), canonical };
+  meta.openGraph = { ...(meta.openGraph ?? {}), url: canonical };
+  // (valfritt) sätt metadataBase om din builder inte redan gör det
+  // meta.metadataBase = new URL(getBaseUrl());
+
+  // JSON-LD: parsea/sanera tyst
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jsonLdRaw = (meta.other as any)?.jsonLd as string | undefined;
-  safeParse(jsonLdRaw);
+  if (jsonLdRaw) {
+    safeParse(jsonLdRaw);
+    // (valfritt) sanera cms → apex
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (meta.other as any).jsonLd = replaceCmsWithApex(jsonLdRaw);
+  }
 
   return meta;
 }

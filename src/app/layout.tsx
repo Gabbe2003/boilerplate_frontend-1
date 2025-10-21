@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
+<<<<<<< HEAD
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Script from 'next/script'; 
+=======
+ import { GoogleAnalytics } from "@next/third-parties/google";
+>>>>>>> e5905b196b20d97a21bd36c6f9f83ecc04f86838
 
 import "@/styles/globals.css";
 
@@ -32,6 +36,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const logo = await getLogo().catch(() => null);
 
   return (
+<<<<<<< HEAD
     <html lang="sv">
       <head>
         <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4868110039996635" crossOrigin="anonymous"></Script>
@@ -62,6 +67,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
             })(); `}
             
         </Script>
+=======
+    <html lang="en">
+      <head>
+             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4868110039996635"
+     crossOrigin="anonymous"></script>
+>>>>>>> e5905b196b20d97a21bd36c6f9f83ecc04f86838
       </head>
       <body className="flex min-h-screen flex-col">
 

@@ -1,0 +1,133 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.prose a { color: rgb(37 99 235) !important; }        /* blue-600 */
+.dark .prose a { color: rgb(96 165 250) !important; } /* blue-400 */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* 3. Your global palette (light mode) */
+:root {
+  --radius: 0.625rem;
+  --background: oklch(100% 0.00011 271.152);
+  --foreground: oklch(0% 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(60.882% 0.221 26.878);
+  --border: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --input: oklch(0.922 0 0);
+  --firstBG: #FFFFFF;
+  --secBG: #F8F9FA;
+
+}
+
+@layer components {
+  .themed-section {
+    --background: oklch(0% 0 0);
+    --foreground: oklch(97.614% 0.00011 271.152);
+    --border: oklch(19.689% 0.0016 16.521 / 0.15);
+
+    @apply bg-background  
+      border-border 
+      text-foreground;
+  }
+}
+
+
+body {
+  background: #FFFFFF;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50; /* needs --color-ring */
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Helvetica', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #222;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: 2.25rem; /* 36px */
+  margin-bottom: 0.7em;
+  margin-top: 1.5em;
+}
+
+h2 {
+  font-size: 1.75rem; /* 28px */
+  margin-bottom: 0.65em;
+  margin-top: 1.2em;
+}
+
+h3 {
+  font-size: 1.375rem; /* 22px */
+  margin-bottom: 0.6em;
+  margin-top: 1em;
+}
+
+h4 {
+  font-size: 1.125rem; /* 18px */
+  margin-bottom: 0.55em;
+  margin-top: 0.9em;
+}
+
+h5 {
+  font-size: 1rem; /* 16px */
+  margin-bottom: 0.5em;
+  margin-top: 0.8em;
+}
+
+h6 {
+  font-size: 0.875rem; /* 14px */
+  margin-bottom: 0.5em;
+  margin-top: 0.8em;
+}
+
+
+.custom-button {
+  @apply px-4 py-2 rounded-md border border-gray-400 text-black 
+         cursor-pointer bg-transparent 
+         transition-all duration-200;
+}
+
+.custom-button:hover {
+  @apply outline outline-1 outline-black;
+}
+
+.custom-button:active {
+  @apply opacity-70;
+}

@@ -1,15 +1,11 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { Category_names, CategoryWithPosts, Post } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
 import { getExcerpt, handleSpecielChar } from "@/lib/globals/actions";
-
-type CategoryResponse = {
-  categoryBySlug?: CategoryWithPosts;
-  error?: string;
-};
-
+ 
 export default function CategorySections({
   getAllCategories,
 }: {
@@ -25,11 +21,12 @@ export default function CategorySections({
       setLoading(true);
       try {
         const res = await fetch(
-          `/api/categories?category=${encodeURIComponent(activeCategory)}`
+          `/api/categories?category=${encodeURIComponent(activeCategory)}&take=${encodeURIComponent(6)}`
         );
         if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
-        const data: CategoryResponse = await res.json();
-        if (!cancelled) setPosts(data?.categoryBySlug?.posts.nodes ?? []);
+        const data: CategoryWithPosts | null = await res.json();
+        
+        if (!cancelled) setPosts(data?.posts.nodes ?? []);
       } catch (err) {
         console.error("Error fetching category:", err);
         if (!cancelled) setPosts([]);
@@ -48,9 +45,8 @@ export default function CategorySections({
       <h2>
         Senast inom {activeCategory }
       </h2>
-      <div className="flex gap-5 border-b-2 mb-10">
+      <div className="flex gap-5 border-b-2 mb-10 pb-10">
       {getAllCategories.map((category, index) => (
-        category.count && category.count > 6 && (
           <button
             key={index}
             onClick={() => setActiveCategory(category.name)}
@@ -63,7 +59,6 @@ export default function CategorySections({
           >
             {loading && activeCategory === category.name ? "Loading..." : category.name}
           </button>
-        )
       ))}
       </div>
       <div>
@@ -75,7 +70,7 @@ export default function CategorySections({
                 <li key={post.id ?? index}>
                   <Link href={`/${post.slug}`} className="block">
                     <Image
-                      src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+                      src={post?.featuredImage?.node?.sourceUrl || "/"}
                       alt={post?.featuredImage?.node?.altText || "Image"}
                       width={600}
                       height={400}

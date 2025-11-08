@@ -1,5 +1,4 @@
 
-/** @type {import('next').NextConfig} */
 
 const securityHeaders = [
   {
@@ -62,7 +61,8 @@ images: {
         headers: securityHeaders
       }
     ];
-  },
-};
+  },}
+
 
 module.exports = nextConfig;
+  

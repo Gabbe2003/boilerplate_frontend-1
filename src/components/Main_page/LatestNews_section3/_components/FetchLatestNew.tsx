@@ -11,7 +11,7 @@ export default function FetchLatestNew() {
 
   async function fetchPosts(amount: number) {
     try {
-      const res = await fetch(`/api/getpost?amount=${amount}`);
+      const res = await fetch(`/api/getpost?amount=${amount}`, {cache: 'no-store'});
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
@@ -36,7 +36,7 @@ export default function FetchLatestNew() {
   return (
     <div className="space-y-4">
       <div className="grid gap-4 grid-cols-2">
-        {posts.map((post, i) => (
+        {posts.map((post) => (
             <Link href={`/${post.slug}`} key={`Senaste-nyheter${post.id}`} prefetch={false}>
               <PostCard post={post} variant="hero" className="h-[420px]" />
             </Link>

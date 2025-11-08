@@ -7,6 +7,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const raw = searchParams.get("category") ?? "";
+    const amount = Number(searchParams.get("take")) ?? 19;
     if (!raw) {
       return NextResponse.json(
         { error: "Missing 'category' query parameter." },
@@ -15,7 +16,7 @@ export async function GET(req: NextRequest) {
     }
 
     const slug = handleSpecielChar(raw);
-    const categoryBySlug = await getCategoryBySlug(slug);
+    const categoryBySlug = await getCategoryBySlug(slug, {take: amount});
 
     if (!categoryBySlug) {
       return NextResponse.json(
@@ -24,7 +25,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({ categoryBySlug });
+    return NextResponse.json(categoryBySlug);
   } catch (err) {
     console.error("GET /api/categories error:", err);
     return NextResponse.json(

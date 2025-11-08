@@ -1,3 +1,5 @@
+import "server-only"; 
+
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Category_names } from "@/lib/types";

@@ -1,3 +1,5 @@
+import "server-only"; 
+
 import Link from 'next/link';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 // Social media link variables

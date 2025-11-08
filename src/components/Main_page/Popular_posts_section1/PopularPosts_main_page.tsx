@@ -1,23 +1,10 @@
-
-
-
+import "server-only"
 
 import { getAllPosts, getTodaysPosts } from "@/lib/graphql_queries/getPost";
 import Link from "next/link";
 import PostCard from "./_components/PostCard";
-import { Post } from "@/lib/types";
+import { formatDateStockholm } from "@/lib/globals/actions";
 
-const stockholmFmt = new Intl.DateTimeFormat("sv-SE", {
-  timeZone: "Europe/Stockholm",
-  month: "short",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-});
-function formatDateStockholm(iso?: string) {
-  if (!iso) return "";
-  return stockholmFmt.format(new Date(iso));
-}
 
 export default async function Home() {
   const posts = await getAllPosts(10);
@@ -51,7 +38,7 @@ export default async function Home() {
         <div className="col-span-12 border-gray-200 pl-4 lg:col-span-4 lg:border-l">
           <h2 className="mb-2 font-semibold">Populära inlägg</h2>
           <ul className="max-h-[72vh] divide-y overflow-y-auto">
-            {todays_posts.map((post : Post) => {
+            {todays_posts.map((post : any) => {
               const cat = (post)?.category?.nodes?.[0]?.name ?? (post)?.category?.nodes?.[0]?.name;
               const when = formatDateStockholm(post.date);
               return (

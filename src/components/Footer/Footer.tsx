@@ -1,4 +1,6 @@
 
+import "server-only"; 
+
 import Link from 'next/link';
 import Image from 'next/image';
 import SocialMediaButtons from './_components/SocialMediaButtons';
@@ -13,12 +15,12 @@ export default function Footer() {
     { type: 'link', title: 'Jobba med oss', slug: '/work' },
     { type: 'link', title: 'Webbplatskarta', slug: '/sitemap.xml' },
   ];
-  const links = [
-    { title: 'Kontakt', slug: '/contact' },
-    { title: host ? `Om ${host}` : 'Om', slug: '/about' },
-    { title: 'Integritetspolicy', slug: '/privacy' },
-    { title: 'Arkiv', slug: '/archive' },
-  ];
+  // const links = [
+  //   { title: 'Kontakt', slug: '/contact' },
+  //   { title: host ? `Om ${host}` : 'Om', slug: '/about' },
+  //   { title: 'Integritetspolicy', slug: '/privacy' },
+  //   { title: 'Arkiv', slug: '/archive' },
+  // ];
 
   return (
     <footer id="footer" className="w-full px-2 border-t border-gray-200 bg-gray-100">

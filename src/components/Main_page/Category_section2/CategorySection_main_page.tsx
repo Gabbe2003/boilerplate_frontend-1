@@ -1,4 +1,6 @@
 // app/(whatever)/category-sections/page.tsx
+import "server-only"
+
 import { get_all_categories_by_name } from '@/lib/graphql_queries/getCategories';
 import CategorySections from './_components/CategorySections';
 import type { Category_names } from '@/lib/types';

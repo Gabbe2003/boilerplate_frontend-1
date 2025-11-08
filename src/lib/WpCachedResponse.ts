@@ -14,7 +14,6 @@ function stableStringify(value: unknown): string {
       if (seen.has(val)) return '[Circular]';
       seen.add(val);
       if (Array.isArray(val)) return val;
-      // Sort plain-object keys
       const entries = Object.entries(val).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
       return Object.fromEntries(entries);
     }
@@ -36,93 +35,141 @@ type CacheOpts = {
 // Let fetchJSON accept a `json` shortcut like signedFetch does.
 type SignedInit = RequestInit & { json?: unknown };
 
-async function fetchJSON(url: string, init: SignedInit = {}) {
-  const { json, headers: initHeaders, ...rest } = init;
+// Centralized, safe JSON fetcher: never throws, returns null on failure.
+async function fetchJSON<T = unknown>(url: string, init: SignedInit = {}): Promise<T | null> {
+  try {
+    const { json, headers: initHeaders, ...rest } = init;
 
-  const headers = new Headers(initHeaders ?? {});
-  headers.set('Accept', 'application/json');
+    const headers = new Headers(initHeaders ?? {});
+    headers.set('Accept', 'application/json');
 
-  if (json !== undefined) {
-    rest.method = rest.method ?? 'POST';
-    rest.body = JSON.stringify(json);
-    headers.set('Content-Type', 'application/json');
-  } else if ((rest.method ?? 'GET').toUpperCase() === 'POST') {
-    if (!headers.has('Content-Type')) {
+    if (json !== undefined) {
+      rest.method = rest.method ?? 'POST';
+      (rest as RequestInit).body = JSON.stringify(json);
       headers.set('Content-Type', 'application/json');
+    } else if ((rest.method ?? 'GET').toUpperCase() === 'POST') {
+      if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
     }
-  }
 
-  const res = await fetch(url, { cache: 'no-store', headers, ...rest });
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new Error(`[fetchJSON] ${res.status} ${res.statusText} ${body}`);
+    const res = await fetch(url, { cache: 'no-store', headers, ...rest });
+
+    const text = await res.text().catch(() => '');
+    if (!res.ok) {
+      console.error(`[fetchJSON] HTTP ${res.status} ${res.statusText} — ${url}\n${text?.slice(0, 500)}`);
+      return null;
+    }
+
+    try {
+      return JSON.parse(text) as T;
+    } catch (e) {
+      console.error('[fetchJSON] Failed to parse JSON:', e);
+      return null;
+    }
+  } catch (err) {
+    console.error('[fetchJSON] Request failed:', err);
+    return null;
   }
-  return res.json();
 }
 
-/** Cached GraphQL call (WPGraphQL). */
+/** Cached GraphQL call (WPGraphQL). Safe: returns null on any failure (including GraphQL-level errors). */
 export async function wpGraphQLCached<T>(
   query: string,
   variables: Record<string, unknown> = {},
   opts: CacheOpts = {}
-): Promise<T> {
+): Promise<T | null> {
   const endpoint = process.env.WP_GRAPHQL_URL;
-  if (!endpoint) throw new Error('WP_GRAPHQL_URL is not set');
+  if (!endpoint) {
+    console.error('WP_GRAPHQL_URL is not set');
+    return null;
+  }
 
   const key = ['wp:gql', stableHash(query), stableHash(variables)];
 
   const runner = cache(
     async () => {
-      const data = await fetchJSON(endpoint, {
-        json: { query, variables },
-      });
-      return data as T;
+      try {
+        const json = await fetchJSON<any>(endpoint, { json: { query, variables } });
+        if (!json) return null;
+
+        // Normalize GraphQL errors (200 OK with { errors: [...] })
+        if (json.errors) {
+          console.error('[wpGraphQLCached] GraphQL errors:', json.errors);
+          return null;
+        }
+
+        return json as T;
+      } catch (e) {
+        console.error('[wpGraphQLCached] Runner failed:', e);
+        return null;
+      }
     },
     key,
     { revalidate: opts.revalidate ?? 300, tags: opts.tags ?? [] }
   );
 
-  return runner();
+  try {
+    return await runner();
+  } catch (e) {
+    // Extra guard: cache layer exceptions
+    console.error('[wpGraphQLCached] Cache wrapper failed:', e);
+    return null;
+  }
 }
 
-/** Cached REST call (WP REST endpoints). */
+/** Cached REST call (WP REST endpoints). Safe: returns null on any failure. */
 export async function wpRestCached<T>(
   url: string,
   opts: CacheOpts = {},
   init?: SignedInit
-): Promise<T> {
+): Promise<T | null> {
   const method = (init?.method ?? 'GET').toUpperCase();
   const headersObj = Object.fromEntries(new Headers(init?.headers ?? {}));
   const bodyOrJson = init?.json ?? init?.body ?? null;
 
-  const key = [
-    'wp:rest',
-    stableHash(url),
-    stableHash({ method, headers: headersObj, body: bodyOrJson }),
-  ];
+  const key = ['wp:rest', stableHash(url), stableHash({ method, headers: headersObj, body: bodyOrJson })];
 
   const runner = cache(
     async () => {
-      const data = await fetchJSON(url, init);
-      return data as T;
+      try {
+        const json = await fetchJSON<T>(url, init);
+        return json; // may be null on failures
+      } catch (e) {
+        console.error('[wpRestCached] Runner failed:', e);
+        return null;
+      }
     },
     key,
     { revalidate: opts.revalidate ?? 300, tags: opts.tags ?? [] }
   );
 
-  return runner();
+  try {
+    return await runner();
+  } catch (e) {
+    console.error('[wpRestCached] Cache wrapper failed:', e);
+    return null;
+  }
 }
 
-
-
-/** Raw (uncached) WPGraphQL call. */
+/** Raw (uncached) WPGraphQL call. Safe: returns null on any failure (including GraphQL-level errors). */
 export async function wpGraphQLRaw<T>(
   query: string,
   variables: Record<string, unknown> = {}
-): Promise<T> {
+): Promise<T | null> {
   const endpoint = process.env.WP_GRAPHQL_URL;
-  if (!endpoint) throw new Error('WP_GRAPHQL_URL is not set');
-  return fetchJSON(endpoint, { json: { query, variables } });
+  if (!endpoint) {
+    console.error('WP_GRAPHQL_URL is not set');
+    return null;
+  }
+
+  const json = await fetchJSON<any>(endpoint, { json: { query, variables } });
+  if (!json) return null;
+
+  if (json.errors) {
+    console.error('[wpGraphQLRaw] GraphQL errors:', json.errors);
+    return null;
+  }
+
+  return json as T;
 }
 
 /** Pick the smallest bucket >= n; otherwise return the largest bucket. */

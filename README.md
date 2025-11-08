@@ -1,20 +1,37 @@
 
-  const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`;
-  const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/top-posts?popular`;
-  const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/today-posts`;
+Then we should start the search in the header. And then from there we move to SEO. 
+
+we fix the site langauge, html and like content and all then we ensure that the Json-ld is working. we shall check for sameAs in the seo fucntions. 
+
+The build is not looking promissing,😂😂😂. 
+
+
+What should we index and what should we not, category, author. 
+
+Advirtisment needs a corsponding page. Category, author, 
+Fix the search 
 
 
 
-
+Fix later
 1. The header is not responviness due to the add of more categroies(fix later)
+
+Fix the change of metadata and title. IN posts
+
 I am scared that the threow error is causing the program to crash
 I am also more scared that we are not having fallbacks. 
+
 The button inside the footer has to be connected with the off-page newsletter, like the popup.
 
+Fix the footer once we have the menus. 
+Make sure that the places we have a request we have try/catch
 
-Should we being the width and heigh for the getCategoryBySlug
+
+We have a fallback if something crash but we dont show anything instead of it. 
+Author doesnt have cache sincne who will go there in the first place?
 
 
+Implement revalidate and tags
 
 
 GetPostByPeriod:

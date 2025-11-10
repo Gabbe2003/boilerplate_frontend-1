@@ -66,9 +66,6 @@ export default function TaxonomyStream({
     const endpoint = kind === "author" ? "/api/author" : "/api/categories";
     const slugKey = kind === "author" ? "slug" : "category";
 
-
-    console.log(slug);
-    
     const url = new URL(endpoint, window.location.origin);
     url.searchParams.set(slugKey, slug);
     url.searchParams.set("take", String(nextTake));

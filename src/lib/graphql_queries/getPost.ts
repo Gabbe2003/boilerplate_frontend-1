@@ -3,7 +3,6 @@ import "server-only"
 import { AllPostSlugsResponse, AllPostsMinimalResponse, GetAllPostsOpts, GetPostSlugsOpts, GQLResp, Post, PostBySlugResult, PostsQueryData, PostTitleSlug, TodayPost, WpGraphQLResponse } from "../types";
 import { pickBucket, wpGraphQLCached, wpGraphQLRaw, wpRestCached } from "../WpCachedResponse";
 import { decodeHTML, extractHeadings } from "../globals/actions";
-import { AuthorInfoProps } from "@/app/[slug]/_components/_post/AuthorInfo";
 
 
 export async function getPostsByPeriod(period: 'week' | 'month') {
@@ -12,7 +11,6 @@ export async function getPostsByPeriod(period: 'week' | 'month') {
 }
 
 export async function getTodaysPosts(limit: number = 5): Promise<TodayPost[]> {
-  // Skip for local dev (avoids errors when no backend)
   if (process.env.NEXT_PUBLIC_HOSTNAME?.includes("boilerplate.local")) {
     return [];
   }

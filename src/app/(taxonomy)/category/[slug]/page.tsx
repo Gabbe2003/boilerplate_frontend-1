@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     follow: true
   }
 
-  metadata.title = `Kategori ${slug} | ${process.env.NEXT_PUBLIC_HOSTNAME}`
+  metadata.title = `Category ${slug} | ${process.env.NEXT_PUBLIC_HOSTNAME}`
 
   return metadata;
 }

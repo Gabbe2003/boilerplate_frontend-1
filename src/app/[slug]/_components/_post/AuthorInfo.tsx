@@ -1,3 +1,4 @@
+import { normalizeName } from "@/lib/globals/actions";
 import { Post } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,10 +37,11 @@ export default function AuthorInfo({ author }: AuthorInfoProps) {
           {name ? name[0].toUpperCase() : "A"}
         </span>
       )}
+      
 
       {name && (
         <>
-          Av <Link href={`author/${name}`} className="text-gray-700 text-sm font-medium">{name}</Link>
+          Av <Link href={`author/${normalizeName(name)}`} className="text-gray-700 text-sm font-medium">{name}</Link>
         </>
       )}
     </div>

@@ -1,5 +1,4 @@
 import { Post } from "@/lib/types";
-import Link from "next/link";
 import PostSocialMedia from "./PostSocialMedia";
 import AuthorInfo from "./AuthorInfo";
 

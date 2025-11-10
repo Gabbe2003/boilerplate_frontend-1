@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { get_all_categories_by_name } from "@/lib/graphql_queries/getCategories";
-import { handleSpecielChar } from "@/lib/globals/actions";
+import { capitalizeFirstLetter, handleSpecielChar } from "@/lib/globals/actions";
 import type { CategoryWithPosts, Post } from "@/lib/types";
 import Breadcrumb from "../_components/BreadCrumb";
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
@@ -15,6 +15,9 @@ export async function generateMetadata() {
     index: false, 
     follow: true
   }
+
+  metadata.title = `Category | ${capitalizeFirstLetter(process.env.NEXT_PUBLIC_HOSTNAME!)}`
+
   return metadata;
 }
 

@@ -1,7 +1,7 @@
 // app/category/[slug]/page.tsx
 import Link from "next/link";
 import Image from "next/image";
-import { handleSpecielChar, capitalizeFirstLetter } from "@/lib/globals/actions";
+import { capitalizeFirstLetter, normalizeName } from "@/lib/globals/actions";
 import { getAllAuthors } from "@/lib/graphql_queries/getAuthor";
 import { Author, Post } from "@/lib/types";
 import Breadcrumb from "../_components/BreadCrumb";
@@ -14,6 +14,9 @@ export async function generateMetadata() {
     index: false, 
     follow: true
   }
+
+  metadata.title = `All authors | ${capitalizeFirstLetter(process.env.NEXT_PUBLIC_HOSTNAME!)} ` 
+
   return metadata;
 }
 
@@ -37,7 +40,7 @@ export default async function CategoryPage({
               {capitalizeFirstLetter(author.name ?? "")}
             </h3>
             <Link
-              href={`/author/${encodeURIComponent(handleSpecielChar(author.slug ?? author.name ?? ""))}`}
+              href={`/author/${normalizeName(author.name)}}`}
               className="text-sm underline"
             >
               View all

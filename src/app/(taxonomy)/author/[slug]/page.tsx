@@ -2,9 +2,9 @@
 import { getAuthorBySlug } from "@/lib/graphql_queries/getAuthor";
 import { notFound } from "next/navigation";
 import TaxonomyStream from "../../_components/TaxonomyStream";
-import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
 import { getAuthorSeo } from "@/lib/seo/authorSeo";
+import { capitalizeFirstLetter } from "@/lib/globals/actions";
 
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
@@ -15,6 +15,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     index: false, 
     follow: true
   }
+
+  metadata.title = `Author ${slug} | ${capitalizeFirstLetter(process.env.NEXT_PUBLIC_HOSTNAME!)} ` 
+
+
   return metadata;
 }
 

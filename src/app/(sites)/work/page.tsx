@@ -1,5 +1,14 @@
+import { capitalizeFirstLetter } from "@/lib/globals/actions";
+import { getWpSeo } from "@/lib/seo/graphqlSeo";
 
-const page = () => {
+
+export async function generateMetadata(){
+  const { metadata } = await getWpSeo('/work'); 
+  metadata.title = `Work | ${capitalizeFirstLetter(process.env.NEXT_PUBLIC_HOSTNAME!)}`
+  return metadata; 
+}
+
+export default function Work(){
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-blue-50">
       <div className="bg-white shadow-2xl rounded-2xl p-8 max-w-lg w-full text-center">
@@ -28,4 +37,3 @@ const page = () => {
   );
 };
 
-export default page;

@@ -11,28 +11,24 @@ const WP_GRAPHQL_URL = process.env.WP_GRAPHQL_URL;
 const SITE_LOGO_URL = process.env.SITE_LOGO_URL ?? `${SITE_URL}/favicon.ico`;
 const SITE_NAME = process.env.SITE_NAME ?? "Finanstidning";
 
-// Fix a better description
 const SITE_DESC =
   "Få dagliga nyheter om finans, aktier, finansnyheter och börsen. Håll dig uppdaterad med de senaste marknadstrenderna och ekonominyheterna.";
 
 if (!WP_GRAPHQL_URL) throw new Error("Missing WP_GRAPHQL_URL");
 
 // ----------------------
-// ✅ LOCAL OG TYPES (fixes `images[0]?.url` errors)
+// ✅ TYPES
 // ----------------------
-type OGImageInput = string | { url: string; width?: number; height?: number };
 
-// Derive the base OG type from Next's Metadata, then force-include `type`
+type OGImageInput = string | { url: string; width?: number; height?: number };
 type OGBase = NonNullable<Metadata["openGraph"]>;
 type OGType = OGBase extends { type?: infer T } ? T : string;
 
 type OpenGraphFixed = Omit<OGBase, "images"> & {
   images?: OGImageInput | OGImageInput[];
-  /** Ensure `type` exists across Next versions */
   type?: OGType;
 };
 
-// Helper to safely pick one image URL from OpenGraphFixed.images
 function getOgImageUrl(og?: OpenGraphFixed): string | undefined {
   const images = og?.images;
   if (Array.isArray(images)) {
@@ -104,6 +100,7 @@ async function fetchGraphQL<T>(query: string, variables: Record<string, any>): P
     console.error("GraphQL errors:", json.errors);
     throw new Error("GraphQL query failed.");
   }
+
   return json.data;
 }
 
@@ -152,7 +149,6 @@ function buildMetadata({
       card: "summary_large_image",
       title,
       description,
-      // Twitter expects string | URL | (string|URL)[]
       images: getOgImageUrl(openGraph),
     },
   };
@@ -176,7 +172,7 @@ function buildJsonLd({
     name: SITE_NAME,
     url: SITE_URL,
     foundingDate: "2025-10-02",
-    legalName: `${SITE_NAME}`,
+    legalName: SITE_NAME,
     logo: { "@type": "ImageObject", url: SITE_LOGO_URL, width: 512, height: 512 },
     sameAs: [
       "https://www.facebook.com/finanstidning/",
@@ -223,24 +219,27 @@ function buildJsonLd({
 // ✅ MAIN FUNCTION
 // ----------------------
 
-export async function getWpSeo(uri: string): Promise<{
-  metadata: Metadata;
-  jsonLd: Array<Record<string, any>>;
-}> {
-  try {
-    const data = await wpGraphQLCached<any>(SEO_BY_URI, { uri });
-    const node = data.nodeByUri;
-    const general = data.generalSettings ?? {};
+export async function getWpSeo(
+  uri: string,
+  isSlug?: boolean
+): Promise<{ metadata: Metadata; jsonLd: Array<Record<string, any>> }> {
+  const normalizedUri = uri.startsWith("/") ? uri : `/${uri}`;
 
-    // --------------------------------------------------
-    // ✅ Fallback if node not found (page missing)
-    // --------------------------------------------------
-    if (!node) {
-      console.warn(`⚠️ No node found for URI "${uri}" – using fallback SEO.`);
+  try {
+    // Always normalize the shape of response
+    const rawData = isSlug
+      ? await fetchGraphQL<any>(SEO_BY_URI, { uri: normalizedUri })
+      : await wpGraphQLCached<any>(SEO_BY_URI, { uri: normalizedUri });
+
+    const data = rawData?.data ?? rawData;
+    const node = data?.nodeByUri ?? null;
+    const general = data?.generalSettings ?? {};
+
+    if (!node || !node.seo?.title) {
+      console.warn(`⚠️ No SEO data for "${normalizedUri}" – using fallback.`);
       const fallbackTitle = `Dagliga nyheter inom finansnyheter, aktier och börsen`;
       const fallbackDesc = SITE_DESC;
-      const canonical = `${SITE_URL}${uri}`;
-
+      const canonical = `${SITE_URL}${normalizedUri}`;
       const fallbackOG: OpenGraphFixed = {
         title: fallbackTitle,
         description: fallbackDesc,
@@ -266,13 +265,10 @@ export async function getWpSeo(uri: string): Promise<{
       };
     }
 
-    // --------------------------------------------------
-    // ✅ Build Metadata + JSON-LD for existing node
-    // --------------------------------------------------
     const seo = node.seo ?? {};
     const title = seo.title ?? node.title ?? general.title ?? SITE_NAME;
     const description = seo.description ?? general.description ?? SITE_DESC;
-    const canonical = seo.canonicalUrl ?? `${SITE_URL}${uri}`;
+    const canonical = seo.canonicalUrl ?? `${SITE_URL}${normalizedUri}`;
     const robots = parseRobots(seo.robots);
     const focusKeywords = normalizeFocusKeywords(seo.focusKeywords);
 
@@ -310,10 +306,10 @@ export async function getWpSeo(uri: string): Promise<{
       jsonLd: buildJsonLd({ node, title, description, canonical, openGraph }),
     };
   } catch (err) {
+    console.error("❌ getWpSeo failed:", err);
     const fallbackTitle = `Dagliga nyheter inom finansnyheter, aktier och börsen`;
     const fallbackDesc = SITE_DESC;
     const canonical = `${SITE_URL}${uri}`;
-
     const fallbackOG: OpenGraphFixed = {
       title: fallbackTitle,
       description: fallbackDesc,
@@ -322,7 +318,6 @@ export async function getWpSeo(uri: string): Promise<{
       siteName: SITE_NAME,
       images: [{ url: SITE_LOGO_URL, width: 512, height: 512 }],
     };
-
     return {
       metadata: buildMetadata({
         title: fallbackTitle,

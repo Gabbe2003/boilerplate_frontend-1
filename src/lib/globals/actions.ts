@@ -111,3 +111,8 @@ export function formatDateStockholm(iso?: string) {
   return stockholmFmt.format(new Date(iso));
 }
 
+export function normalizeName(name: string){
+  return name
+    .split(" ")[0]
+    .toLowerCase(); 
+}

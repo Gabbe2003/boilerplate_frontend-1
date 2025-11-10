@@ -70,8 +70,8 @@ export async function wpGraphQLCached<T>(
   if (!endpoint) return null;
 
   const key = ['wp:gql', stableHash(query), stableHash(variables)];
-
-  const runner = cache(
+  
+  const runner = cache( 
     async () => {
       const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
       const res = await fetch(endpoint, {

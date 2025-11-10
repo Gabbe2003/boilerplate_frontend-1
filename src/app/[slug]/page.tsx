@@ -8,11 +8,9 @@ import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const { slug } = await params;
-  const uri = `/${slug}/`;
-  const { metadata } = await getWpSeo(uri);
-
-  metadata.title = metadata.title ?? "Finanstidning.se";
-
+  const uri = `/${slug}`;
+  const { metadata } = await getWpSeo(uri, true);
+  
   return metadata;
 }
 

@@ -33,13 +33,11 @@ type CacheOpts = {
 };
 
 // Let fetchJSON accept a `json` shortcut like signedFetch does.
-type SignedInit = RequestInit & { json?: unknown };
+type SignedInit = RequestInit & { json?: unknown; next?: { revalidate?: number; tags?: string[] } };
 
-// Centralized, safe JSON fetcher: never throws, returns null on failure.
 async function fetchJSON<T = unknown>(url: string, init: SignedInit = {}): Promise<T | null> {
   try {
-    const { json, headers: initHeaders, ...rest } = init;
-
+    const { json, headers: initHeaders, next, ...rest } = init;
     const headers = new Headers(initHeaders ?? {});
     headers.set('Accept', 'application/json');
 
@@ -47,61 +45,48 @@ async function fetchJSON<T = unknown>(url: string, init: SignedInit = {}): Promi
       rest.method = rest.method ?? 'POST';
       (rest as RequestInit).body = JSON.stringify(json);
       headers.set('Content-Type', 'application/json');
-    } else if ((rest.method ?? 'GET').toUpperCase() === 'POST') {
-      if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
     }
 
-    const res = await fetch(url, { cache: 'no-store', headers, ...rest });
+    const res = await fetch(url, { headers, next, ...rest });
 
     const text = await res.text().catch(() => '');
     if (!res.ok) {
       console.error(`[fetchJSON] HTTP ${res.status} ${res.statusText} — ${url}\n${text?.slice(0, 500)}`);
       return null;
     }
-
-    try {
-      return JSON.parse(text) as T;
-    } catch (e) {
-      console.error('[fetchJSON] Failed to parse JSON:', e);
-      return null;
-    }
+    return JSON.parse(text) as T;
   } catch (err) {
     console.error('[fetchJSON] Request failed:', err);
     return null;
   }
 }
 
-/** Cached GraphQL call (WPGraphQL). Safe: returns null on any failure (including GraphQL-level errors). */
 export async function wpGraphQLCached<T>(
   query: string,
   variables: Record<string, unknown> = {},
-  opts: CacheOpts = {}
+  opts: { revalidate?: number; tags?: string[] } = {}
 ): Promise<T | null> {
   const endpoint = process.env.WP_GRAPHQL_URL;
-  if (!endpoint) {
-    console.error('WP_GRAPHQL_URL is not set');
-    return null;
-  }
+  if (!endpoint) return null;
 
   const key = ['wp:gql', stableHash(query), stableHash(variables)];
 
   const runner = cache(
     async () => {
-      try {
-        const json = await fetchJSON<any>(endpoint, { json: { query, variables } });
-        if (!json) return null;
+      const headers = new Headers({ 'Content-Type': 'application/json', Accept: 'application/json' });
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        body: JSON.stringify({ query, variables }),
+        headers,
+        cache: 'no-store',
+      });
 
-        // Normalize GraphQL errors (200 OK with { errors: [...] })
-        if (json.errors) {
-          console.error('[wpGraphQLCached] GraphQL errors:', json.errors);
-          return null;
-        }
+      const text = await res.text();
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${text.slice(0, 500)}`);
 
-        return json as T;
-      } catch (e) {
-        console.error('[wpGraphQLCached] Runner failed:', e);
-        return null;
-      }
+      const json = JSON.parse(text);
+      if (json?.errors) throw new Error(`GQL: ${JSON.stringify(json.errors)}`);
+      return json as T;                   // good result is cached
     },
     key,
     { revalidate: opts.revalidate ?? 300, tags: opts.tags ?? [] }
@@ -110,12 +95,10 @@ export async function wpGraphQLCached<T>(
   try {
     return await runner();
   } catch (e) {
-    // Extra guard: cache layer exceptions
-    console.error('[wpGraphQLCached] Cache wrapper failed:', e);
-    return null;
+    console.error('[wpGraphQLCached] fetch failed, not cached:', e);
+    return null;                          // failures did not get cached
   }
 }
-
 /** Cached REST call (WP REST endpoints). Safe: returns null on any failure. */
 export async function wpRestCached<T>(
   url: string,

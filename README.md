@@ -1,29 +1,25 @@
 
 
+We need to fix the ads.
 
-What should we index and what should we not, category, author. Also we shall have better descriptions here. 
+H1 for main page, category, author. 
 
+There is a little problem? That the full width is indeed controlled in the layout, but the colors of for example divs wont go all the way to. 
 
+The seo of the main page is being fetched, i think it is the getWpSeo that casuses it
 
 Fix later
 1. The header is not responviness due to the add of more categroies(fix later)
 
-Fix the change of metadata and title. IN posts
 
-I am scared that the threow error is causing the program to crash
+Make sure that the places we have a request we have try/catch
 I am also more scared that we are not having fallbacks. 
 
 The button inside the footer has to be connected with the off-page newsletter, like the popup.
-
 Fix the footer once we have the menus. 
-Make sure that the places we have a request we have try/catch
 
 
-We have a fallback if something crash but we dont show anything instead of it. 
-Author doesnt have cache sincne who will go there in the first place?
 
-
-Implement revalidate and tags
 
 
 GetPostByPeriod:

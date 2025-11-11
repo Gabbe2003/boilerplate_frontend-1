@@ -11,13 +11,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const {slug} =  await params
   const authorData  = await getAuthorBySlug(slug, { take: 9 });
   const { metadata } = await getAuthorSeo(authorData!);
-   metadata.robots = {
-    index: false, 
-    follow: true
-  }
 
   metadata.title = `Author ${slug} | ${capitalizeFirstLetter(process.env.NEXT_PUBLIC_HOSTNAME!)} ` 
-
 
   return metadata;
 }

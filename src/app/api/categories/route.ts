@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     }
 
     const slug = handleSpecielChar(raw);
-    const categoryBySlug = await getCategoryBySlug(slug, {take: amount});
+    const categoryBySlug = await getCategoryBySlug(slug, {take: amount})
 
     if (!categoryBySlug) {
       return NextResponse.json(

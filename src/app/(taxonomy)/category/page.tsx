@@ -11,11 +11,6 @@ import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
 
 export async function generateMetadata() {
   const { metadata } = await getWpSeo("/category");
-  metadata.robots = {
-    index: false, 
-    follow: true
-  }
-
   metadata.title = `Category | ${capitalizeFirstLetter(process.env.NEXT_PUBLIC_HOSTNAME!)}`
 
   return metadata;

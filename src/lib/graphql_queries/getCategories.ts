@@ -8,10 +8,10 @@ import { wpGraphQLCached, wpGraphQLRaw } from "../WpCachedResponse";
 export async function get_all_categories_by_name(): Promise<CategoryName[]>;
 export async function get_all_categories_by_name(
   with_excerpt: true
-): Promise<CategoryWithPosts[]>;
+): Promise<CategoryWithPosts[] >;
 export async function get_all_categories_by_name(
   with_excerpt?: boolean
-): Promise<CategoryName[] | CategoryWithPosts[]> {
+): Promise<CategoryName[] | CategoryWithPosts[]  > {
   const QUERY = with_excerpt
     ? `
       query NewQuery {
@@ -78,7 +78,7 @@ export async function get_all_categories_by_name(
 
 export async function getCategoryBySlug(
   slug: string,
-  opts?: { take?: number; after?: string | null }
+  opts?: { take?: number; after?: string | [] }
 ): Promise<CategoryWithPosts | null> {
   const take = Math.max(1, opts?.take ?? 9); // 1 + 4 + 4
   const after = opts?.after ?? null; // we’ll pass null from the client for grow-by-count

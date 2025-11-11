@@ -7,8 +7,11 @@ import { formatDateStockholm } from "@/lib/globals/actions";
 
 
 export default async function Home() {
-  const posts = await getAllPosts(10);
-  const todays_posts = await getTodaysPosts(12);
+  let [posts, todays_posts] = await Promise.all([
+    getAllPosts(10),
+    getTodaysPosts(12),
+  ]);
+
 
   const left_col = posts.slice(0, 2);
   const middle_col = posts.slice(2, 6);

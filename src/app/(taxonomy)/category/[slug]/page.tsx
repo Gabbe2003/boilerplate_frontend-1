@@ -2,16 +2,12 @@
 import { getCategoryBySlug } from "@/lib/graphql_queries/getCategories";
 import { notFound } from "next/navigation";
 import TaxonomyStream from "../../_components/TaxonomyStream";
-import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import { buildFallback } from "@/lib/seo/helpers/helpers";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const {slug} =  await params
-  const { metadata } = await getWpSeo(`/category/${slug}`);
-  metadata.robots = {
-    index: false, 
-    follow: true
-  }
+  const {metadata} = buildFallback(`/category/${slug}`); 
 
   metadata.title = `Category ${slug} | ${process.env.NEXT_PUBLIC_HOSTNAME}`
 
@@ -22,7 +18,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   const {slug} =  await params
   const initial = await getCategoryBySlug(slug, { take: 9 });  
-  const { jsonLd } = await getWpSeo(`/category/${slug}`);
+  const {jsonLd} = buildFallback(`/category/${slug}`); 
 
   
   if (!initial) return notFound();

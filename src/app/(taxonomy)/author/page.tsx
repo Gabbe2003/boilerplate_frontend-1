@@ -10,10 +10,6 @@ import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
 
 export async function generateMetadata() {
   const { metadata } = await getWpSeo("/author");
-   metadata.robots = {
-    index: false, 
-    follow: true
-  }
 
   metadata.title = `All authors | ${capitalizeFirstLetter(process.env.NEXT_PUBLIC_HOSTNAME!)} ` 
 
@@ -21,9 +17,7 @@ export async function generateMetadata() {
 }
 
 
-export default async function CategoryPage({
-  params,
-}: { params: { slug: string } }) {
+export default async function CategoryPage() {
   const authors: Author[] = await getAllAuthors();
   const { jsonLd } = await getWpSeo("/author");
 
@@ -40,7 +34,7 @@ export default async function CategoryPage({
               {capitalizeFirstLetter(author.name ?? "")}
             </h3>
             <Link
-              href={`/author/${normalizeName(author.name)}}`}
+              href={`/author/${normalizeName(author.name)}`}
               className="text-sm underline"
             >
               View all

@@ -24,6 +24,7 @@ export default async function Header() {
           <Link href="/" aria-label="Finanstidning.se startsida" className="block">
             <Image
               src="/Finanstidning_with_slogan.png"
+              overrideSrc="/Finanstidning_with_slogan.png"
               alt="Finanstidning.se logotyp"
               width={70}
               height={50}
@@ -43,6 +44,11 @@ export default async function Header() {
             <MobileHeader links={links} all_categories={data}/>
           </div>
         </div>
+        
+        <div className="hidden md:flex w-full justify-center">
+          <SearchBar posts={allPost} action="/search" />
+        </div>
+
 
         {/* Mobile / Tablet: search below top row, full width */}
         <div className="md:hidden mt-3 flex justify-center">

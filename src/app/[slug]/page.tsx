@@ -21,18 +21,18 @@ export default async function Page({ params }: { params: { slug: string } }) {
   if (!result) return notFound();
 
   const uri = `/${slug}/`;
-  const { jsonLd } = await getWpSeo(uri);
+  const { jsonLd } = await getWpSeo(uri, true);
 
   const { post, updatedHtml, toc } = result;
 
   return (
     <>
-     <SinglePost
-      post={post}
-      currentSlug={slug}
-      updatedHtml={updatedHtml}
-      toc={toc}
-    />
+      <SinglePost
+        post={post}
+        currentSlug={slug}
+        updatedHtml={updatedHtml}
+        toc={toc}
+      />
       <SeoJsonLd data={jsonLd} />
     </>
   );

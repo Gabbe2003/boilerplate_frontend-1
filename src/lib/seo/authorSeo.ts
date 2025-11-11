@@ -6,7 +6,7 @@ const SITE_NAME = process.env.SITE_NAME ?? "Finanstidning";
 const SITE_LOGO_URL = process.env.SITE_LOGO_URL ?? `${SITE_URL}/favicon.ico`;
 
 function getAuthorCanonical(slug: string): string {
-  return `${SITE_URL}/forfattare/${slug}`;
+  return `${SITE_URL}/author/${slug}`;
 }
 
 // ✅ 1. Build Metadata (OpenGraph + Twitter)

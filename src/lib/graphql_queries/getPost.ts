@@ -58,7 +58,7 @@ export async function getAllPosts(
   a?: number,
   b?: number | GetAllPostsOpts,
   c?: GetAllPostsOpts
-): Promise<Post[]> {
+): Promise<Post[] | []> {
   const QUERY = `
     query AllPostsMinimal($first: Int) {
       posts(first: $first) {

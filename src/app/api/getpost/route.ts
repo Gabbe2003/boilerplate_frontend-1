@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const amount = Number(searchParams.get("amount")) || 10;
 
-    const posts = await getAllPosts(amount); // assuming this returns an array of posts
+    const posts = await getAllPosts(amount); 
 
     return NextResponse.json({ success: true, posts });
   } catch (error) {

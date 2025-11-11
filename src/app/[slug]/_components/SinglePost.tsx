@@ -1,4 +1,3 @@
-// components/SinglePost.tsx (server)
 import "server-only";
 
 import BreadCrump from "./BreadCrump";

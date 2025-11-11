@@ -5,6 +5,8 @@ import Image from "next/image";
 import AuthorInfo from "../[slug]/_components/_post/AuthorInfo";
 import Link from "next/link";
 
+
+
 export default async function SearchPage({
   searchParams,
 }: {

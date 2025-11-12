@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Category_names } from "@/lib/types";
 import { handleSpecielChar } from "@/lib/globals/actions";
+import NewsletterIsland from "@/components/Ads/NewsLetter/NewsletterIsland";
 
 export function MobileHeader({
   links,
@@ -63,15 +64,25 @@ export function MobileHeader({
                   );
                 })}
 
-                {links.map((l) => (
-                  <Link
+                {links.map((l) =>
+                  l.name.toUpperCase() === "NYHETSBREV" ? (
+                    <div key={l.name}>
+                      <NewsletterIsland
+                        key={l.name}
+                        className="text-gray-800 hover:text-black tracking-wide"
+                        label={l.name}
+                        />
+                    </div>
+                  ) : (
+                    <Link
                     key={l.name}
                     href={l.href}
                     className="text-gray-800 hover:text-black tracking-wide"
-                  >
-                    {l.name}
-                  </Link>
-                ))}
+                    >
+                      {l.name}
+                    </Link>
+                  )
+                )}
             </nav>
         </div>
       </div>

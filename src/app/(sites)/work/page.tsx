@@ -8,7 +8,9 @@ export async function generateMetadata(){
   return metadata; 
 }
 
-export default function Work(){
+export default async function Work(){
+  const { jsonLd } = await getWpSeo('/work'); 
+
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-blue-50">
       <div className="bg-white shadow-2xl rounded-2xl p-8 max-w-lg w-full text-center">

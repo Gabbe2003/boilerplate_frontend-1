@@ -15,7 +15,7 @@ export function capitalizeFirstLetter(val : string) {
 
 
 
-export function getExcerpt(text?: string, words = 16) {
+export function limitExcerpt(text?: string, words = 16) {
   const t = stripHtml(text || "");
   const arr = t.split(/\s+/);
   return arr.length > words ? arr.slice(0, words).join(" ") + "…" : t;

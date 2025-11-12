@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Category_names, CategoryWithPosts, Post } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
-import { getExcerpt, handleSpecielChar } from "@/lib/globals/actions";
+import { limitExcerpt, handleSpecielChar } from "@/lib/globals/actions";
+import ReadPeak from "@/components/Ads/Ads/Readpeak/ReadPeak";
  
 export default function CategorySections({
   getAllCategories,
@@ -62,52 +63,80 @@ export default function CategorySections({
       ))}
       </div>
       <div>
-        {posts.length > 0 && (
-          <>
-            {/* Row 1: 4 columns */}
-            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 border-b-2 pb-8">
-              {posts.slice(0, 4).map((post, index) => (
-                <li key={post.id ?? index}>
-                  <Link href={`/${post.slug}`} className="block">
-                    <Image
-                      src={post?.featuredImage?.node?.sourceUrl || "/"}
-                      alt={post?.featuredImage?.node?.altText || "Image"}
-                      width={600}
-                      height={400}
-                      className="w-full h-48 object-cover"
-                    />
-                    <h3 className="mt-3 font-semibold">{post.title}</h3>
-                    <div className="mt-2 text-sm text-gray-600">
-                      {getExcerpt(post.excerpt)}
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+  {posts.length > 0 && (
+    <ul
+      className="
+        grid 
+        grid-cols-1 
+        sm:grid-cols-2 
+        lg:grid-cols-4 
+        gap-6 
+        border-b-2 
+        pb-8
+        mt-8
+      "
+    >
+      {(() => {
+        // Choose one random index between 0–5
+        const randomIndex = Math.floor(Math.random() * 6);
 
-            {/* Row 2: 2 columns */}
-            <ul className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {posts.slice(4, 6).map((post, index) => (
-                <li key={post.id ?? `b-${index}`}>
-                  <Link href={`/${post.slug}`} className="block">
-                    <Image
-                      src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
-                      alt={post?.featuredImage?.node?.altText || "Image"}
-                      width={600}
-                      height={400}
-                      className="w-full h-48 object-cover"
-                    />
-                    <h3 className="mt-3 font-semibold">{post.title}</h3>
-                    <div className="mt-2 text-sm text-gray-600">
-                      {getExcerpt(post.excerpt)}
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </>
-        )}
-      </div>
+        return posts.slice(0, 6).map((post, index) => {
+          // Top row: 4 cards, bottom row: 2 wide cards
+          const spanClasses =
+            index < 4
+              ? "col-span-1"
+              : "col-span-1 lg:col-span-2";
+
+          // Inject the ReadPeak ad
+          if (index === randomIndex) {
+            return (
+              <li
+                key="readpeak-ad"
+                className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col`}
+              >
+              <div className="relative w-full h-48 bg-gray-100 ">
+                <ReadPeak numberOfAds={1} />
+              </div>
+
+              
+              </li>
+            );
+          }
+
+          // Regular post
+          return (
+            <li
+              key={post.id ?? index}
+              className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow  flex flex-col`}
+            >
+              <Link href={`/${post.slug}`} className="block h-full">
+                <div className="relative w-full h-48 overflow-hidden">
+                  <Image
+                    src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+                    alt={post?.featuredImage?.node?.altText || "Image"}
+                    width={600}
+                    height={400}
+                    className="w-full h-48 object-cover"
+                  />
+                </div>
+
+                <div className="p-4 flex flex-col justify-between flex-1">
+                  <h3 className="font-semibold text-lg text-gray-900 leading-snug">
+                    {post.title}
+                  </h3>
+                  <div className="mt-2 text-sm text-gray-600 leading-snug">
+                    {limitExcerpt(post.excerpt)}
+                  </div>
+                </div>
+              </Link>
+            </li>
+          );
+        });
+      })()}
+    </ul>
+  )}
+</div>
+
 
       <div className="mt-8 w-full flex justify-center mt-5">
         <button className="custom-button">

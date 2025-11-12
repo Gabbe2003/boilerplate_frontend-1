@@ -39,7 +39,6 @@ export default async function Home() {
 
         {/* right (popular list) */}
         <div className="col-span-12 border-gray-200 pl-4 lg:col-span-4 lg:border-l">
-          <h2 className="mb-2 font-semibold">Populära inlägg</h2>
           <ul className="max-h-[72vh] divide-y overflow-y-auto">
             {todays_posts.map((post : any) => {
               const cat = (post)?.category?.nodes?.[0]?.name ?? (post)?.category?.nodes?.[0]?.name;

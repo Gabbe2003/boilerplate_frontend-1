@@ -1,12 +1,48 @@
-import "server-only"
-import FetchLatestNew from "./_components/FetchLatestNew";
+import "server-only";
+import dynamic from "next/dynamic";
 
+// Lazy load both client components
+const FetchLatestNew = dynamic(() => import("./_components/FetchLatestNew"), {
+  ssr: true, 
+  loading: () => (
+    <div className="flex justify-center items-center py-10 text-gray-500 text-sm">
+      Laddar nyheter...
+    </div>
+  ),
+});
 
-export default async function LatestNews_main_page(){
-    return (
-        <section className="w-full mt-10">
-            <h2>Senaste nyheterna</h2>
-            <FetchLatestNew  />
-        </section>
-    )
+const TradingViewWidget = dynamic(
+  () => import("@/components/Sidebar/Connections/TradingViewWidget"),
+  {
+    ssr: true,
+    loading: () => (
+      <div className="flex justify-center items-center py-10 text-gray-500 text-sm border rounded-md">
+        Laddar händelser...
+      </div>
+    ),
+  }
+);
+
+export default async function LatestNews_main_page() {
+  return (
+    <section className="w-full mt-10">
+      <h2 className="text-xl font-semibold mb-4">Senaste nyheterna</h2>
+
+      <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main news section */}
+        <div className="col-span-2 w-full">
+          <FetchLatestNew />
+        </div>
+
+        {/* Sidebar widget */}
+        <div className="col-span-1 w-full relative">
+          <TradingViewWidget
+            title="Kommande händelser"
+            heights={{ base: 360, sm: 420, md: 500, lg: 560 }}
+            className="rounded-md overflow-hidden border w-full"
+          />
+        </div>
+      </div>
+    </section>
+  );
 }

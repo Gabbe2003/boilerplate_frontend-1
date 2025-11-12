@@ -1,12 +1,32 @@
 
 
-We need to fix the ads.
 
-H1 for main page, category, author. 
+await the menus from wp(yet to be implemented). 
 
-There is a little problem? That the full width is indeed controlled in the layout, but the colors of for example divs wont go all the way to. 
 
-The seo of the main page is being fetched, i think it is the getWpSeo that casuses it
+
+Stlye
+apply 80%, 70% width and fix the color thing,
+better color. 
+Fix better style, category, author. Better style, font, sizes, colors. Hem > Företag, we remove the one in the middle. Remove the excerpt, remove the border-radious and border. Fix a sidebar, with ads, signup to emails. Same for author, Remove the category and author main page, base_url/author. 
+main page style everything takes huge amount of space. 
+
+Fix a better Populära inlägg, Liknar dagensps, fix better, 
+Fix the style of the readpeak inside of category
+
+Post: 
+Breadcrumb add hem. The date and share_button fix them together. 
+
+WE have to check in nextjs a way to display variants of an image. So that for example smaller images can take full width without looking ugly. 
+
+TOC; fix better style and smother animtion. 
+Make the text more contained,  for example 80%, of the parent width. 
+Fix a better style, for senaste nyheter.
+
+The seo of the main page is being fetched, i think it is the getWpSeo that casuses it. 
+
+404-page: 
+https://new-finanstidning-se.vercel.app/nyhetsbrev
 
 Fix later
 1. The header is not responviness due to the add of more categroies(fix later)

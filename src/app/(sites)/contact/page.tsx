@@ -11,7 +11,7 @@ export async function generateMetadata() {
 
 export default async function ContactPage() {
   const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Our Site";
-  const { jsonLd } = await getWpSeo("/kontakt");
+  const { jsonLd } = await getWpSeo("/contact");
 
 
   return (

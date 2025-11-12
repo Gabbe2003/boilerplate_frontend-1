@@ -7,6 +7,8 @@ import SeoText from "@/lib/seo/SeoText";
 import RulePopUp from "@/components/Ads/NewsLetter/AdsPopup";
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
+import ReadPeak from "@/components/Ads/Ads/Readpeak/ReadPeak";
 
 
 export async function generateMetadata() {
@@ -20,9 +22,13 @@ export default async function Home() {
 
   return(
     <div>
+      <h1>Dina dagliga nyheter inom finans, aktier och börsen</h1>
       {/* Section 1 */}
-      <PopularPosts_main_page /> 
+      <ReadPeakProvider />
+      {/* <ReadPeak numberOfAds={1} /> */}
       
+      <PopularPosts_main_page /> 
+
       {/* Section 2 */}
       <CategorySection_main_page /> 
 
@@ -30,7 +36,7 @@ export default async function Home() {
       <LatestNews_main_page />
 
       {/* Seciton */}
-      <RulePopUp />
+      {/* <RulePopUp /> */}
       <SeoText />
       <SeoJsonLd data={jsonLd} />
     </div>

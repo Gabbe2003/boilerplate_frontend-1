@@ -3,7 +3,6 @@ import "server-only";
 
 import Link from 'next/link';
 import Image from 'next/image';
-import SocialMediaButtons from './_components/SocialMediaButtons';
 
 
 export default function Footer() {
@@ -100,9 +99,6 @@ export default function Footer() {
           <p className="text-center text-xs text-gray-500 md:text-left break-normal whitespace-normal hyphens-auto text-pretty">
             &copy; {currentYear} {host}. Alla rättigheter förbehållna.
           </p>
-          <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-center md:justify-end">
-            <SocialMediaButtons className="flex-wrap flex-col sm:flex-row sm:flex-nowrap" />
-          </div>
         </div>
       </div>
     </footer>

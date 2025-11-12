@@ -1,4 +1,4 @@
-// This file provide validation for advertisment
+// This file provide validation for advertisement
 
 import { z } from "zod";
 

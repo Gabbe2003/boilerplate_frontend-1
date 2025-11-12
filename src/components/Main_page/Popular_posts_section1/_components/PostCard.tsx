@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import { Post } from "@/lib/types";
-import { getExcerpt, stripHtml } from "@/lib/globals/actions";
+import { limitExcerpt, stripHtml } from "@/lib/globals/actions";
 
 type PostCardProps = {
   post: Post;                 // <-- single post
@@ -16,11 +16,13 @@ export default function PostCard({ post, className = "", variant = "default" }: 
   const cat = post.category?.nodes?.[0]?.name ?? "";
 
   if (variant === "hero") {
+    
     return (
       <article className={`relative overflow-hidden ${className}`}>
         {imgSrc ? (
           <Image
             src={imgSrc}
+            overrideSrc={imgSrc}
             alt={alt}
             fill
             sizes="(max-width:1024px) 100vw, 50vw"
@@ -41,7 +43,7 @@ export default function PostCard({ post, className = "", variant = "default" }: 
             {post.title}
           </h3>
           {post.excerpt && (
-            <p className="mt-2 text-white/90 line-clamp-2">{getExcerpt(post.excerpt, 22)}</p>
+            <p className="mt-2 text-white/90 line-clamp-2">{limitExcerpt(post.excerpt, 22)}</p>
           )}
         </div>
       </article>
@@ -73,7 +75,7 @@ export default function PostCard({ post, className = "", variant = "default" }: 
         )}
         <h3 className="text-[18px] font-semibold leading-snug text-gray-900 !m-0">{post.title}</h3>
         {post.excerpt && (
-          <p className="mt-1 text-sm text-gray-700 line-clamp-2">{getExcerpt(post.excerpt, 18)}</p>
+          <p className="mt-1 text-sm text-gray-700 line-clamp-2">{limitExcerpt(post.excerpt, 18)}</p>
         )}
       </div>
     </article>

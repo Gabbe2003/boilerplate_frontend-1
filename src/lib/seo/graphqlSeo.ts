@@ -64,9 +64,6 @@ export async function getWpSeo(uri: string, isSlug?: boolean) {
       ? await fetchGraphQL<any>(SEO_BY_URI, { uri: normalizedUri })
       : await wpGraphQLCached<any>(SEO_BY_URI, { uri: normalizedUri });
 
-      console.log(rawData);
-      
-
     const data = rawData?.data ?? rawData;
     const node = data?.nodeByUri ?? null;
     const general = data?.generalSettings ?? {};

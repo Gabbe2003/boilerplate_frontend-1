@@ -90,7 +90,7 @@ export default function SearchBar({
         <ul className="absolute left-0 right-0 top-full mt-2 z-50 max-h-72 overflow-auto rounded-xl border bg-white shadow-lg">
           {suggestions.map((p) => (
             <li key={p.slug} className="group p-3 hover:bg-gray-50">
-              <Link href={`${hrefPrefix}${p.slug}`} className="font-medium text-gray-900 hover:underline">
+            <Link href={`${hrefPrefix}${p.slug}`} className="font-medium text-gray-900 hover:underline" onClick={clear}>
                 {highlightAll(p.title, value)}
               </Link>
             </li>

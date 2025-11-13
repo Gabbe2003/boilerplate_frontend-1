@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Breadcrumb from "@/app/(taxonomy)/_components/BreadCrumb";
 import InfiniteScroll from "@/app/[slug]/_components/InfinityScroll/InfiniteScroll";
-import type { CategoryWithPosts, Post } from "@/lib/types";
+import type { Post } from "@/lib/types";
 import { capitalizeFirstLetter } from "@/lib/globals/actions";
 
 type StreamKind = "author" | "category";
@@ -85,7 +85,7 @@ export default function TaxonomyStream({
   const author_name = capitalizeFirstLetter(initial.name); 
 
   return (
-    <main className="space-y-10">
+    <main className="base-width-for-all-pages">
       {/* Breadcrumb */}
       <div>
         <Breadcrumb type={kind} name={author_name} />
@@ -130,10 +130,10 @@ export default function TaxonomyStream({
       {chunk(rest, 4).map((row, i) => (
         <div key={i} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {row?.map((p) => (
-            <article key={p.id ?? p.slug} className="rounded-xl border p-4">
+            <article key={p.id ?? p.slug} className="rounded-xl border">
               <Link href={`/${p.slug}`} className="block space-y-3">
                 {p.featuredImage?.node?.sourceUrl && (
-                  <div className="relative aspect-[16/9] overflow-hidden rounded-lg">
+                  <div className="relative aspect-[16/9] overflow-hidden rounded-sm">
                     <Image
                       src={p.featuredImage.node.sourceUrl}
                       alt={p.featuredImage.node.altText ?? p.title ?? ""}
@@ -143,7 +143,7 @@ export default function TaxonomyStream({
                     />
                   </div>
                 )}
-                <h3 className="font-medium leading-tight">{p.title}</h3>
+                <h3 className="font-medium leading-tight !text-lg">{p.title}</h3>
                 {p.excerpt && (
                   <div
                     className="prose prose-sm max-w-none line-clamp-3"

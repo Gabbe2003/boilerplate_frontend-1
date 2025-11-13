@@ -9,17 +9,14 @@ interface BreadcrumbProps {
 
 /**
  * Displays breadcrumb navigation:
- * home / author / authorName
- * home / category / categoryName
+ * home / authorName
+ * home / categoryName
  *
  * If name is not provided:
- * home / author
- * home / category
+ * home
  */
 export default function Breadcrumb({ type, name }: BreadcrumbProps) {
   const basePath = `/${type}`;
-  const label =
-    type === "author" ? "author" : type === "category" ? "category" : "";
 
   return (
     <nav
@@ -33,20 +30,6 @@ export default function Breadcrumb({ type, name }: BreadcrumbProps) {
           </Link>
         </li>
 
-        <li>
-          <span className="text-muted-foreground">/</span>
-        </li>
-
-        {/* Author or Category */}
-        <li>
-          <Link
-            href={basePath}
-            className="hover:text-foreground transition-colors"
-          >
-            {label}
-          </Link>
-        </li>
-
         {name && (
           <>
             <li>
@@ -56,7 +39,12 @@ export default function Breadcrumb({ type, name }: BreadcrumbProps) {
               aria-current="page"
               className="font-medium text-foreground capitalize"
             >
-              {name}
+              <Link
+                href={`${basePath}/${encodeURIComponent(name)}`}
+                className="hover:text-foreground transition-colors"
+              >
+                {name}
+              </Link>
             </li>
           </>
         )}

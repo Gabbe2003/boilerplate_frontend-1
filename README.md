@@ -8,7 +8,11 @@ await the menus from wp(yet to be implemented).
 Stlye
 apply 80%, 70% width and fix the color thing,
 better color. 
-Fix better style, category, author. Better style, font, sizes, colors. Hem > Företag, we remove the one in the middle. Remove the excerpt, remove the border-radious and border. Fix a sidebar, with ads, signup to emails. Same for author, Remove the category and author main page, base_url/author. 
+
+more contained text in author. Better font
+Fix better style, category, author. Better style, font, sizes, colors. Hem > Företag, we remove the one in the middle. Remove the excerpt, remove the border-radious and border. Fix a sidebar, with ads, signup to emails.
+
+
 main page style everything takes huge amount of space. 
 
 Fix a better Populära inlägg, Liknar dagensps, fix better, 

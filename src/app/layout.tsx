@@ -9,7 +9,7 @@ export default function RootLayout({children}: Readonly<{
   return (
     <html lang="sv">
       <body className="flex justify-center items-center">
-        <div className="w-[70%]"> {/* This div controls the width, padding, margin at root-level */}
+        <div>   
           <Header />
             {children}
           <Footer />

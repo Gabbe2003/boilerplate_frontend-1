@@ -81,7 +81,6 @@ export default function CategorySections({
         const randomIndex = Math.floor(Math.random() * 6);
 
         return posts.slice(0, 6).map((post, index) => {
-          // Top row: 4 cards, bottom row: 2 wide cards
           const spanClasses =
             index < 4
               ? "col-span-1"

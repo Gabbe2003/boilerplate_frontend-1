@@ -8,8 +8,8 @@ export default function RootLayout({children}: Readonly<{
 }>) {
   return (
     <html lang="sv">
-      <body className="flex justify-center items-center">
-        <div>   
+      <body>
+        <div className="w-full flex flex-col items-center">   
           <Header />
             {children}
           <Footer />

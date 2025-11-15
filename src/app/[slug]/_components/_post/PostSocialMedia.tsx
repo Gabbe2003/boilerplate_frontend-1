@@ -34,7 +34,7 @@ export default function PostSocialMedia({
     <div className="flex items-center justify-start gap-1 py-2 border-neutral-100 rounded-xs">
       {/* Native share/copy */}
       <button
-        className="h-9 min-w-[52px] flex items-center justify-center text-neutral-700 font-medium rounded-xs cursor-pointer transition-colors duration-150 border border-transparent hover:bg-neutral-100"
+        className="h-9 flex items-center p-0 sm:p-2 justify-center text-neutral-700 font-medium rounded-xs cursor-pointer transition-colors duration-150 border border-transparent hover:bg-neutral-100"
         onClick={async () => {
           if (typeof window !== 'undefined' && navigator.share) {
             try {

@@ -1,7 +1,7 @@
 // components/PostShell.tsx
 
 // <— If we only want to change the width of hero and body.
-export const POST_MAX = "max-w-[75%]";
+export const POST_MAX = "max-w-[100%]";
 
 export function PostShell({
   children,
@@ -11,8 +11,10 @@ export function PostShell({
   className?: string;
 }) {
   return (
-    <div className={`w-full ${POST_MAX} mx-auto px-4 sm:px-6 ${className}`}>
-      {children}
+    <div className="base-width-for-all-pages">
+      <div className={`w-full ${POST_MAX}  mx-auto ${className}`}>
+        {children}
+      </div>
     </div>
   );
 }

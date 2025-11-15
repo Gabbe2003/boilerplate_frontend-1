@@ -39,17 +39,19 @@ export default function TableOfConet({ toc, defaultOpen = true }: Props) {
           </svg>
         </button>
       </h2>
-
       <div
         id={panelId}
         role="region"
         aria-labelledby={headingId}
-        className={open ? "block" : "hidden"}
+        className={`
+          overflow-hidden transition-all duration-300
+          ${open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}
+        `}
       >
-        <nav aria-label="Table of contents" className="px-4 pb-4">
-          <ul className="space-y-1 text-sm list-disc">
+        <nav aria-label="Table of contents" className="px-4 pb-4 pt-1">
+          <ul className="space-y-1 text-sm list-disc pl-4">
             {toc.map((item) => (
-              <li key={item.id} className="">
+              <li key={item.id}>
                 <Link href={`#${item.id}`} prefetch={false} className="hover:underline">
                   {item.text}
                 </Link>

@@ -39,12 +39,11 @@ export default function Breadcrumb({ type, name }: BreadcrumbProps) {
               aria-current="page"
               className="font-medium text-foreground capitalize"
             >
-              <Link
-                href={`${basePath}/${encodeURIComponent(name)}`}
+              <div
                 className="hover:text-foreground transition-colors"
               >
                 {name}
-              </Link>
+              </div>
             </li>
           </>
         )}

@@ -1,43 +1,27 @@
 
 
-
-await the menus from wp(yet to be implemented). 
-
+Implement menus and then the RULE popup is not working 100% on mobile. 
 
 
 Stlye
-apply 80%, 70% width and fix the color thing,
 better color. 
 
 more contained text in author. Better font
 Fix better style, category, author. Better style, font, sizes, colors. Hem > Företag, we remove the one in the middle. Remove the excerpt, remove the border-radious and border. Fix a sidebar, with ads, signup to emails.
 
-
 main page style everything takes huge amount of space. 
 
 Fix a better Populära inlägg, Liknar dagensps, fix better, 
 Fix the style of the readpeak inside of category
+Fix a better style, for senaste nyheter.
 
 Post: 
-Breadcrumb add hem. The date and share_button fix them together. 
+
 
 WE have to check in nextjs a way to display variants of an image. So that for example smaller images can take full width without looking ugly. 
 
-TOC; fix better style and smother animtion. 
-Make the text more contained,  for example 80%, of the parent width. 
-Fix a better style, for senaste nyheter.
-
-The seo of the main page is being fetched, i think it is the getWpSeo that casuses it. 
-
 404-page: 
-https://new-finanstidning-se.vercel.app/nyhetsbrev
-
-Fix later
-1. The header is not responviness due to the add of more categroies(fix later)
-
-
-Make sure that the places we have a request we have try/catch
-I am also more scared that we are not having fallbacks. 
+https://new-finanstidning-se.vercel.app/nyhetsbrev, from the footer
 
 The button inside the footer has to be connected with the off-page newsletter, like the popup.
 Fix the footer once we have the menus. 

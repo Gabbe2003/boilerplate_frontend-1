@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Category_names, CategoryWithPosts, Post } from "@/lib/types";
 import Link from "next/link";
 import Image from "next/image";
@@ -43,10 +43,10 @@ export default function CategorySections({
 
   return (
     <div >
-      <h2>
-        Senast inom {activeCategory }
+      <h2 className="text-2xl text-center sm:text-left">
+        Senast inom {activeCategory}
       </h2>
-      <div className="flex gap-5 border-b-2 mb-10 pb-10">
+      <div className="flex flex-wrap gap-5 border-b-2 mb-10 mt-5 pb-10">
       {getAllCategories.map((category, index) => (
           <button
             key={index}
@@ -63,80 +63,79 @@ export default function CategorySections({
       ))}
       </div>
       <div>
-  {posts.length > 0 && (
-    <ul
-      className="
-        grid 
-        grid-cols-1 
-        sm:grid-cols-2 
-        lg:grid-cols-4 
-        gap-6 
-        border-b-2 
-        pb-8
-        mt-8
-      "
-    >
-      {(() => {
-        // Choose one random index between 0–5
-        const randomIndex = Math.floor(Math.random() * 6);
+        {posts.length > 0 && (
+          <ul
+            className="
+              grid 
+              grid-cols-1 
+              sm:grid-cols-2 
+              lg:grid-cols-4 
+              gap-6 
+              border-b-2 
+              pb-8
+              mt-8
+            "
+          >
+            {(() => {
+              // Choose one random index between 0–5
+              const randomIndex = Math.floor(Math.random() * 6);
 
-        return posts.slice(0, 6).map((post, index) => {
-          const spanClasses =
-            index < 4
-              ? "col-span-1"
-              : "col-span-1 lg:col-span-2";
+              return posts.slice(0, 6).map((post, index) => {
+                const spanClasses =
+                  index < 4
+                    ? "col-span-1"
+                    : "col-span-1 lg:col-span-2";
 
-          // Inject the ReadPeak ad
-          if (index === randomIndex) {
-            return (
-              <li
-                key="readpeak-ad"
-                className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col`}
-              >
-              <div className="relative w-full h-48 bg-gray-100 ">
-                <ReadPeak numberOfAds={1} />
-              </div>
+                // Inject the ReadPeak ad
+                if (index === randomIndex) {
+                  return (
+                    <li
+                      key="readpeak-ad"
+                      className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col`}
+                    >
+                    <div className="relative w-full h-48 bg-gray-100 ">
+                      {/* <ReadPeak numberOfAds={1} /> */}
+                    </div>
 
-              
-              </li>
-            );
-          }
+                    
+                    </li>
+                  );
+                }
 
-          // Regular post
-          return (
-            <li
-              key={post.id ?? index}
-              className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow  flex flex-col`}
-            >
-              <Link href={`/${post.slug}`} className="block h-full">
-                <div className="relative w-full h-48 overflow-hidden">
-                  <Image
-                    src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
-                    alt={post?.featuredImage?.node?.altText || "Image"}
-                    width={600}
-                    height={400}
-                    className="w-full h-48 object-cover"
-                  />
-                </div>
+                // Regular post
+                return (
+                  <li
+                    key={post.id ?? index}
+                    className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col`}
+                  >
+                    <Link href={`/${post.slug}`} className="block h-full">
+                      <div className="relative w-full h-48 overflow-hidden">
+                        <Image
+                          src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+                          alt={post?.featuredImage?.node?.altText || "Image"}
+                          width={600}
+                          height={400}
+                          className="w-full h-48 object-cover"
+                        />
+                      </div>
 
-                <div className="p-4 flex flex-col justify-between flex-1">
-                  <h3 className="font-semibold text-lg text-gray-900 leading-snug">
-                    {post.title}
-                  </h3>
-                  <div className="mt-2 text-sm text-gray-600 leading-snug">
-                    {limitExcerpt(post.excerpt)}
-                  </div>
-                </div>
-              </Link>
-            </li>
-          );
-        });
-      })()}
-    </ul>
-  )}
-</div>
+                      <div className="p-4 flex flex-col justify-between flex-1">
+                        <h3 className="font-semibold text-lg text-gray-900 leading-snug">
+                          {post.title}
+                        </h3>
+                        <div className="mt-2 text-sm text-gray-600 leading-snug">
+                          {limitExcerpt(post.excerpt)}
+                        </div>
+                      </div>
 
-
+                    </Link>
+                  </li>
+                );
+              });
+            })()}
+          </ul>
+        )}
+      </div>
       <div className="mt-8 w-full flex justify-center mt-5">
         <button className="custom-button">
           <Link href={`/category/${handleSpecielChar(activeCategory || "")}`}>

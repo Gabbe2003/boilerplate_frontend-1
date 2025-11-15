@@ -3,7 +3,6 @@ import "server-only"
 import { getAllPosts, getTodaysPosts } from "@/lib/graphql_queries/getPost";
 import Link from "next/link";
 import PostCard from "./_components/PostCard";
-import { formatDateStockholm } from "@/lib/globals/actions";
 
 
 export default async function Home() {
@@ -15,21 +14,25 @@ export default async function Home() {
 
   const left_col = posts.slice(0, 2);
   const middle_col = posts.slice(2, 6);
-
   return (
-    <main>
-      <div className="mt-8 grid gap-6 lg:grid-cols-12">
+    <main className="w-full flex justify-center">
+      <div className="mt-8 space-y-6 lg:grid lg:grid-cols-14 lg:gap-6 lg:space-y-0 base-width-for-all-pages">
         {/* left */}
-        <div className="col-span-12 flex flex-col gap-6 border-gray-200 pr-4 lg:col-span-5 lg:border-r">
+        <div className="col-span-12 flex flex-col gap-6 border-gray-200 pr-0 lg:pr-4 lg:col-span-6 lg:border-r">
           {left_col.map((item) => (
             <Link href={`/${item.slug}`} key={`left-${item.id}`} prefetch={false}>
-              <PostCard post={item} variant="hero" className="h-[420px]" />
+              {/* Responsive hero card height */}
+              <PostCard
+                post={item}
+                variant="hero"
+                className="h-[280px] sm:h-[350px] lg:h-[420px]"
+              />
             </Link>
           ))}
         </div>
 
         {/* middle */}
-        <div className="col-span-12 flex flex-col gap-6 px-4 lg:col-span-3">
+      <div className="col-span-12 grid grid-cols-2 gap-4 lg:flex lg:flex-col lg:col-span-4">
           {middle_col.map((item) => (
             <Link href={`/${item.slug}`} key={`mid-${item.id}`} prefetch={false}>
               <PostCard post={item} />
@@ -38,38 +41,38 @@ export default async function Home() {
         </div>
 
         {/* right (popular list) */}
-        <div className="col-span-12 border-gray-200 pl-4 lg:col-span-4 lg:border-l">
+        <div className="col-span-12 border-gray-200 lg:col-span-4 lg:pl-3 lg:border-l">
           <ul className="max-h-[72vh] divide-y overflow-y-auto">
-            {todays_posts.map((post : any) => {
-              const cat = (post)?.category?.nodes?.[0]?.name ?? (post)?.category?.nodes?.[0]?.name;
-              const when = formatDateStockholm(post.date);
-              return (
-                <li key={post.id} className="group">
-                  <Link href={post.slug!} className="block rounded-none px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30">
-                    <div className="flex items-start gap-3">
-                      <span className="relative mt-1 inline-flex h-2 w-2 shrink-0">
-                        <span className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75 animate-ping" aria-hidden />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
-                      </span>
-                      <div className="min-w-0">
-                        <div className="mb-0.5 flex items-baseline gap-2 text-[11px] font-extrabold tracking-wide">
-                          {cat && <span className="uppercase text-rose-700">{cat}</span>}
-                          {when && <span className="text-red-500">{when}</span>}
-                        </div>
-                        <div className="truncate font-medium text-gray-900 group-hover:underline">
+            {todays_posts.map((post: any) => (
+              <li key={post.id} className="group">
+                <Link
+                  href={post.slug!}
+                  className="block rounded-none py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/30"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="min-w-0">
+                      <div className="mb-0.5 flex items-baseline gap-2 text-[11px] font-extrabold tracking-wide">
+                        {post.category}
+                      </div>
+
+                      <div className="flex items-center">
+                        <span className="relative mt-1 ml-1 inline-flex h-2 w-2 shrink-0">
+                          <span
+                            className="absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75 animate-ping"
+                            aria-hidden
+                          />
+                          <span className="relative inline-flex h-2 w-2 rounded-full bg-red-500" />
+                        </span>
+
+                        <div className="truncate font-medium text-gray-900 group-hover:underline ml-1">
                           {post.title ?? ""}
                         </div>
-                        {post.excerpt && (
-                          <p className="mt-0.5 line-clamp-1 text-[13px] text-gray-600">
-                            {post.excerpt.replace(/<\/?[^>]+>/g, "").replace(/\s+/g, " ").trim()}
-                          </p>
-                        )}
                       </div>
                     </div>
-                  </Link>
-                </li>
-              );
-            })}
+                  </div>
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

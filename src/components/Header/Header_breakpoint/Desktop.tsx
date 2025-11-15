@@ -17,7 +17,7 @@ export async function DesktopHeader({
   return (
     <>
     <div className="flex items-center justify-between gap-6">
-      <nav className="flex items-center gap-8 text-sm font-small mr-4">
+      <nav className="flex items-center gap-5 text-sm font-small mr-4">
         {/* Category links */}
         
         {all_categories.map((cat, index) => {

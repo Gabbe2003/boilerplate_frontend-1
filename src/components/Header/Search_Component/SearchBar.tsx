@@ -55,7 +55,7 @@ export default function SearchBar({
   const showDropdown = value.trim().length > 0 && posts.length > 0;
 
   return (
-    <div className="w-full mx-auto relative px-2">
+    <div className="w-full mx-auto relative">
       {/* input */}
       <form className="relative" action={action} method="GET" onSubmit={onSubmit}>
         <input

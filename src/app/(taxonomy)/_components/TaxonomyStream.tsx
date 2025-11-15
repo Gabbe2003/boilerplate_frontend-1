@@ -85,7 +85,7 @@ export default function TaxonomyStream({
   const author_name = capitalizeFirstLetter(initial.name); 
 
   return (
-    <main className="base-width-for-all-pages">
+    <main className="base-width-for-all-pages mt-3">
       {/* Breadcrumb */}
       <div>
         <Breadcrumb type={kind} name={author_name} />
@@ -93,7 +93,7 @@ export default function TaxonomyStream({
 
       {/* Header */}
       <header className="space-y-3">
-        <h1 className="text-2xl font-semibold">{author_name}</h1>
+        <h1 className="text-2xl font-semibold mb-5">{author_name}</h1>
         {initial.description ? (
           <div className="text-muted-foreground">{initial.description}</div>
         ) : null}
@@ -128,9 +128,9 @@ export default function TaxonomyStream({
 
       {/* Rows of 4 */}
       {chunk(rest, 4).map((row, i) => (
-        <div key={i} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div key={i} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 ">
           {row?.map((p) => (
-            <article key={p.id ?? p.slug} className="rounded-xl border">
+            <article key={p.id ?? p.slug} className="rounded-xl border p-2 mt-5">
               <Link href={`/${p.slug}`} className="block space-y-3">
                 {p.featuredImage?.node?.sourceUrl && (
                   <div className="relative aspect-[16/9] overflow-hidden rounded-sm">
@@ -146,7 +146,7 @@ export default function TaxonomyStream({
                 <h3 className="font-medium leading-tight !text-lg">{p.title}</h3>
                 {p.excerpt && (
                   <div
-                    className="prose prose-sm max-w-none line-clamp-3"
+                    className="prose prose-sm max-w-none line-clamp-3 text-[13px]"
                     dangerouslySetInnerHTML={{ __html: p.excerpt }}
                   />
                 )}

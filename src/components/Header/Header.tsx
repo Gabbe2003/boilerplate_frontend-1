@@ -1,4 +1,4 @@
-import "server-only"; 
+import "server-only";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -14,12 +14,12 @@ const links = [
 ];
 
 export default async function Header() {
-  const data = await get_all_categories_by_name() 
-  const allPost = await getAllPostsByTitle()
- 
+  const data = await get_all_categories_by_name();
+  const allPost = await getAllPostsByTitle();
+
   return (
-    <header className="w-full border-b border-gray-200 bg-white sticky top-0 z-50 shadow-sm">
-      <div className="max-w-screen-xl mx-auto ">
+    <header className="w-full bg-white border-b border-gray-300 sticky top-0 z-50 shadow-sm">
+      <div className="base-width-for-all-pages mx-auto "> 
         <div className="flex items-center justify-between">
           <Link href="/" aria-label="Finanstidning.se startsida" className="block">
             <Image
@@ -33,26 +33,16 @@ export default async function Header() {
             />
           </Link>
 
-
-          {/* Desktop */}
-          <div className="hidden md:flex flex-1 justify-end">
+          <div className="hidden lg:flex flex-1 justify-end">
             <DesktopHeader links={links} all_categories={data} />
           </div>
 
-          {/* Mobile / Tablet: hamburger only in top row */}
-          <div className="flex md:hidden">
-            <MobileHeader links={links} all_categories={data}/>
+          <div className="flex lg:hidden">
+            <MobileHeader links={links} all_categories={data} />
           </div>
         </div>
-        
-        <div className="hidden md:flex w-full justify-center">
+        <div className=" md:flex w-full justify-center pb-3">
           <SearchBar posts={allPost} action="/search" />
-        </div>
-
-
-        {/* Mobile / Tablet: search below top row, full width */}
-        <div className="md:hidden mt-3 flex justify-center">
-          <SearchBar posts={allPost} action="/search" /* hrefPrefix="/blog/" */ />
         </div>
       </div>
     </header>

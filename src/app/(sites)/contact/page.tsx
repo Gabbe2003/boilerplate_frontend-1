@@ -15,8 +15,9 @@ export default async function ContactPage() {
 
 
   return (
-    <div className="max-w-4xl mx-auto  py-12">
-      <h1 className="text-4xl font-bold mb-8 text-center">Köp en länk</h1>
+    <div className="full flex flex-col items-center">
+    <div className="mx-auto base-width-for-all-pages justify-center py-12">
+      <h1 className="text-4xl font-bold mb-8 text-center ">Köp en länk</h1>
 
       <section className="space-y-6 text-lg leading-relaxed text-gray-800">
         <p>
@@ -40,13 +41,15 @@ export default async function ContactPage() {
         </p>
       </section>
 
-      {/* Full-width form outside the constrained container */}
-      <div className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-gray-50 py-12">
-        <div className="max-w-5xl mx-auto px-6">
+      <SeoJsonLd data={jsonLd} />
+      </div>
+
+      <div className="w-full flex justify-center bg-gray-50 py-5">
+        <div className="base-width-for-all-pages mt-5 mb-5">
           <FormInquiry />
         </div>
       </div>
-      <SeoJsonLd data={jsonLd} />
     </div>
+
   );
 }

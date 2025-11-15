@@ -18,8 +18,8 @@ export default async function AdInquiryPage() {
   const { jsonLd } = await getWpSeo("/advertisement");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center px-2 py-10">
-      <div className="w-full max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center py-10">
+      <div className="base-width-for-all-pages mx-auto">
         <div className="flex flex-col md:flex-row gap-8">
           {/* Vänster kolumn (server-renderad) */}
           <div className="flex-1 mb-8 md:mb-0 rounded-2xl bg-white border border-blue-100 shadow-lg p-6 flex flex-col justify-between">

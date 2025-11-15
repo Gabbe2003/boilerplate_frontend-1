@@ -22,13 +22,13 @@ export default function PostHero({
 }: PostHeroProps) {
     
     return(
-      <header className="w-full mb-6 md:mb-8">
+      <header className="w-full mb-6 md:mb-8 ">
         {!boolInfinite ? (
-          <h1 className="text-pretty text-3xl md:text-4xl font-bold leading-tight">
+          <h1 className="text-pretty text-2xl md:text-4xl mt-5 font-bold leading-tight">
             {title}
           </h1>
         ): 
-          <h2 className="text-pretty text-3xl md:text-4xl font-bold leading-tight">
+          <h2 className="text-pretty text-2xl md:text-5xl font-bold leading-tight">
             {title}
           </h2>
         }
@@ -38,20 +38,23 @@ export default function PostHero({
               {author && <AuthorInfo author={author} />}
             </div>
 
+          
+          </div>
+
+          <div className="text-sm text-gray-600 grid items-center justify-between sm:flex">
+            <div>
+              Publicerad:{" "}
+              {date && (
+                <time dateTime={date}>
+                  {new Date(date).toISOString().slice(0, 10)}
+                </time>
+              )}
+            </div>
             <PostSocialMedia
               postUrl={uri || ""}
               postTitle={title || ""}
               postExcerpt={excerpt || ""}
             />
-          </div>
-
-          <div className="text-sm text-gray-600">
-            Publicerad:{" "}
-            {date && (
-              <time dateTime={date}>
-                {new Date(date).toISOString().slice(0, 10)}
-              </time>
-            )}
           </div>
         </div>
     </header>

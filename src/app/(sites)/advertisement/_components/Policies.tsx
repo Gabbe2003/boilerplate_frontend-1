@@ -44,6 +44,7 @@ export default function Policies({ site }: { site: string }) {
         <Link href="mailto:publisheradsquestions@gmail.com" className="font-medium text-indigo-700 underline hover:text-indigo-900 transition">
           kontakta oss direkt
         </Link>
+        <br />
         .<br />
         Vi ser fram emot att hjälpa dig att uppnå fantastiska SEO-resultat på{" "}
         <span className="font-semibold text-indigo-700">{site}</span>!

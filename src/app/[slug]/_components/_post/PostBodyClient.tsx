@@ -1,4 +1,4 @@
-// components/_post/PostBodyClient.tsx
+
 "use client";
 
 import Image from "next/image";

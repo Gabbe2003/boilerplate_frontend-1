@@ -48,9 +48,15 @@ export default async function PostBody({
           [&_pre]:overflow-x-auto
           [&_code]:break-all
           prose-sm
+          w-[80%] 
+          
           prose-a:text-blue-600 dark:prose-a:text-blue-400
           prose-a:no-underline hover:prose-a:underline
           prose-a:visited:text-blue-700 dark:prose-a:visited:text-blue-500
+
+          [&_h2]:mb-3
+          [&_h3]:mb-5
+          [&_h4]:mt-4
         "
         dangerouslySetInnerHTML={{ __html: contentHtml }}
       />

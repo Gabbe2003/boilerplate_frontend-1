@@ -33,7 +33,7 @@ export default async function SinglePost({
   const title = post.title
 
   return (
-    <div className="w-full">
+    <div className="w-full flex justify-center">
       <PostShell>
         {breadcrumbs && <BreadCrump breadcrumbs={breadcrumbs} title={title}/>}
 
@@ -46,6 +46,7 @@ export default async function SinglePost({
         />
 
         <main>
+          {/* Changing here involve changing postBodyClient! */}
           <PostBody post={post} contentHtml={updatedHtml} toc={toc} />
         </main>
 

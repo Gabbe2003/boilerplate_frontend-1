@@ -1,6 +1,7 @@
 import "server-only"; 
-import type { CategoryName, CategoryWithPosts } from "@/lib/types";
+import type { CategoryName, CategoryWithPosts, Post } from "@/lib/types";
 import { wpGraphQLCached, wpGraphQLRaw } from "../WpCachedResponse";
+import { decodeHTML } from "../globals/actions";
 
 
 
@@ -133,7 +134,10 @@ export async function getCategoryBySlug(
         hasNextPage: !!c.posts?.pageInfo?.hasNextPage,
         endCursor: c.posts?.pageInfo?.endCursor ?? null,
       },
-      nodes: c.posts?.nodes ?? [],
+      nodes: (c.posts?.nodes ?? []).map((post : Post) => ({
+        ...post,
+        excerpt: decodeHTML(post.excerpt ?? ""),
+      })),
     },
   };
 }

@@ -76,7 +76,6 @@ export const ReadPeakSlot: React.FC<ReadPeakSlotProps> = ({
     container.appendChild(script);
   }, [id, numberOfAds, gdprConsent, catsKey, tagsKey]);
   
-  console.log(className);
   return (
     <div
       ref={hostRef}

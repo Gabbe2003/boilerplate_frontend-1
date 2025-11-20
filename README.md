@@ -1,34 +1,10 @@
 
 
-Implement menus and then the RULE popup is not working 100% on mobile. 
+
+The images are being downloaded becuase of Content-Disposition: attachment and it should be inline. There is not hotlinking protection somewhere maybe, 
 
 
-Stlye
-better color. 
-
-more contained text in author. Better font
-Fix better style, category, author. Better style, font, sizes, colors. Hem > Företag, we remove the one in the middle. Remove the excerpt, remove the border-radious and border. Fix a sidebar, with ads, signup to emails.
-
-main page style everything takes huge amount of space. 
-
-Fix a better Populära inlägg, Liknar dagensps, fix better, 
-Fix the style of the readpeak inside of category
-Fix a better style, for senaste nyheter.
-
-Post: 
-
-
-WE have to check in nextjs a way to display variants of an image. So that for example smaller images can take full width without looking ugly. 
-
-404-page: 
-https://new-finanstidning-se.vercel.app/nyhetsbrev, from the footer
-
-The button inside the footer has to be connected with the off-page newsletter, like the popup.
-Fix the footer once we have the menus. 
-
-
-
-
+one thing, and then everything will be perfect, the images, the way we display them. 
 
 GetPostByPeriod:
 {
@@ -113,4 +89,4 @@ Todays posts:
 },
 
 
-WE use categpey name, date, id, slug, title, excerpt. 
+WE use categpey name, date, id, slug, title, excerpt. gs

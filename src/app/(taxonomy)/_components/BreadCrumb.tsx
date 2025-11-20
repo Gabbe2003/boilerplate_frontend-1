@@ -16,7 +16,6 @@ interface BreadcrumbProps {
  * home
  */
 export default function Breadcrumb({ type, name }: BreadcrumbProps) {
-  const basePath = `/${type}`;
 
   return (
     <nav
@@ -49,5 +48,5 @@ export default function Breadcrumb({ type, name }: BreadcrumbProps) {
         )}
       </ol>
     </nav>
-  );
+  )
 }

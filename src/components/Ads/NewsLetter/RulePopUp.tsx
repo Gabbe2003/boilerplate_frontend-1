@@ -57,7 +57,7 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
       const t = setTimeout(() => setVisible(false), 300);
       return () => clearTimeout(t);
     }
-  }, [isOpen, internalOpen, visible]);
+  }, [isOpen, internalOpen]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -127,15 +127,16 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
           <X className="h-5 w-5 cursor-pointer" />
         </button>
 
-        <Image
+        <div className="hidden md:flex w-1/2 items-center justify-center bg-[#EDE5DF] p-6 md:p-8">
+          <Image
             src="/Finanstidning_with_slogan.png"
             alt="Finanstidning.se logotyp"
             width={400}
             height={200}
             className="w-full rounded max-w-[300px] md:max-w-[360px] h-auto object-contain"
             priority
-        />
-
+          />
+        </div>
         {/* Text / form content */}
         <div className="relative z-10 flex w-full flex-col justify-center p-6 md:w-2/3 bg-white/95 md:bg-transparent">
           {isSubmitted ? (

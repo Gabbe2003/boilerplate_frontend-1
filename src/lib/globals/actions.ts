@@ -31,6 +31,7 @@ export function handleSpecielChar(text: string) {
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
+    
 }
 
 
@@ -88,6 +89,8 @@ const htmlEntities: Record<string, string> = {
   '&#8217;': '’',
   '&#8220;': '“',
   '&#8221;': '”',
+  '&hellip;': '…',   
+
 };
 
 export function decodeHTML(str?: string | null): string {

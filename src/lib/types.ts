@@ -156,23 +156,24 @@ export interface Post {
   excerpt?: string;
 
   featuredImage?: {
-    node?: {
-      id?: string | number;
-      altText?: string;
-      sourceUrl?: string;
-      mediaDetails?: {
+  node?: {
+    id?: string | number;
+    altText?: string;
+    sourceUrl?: string;
+    mediaDetails?: {
+      width?: number;
+      height?: number;
+      sizes?: Array<{
+        name?: string;
+        sourceUrl?: string;
         width?: number;
         height?: number;
-        sizes?: Array<{
-          name?: string;
-          sourceUrl?: string;
-          width?: number;
-          height?: number;
-        }>;
-      };
-      [k: string]: any;
+      }>;
     };
-  };
+    [k: string]: any;
+  } | null;
+};
+
 
   id?: string;
   slug?: string;

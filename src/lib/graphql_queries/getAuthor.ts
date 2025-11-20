@@ -1,62 +1,6 @@
 import "server-only"
 import { wpGraphQLRaw } from "../WpCachedResponse";
-import { AllAuthorsData, Author, GqlResponse, Post, SeoBasic } from "../types";
-
-export async function getAllAuthors(): Promise<Author[]> {
-  const query = `
-    query AllAuthors {
-      users {
-        nodes {
-          id
-          name
-          slug
-          description
-          avatar { url }
-          posts(first: 4) {
-            nodes {
-              title
-              slug
-              excerpt
-              featuredImage { node { altText sourceUrl } }
-              seo {
-                breadcrumbs { text url }
-                title
-              }
-            }
-          }
-        }
-      }
-    }
-  `;
- 
-  try {
-  const json = await wpGraphQLRaw<GqlResponse<AllAuthorsData>>(query);
-    const nodes = json?.data?.users?.nodes ?? [];
-
-    const authors: Author[] = nodes.map((a: any) => {
-      const posts: { nodes: Post[] } = {
-        nodes: (a?.posts?.nodes ?? []) as Post[],
-      };
-
-      return {
-        id: a.id,
-        name: a.name,
-        slug: a.slug,
-        description: a?.description ?? null,
-        avatar: a?.avatar ?? null,
-        posts
-      };
-    });
-
-    return authors;
-  } catch (err: any) {
-    console.error(err?.message ?? err);
-    return [];
-  }
-}
-
-
-
+import {  Author, GqlResponse, Post } from "../types";
 
 
 export async function getAuthorBySlug(
@@ -85,7 +29,6 @@ export async function getAuthorBySlug(
             databaseId
             slug
             title
-            excerpt
             featuredImage { node { sourceUrl altText } }
             date
           }

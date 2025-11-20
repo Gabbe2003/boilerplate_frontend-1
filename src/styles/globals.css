@@ -56,6 +56,10 @@ html {
   scroll-behavior: smooth;
 }
 
+body{
+  font-family: "serif"
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50; /* needs --color-ring */

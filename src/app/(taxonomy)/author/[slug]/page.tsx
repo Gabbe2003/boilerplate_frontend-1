@@ -27,7 +27,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
   if (!initial) return notFound();
   return (
     <div className="w-full flex justify-center">
-      <TaxonomyStream kind="author" slug={slug} initial={initial} />;
+      <TaxonomyStream kind="author" slug={slug} initial={initial} />
       <SeoJsonLd data={jsonLd} />
     </div>
   )

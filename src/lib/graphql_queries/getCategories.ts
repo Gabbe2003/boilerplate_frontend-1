@@ -74,15 +74,24 @@ export async function get_all_categories_by_name(
     return { name: n.name, count: n.count, posts };
   });
 }
-
-
-
 export async function getCategoryBySlug(
   slug: string,
-  opts?: { take?: number; after?: string | [] }
+  opts?: { take?: number; after?: string | []; start?: number; end?: number }
 ): Promise<CategoryWithPosts | null> {
-  const take = Math.max(1, opts?.take ?? 9); // 1 + 4 + 4
-  const after = opts?.after ?? null; // we’ll pass null from the client for grow-by-count
+
+  const start = opts?.start ?? 0;
+  const end = opts?.end ?? null;
+
+  let take: number;
+
+  if (end !== null) {
+    // Fetch everything up to "end" (so we can slice later)
+    take = Math.max(1, end);
+  } else {
+    take = Math.max(1, opts?.take ?? 9);
+  }
+
+  const after = opts?.after ?? null;
 
   const QUERY = /* GraphQL */ `
     query CategoryBySlug($slug: ID!, $first: Int!, $after: String) {
@@ -116,11 +125,21 @@ export async function getCategoryBySlug(
     }
   `;
 
-  // cached is fine because the cache key will vary with `first: take`
-  const data = await wpGraphQLCached<any>(QUERY, { slug, first: take, after });
-    
+  const data = await wpGraphQLCached<any>(QUERY, {
+    slug,
+    first: take,
+    after,
+  });
+
   const c = data?.data?.category;
   if (!c) return null;
+
+  let nodes = c.posts?.nodes ?? [];
+
+  // slice AFTER we fetched enough
+  if (end !== null) {
+    nodes = nodes.slice(start, end);
+  }
 
   return {
     id: String(c.id),
@@ -134,11 +153,10 @@ export async function getCategoryBySlug(
         hasNextPage: !!c.posts?.pageInfo?.hasNextPage,
         endCursor: c.posts?.pageInfo?.endCursor ?? null,
       },
-      nodes: (c.posts?.nodes ?? []).map((post : Post) => ({
+      nodes: nodes.map((post: Post) => ({
         ...post,
         excerpt: decodeHTML(post.excerpt ?? ""),
       })),
     },
   };
 }
-

@@ -3,6 +3,7 @@ import "server-only";
 
 import Link from 'next/link';
 import Image from 'next/image';
+import NewsletterIsland from "../Ads/NewsLetter/NewsletterIsland";
 
 
 export default function Footer() {
@@ -12,14 +13,8 @@ export default function Footer() {
   const extraLinks = [
     { type: 'button', title: 'Nyhetsbrev' },
     { type: 'link', title: 'Jobba med oss', slug: '/work' },
-    { type: 'link', title: 'Webbplatskarta', slug: '/sitemap.xml' },
+    { type: 'link', title: 'Annonsering', slug: '/advertisement' },
   ];
-  // const links = [
-  //   { title: 'Kontakt', slug: '/contact' },
-  //   { title: host ? `Om ${host}` : 'Om', slug: '/about' },
-  //   { title: 'Integritetspolicy', slug: '/privacy' },
-  //   { title: 'Arkiv', slug: '/archive' },
-  // ];
 
   return (
     <footer id="footer" className="w-full px-2 border-t border-gray-200 bg-gray-100">
@@ -36,16 +31,20 @@ export default function Footer() {
                 height={60}
                 priority
               />
-
             </Link>
           </div>
 
           {/* Links in columns */}
           <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4 justify-end md:items-start min-w-0">
             <div className="min-w-0">
-              <h3 className="mb-4 text-lg font-semibold text-gray-700">Läsarnas favoriter</h3>
+              <h3 className="mb-4 text-lg font-semibold text-gray-700">Företag</h3>
               <ul className="space-y-2">
-              
+                <li>
+                  <Link href={"/about"} >Om oss</Link>
+                </li>
+                <li>
+                  <Link href={"/fact-checking-and-source-criticism-at-finanstidning"} >Faktagranskning på Finanstidning</Link>
+                </li>
               </ul>
             </div>
 
@@ -56,17 +55,16 @@ export default function Footer() {
                   {extraLinks.map((item, index) => {
                     if (item.type === "button") {
                       return (
-                        <button
-                          key={index}
-                          className=""
-                          // onClick={} FIx this later
-                        >
-                          {item.title}
-                        </button>
+                        <div key={item.title}>
+                          <NewsletterIsland
+                            key={item.title}
+                            className="text-gray-800 hover:text-black tracking-wide"
+                            label={item.title}
+                            />
+                        </div>
                       );
                     }
 
-                    // Otherwise, it's a link
                     return (
                       <Link
                         key={index}
@@ -85,7 +83,12 @@ export default function Footer() {
             <div className="min-w-0">
               <h3 className="mb-4 text-lg font-semibold text-gray-700">Om oss</h3>
               <ul className="space-y-2">
-               
+                  <li>
+                    <Link href={"/privacy-statement-eu"} >Integritetspolicy</Link>
+                  </li>
+                  <li>
+                    <Link href={"/cookie-policy-eu"} >Cookie policy</Link>
+                  </li>
               </ul>
             </div>
           </div>
@@ -95,10 +98,15 @@ export default function Footer() {
         <hr className="my-8 border-t border-gray-300" />
 
         {/* Bottom row */}
-        <div className="flex flex-col gap-4 pt-8 md:flex-row md:items-center md:justify-between">
+        <div className="flex justify-between items-center">
+          <div className="flex flex-col gap-4 pt-8 md:flex-row md:items-center md:justify-between">
           <p className="text-center text-xs text-gray-500 md:text-left break-normal whitespace-normal hyphens-auto text-pretty">
             &copy; {currentYear} {host}. Alla rättigheter förbehållna.
           </p>
+        </div>
+        <div>
+          <Link href={`/sitemap.xml`}>Webbplatskarta</Link>
+        </div>
         </div>
       </div>
     </footer>

@@ -2,7 +2,7 @@ import "server-only"
 
 import { AllPostSlugsResponse, AllPostsMinimalResponse, GetAllPostsOpts, GetPostSlugsOpts, GQLResp, Post, PostBySlugResult, PostsQueryData, PostTitleSlug, TodayPost, WpGraphQLResponse } from "../types";
 import { pickBucket, wpGraphQLCached, wpGraphQLRaw, wpRestCached } from "../WpCachedResponse";
-import { decodeHTML, extractHeadings } from "../globals/actions";
+import { decodeHTML, extractHeadings, stripHtml } from "../globals/actions";
 
 
 export async function getPostsByPeriod(period: 'week' | 'month') {
@@ -125,11 +125,12 @@ export async function getAllPosts(
   const nodes = data?.data?.posts?.nodes ?? [];
 
   // ---- Normalize and Decode ----
-  return nodes.slice(start, end).map((post : Post) => ({
-    ...post,
-    title: decodeHTML(typeof post.title === "string" ? post.title : ""),
-    excerpt: decodeHTML(typeof post.excerpt === "string" ? post.excerpt : ""),
-  }));
+ return nodes.slice(start, end).map((post: Post) => ({
+  ...post,
+  title: stripHtml(decodeHTML(post.title || "")),
+  excerpt: stripHtml(decodeHTML(post.excerpt || "")),
+}));
+
 }
  
 export async function getPostBySlug(slug: string): Promise<PostBySlugResult | null> {

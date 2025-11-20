@@ -8,7 +8,7 @@ interface ReadPeakProps {
 }
 
 export default function ReadPeak({
-  numberOfAds = 4,
+  numberOfAds = 1,
   className,
 }: ReadPeakProps) {
   return (

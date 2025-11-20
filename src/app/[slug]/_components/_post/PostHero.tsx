@@ -28,7 +28,7 @@ export default function PostHero({
             {title}
           </h1>
         ): 
-          <h2 className="text-pretty text-2xl md:text-5xl font-bold leading-tight">
+          <h2 className="text-pretty text-2xl md:text-5xl font-bold leading-tight mt-30">
             {title}
           </h2>
         }

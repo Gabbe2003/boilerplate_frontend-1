@@ -19,19 +19,23 @@ export default function PostCard({ post, className = "", variant = "default" }: 
     
     return (
       <article className={`relative overflow-hidden ${className}`}>
-        {imgSrc ? (
-          <Image
-            src={imgSrc}
-            overrideSrc={imgSrc}
-            alt={alt}
-            fill
-            sizes="(max-width:1024px) 100vw, 50vw"
-            className="object-cover"
-            priority
-          />
-        ) : (
-          <div className="aspect-[16/9] w-full bg-gray-200" />
-        )}
+        <div className="relative w-full aspect-[4/3] overflow-hidden">
+        {/* <div className="relative w-full aspect-[16/9] overflow-hidden"> */}
+          {imgSrc ? (
+            <Image
+              src={imgSrc}
+              overrideSrc={imgSrc}
+              alt={alt}
+              fill
+              sizes="(max-width:1024px) 100vw, 50vw"
+              className="object-cover"
+              priority
+            />
+          ) : (
+            <div className="aspect-[16/9] w-full bg-gray-200" />
+          )}
+        </div>
+
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 p-6">
           {cat && (
@@ -39,11 +43,11 @@ export default function PostCard({ post, className = "", variant = "default" }: 
               {cat}
             </span>
           )}
-          <h3 className="text-3xl !text-white font-extrabold leading-tight line-clamp-2 !mt-1">
+          <h3 className="text-1xl sm:text-2xl !text-white font-extrabold leading-tight line-clamp-2 !mt-1">
             {post.title}
           </h3>
           {post.excerpt && (
-            <p className="mt-2 text-white/90 line-clamp-2">{limitExcerpt(post.excerpt, 22)}</p>
+            <p className="mt-2 text-white/90 line-clamp-2 text-sm sm:text-md">{limitExcerpt(post.excerpt, 22)}</p>
           )}
         </div>
       </article>
@@ -53,19 +57,21 @@ export default function PostCard({ post, className = "", variant = "default" }: 
   // default card (like your small teasers)
   return (
     <article className={`overflow-hidden ${className}`}>
-      {imgSrc ? (
-        <div className="relative aspect-[16/9] w-full overflow-hidden ">
-          <Image
-            src={imgSrc}
-            alt={alt}
-            fill
-            sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw"
-            className="object-cover"
-          />
+      <div className="relative w-full aspect-[16/9] overflow-hidden rounded-md">
+          {imgSrc ? (
+            <Image
+              src={imgSrc}
+              overrideSrc={imgSrc}
+              alt={alt}
+              fill
+              sizes="(max-width:1024px) 100vw, 50vw"
+              className="object-contain"
+              priority
+            />
+          ) : (
+            <div className="aspect-[16/9] w-full bg-gray-200" />
+          )}
         </div>
-      ) : (
-        <div className="aspect-[16/9] w-full rounded-md bg-gray-200" />
-      )}
 
       <div className="mt-2">
         {cat && (

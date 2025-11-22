@@ -80,6 +80,7 @@ export async function getAllPosts(
               }
             }
           }
+            author{ node { name avatar { url } } }
           category: categories {
             nodes { id name slug }
           }

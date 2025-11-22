@@ -21,7 +21,7 @@ export default async function Home() {
   return (
     <div className="w-full mt-10">
       <div className="w-full flex justify-center">
-        <h1 className="base-width-for-all-pages text-center text-base lg:text-3xl md:text-2xl sm:text-base">
+        <h1 className="base-width-for-all-pages text-start text-base lg:text-3xl md:text-2xl sm:text-base">
           Dina dagliga nyheter inom finans, aktier och börsen
         </h1>
       </div>

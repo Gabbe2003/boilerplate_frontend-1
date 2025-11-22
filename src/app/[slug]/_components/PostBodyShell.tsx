@@ -11,16 +11,15 @@ export default function PostBodyShell({
   children: React.ReactNode;
   featured?: FeaturedNode | null;
 }) {
-    
   return (
     <article className="w-full">
 
-      {featured?.node?.sourceUrl && (
+      {featured?.sourceUrl && (
         <figure className="mb-6 w-full flex justify-center">
           <div className="relative w-[50%] aspect-[3/1.49] overflow-hidden">
             <Image
-              overrideSrc={featured?.node?.sourceUrl}
-              src={featured?.node?.sourceUrl}
+              overrideSrc={featured?.sourceUrl}
+              src={featured?.sourceUrl}
               alt={featured?.node?.altText || ""}
               fill
               sizes="40vw"

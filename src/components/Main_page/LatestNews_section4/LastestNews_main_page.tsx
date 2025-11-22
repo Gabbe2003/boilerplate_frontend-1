@@ -25,7 +25,7 @@ const TradingViewWidget = dynamic(
 
 export default async function LatestNews_main_page() {
   return (
-    <section className="w-full mt-10 flex flex-col items-center">
+    <section className="w-full mt-30 flex flex-col items-center bg-snow-white">
       <h2 className="text-xl font-semibold mb-4">Senaste nyheterna</h2>
 
       <div className="base-width-for-all-pages grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -1,5 +1,4 @@
 
-import { getAllPosts, getTodaysPosts } from "../graphql_queries/getPost";
 import { ITOCItem } from "../types";
 import { load } from "cheerio";
 

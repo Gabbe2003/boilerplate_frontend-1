@@ -56,9 +56,7 @@ html {
   scroll-behavior: smooth;
 }
 
-body{
-  font-family: "serif"
-}
+
 
 @layer base {
   * {
@@ -85,7 +83,7 @@ h6 {
 
 
 .base-width-for-all-pages{
-  width: 80%; 
+  width: 85%; 
 }
 
 .custom-button {

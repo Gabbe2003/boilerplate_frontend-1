@@ -1,7 +1,7 @@
 // components/PostShell.tsx
 
 // <— If we only want to change the width of hero and body.
-export const POST_MAX = "max-w-[100%]";
+export const POST_MAX = "max-w-[90%]";
 
 export function PostShell({
   children,

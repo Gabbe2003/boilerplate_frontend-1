@@ -1,10 +1,9 @@
 
 
 
-The images are being downloaded becuase of Content-Disposition: attachment and it should be inline. There is not hotlinking protection somewhere maybe, 
+And make the image little contain but little bit limited fix it later. 
 
 
-one thing, and then everything will be perfect, the images, the way we display them. 
 
 GetPostByPeriod:
 {

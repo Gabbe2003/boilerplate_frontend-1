@@ -42,117 +42,117 @@ export default function CategorySections({
   }, [activeCategory]);
 
 
-  return (
-    <div >
-      <h2 className="text-2xl text-center sm:text-left">
-        Våran kategoriutbud
-      </h2>
-      <div className="flex flex-wrap gap-5 border-b-2 mb-10 mt-5 pb-10">
-        {getAllCategories.map((category, index) => (
-          <button
-            key={index}
-            onClick={() => setActiveCategory(category.name)}
-            aria-pressed={activeCategory === category.name}
-            disabled={loading && activeCategory === category.name}
-            className={`px-3 py-2 rounded-md transition font-medium custom-button
-      ${activeCategory === category.name
-                ? "!text-gray-900 !border-b-2 !border-gray-900"
-                : "text-gray-600 hover:text-gray-900"
-              }
-      ${loading && activeCategory === category.name ? "opacity-70 cursor-not-allowed" : ""}
-    `}
-          >
-            {loading && activeCategory === category.name ? "Loading..." : category.name}
-          </button>
-        ))}
+    return (
+      <div >
+        <h2 className="text-2xl text-center sm:text-left">
+          Våran kategoriutbud
+        </h2>
+        <div className="flex flex-wrap gap-5 border-b-2 mb-10 mt-5 pb-10">
+          {getAllCategories.map((category, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveCategory(category.name)}
+              aria-pressed={activeCategory === category.name}
+              disabled={loading && activeCategory === category.name}
+              className={`px-3 py-2 rounded-md transition font-medium custom-button
+                ${activeCategory === category.name
+                          ? "!bg-black !text-white"
+                          : "text-gray-600 hover:text-gray-900"
+                        }
+                ${loading && activeCategory === category.name ? "opacity-70 cursor-not-allowed" : ""}
+              `}
+            >
+              {loading && activeCategory === category.name ? "Loading..." : category.name}
+            </button>
+          ))}
 
-      </div>
-      <div>
-        {posts.length > 0 && (
-          <ul
-            className="
-              grid 
-              grid-cols-1 
-              sm:grid-cols-2 
-              lg:grid-cols-4 
-              gap-6 
-              border-b-2 
-              pb-8
-              mt-8
-            "
-          >
-            {(() => {
-              // Choose one random index between 0–5
-              const randomIndex = Math.floor(Math.random() * 6);
+        </div>
+        <div>
+          {posts.length > 0 && (
+            <ul
+              className="
+                grid 
+                grid-cols-1 
+                sm:grid-cols-2 
+                lg:grid-cols-4 
+                gap-x-6 
+                gap-y-10
+                border-b-2 
+                pb-8
+                mt-8
+              "
+            >
+              {(() => {
+                const randomIndex = Math.floor(Math.random() * 6);
 
-              return posts.slice(0, 6).map((post, index) => {
-                const spanClasses =
-                  index < 4
-                    ? "col-span-1"
-                    : "col-span-1 lg:col-span-2";
+                return posts.slice(0, 6).map((post, index) => {
+                  const spanClasses =
+                    index < 4
+                      ? "col-span-1"
+                      : "col-span-1 lg:col-span-2";
 
-                // Inject the ReadPeak ad
-                if (index === randomIndex) {
+                  // Inject the ReadPeak ad
+                  if (index === randomIndex) {
+                    return (
+                      <li
+                        key="readpeak-ad"
+                        className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col`}
+                      >
+                        <div className="relative w-full bg-gray-100 ">
+                          <ReadPeak numberOfAds={1} />
+                        </div>
+                      </li>
+                    );
+                  }
+
                   return (
                     <li
-                      key="readpeak-ad"
-                      className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col`}
+                      key={post.id ?? index}
+                      className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col h-full`}
                     >
-                      <div className="relative w-full bg-gray-100 ">
-                        <ReadPeak numberOfAds={1} />
-                      </div>
+                      <Link href={`/${post.slug}`} className="flex flex-col h-full">
+
+                        {/* Image wrapper — fixed height via aspect ratio */}
+                        <div className="relative w-full aspect-[16/9] overflow-hidden ">
+                          <Image
+                            src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+                            alt={post?.featuredImage?.node?.altText || "Image"}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 33vw"
+                            className="object-contain"
+                          />
+                        </div>
+
+                        {/* Text container — enforces equal height */}
+                        <div className="p-4 flex flex-col flex-1 justify-between">
+
+                          <h3 className="font-semibold text-lg text-gray-900 leading-snug line-clamp-2">
+                            {post.title}
+                          </h3>
+
+                          <p className="mt-2 text-sm text-gray-600 leading-snug line-clamp-3">
+                            {limitExcerpt(post.excerpt)}
+                          </p>
+
+                        </div>
+
+                      </Link>
                     </li>
                   );
-                }
-
-                return (
-                  <li
-                    key={post.id ?? index}
-                    className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col h-full`}
-                  >
-                    <Link href={`/${post.slug}`} className="flex flex-col h-full">
-
-                      {/* Image wrapper — fixed height via aspect ratio */}
-                      <div className="relative w-full aspect-[16/9] overflow-hidden ">
-                        <Image
-                          src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
-                          alt={post?.featuredImage?.node?.altText || "Image"}
-                          fill
-                          sizes="(max-width: 1024px) 100vw, 33vw"
-                          className="object-contain"
-                        />
-                      </div>
-
-                      {/* Text container — enforces equal height */}
-                      <div className="p-4 flex flex-col flex-1 justify-between">
-
-                        <h3 className="font-semibold text-lg text-gray-900 leading-snug line-clamp-2">
-                          {post.title}
-                        </h3>
-
-                        <p className="mt-2 text-sm text-gray-600 leading-snug line-clamp-3">
-                          {limitExcerpt(post.excerpt)}
-                        </p>
-
-                      </div>
-
-                    </Link>
-                  </li>
-                );
-              });
-            })()}
-          </ul>
-        )}
+                });
+              })()}
+            </ul>
+          )}
+        </div>
+        <div className="mt-8 w-full flex justify-center mt-5">
+          <button className="custom-button">
+            <Link href={`/category/${handleSpecielChar(activeCategory || "")}`}>
+              <p>
+                Läs mer om {activeCategory}
+              </p>
+            </Link>
+          </button>
+        </div>
       </div>
-      <div className="mt-8 w-full flex justify-center mt-5">
-        <button className="custom-button">
-          <Link href={`/category/${handleSpecielChar(activeCategory || "")}`}>
-            <p>
-              Läs mer om {activeCategory}
-            </p>
-          </Link>
-        </button>
-      </div>
-    </div>
-  );
+    );
 }

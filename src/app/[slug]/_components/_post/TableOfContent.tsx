@@ -49,10 +49,10 @@ export default function TableOfConet({ toc, defaultOpen = true }: Props) {
         `}
       >
         <nav aria-label="Table of contents" className="px-4 pb-4 pt-1">
-          <ul className="space-y-1 text-sm list-disc pl-4">
+          <ul className="space-y-1 text-xs  list-disc pl-5">
             {toc.map((item) => (
               <li key={item.id}>
-                <Link href={`#${item.id}`} prefetch={false} className="hover:underline">
+                <Link href={`#${item.id}`} prefetch={false} className="!text-black hover:underline">
                   {item.text}
                 </Link>
               </li>

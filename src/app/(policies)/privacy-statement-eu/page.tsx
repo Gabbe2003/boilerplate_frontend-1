@@ -1,13 +1,21 @@
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import { cache } from "react";
+
+
+
+const getSeoCached = cache(async (uri: string) => {
+  return getWpSeo(uri, true);
+});
+
 
 export async function generateMetadata() {
-  const { metadata } = await getWpSeo("/privacy-statement-eu");
+  const { metadata } = await getSeoCached("/privacy-statement-eu");
   return metadata;
 }
 
 export default async function PrivacyPage() {
-  const { jsonLd } = await getWpSeo("/privacy-statement-eu");
+  const { jsonLd } = await getSeoCached("/privacy-statement-eu");
 
   const siteName = process.env.NEXT_PUBLIC_HOSTNAME || "vår webbplats";
 

@@ -1,6 +1,4 @@
 
-import { ITOCItem } from "../types";
-import { load } from "cheerio";
 
 
 export function stripHtml(s = "") {
@@ -11,7 +9,6 @@ export function stripHtml(s = "") {
 export function capitalizeFirstLetter(val : string) {
   return String(val).charAt(0).toUpperCase() + String(val).slice(1);
 }
-
 
 
 export function limitExcerpt(text?: string, words = 16) {
@@ -32,40 +29,6 @@ export function handleSpecielChar(text: string) {
     .replace(/^-|-$/g, "");
     
 }
-
-
-export function extractHeadings(html: string):{ updatedHtml: string; toc: ITOCItem[] } {
-  if(!html){
-    console.error("Something went wrong.");
-    return {
-        updatedHtml: "",
-        toc: []
-    };
-  }
-  const $ = load(html);
-  const toc: ITOCItem[] = [];
-
-  $('h2, h3, h4, h5, h6').each((_, el) => {
-    const $el = $(el);
-    const tag = el.tagName.toLowerCase();
-    const level = parseInt(tag.charAt(1), 10);
-    const text = $el.text().trim();
-
-    const id =
-      $el.attr('id') ||
-      text
-        .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]+/g, '');
-
-    $el.attr('id', id);
-    toc.push({ text, id, level });
-  });
-
-  const updatedHtml = $('body').html() ?? $.root().html() ?? '';
-  return { updatedHtml, toc };
-}
-
 
 
 export function randomIntInclusive(min: number, max: number) {

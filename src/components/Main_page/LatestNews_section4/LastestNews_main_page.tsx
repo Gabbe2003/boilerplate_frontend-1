@@ -25,10 +25,11 @@ const TradingViewWidget = dynamic(
 
 export default async function LatestNews_main_page() {
   return (
-    <section className="w-full mt-30 flex flex-col items-center bg-snow-white">
-      <h2 className="text-xl font-semibold mb-4">Senaste nyheterna</h2>
+  <section className="w-full pt-[var(--section-spacing)] flex flex-col items-center bg-snow-white ">
+    <div className="base-width-for-all-pages flex flex-col   ">
+       <h2 className="text-xl font-semibold mb-4 text-start">Senaste nyheterna</h2>
 
-      <div className="base-width-for-all-pages grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className=" grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* FIRST 8 POSTS */}
         <div className="col-span-2 w-full">
           <LatestNewsInitial />
@@ -45,9 +46,10 @@ export default async function LatestNews_main_page() {
       </div>
 
       {/* Full-width infinite scroll */}
-      <div className="base-width-for-all-pages w-full mt-10">
+      <div className=" w-full mt-10">
         <LatestNewsInfinite />
       </div>
+    </div>
     </section>
   );
 }

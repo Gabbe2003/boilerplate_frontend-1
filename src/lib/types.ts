@@ -154,7 +154,7 @@ export interface Post {
   databaseId?: number;
   date?: string;
   excerpt?: string;
-
+  modified?: string;
   featuredImage?: {
   node?: {
     id?: string | number;

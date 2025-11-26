@@ -1,14 +1,23 @@
+import "server-only"
+
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import { cache } from "react";
+
+
+const getSeoCached = cache(async (uri: string) => {
+  return getWpSeo(uri, true);
+});
+
 
 export async function generateMetadata() {
-  const { metadata } = await getWpSeo("/cookie-policy-eu");
+  const { metadata } = await getSeoCached("/cookie-policy-eu");
   return metadata;
 }
 
 
 export default async function CookiePolicyPage() {
-    const { jsonLd } = await getWpSeo("/cookie-policy-eu");
+    const { jsonLd } = await getSeoCached("/cookie-policy-eu");
   return (
     <main className="w-full py-10">
       <article className="base-width-for-all-pages max-w-3xl mx-auto px-4">

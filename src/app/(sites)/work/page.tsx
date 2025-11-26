@@ -1,14 +1,23 @@
 import { capitalizeFirstLetter } from "@/lib/globals/actions"; 
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
+import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import { cache } from "react";
+
+
+
+const getSeoCached = cache(async (uri: string) => {
+  return getWpSeo(uri, true);
+});
+
 
 export async function generateMetadata() {
-  const { metadata } = await getWpSeo('/work'); 
+  const { metadata } = await getSeoCached('/work'); 
   metadata.title = `Work | ${capitalizeFirstLetter(process.env.NEXT_PUBLIC_HOSTNAME!)}`;
   return metadata; 
 }
 
 export default async function Work() {
-  const { jsonLd } = await getWpSeo('/work'); 
+  const { jsonLd } = await getSeoCached('/work'); 
 
   return (
     <main className="w-full flex justify-center  bg-gradient-to-br from-gray-50 via-white to-blue-50 py-10">
@@ -38,8 +47,8 @@ export default async function Work() {
             </p>
           </div>
         </div>
-
       </div>
+      <SeoJsonLd data={jsonLd} />
     </main>
   );
 }

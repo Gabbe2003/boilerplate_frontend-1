@@ -1,62 +1,43 @@
-import "server-only"; 
 
 import Link from "next/link";
-import { Category_names } from "@/lib/types";
+import SearchBar from "../Search_Component/SearchBar";
 import { handleSpecielChar } from "@/lib/globals/actions";
-import NewsletterIsland from "@/components/Ads/NewsLetter/NewsletterIsland";
-import { getAllPostsByTitle } from "@/lib/graphql_queries/getPost";
+import { Category_names, CategoryName, PostTitleSlug } from "@/lib/types";
 
-export async function DesktopHeader({
-  links,
-  all_categories,
-}: {
-  links: { name: string; href: string }[];
-  all_categories: Category_names[];
+export  function DesktopHeader({ categories_name, allPost }: {
+  categories_name: CategoryName[];
+  allPost: PostTitleSlug[]
 }) {
 
   return (
-    <>
-    <div className="flex items-center justify-between gap-6">
-      <nav className="flex items-center gap-5 text-sm font-small mr-4">
-        {/* Category links */}
-        
-        {all_categories.map((cat, index) => {
+<div className="hidden md:flex items-center py-3 border-b-2 border-black">
+      
+      {/* LEFT SPACER */}
+      <div className="flex-1"></div>
+
+      {/* NAVIGATION */}
+      <nav className="flex gap-6 text-xs font-bold tracking-wide uppercase">
+        {categories_name.map((cat, index) => {
           const slug = handleSpecielChar(cat.name);
+
           return (
             <Link
-            key={slug + index}
-            href={`/category/${slug}`}
-            className="text-gray-800 hover:text-black tracking-wide"
+              key={slug + index}
+              href={`/category/${slug}`}
+              className="text-gray-800 hover:text-black border-r border-gray-400 pr-4 last:border-r-0"
             >
               {cat.name}
             </Link>
           );
         })}
-
-        {/* General links */}
-        {links.map((l) =>
-          l.name.toUpperCase() === "NYHETSBREV" ? (
-            <div key={l.name}>
-              <NewsletterIsland
-                key={l.name}
-                className="text-gray-800 hover:text-black tracking-wide"
-                label={l.name}
-                />
-            </div>
-          ) : (
-            <Link
-            key={l.name}
-            href={l.href}
-            className="text-gray-800 hover:text-black tracking-wide"
-            >
-              {l.name}
-            </Link>
-          )
-        )}
       </nav>
-    
+
+      {/* SEARCH BAR */}
+      <div className="flex-1 flex justify-end">
+        <div className="w-[200px]">
+          <SearchBar posts={allPost} action="/search" limitWidth="200px" />
+        </div>
+      </div>
     </div>
-     
-    </>
   );
 }

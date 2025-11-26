@@ -5,10 +5,17 @@ import TaxonomyStream from "../../_components/TaxonomyStream";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
 import { buildFallback } from "@/lib/seo/helpers/helpers";
 import DisplayComponents from "../../_components/DisplayComponents";
+import { getWpSeo } from "@/lib/seo/graphqlSeo";
+import { cache } from "react";
+
+
+const getSeoCached = cache(async (uri: string) => {
+  return  buildFallback(uri);
+});
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const {slug} =  await params
-  const {metadata} = buildFallback(`/category/${slug}`); 
+  const {metadata} = await getSeoCached(`/category/${slug}`); 
 
   metadata.title = `Category ${slug} | ${process.env.NEXT_PUBLIC_HOSTNAME}`
 
@@ -19,7 +26,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   const {slug} =  await params
   const initial = await getCategoryBySlug(slug, { take: 9 });  
-  const {jsonLd} = buildFallback(`/category/${slug}`); 
+  const {jsonLd} = await getSeoCached(`/category/${slug}`); 
 
   
   if (!initial) return notFound();

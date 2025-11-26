@@ -13,7 +13,7 @@ export default function ReadPeak({
 }: ReadPeakProps) {
   return (
     <div className={`${className || ''}`}>
-      <ReadPeakSlot id={'90924881c10805b4'} numberOfAds={numberOfAds} className="w-full" />
+      <ReadPeakSlot id={'90924881c10805b4'} numberOfAds={numberOfAds} className="w-full " />
     </div>
   );
 }

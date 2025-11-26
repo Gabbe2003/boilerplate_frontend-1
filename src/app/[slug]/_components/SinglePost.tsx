@@ -30,7 +30,9 @@ export default async function SinglePost({
   const slugs = await getPostSlugs(R + H, { revalidate: 3000 });
   const slugQueue = slugs.slice(R + 1).filter((s) => s && s !== currentSlug);
 
-  const title = post.title
+  const title = post.title; 
+  console.log(post);
+  
 
   return (
     <div className="w-full flex justify-center">
@@ -38,15 +40,16 @@ export default async function SinglePost({
         {breadcrumbs && <BreadCrump breadcrumbs={breadcrumbs} title={title}/>}
 
         <PostHero
-          title={post.title}
+          title={title}
           author={post.author}
           date={post.date}
           excerpt={post.excerpt}
           uri={post.uri}
+          featured={post.featuredImage}
+          modified={post.modified}
         />
 
         <main>
-          {/* Changing here involve changing postBodyClient! */}
           <PostBody post={post} contentHtml={updatedHtml} toc={toc} />
         </main>
 

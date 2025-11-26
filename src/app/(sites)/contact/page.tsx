@@ -1,17 +1,22 @@
 import FormInquiry from "@/components/FormInquiry";
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import { cache } from "react";
+
+const getSeoCached = cache(async (uri: string) => {
+  return getWpSeo(uri, true);
+});
 
 
 export async function generateMetadata() {
-  const { metadata } = await getWpSeo("/contact");
+  const { metadata } = await getSeoCached("/contact");
   return metadata;
 }
 
 
 export default async function ContactPage() {
   const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Our Site";
-  const { jsonLd } = await getWpSeo("/contact");
+  const { jsonLd } = await getSeoCached("/contact");
 
 
   return (

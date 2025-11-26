@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getAllPosts } from "@/lib/graphql_queries/getPost";
 
 export default async function LatestNewsInitial() {
-  const posts = await getAllPosts(4)
+  const posts = await getAllPosts(10)
 
   return (
     <div className="grid gap-6 grid-cols-1 sm:grid-cols-2">

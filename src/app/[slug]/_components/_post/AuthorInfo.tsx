@@ -41,7 +41,7 @@ export default function AuthorInfo({ author }: AuthorInfoProps) {
 
       {name && (
         <>
-          Av <Link href={`author/${normalizeName(name)}`} className="text-gray-700 text-sm font-medium">{name}</Link>
+          <Link href={`author/${normalizeName(name)}`} className="text-gray-700 text-sm font-medium">{name}</Link>
         </>
       )}
     </div>

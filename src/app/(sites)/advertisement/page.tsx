@@ -5,17 +5,24 @@ import NewsletterHighlight from "./_components/NewsletterHighlight";
 import FormInquiry from "@/components/FormInquiry";
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import { cache } from "react";
 
 const SITE = process.env.NEXT_PUBLIC_HOSTNAME ?? "Vår Webbplats";
 
+
+
+const getSeoCached = cache(async (uri: string) => {
+  return getWpSeo(uri, true);
+});
+
 export async function generateMetadata() {
-  const { metadata } = await getWpSeo("/advertisement");
+  const { metadata } = await getSeoCached("/advertisement");
   return metadata;
 }
 
 
 export default async function AdInquiryPage() {
-  const { jsonLd } = await getWpSeo("/advertisement");
+  const { jsonLd } = await getSeoCached("/advertisement");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center py-10">

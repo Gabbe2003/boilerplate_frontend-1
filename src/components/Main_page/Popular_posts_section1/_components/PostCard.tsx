@@ -43,11 +43,11 @@ export default function PostCard({ post, className = "", variant = "default" }: 
               {cat}
             </span>
           )}
-          <h3 className="text-1xl sm:text-2xl !text-white font-extrabold leading-tight line-clamp-2 !mt-1">
+          <h3 className="text-1xl  !text-white font-extrabold leading-tight line-clamp-2 !mt-1">
             {post.title}
           </h3>
           {post.excerpt && (
-            <p className="mt-2 text-white/90 line-clamp-2 text-sm sm:text-md">{limitExcerpt(post.excerpt, 22)}</p>
+            <p className="mt-2 text-white/90 line-clamp-2 text-xs sm:text-md">{limitExcerpt(post.excerpt, 22)}</p>
           )}
         </div>
       </article>

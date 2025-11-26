@@ -1,13 +1,20 @@
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import { cache } from "react";
+
+
+
+const getSeoCached = cache(async (uri: string) => {
+  return getWpSeo(uri, true);
+});
 
 export async function generateMetadata() {
-  const { metadata } = await getWpSeo("/om-oss/");
+  const { metadata } = await getSeoCached("/om-oss/");
   return metadata;
 }
 
 export default async function AboutPage() {
-  const { jsonLd } = await getWpSeo("/om-oss/");
+  const { jsonLd } = await getSeoCached("/om-oss/");
 
   return (
     <div className="w-full flex justify-center bg-white py-12">

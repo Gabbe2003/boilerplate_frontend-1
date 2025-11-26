@@ -2,7 +2,8 @@ import "server-only"
 
 import { AllPostSlugsResponse, AllPostsMinimalResponse, GetAllPostsOpts, GetPostSlugsOpts, GQLResp, Post, PostBySlugResult, PostsQueryData, PostTitleSlug, TodayPost, WpGraphQLResponse } from "../types";
 import { pickBucket, wpGraphQLCached, wpGraphQLRaw, wpRestCached } from "../WpCachedResponse";
-import { decodeHTML, extractHeadings, stripHtml } from "../globals/actions";
+import { decodeHTML, stripHtml } from "../globals/actions";
+import { extractHeadings } from "./helpers/helper";
 
 
 export async function getPostsByPeriod(period: 'week' | 'month') {
@@ -15,7 +16,7 @@ export async function getTodaysPosts(limit: number = 5): Promise<TodayPost[]> {
     return [];
   }
 
-  const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/today-posts`;
+  const url = `${process.env.NEXT_PUBLIC_HOST_URL}/wp-json/hpv/v1/today-posts?period=month`;
 
   try {
     const data = await wpRestCached<TodayPost[]>(
@@ -151,6 +152,7 @@ export async function getPostBySlug(slug: string): Promise<PostBySlugResult | nu
             sourceUrl
             altText
             mediaDetails { width height }
+            caption(format: RENDERED)
           }
         }
         author { node { name avatar { url } } }
@@ -178,13 +180,29 @@ export async function getPostBySlug(slug: string): Promise<PostBySlugResult | nu
     const post = res?.data?.postBy;
     if (!post) return null;
 
-    // --- Normalize title/excerpt/content ---
     const normalizedPost: Post = {
       ...post,
       title: decodeHTML(typeof post.title === "string" ? post.title : ""),
       excerpt: decodeHTML(typeof post.excerpt === "string" ? post.excerpt : ""),
       content: decodeHTML(typeof post.content === "string" ? post.content : ""),
+
+      featuredImage: post.featuredImage 
+        ? {
+            ...post.featuredImage,
+            node: {
+              ...(post.featuredImage.node || {}),
+              caption: decodeHTML(stripHtml(
+                (
+                typeof post.featuredImage.node?.caption === "string"
+                  ? post.featuredImage.node.caption
+                  : ""
+              ),
+              ))
+            },
+          }
+        : undefined,
     };
+
 
     const { updatedHtml, toc } = extractHeadings(normalizedPost.content ?? "");
     

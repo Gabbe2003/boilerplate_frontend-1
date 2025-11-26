@@ -17,7 +17,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer id="footer" className="w-full px-2 border-t border-gray-200 bg-gray-100">
+    <footer id="footer" className="w-full px-2 border-t border-gray-200 bg-background">
       <div className="w-[100%] px-2 lg:w-[90%] xl:w-[70%] mx-auto py-6">
         {/* Logo and Links */}
         <div className="flex flex-col md:flex-row mb-8 gap-8">

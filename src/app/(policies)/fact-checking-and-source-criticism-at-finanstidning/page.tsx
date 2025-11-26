@@ -1,14 +1,22 @@
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import { cache } from "react";
+
+
+const getSeoCached = cache(async (uri: string) => {
+  return getWpSeo(uri, true);
+});
+
+
 
 export async function generateMetadata() {
-  const { metadata } = await getWpSeo("/fact-checking-and-source-criticism-at-finanstidning");
+  const { metadata } = await getSeoCached("/fact-checking-and-source-criticism-at-finanstidning");
   return metadata;
 }
 
 
 export default async function FactCheckingAndSourceCriticismAtFinanstidningPage() {
-  const { jsonLd } = await getWpSeo("/fact-checking-and-source-criticism-at-finanstidning");
+  const { jsonLd } = await getSeoCached("/fact-checking-and-source-criticism-at-finanstidning");
   return (
     <main className="w-full py-10">
       <article className="base-width-for-all-pages max-w-3xl mx-auto px-4">

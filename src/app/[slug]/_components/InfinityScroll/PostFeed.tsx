@@ -87,7 +87,7 @@ export default function PostFeed({
       body: JSON.stringify({ databaseId }),
       cache: "no-store",
       keepalive: true,
-    }).catch(() => {});
+    }).catch(() => { });
   }, [items]);
 
   // -----------------------------
@@ -177,7 +177,8 @@ export default function PostFeed({
             date={post.date}
             excerpt={post.excerpt}
             uri={post.uri}
-            boolInfinite
+            featured={post.featuredImage}
+            modified={post.modified}
           />
           <main>
             <PostBodyClient post={post} contentHtml={updatedHtml} toc={toc} />

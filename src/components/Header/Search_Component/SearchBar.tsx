@@ -12,6 +12,7 @@ type Props = {
   action?: string;            // where to go when no suggestions; default "/search"
   hrefPrefix?: string;        // e.g. "/blog/" if needed; default "/"
   placeholder?: string;
+  limitWidth?: string; 
 };
 
 export default function SearchBar({
@@ -19,6 +20,7 @@ export default function SearchBar({
   action = "/search",
   hrefPrefix = "/",
   placeholder = "Sök…",
+  limitWidth = "100%"
 }: Props) {
   const router = useRouter();
   const [value, setValue] = useState("");
@@ -55,7 +57,7 @@ export default function SearchBar({
   const showDropdown = value.trim().length > 0 && posts.length > 0;
 
   return (
-    <div className="w-full mx-auto relative">
+    <div className=" mx-auto relative " style={{ maxWidth: limitWidth }}>
       {/* input */}
       <form className="relative" action={action} method="GET" onSubmit={onSubmit}>
         <input

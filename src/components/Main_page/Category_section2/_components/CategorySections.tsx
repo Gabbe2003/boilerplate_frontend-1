@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { limitExcerpt, handleSpecielChar } from "@/lib/globals/actions";
 import ReadPeak from "@/components/Ads/Ads/Readpeak/ReadPeak";
+import SectionBreaker from "@/components/SectionBreaker";
 
 export default function CategorySections({
   getAllCategories,
@@ -42,117 +43,185 @@ export default function CategorySections({
   }, [activeCategory]);
 
 
-    return (
-      <div >
-        <h2 className="text-2xl text-center sm:text-left">
-          Våran kategoriutbud
-        </h2>
-        <div className="flex flex-wrap gap-5 border-b-2 mb-10 mt-5 pb-10">
-          {getAllCategories.map((category, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveCategory(category.name)}
-              aria-pressed={activeCategory === category.name}
-              disabled={loading && activeCategory === category.name}
-              className={`px-3 py-2 rounded-md transition font-medium custom-button
-                ${activeCategory === category.name
-                          ? "!bg-black !text-white"
-                          : "text-gray-600 hover:text-gray-900"
-                        }
-                ${loading && activeCategory === category.name ? "opacity-70 cursor-not-allowed" : ""}
+  return (
+    <div className="pt-[var(--section-spacing)] pb-[var(--section-spacing)]  bg-[#F5ECE4]">
+      <SectionBreaker color="red" />
+
+      <h2 className="text-2xl text-center sm:text-left text-[#1A1A1A]">
+        Våra kategorier
+      </h2>
+
+      {/* CATEGORY BUTTONS */}
+      <div className="flex flex-wrap gap-4 mt-5 pb-10">
+        {getAllCategories.map((category, index) => (
+          <button
+            key={index}
+            onClick={() => setActiveCategory(category.name)}
+            aria-pressed={activeCategory === category.name}
+            disabled={loading && activeCategory === category.name}
+            className={`py-2 rounded-sm transition font-medium custom-button !border-black text-sm
+
+            ${activeCategory === category.name
+                ? "!bg-black !text-white"
+                : "text-[#4B4B4B] hover:text-black"
+              }
+
+            ${loading && activeCategory === category.name
+                ? "opacity-70 cursor-not-allowed"
+                : ""
+              }
+          `}
+          >
+            {loading && activeCategory === category.name ? "Loading..." : category.name}
+          </button>
+        ))}
+      </div>
+
+      {/* POSTS LIST */}
+  <div>
+  {posts.length > 0 && (
+    <ul
+      className="
+        grid 
+        grid-cols-1 
+        sm:grid-cols-2 
+        lg:grid-cols-4 
+        gap-x-6 
+        gap-y-10
+        border-b-2 border-[#eae3dc] 
+        pb-8
+        mt-3
+      "
+    >
+      {(() => {
+        const randomIndex = Math.floor(Math.random() * 4);
+
+        return posts.slice(0, 6).map((post, index) => {
+          const spanClasses =
+            index < 4 ? "col-span-1" : "col-span-1 lg:col-span-2";
+
+          const showRightBorder = index < 3 || index === 4;
+
+          /** -------------------------------------
+           *  AD SLOT
+           * ------------------------------------ */
+          if (index === randomIndex) {
+            return (
+              <li
+                key="readpeak-ad"
+                className={`
+                  ${spanClasses}
+                  flex flex-col
+                  transition-shadow
+                  ${showRightBorder ? "lg:border-r lg:pr-6 border-[#eae3dc]" : ""}
+                `}
+              >
+                <div className="relative w-full bg-[#f2eee7] rounded-md">
+                  <ReadPeak numberOfAds={1} />
+                </div>
+              </li>
+            );
+          }
+
+          /** -------------------------------------
+           *  NORMAL POST
+           * ------------------------------------ */
+          return (
+            <li
+              key={post.id ?? index}
+              className={`
+                ${spanClasses}
+                transition-shadow 
+                flex h-full 
+                ${index >= 4 ? "flex-col lg:flex-row lg:gap-4" : "flex-col"}
+                ${showRightBorder ? "lg:border-r lg:pr-6 border-[#eae3dc]" : ""}
               `}
             >
-              {loading && activeCategory === category.name ? "Loading..." : category.name}
-            </button>
-          ))}
+              <Link
+                href={`/${post.slug}`}
+                className={`
+                  flex h-full w-full 
+                  ${index >= 4 ? "flex-col lg:flex-row lg:gap-4" : "flex-col"}
+                `}
+              >
+                {/* --------------------------------- */}
+                {/* Image Handling - Unified & Clean */}
+                {/* --------------------------------- */}
 
-        </div>
-        <div>
-          {posts.length > 0 && (
-            <ul
-              className="
-                grid 
-                grid-cols-1 
-                sm:grid-cols-2 
-                lg:grid-cols-4 
-                gap-x-6 
-                gap-y-10
-                border-b-2 
-                pb-8
-                mt-8
-              "
-            >
-              {(() => {
-                const randomIndex = Math.floor(Math.random() * 6);
+                {index >= 4 ? (
+                  <>
+                    {/* MOBILE */}
+                    <div className="lg:hidden relative w-full h-[150px] flex items-center justify-center bg-[#f2eee7] rounded-sm overflow-hidden">
+                      <Image
+                        src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+                        alt={post?.featuredImage?.node?.altText || "Image"}
+                        fill
+                        className="object-contain"
+                        priority
+                      />
+                    </div>
 
-                return posts.slice(0, 6).map((post, index) => {
-                  const spanClasses =
-                    index < 4
-                      ? "col-span-1"
-                      : "col-span-1 lg:col-span-2";
+                    {/* DESKTOP */}
+                    <div className="hidden lg:flex w-[220px] h-[190px] relative items-center justify-center bg-[#f2eee7] rounded-sm overflow-hidden">
+                      <Image
+                        src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+                        alt={post?.featuredImage?.node?.altText || "Image"}
+                        fill
+                        sizes="220px"
+                        className="object-contain"
+                        priority
+                      />
+                    </div>
+                  </>
+                ) : (
+                  /* TOP GRID IMAGES */
+                  <div className="relative w-full h-[180px] flex items-center justify-center bg-[#f2eee7] rounded-sm overflow-hidden">
+                    <Image
+                      src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+                      alt={post?.featuredImage?.node?.altText || "Image"}
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
+                )}
 
-                  // Inject the ReadPeak ad
-                  if (index === randomIndex) {
-                    return (
-                      <li
-                        key="readpeak-ad"
-                        className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col`}
-                      >
-                        <div className="relative w-full bg-gray-100 ">
-                          <ReadPeak numberOfAds={1} />
-                        </div>
-                      </li>
-                    );
-                  }
+                {/* ------------------------------ */}
+                {/* TEXT */}
+                {/* ------------------------------ */}
+                <div
+                  className={`
+                    py-4 flex flex-col justify-between 
+                    ${index >= 4 ? "lg:flex-1" : ""}
+                  `}
+                >
+                  <h3 className="font-semibold text-base leading-snug line-clamp-2">
+                    {post.title}
+                  </h3>
 
-                  return (
-                    <li
-                      key={post.id ?? index}
-                      className={`${spanClasses} bg-white rounded-md shadow-sm hover:shadow-md transition-shadow flex flex-col h-full`}
-                    >
-                      <Link href={`/${post.slug}`} className="flex flex-col h-full">
+                  <p className="mt-2 text-xs leading-snug  line-clamp-3">
+                    {limitExcerpt(post.excerpt)}
+                  </p>
+                </div>
+              </Link>
+            </li>
+          );
+        });
+      })()}
+    </ul>
+  )}
+</div>
 
-                        {/* Image wrapper — fixed height via aspect ratio */}
-                        <div className="relative w-full aspect-[16/9] overflow-hidden ">
-                          <Image
-                            src={post?.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
-                            alt={post?.featuredImage?.node?.altText || "Image"}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 33vw"
-                            className="object-contain"
-                          />
-                        </div>
 
-                        {/* Text container — enforces equal height */}
-                        <div className="p-4 flex flex-col flex-1 justify-between">
-
-                          <h3 className="font-semibold text-lg text-gray-900 leading-snug line-clamp-2">
-                            {post.title}
-                          </h3>
-
-                          <p className="mt-2 text-sm text-gray-600 leading-snug line-clamp-3">
-                            {limitExcerpt(post.excerpt)}
-                          </p>
-
-                        </div>
-
-                      </Link>
-                    </li>
-                  );
-                });
-              })()}
-            </ul>
-          )}
-        </div>
-        <div className="mt-8 w-full flex justify-center mt-5">
-          <button className="custom-button">
-            <Link href={`/category/${handleSpecielChar(activeCategory || "")}`}>
-              <p>
-                Läs mer om {activeCategory}
-              </p>
-            </Link>
-          </button>
-        </div>
+      {/* READ MORE BUTTON */}
+      <div className="mt-8 w-full flex justify-center mt-5">
+        <button className="custom-button !bg-black !text-white px-4 py-2 rounded-sm">
+          <Link href={`/category/${handleSpecielChar(activeCategory || "")}`}>
+            <p>Läs mer om {activeCategory}</p>
+          </Link>
+        </button>
       </div>
-    );
+    </div>
+  );
+
 }

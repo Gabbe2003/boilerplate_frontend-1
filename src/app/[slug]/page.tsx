@@ -1,27 +1,40 @@
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "@/lib/graphql_queries/getPost";
-import type { PostBySlugResult } from "@/lib/types";
 import SinglePost from "./_components/SinglePost";
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
-import { Metadata,  } from "next";
+import { Metadata } from "next";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import { cache } from "react";
+
+
+const getPostCached = cache(async (slug: string) => {
+  return getPostBySlug(slug);
+});
+
+
+const getSeoCached = cache(async (uri: string) => {
+  return getWpSeo(uri, true);
+});
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const { slug } = await params;
+    const result = await getPostCached(slug);
+  if (!result) return notFound();
+
   const uri = `/${slug}`;
-  const { metadata } = await getWpSeo(uri, true);
-  
+  const { metadata } = await getSeoCached(uri);
+
   return metadata;
 }
 
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const { slug } = await params;
-  const result: PostBySlugResult | null = await getPostBySlug(slug);
+    const result = await getPostCached(slug);
   if (!result) return notFound();
 
   const uri = `/${slug}/`;
-  const { jsonLd } = await getWpSeo(uri, true);
+  const { jsonLd } = await getSeoCached(uri);
 
   const { post, updatedHtml, toc } = result;
 

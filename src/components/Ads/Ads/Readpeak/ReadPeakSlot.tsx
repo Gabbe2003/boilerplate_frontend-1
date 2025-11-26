@@ -79,7 +79,7 @@ export const ReadPeakSlot: React.FC<ReadPeakSlotProps> = ({
   return (
     <div
       ref={hostRef}
-      className={className}
+      className={`${className}`}
       aria-label="Sponsored content"
       role="region"
     />

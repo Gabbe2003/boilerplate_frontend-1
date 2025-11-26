@@ -13,20 +13,7 @@ export default function PostBodyShell({
 }) {
   return (
     <article className="w-full">
-
-      {featured?.sourceUrl && (
-        <figure className="mb-6 w-full flex justify-center">
-          <div className="relative w-[50%] aspect-[3/1.49] overflow-hidden">
-            <Image
-              overrideSrc={featured?.sourceUrl}
-              src={featured?.sourceUrl}
-              alt={featured?.node?.altText || ""}
-              fill
-              sizes="40vw"
-            />
-          </div>
-        </figure>
-      )}
+    
 
       {/* Shared prose styling */}
       <div
@@ -38,7 +25,7 @@ export default function PostBodyShell({
           [&_pre]:overflow-x-auto
           [&_code]:break-all
           prose-sm
-          w-[80%]
+          w-full sm:w-[75%]
 
           prose-a:text-blue-600 dark:prose-a:text-blue-400
           prose-a:no-underline hover:prose-a:underline
@@ -49,6 +36,7 @@ export default function PostBodyShell({
           [&_h3]:mb-3
           [&_h3]:mt-7
           [&_h4]:mt-4
+          [&_p]:text-sm
         "
       >
         {children}

@@ -7,6 +7,7 @@ import { useEffect, useState, useRef } from "react";
 import SearchBar from "./Search_Component/SearchBar";
 import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { handleSpecielChar } from "@/lib/globals/actions";
 
 type HeaderProps = {
   categories_name: CategoryName[];
@@ -146,16 +147,19 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
 
           {/* NAVIGATION */}
           <nav className="flex flex-col mt-4 px-4 gap-3 text-sm font-semibold">
-            {categories_name.map((cat, index) => (
-              <Link
+            {categories_name.map((cat, index) => {
+              const slug = handleSpecielChar(cat.name);
+             return(
+               <Link
                 key={cat.name + index}
-                href={`/category/${cat.name.toLowerCase()}`}
+                href={`/category/${slug}`}
                 className="text-[#1A1A1A] hover:text-red-600 transition"
                 onClick={() => setMobileOpen(false)}
               >
                 {cat.name}
               </Link>
-            ))}
+             )
+            })}
           </nav>
         </div>
 

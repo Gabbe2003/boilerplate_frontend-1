@@ -18,12 +18,13 @@ export  function DesktopHeader({ categories_name, allPost }: {
       {/* NAVIGATION */}
       <nav className="flex gap-6 text-xs font-bold tracking-wide uppercase">
         {categories_name.map((cat, index) => {
+          
           const slug = handleSpecielChar(cat.name);
 
           return (
             <Link
               key={slug + index}
-              href={`/category/${handleSpecielChar(slug)}`}
+              href={`/category/${slug}`}
               className="text-gray-800 hover:text-black border-r border-gray-400 pr-4 last:border-r-0"
             >
               {cat.name}

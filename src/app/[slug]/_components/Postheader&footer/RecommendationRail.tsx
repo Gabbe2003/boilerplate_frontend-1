@@ -11,9 +11,9 @@ interface Props { posts: Post[] }
 
 
 
-const generateLink = (p: Post, i:number ) => {
+const generateLink = (p: Post, i: number) => {
   console.log(p.id);
-  
+
   return (
     <Link
       key={`${p.id}-${i}`}
@@ -29,18 +29,25 @@ const generateLink = (p: Post, i:number ) => {
     "
     >
       {/* Image */}
-      <div className="relative h-40 w-full overflow-hidden">
+      <div
+        className="
+          relative 
+          w-full 
+          h-[150px]
+          overflow-hidden 
+          flex items-start justify-center 
+        "
+      >
         <Image
           src={p.featuredImage?.node?.sourceUrl || '/full_logo_with_slogan.png'}
           alt={p.featuredImage?.node?.altText || ""}
           fill
-          className="
-          object-contain
-        "
+          className="object-cover"
+          sizes="(max-width: 1024px) 100vw, 400px"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/0 to-black/20" />
       </div>
+
 
       {/* Content */}
       <div className="px-4 py-4 space-y-2">
@@ -59,7 +66,7 @@ const generateLink = (p: Post, i:number ) => {
         <div className="flex items-center justify-between text-xs text-neutral-500">
           <span className="text-sx text-red-500">
             {p.author?.node?.name && (
-              <AuthorInfo author={p.author} noLink /> 
+              <AuthorInfo author={p.author} noLink />
             )}
           </span>
           <span className="text-xs text-[#6f6a63] ">{formatDateStockholm(p.date)}</span>
@@ -108,15 +115,15 @@ export default function RecommendationRail({ posts }: Props) {
   }, []);
 
   // Build two lanes (3 each), and duplicate each lane for seamless 200% width
-const { row1Items, row2Items } = useMemo(() => {
-  const top = posts.slice(0, 4);       // first 4
-  const bottom = posts.slice(4, 8);    // next 4
+  const { row1Items, row2Items } = useMemo(() => {
+    const top = posts.slice(0, 4);       // first 4
+    const bottom = posts.slice(4, 8);    // next 4
 
-  return {
-    row1Items: [...top, ...top],       // duplicated for marquee
-    row2Items: [...bottom, ...bottom], // duplicated for marquee
-  };
-}, [posts]);
+    return {
+      row1Items: [...top, ...top],       // duplicated for marquee
+      row2Items: [...bottom, ...bottom], // duplicated for marquee
+    };
+  }, [posts]);
 
 
   return (
@@ -145,7 +152,7 @@ const { row1Items, row2Items } = useMemo(() => {
               animationPlayState: "running",
             }}
           >
-            {row1Items.map((p,i) => generateLink(p,i))}
+            {row1Items.map((p, i) => generateLink(p, i))}
 
           </div>
         </div>
@@ -163,7 +170,7 @@ const { row1Items, row2Items } = useMemo(() => {
               animationPlayState: "running",
             }}
           >
-            {row2Items.map((p,i) => generateLink(p,i))}
+            {row2Items.map((p, i) => generateLink(p, i))}
           </div>
         </div>
       </div>

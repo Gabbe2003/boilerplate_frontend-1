@@ -74,15 +74,17 @@ export default async function Home() {
               href={`/${middle_big.slug}`}
               className="block overflow-hidden p-3 "
             >
-              <div className="relative w-full aspect-[16/9]  overflow-hidden">
+              <div className="relative w-full aspect-[4/3] overflow-hidden flex items-center justify-center">
                 <Image
                   src={middle_big.featuredImage?.node?.sourceUrl!}
                   alt={middle_big.featuredImage?.node?.altText || middle_big.title!}
                   fill
                   className="object-contain "
                   priority
+                  sizes="(max-width: 768px) 100vw, 700px"
                 />
               </div>
+
 
               <div className="pt-3">
                 <h2 className="text-lg sm:text-xl font-bold leading-snug ">
@@ -106,39 +108,55 @@ export default async function Home() {
           {/* Middle Rest */}
           <div className="flex flex-col w-full">
             {middle_rest.map((post: Post) => (
-              <Link
-                key={post.id}
-                href={`/${post.slug}`}
-                className="flex gap-4 py-4 border-t w-full"
-              >
-                {/* Image */}
-                <div className="relative aspect-[16/10] w-32 sm:w-40 flex-shrink-0 rounded-md overflow-hidden">
-                  <Image
-                    src={post.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
-                    alt={post.featuredImage?.node?.altText || post.title!}
-                    fill
-                    className="object-contain rounded-md" 
-                  />
-                </div>
+             <Link
+  key={post.id}
+  href={`/${post.slug}`}
+  className="
+    flex flex-col lg:flex-row 
+    gap-4 
+    py-4 
+    border-t border-[#e4d8ce] 
+    w-full
+  "
+>
+  {/* Image */}
+  <div className="
+    relative 
+    w-full lg:w-40 
+    aspect-[4/3]
+    lg:aspect-[16/9]
+    overflow-hidden 
+    flex items-center justify-center
+  ">
+    <Image
+      src={post.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+      alt={post.featuredImage?.node?.altText || post.title!}
+      fill
+      className="object-contain"
+      sizes="(max-width: 1024px) 100vw, 160px"
+      quality={90}
+    />
+  </div>
 
-                {/* Text */}
-                <div className="flex flex-col flex-1 min-w-0">
-                  <h3 className="font-semibold text-sm sm:text-base leading-snug mb-1 break-words">
-                    {post.title}
-                  </h3>
+  {/* Text */}
+  <div className="flex flex-col flex-1 min-w-0">
+    <h3 className="font-semibold text-sm sm:text-base leading-snug mb-1 break-words">
+      {post.title}
+    </h3>
 
-                  <p className="text-xs leading-relaxed line-clamp-2 mb-2">
-                    {limitExcerpt(post.excerpt)}
-                  </p>
+    <p className="text-xs leading-relaxed line-clamp-2 mb-2">
+      {limitExcerpt(post.excerpt)}
+    </p>
 
-                  <div className="flex justify-between items-center text-xs text-[#6f6a63]">
-                    <span className="text-red-500">
-                      {capitalizeFirstLetter(post.author?.node?.name) ?? ""}
-                    </span>
-                    <span>{formatDateStockholm(post.date!)}</span>
-                  </div>
-                </div>
-              </Link>
+    <div className="flex justify-between items-center text-xs text-[#6f6a63]">
+      <span className="text-red-500">
+        {capitalizeFirstLetter(post.author?.node?.name) ?? ""}
+      </span>
+      <span>{formatDateStockholm(post.date!)}</span>
+    </div>
+  </div>
+</Link>
+
             ))}
           </div>
 

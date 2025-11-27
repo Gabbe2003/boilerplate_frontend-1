@@ -1,5 +1,6 @@
 import "server-only";
 import dynamic from "next/dynamic";
+import SectionBreaker from "@/components/SectionBreaker";
 
 const LatestNewsInitial = dynamic(
   () => import("./_components/LatestNewsInitial"),
@@ -27,6 +28,7 @@ export default async function LatestNews_main_page() {
   return (
   <section className="w-full pt-[var(--section-spacing)] flex flex-col items-center bg-snow-white ">
     <div className="base-width-for-all-pages flex flex-col   ">
+    <SectionBreaker />
        <h2 className="text-xl font-semibold mb-4 text-start">Senaste nyheterna</h2>
 
       <div className=" grid grid-cols-1 lg:grid-cols-3 gap-6">

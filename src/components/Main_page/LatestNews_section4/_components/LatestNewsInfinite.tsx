@@ -63,9 +63,9 @@ export default function LatestNewsInfinite() {
           return (
             <div
               key={`ad-${index}`}
-              className="rounded-md bg-white shadow-sm hover:shadow-md transition-shadow py-4"
+              className=" py-4 "
             >
-              <ReadPeak numberOfAds={2} />
+              <ReadPeak numberOfAds={1} />
             </div>
           );
         }

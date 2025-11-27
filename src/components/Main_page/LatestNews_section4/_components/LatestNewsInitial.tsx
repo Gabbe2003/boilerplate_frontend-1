@@ -1,4 +1,3 @@
-import { Post } from "@/lib/types";
 import PostCard from "../../Popular_posts_section1/_components/PostCard";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/graphql_queries/getPost";

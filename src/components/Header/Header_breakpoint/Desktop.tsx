@@ -2,7 +2,7 @@
 import Link from "next/link";
 import SearchBar from "../Search_Component/SearchBar";
 import { handleSpecielChar } from "@/lib/globals/actions";
-import { Category_names, CategoryName, PostTitleSlug } from "@/lib/types";
+import { CategoryName, PostTitleSlug } from "@/lib/types";
 
 export  function DesktopHeader({ categories_name, allPost }: {
   categories_name: CategoryName[];
@@ -23,7 +23,7 @@ export  function DesktopHeader({ categories_name, allPost }: {
           return (
             <Link
               key={slug + index}
-              href={`/category/${slug}`}
+              href={`/category/${handleSpecielChar(slug)}`}
               className="text-gray-800 hover:text-black border-r border-gray-400 pr-4 last:border-r-0"
             >
               {cat.name}

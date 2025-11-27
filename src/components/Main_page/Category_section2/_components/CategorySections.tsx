@@ -88,7 +88,8 @@ export default function CategorySections({
         lg:grid-cols-4 
         gap-x-6 
         gap-y-10
-        border-b-2 border-[#eae3dc] 
+        border-b-2 border-[#e3d7cc]
+
         pb-8
         mt-3
       "
@@ -113,7 +114,7 @@ export default function CategorySections({
                   ${spanClasses}
                   flex flex-col
                   transition-shadow
-                  ${showRightBorder ? "lg:border-r lg:pr-6 border-[#eae3dc]" : ""}
+                  ${showRightBorder ? "lg:border-r lg:pr-6 border-[#e3d7cc]" : ""}
                 `}
               >
                 <div className="relative w-full bg-[#f2eee7] rounded-md">
@@ -134,7 +135,7 @@ export default function CategorySections({
                 transition-shadow 
                 flex h-full 
                 ${index >= 4 ? "flex-col lg:flex-row lg:gap-4" : "flex-col"}
-                ${showRightBorder ? "lg:border-r lg:pr-6 border-[#eae3dc]" : ""}
+                ${showRightBorder ? "lg:border-r lg:pr-6 border-[#e3d7cc]" : ""}
               `}
             >
               <Link

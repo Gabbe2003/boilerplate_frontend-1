@@ -14,17 +14,20 @@ export default async function PostBody({
   contentHtml: string;
   toc: ITOCItem[];
 }) {  const featured = post.featuredImage?.node;
-  const posts = await getRecommendation({ excludeSlug: post.slug });
+  const posts = await getRecommendation({ excludeSlug: post.slug, count: 8 });
 
   return (
+  <>
+
     <PostBodyShell featured={featured}>
       <TableOfConet toc={toc} />
 
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
 
+    </PostBodyShell>
       <div className="mt-10">
         <RecommendationRail posts={posts} />
       </div>
-    </PostBodyShell>
+  </>
   );
 }

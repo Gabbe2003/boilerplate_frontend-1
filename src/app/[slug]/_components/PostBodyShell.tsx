@@ -1,21 +1,16 @@
 // PostBodyShell.tsx
-import Image from "next/image";
 import type { Post } from "@/lib/types";
 
 type FeaturedNode = NonNullable<Post["featuredImage"]>["node"];
 
 export default function PostBodyShell({
   children,
-  featured,
 }: {
   children: React.ReactNode;
   featured?: FeaturedNode | null;
 }) {
   return (
     <article className="w-full">
-    
-
-      {/* Shared prose styling */}
       <div
         className="
           prose prose-neutral dark:prose-invert
@@ -41,7 +36,6 @@ export default function PostBodyShell({
       >
         {children}
       </div>
-
     </article>
   );
 }

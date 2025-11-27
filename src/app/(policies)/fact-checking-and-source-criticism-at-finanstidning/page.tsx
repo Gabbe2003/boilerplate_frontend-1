@@ -1,5 +1,6 @@
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import Link from "next/link";
 import { cache } from "react";
 
 
@@ -23,10 +24,10 @@ export default async function FactCheckingAndSourceCriticismAtFinanstidningPage(
         
         <header className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-            Faktagranskning och källkritik på Finanstidning
+            Faktagranskning och källkritik på {process.env.NEXT_PUBLIC_HOSTNAME}
           </h1>
           <p className="mt-4 text-gray-700 text-lg">
-            På Finanstidning värnar vi om korrekthet, transparens och förtroende. 
+            På {process.env.NEXT_PUBLIC_HOSTNAME} värnar vi om korrekthet, transparens och förtroende. 
             Alla artiklar, analyser och nyheter vi publicerar genomgår en noggrann 
             faktagranskningsprocess innan publicering. Vårt mål är att ge läsarna 
             tillförlitlig, verifierad och aktuell information inom ekonomi, finans 
@@ -40,7 +41,7 @@ export default async function FactCheckingAndSourceCriticismAtFinanstidningPage(
             Vår grundprincip: sanningsenlig och verifierad rapportering
           </h2>
           <p className="text-gray-700 mb-4">
-            Varje publicerad text på Finanstidning bygger på verifierade uppgifter 
+            Varje publicerad text på {process.env.NEXT_PUBLIC_HOSTNAME} bygger på verifierade uppgifter 
             från trovärdiga och etablerade källor. Vi strävar alltid efter att:
           </p>
 
@@ -80,7 +81,7 @@ export default async function FactCheckingAndSourceCriticismAtFinanstidningPage(
             Källkritisk metod
           </h2>
           <p className="text-gray-700 mb-4">
-            Finanstidning tillämpar en systematisk källkritisk granskning i varje publicering. 
+            {process.env.NEXT_PUBLIC_HOSTNAME} tillämpar en systematisk källkritisk granskning i varje publicering. 
             Det innebär att vi bedömer:
           </p>
 
@@ -130,7 +131,7 @@ export default async function FactCheckingAndSourceCriticismAtFinanstidningPage(
             Vår ambition
           </h2>
           <p className="text-gray-700">
-            Vi vill att Finanstidning ska vara en trovärdig, neutral och faktabaserad källa inom 
+            Vi vill att {process.env.NEXT_PUBLIC_HOSTNAME} ska vara en trovärdig, neutral och faktabaserad källa inom 
             ekonomi, finans och börs. Genom noggrann faktakontroll, oberoende analys och 
             källkritik stärker vi vår journalistiska kvalitet och ditt förtroende som läsare.
           </p>
@@ -146,12 +147,12 @@ export default async function FactCheckingAndSourceCriticismAtFinanstidningPage(
           </p>
           <p className="text-gray-700">
             <strong>E-post:</strong>{" "}
-            <a
+            <Link
               href="mailto:info@finanstidning.se"
               className="text-blue-600 hover:underline"
             >
               info@finanstidning.se
-            </a>
+            </Link>
           </p>
         </section>
 

@@ -3,8 +3,7 @@
 const securityHeaders = [
   {
     key: "Strict-Transport-Security",
-    // enforces secure (HTTP over SSL/TLS) connections to the server.
-    value: "max-age=31536000; includeSubDomains; preload",
+     value: "max-age=31536000; includeSubDomains; preload",
   }, 
   {
     key: "X-frame-Options", 
@@ -33,6 +32,7 @@ images: {
     { protocol: 'https', hostname: 'secure.gravatar.com', pathname: '/**' },
     { hostname: 'boilerplate.local', pathname: '/**' },
   ],
+  contentDispositionType:"inline"
 },
 
 

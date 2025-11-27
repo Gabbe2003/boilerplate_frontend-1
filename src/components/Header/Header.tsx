@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import SearchBar from "./Search_Component/SearchBar";
 import { Menu } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 type HeaderProps = {
   categories_name: CategoryName[];
@@ -20,6 +21,9 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
   const lastScrollY = useRef(0);
   const direction = useRef(0);
   const lastChangePoint = useRef(0);
+
+  const pathname = usePathname(); 
+  const isHome = pathname === "/";
 
   useEffect(() => {
     const THRESHOLD = 10;
@@ -53,7 +57,7 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
 
   return (
     <header className="w-full flex justify-center sticky top-0 z-50 bg-background py-4 lg:py-3">
-      <div className="base-width-for-all-pages px-4">
+      <div className="base-width-for-all-pages">
 
         {/* TOP ROW */}
         <div className="relative flex items-center justify-between py-4 lg:py-3 ">
@@ -76,20 +80,26 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
               lg:absolute lg:left-1/2 lg:-translate-x-1/2
             "
           >
-            <Link href="/" prefetch={false}>Finanstidning</Link>
+            <Link href="/" prefetch={false}>{process.env.NEXT_PUBLIC_HOSTNAME}</Link>
           </h2>
 
           {/* RIGHT — MENU ON MOBILE, EMAIL ON DESKTOP */}
           <div className="lg:hidden">
-            <button onClick={() => setMobileOpen((p) => !p)} className="text-3xl">
+            <button onClick={() => setMobileOpen((p) => !p)} className="text-3xl cursor-pointer">
               <Menu />
             </button>
           </div>
 
           <div className="hidden lg:flex text-sm">
-            <h2 className="text-xs sm:text-sm mt-1 leading-tight max-w-[180px]">
-              Dina dagliga nyheter inom finans, aktier och börsen
-            </h2>
+            {isHome ? (
+        <h1 className="block lg:hidden text-sm text-center mr-10">
+          Dina dagliga nyheter inom finans, aktier & börsen
+        </h1>
+      ) : (
+        <h2 className="block lg:hidden text-sm text-center mr-10">
+          Dina dagliga nyheter inom finans, aktier & börsen
+        </h2>
+      )}
           </div>
 
         </div>
@@ -113,15 +123,21 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
         >
           {/* HEADER */}
           <div className="flex items-center justify-between px-4 py-4 border-b border-[#e5d8c9]">
-            <h1 className="block lg:hidden text-sm text-center mr-10">
-              Dina dagliga nyheter inom finans, aktier & börsen
-            </h1>
+           {isHome ? (
+        <h1 className="block lg:hidden text-sm text-center mr-10">
+          Dina dagliga nyheter inom finans, aktier & börsen
+        </h1>
+      ) : (
+        <h2 className="block lg:hidden text-sm text-center mr-10">
+          Dina dagliga nyheter inom finans, aktier & börsen
+        </h2>
+      )}
 
             {/* Close BTN (X) */}
             <button
               onClick={() => setMobileOpen(false)}
               aria-label="Close menu"
-              className="text-xl font-semibold text-[#2f2a26]"
+              className="text-xl font-semibold text-[#2f2a26] cursor-pointer"
             >
               X
             </button>

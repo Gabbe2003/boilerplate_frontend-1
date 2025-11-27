@@ -35,7 +35,7 @@ export default async function Home() {
             <Link
               key={post.id}
               href={`/${post.slug}`}
-              className="py-4 border-b border-[#e8e0d8] "
+              className="py-4 border-b border-[#e4d8ce] "
             >
               <h3 className="font-semibold text-base leading-snug ">
                 {post.title}
@@ -66,7 +66,7 @@ export default async function Home() {
         </aside>
 
         {/* MIDDLE COLUMN */}
-        <section className="md:col-span-6 flex flex-col gap-6 order-1 md:order-2 p-3 border border-[#e8e0d8] bg-white/40">
+        <section className="md:col-span-6 flex flex-col gap-6 order-1 md:order-2 p-3 border border-[#e4d8ce]">
 
           {/* Large Article */}
           {middle_big && (
@@ -80,6 +80,7 @@ export default async function Home() {
                   alt={middle_big.featuredImage?.node?.altText || middle_big.title!}
                   fill
                   className="object-contain "
+                  priority
                 />
               </div>
 
@@ -116,7 +117,7 @@ export default async function Home() {
                     src={post.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
                     alt={post.featuredImage?.node?.altText || post.title!}
                     fill
-                    className="object-contain rounded-md"
+                    className="object-contain rounded-md" 
                   />
                 </div>
 
@@ -151,13 +152,13 @@ export default async function Home() {
               Dagens nyheter
             </h2>
 
-            <div className="flex flex-col border-b border-[#e8e0d8]">
+            <div className="flex flex-col border-b border-[#e4d8ce]">
               {todays_right.map((post: any) => (
                 post && (
                   <Link
                     key={post.id}
                     href={`/${post.slug}`}
-                    className="py-4 border-b border-[#e8e0d8] "
+                    className="py-4 border-b border-[#e4d8ce] "
                   >
                     <h3 className="font-semibold text-sm leading-snug">
                       {post.title}

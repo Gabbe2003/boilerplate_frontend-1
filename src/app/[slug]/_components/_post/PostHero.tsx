@@ -2,7 +2,7 @@ import { Post } from "@/lib/types";
 import PostSocialMedia from "./PostSocialMedia";
 import AuthorInfo from "./AuthorInfo";
 import Image from "next/image"
-import { decodeHTML, stripHtml } from "@/lib/globals/actions";
+import { decodeHTML, formatDateStockholm, stripHtml } from "@/lib/globals/actions";
 
 interface PostHeroProps {
   title?: Post['title'];
@@ -25,7 +25,6 @@ export default function PostHero({
   modified,
   boolInfinite = false
 }: PostHeroProps) {
-  console.log(featured);
 
   return (
     <header className="w-full mb-6 md:mb-8 ">
@@ -41,27 +40,34 @@ export default function PostHero({
         }
       </div>
 
-     <div className="mb-10">
-       {featured?.node?.sourceUrl && (
-        <figure className="mb-6 w-full flex flex-col ">
-          <div className="w-full relative h-30 md:h-96 lg:h-[500px] max-w-4xl">
-            <Image
-              overrideSrc={featured.node?.sourceUrl}
-              src={featured.node?.sourceUrl}
-              alt={featured?.node?.altText || ""}
-              fill
-            />
-          </div>
-           <span>
-             {featured.node?.caption && (
-              <figcaption className="text-xs mt-2">
-                {decodeHTML(stripHtml((featured.node?.caption)))}
+      <div className="mb-10">
+        {featured?.node?.sourceUrl && (
+          <figure className="mb-6 w-full flex flex-col items-center">
+
+            {/* Responsive wrapper */}
+            <div className="relative w-full max-w-3xl mx-auto aspect-[16/9] rounded-xs overflow-hidden bg-gray-100">
+              <Image
+                overrideSrc={featured.node?.sourceUrl}
+                src={featured.node?.sourceUrl}
+                alt={featured?.node?.altText || ""}
+                fill
+                className="object-contain md:object-cover"
+                sizes="(max-width: 768px) 100vw,
+                 (max-width: 1200px) 80vw,
+                 60vw"
+              />
+            </div>
+
+            {/* Caption */}
+            {featured.node?.caption && (
+              <figcaption className="text-xs mt-2 text-center text-gray-600 max-w-2xl">
+                {decodeHTML(stripHtml(featured.node?.caption))}
               </figcaption>
             )}
-           </span>
-        </figure>
-      )}
-     </div>
+
+          </figure>
+        )}
+      </div>
 
       <div className="mt-4 grid w-full gap-3">
         <div className="flex items-center justify-between flex-wrap gap-3">
@@ -73,15 +79,15 @@ export default function PostHero({
               Publicerad:{" "}
               {date && (
                 <time dateTime={date}>
-                  {new Date(date).toISOString().slice(0, 10)}
+                  {formatDateStockholm(date)}
                 </time>
               )}
             </div>
             <div>
-              Modiferad:{" "}
+              Modifierad:{" "}
               {modified && (
                 <time dateTime={modified}>
-                  {new Date(modified).toISOString().slice(0, 10)}
+                  {formatDateStockholm(date)}
                 </time>
               )}
 

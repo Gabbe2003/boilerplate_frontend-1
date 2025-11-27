@@ -292,6 +292,8 @@ function pickRandom<T>(arr: T[], n: number): T[] {
   }
   return a.slice(0, n);
 }
+
+
 export async function getRecommendation(opts?: {
   excludeSlug?: string;
   count?: number;
@@ -302,19 +304,25 @@ export async function getRecommendation(opts?: {
   const poolSize = Math.max(count, opts?.poolSize ?? 100);
 
   const RECOMMEND_QUERY = `
-    query RecPosts($first: Int!) {
-      posts(first: $first, where: { status: PUBLISH }) {
-        nodes {
-          id
-          slug
-          title
-          featuredImage {
-            node { sourceUrl altText }
+  query RecPosts($first: Int!) {
+    posts(first: $first, where: { status: PUBLISH }) {
+      nodes {
+        id
+        slug
+        title
+        date
+        author{ node { name avatar { url } } }
+        featuredImage {
+          node {
+            sourceUrl
+            altText
           }
         }
       }
     }
-  `;
+  }
+`;
+
 
   try {
     const data = await wpGraphQLCached<GQLResp>(

@@ -5,7 +5,7 @@ import { getRecommendation } from "@/lib/graphql_queries/getPost";
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const count = Math.max(1, Number(searchParams.get("count") ?? 6));
+    const count = Math.max(1, Number(searchParams.get("count") ?? 8));
     const excludeSlug = searchParams.get("slug") ?? ""
 
     const posts = await getRecommendation({ count, excludeSlug });

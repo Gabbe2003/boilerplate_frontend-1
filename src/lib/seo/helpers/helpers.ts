@@ -1,22 +1,12 @@
-// src/lib/seo/helpers.ts
 import type { Metadata } from "next";
-
-// ----------------------
-// ✅ CONFIGURATION
-// ----------------------
 
 export const SITE_URL = process.env.SITE_URL ?? "https://finanstidning.se";
 export const WP_GRAPHQL_URL = process.env.WP_GRAPHQL_URL;
 export const SITE_LOGO_URL = process.env.SITE_LOGO_URL ?? `${SITE_URL}/favicon.ico`;
-export const SITE_NAME = process.env.SITE_NAME ?? "Finanstidning";
-export const SITE_DESC =
-  "Få dagliga nyheter om finans, aktier, finansnyheter och börsen. Håll dig uppdaterad med de senaste marknadstrenderna och ekonominyheterna.";
+export const SITE_NAME = process.env.SITE_NAME ?? process.env.NEXT_PUBLIC_HOSTNAME ?? "Finanstidning";
+export const SITE_DESC = process.env.SITE_DESC ?? "Få dagliga nyheter om finans, aktier, finansnyheter och börsen. Håll dig uppdaterad med de senaste marknadstrenderna och ekonominyheterna.";
 
 if (!WP_GRAPHQL_URL) throw new Error("Missing WP_GRAPHQL_URL");
-
-// ----------------------
-// ✅ TYPES
-// ----------------------
 
 export type OGImageInput = string | { url: string; width?: number; height?: number };
 export type OGBase = NonNullable<Metadata["openGraph"]>;
@@ -26,10 +16,6 @@ export type OpenGraphFixed = Omit<OGBase, "images"> & {
   images?: OGImageInput | OGImageInput[];
   type?: OGType;
 };
-
-// ----------------------
-// ✅ GRAPHQL HELPERS
-// ----------------------
 
 export async function fetchGraphQL<T>(query: string, variables: Record<string, any>): Promise<T> {
   const res = await fetch(WP_GRAPHQL_URL!, {
@@ -49,9 +35,6 @@ export async function fetchGraphQL<T>(query: string, variables: Record<string, a
   return json.data;
 }
 
-// ----------------------
-// ✅ SEO HELPERS
-// ----------------------
 
 export function getOgImageUrl(og?: OpenGraphFixed): string | undefined {
   const images = og?.images;
@@ -81,9 +64,6 @@ export function normalizeFocusKeywords(raw: any): string[] | undefined {
   return;
 }
 
-// ----------------------
-// ✅ BUILDERS
-// ----------------------
 
 export function buildMetadata({
   title,

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Author } from "../types";
 
 const SITE_URL = process.env.SITE_URL ?? "https://finanstidning.se";
-const SITE_NAME = process.env.SITE_NAME ?? "Finanstidning";
+const SITE_NAME = process.env.SITE_NAME ?? process.env.NEXT_PUBLIC_HOSTNAME ??"Finanstidning";
 const SITE_LOGO_URL = process.env.SITE_LOGO_URL ?? `${SITE_URL}/favicon.ico`;
 
 function getAuthorCanonical(slug: string): string {
@@ -60,9 +60,9 @@ function buildAuthorJsonLd(author: Author): Array<Record<string, any>> {
       height: 512,
     },
     sameAs: [
-      "https://www.facebook.com/finanstidning/",
-      "https://twitter.com/finanstidning",
-      "https://www.linkedin.com/company/finanstidning/",
+      `https://www.facebook.com/${process.env.NEXT_PUBLIC_HOSTNAME}`,
+      `https://twitter.com/${process.env.NEXT_PUBLIC_HOSTNAME}`,
+      `https://www.linkedin.com/company/${process.env.NEXT_PUBLIC_HOSTNAME}`,
     ],
   };
 

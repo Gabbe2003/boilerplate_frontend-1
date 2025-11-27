@@ -3,6 +3,7 @@ import "server-only"
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
 import { cache } from "react";
+import Link from "next/link";
 
 
 const getSeoCached = cache(async (uri: string) => {
@@ -25,10 +26,10 @@ export default async function CookiePolicyPage() {
         {/* Header */}
         <header className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight">
-            Cookiepolicy för Finanstidning
+            Cookiepolicy för {process.env.NEXT_PUBLIC_HOSTNAME}
           </h1>
           <p className="mt-4 text-gray-700 text-lg">
-            Denna cookiepolicy beskriver hur Finanstidning använder cookies och liknande tekniker
+            Denna cookiepolicy beskriver hur {process.env.NEXT_PUBLIC_HOSTNAME} använder cookies och liknande tekniker
             på vår webbplats. Vi värnar om din integritet och vill att du ska känna dig trygg när
             du besöker oss. Här förklarar vi vilka typer av cookies vi använder, varför vi använder
             dem och hur du kan hantera dina cookie-inställningar.
@@ -91,10 +92,9 @@ export default async function CookiePolicyPage() {
           </div>
         </section>
 
-        {/* How Finanstidning uses cookies */}
         <section className="mb-10">
           <h2 className="text-2xl font-semibold text-gray-900 mb-3">
-            Hur använder Finanstidning cookies?
+            Hur använder {process.env.NEXT_PUBLIC_HOSTNAME} cookies?
           </h2>
           <p className="text-gray-700 mb-4">Vi använder cookies för att:</p>
 
@@ -145,7 +145,7 @@ export default async function CookiePolicyPage() {
         <section className="mb-10">
           <h2 className="text-2xl font-semibold text-gray-900 mb-3">Tredjepartstjänster</h2>
           <p className="text-gray-700">
-            Finanstidning kan använda externa verktyg för analys och marknadsföring, exempelvis:
+            {process.env.NEXT_PUBLIC_HOSTNAME} kan använda externa verktyg för analys och marknadsföring, exempelvis:
           </p>
 
           <ul className="list-disc pl-6 space-y-2 text-gray-700 mt-4">
@@ -163,7 +163,7 @@ export default async function CookiePolicyPage() {
         <section className="mb-10">
           <h2 className="text-2xl font-semibold text-gray-900 mb-3">Samtycke och återkallelse</h2>
           <p className="text-gray-700">
-            När du besöker Finanstidning för första gången får du välja vilka cookies du samtycker till.
+            När du besöker {process.env.NEXT_PUBLIC_HOSTNAME} för första gången får du välja vilka cookies du samtycker till.
             Du kan när som helst ändra eller återkalla ditt samtycke via länken <strong>”Hantera cookies”</strong> längst ned på sidan.
           </p>
         </section>
@@ -174,9 +174,9 @@ export default async function CookiePolicyPage() {
           <p className="text-gray-700 mb-2">Om du har frågor om vår cookieanvändning:</p>
           <p className="text-gray-700">
             <strong>E-post:</strong>{" "}
-            <a href="mailto:info@finanstidning.se" className="text-blue-600 hover:underline">
+            <Link href="mailto:info@finanstidning.se" className="text-blue-600 hover:underline">
               info@finanstidning.se
-            </a>
+            </Link>
           </p>
         </section>
 

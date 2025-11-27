@@ -43,7 +43,7 @@ export default function Footer() {
                   <Link href={"/about"} >Om oss</Link>
                 </li>
                 <li>
-                  <Link href={"/fact-checking-and-source-criticism-at-finanstidning"} >Faktagranskning på Finanstidning</Link>
+                  <Link href={"/fact-checking-and-source-criticism-at-finanstidning"} >Faktagranskning på {process.env.NEXT_PUBLIC_HOSTNAME}</Link>
                 </li>
               </ul>
             </div>

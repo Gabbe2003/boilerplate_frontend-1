@@ -4,10 +4,72 @@ import { useEffect, useRef, useCallback, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Post } from "@/lib/types";
+import { formatDateStockholm, handleSpecielChar } from "@/lib/globals/actions";
+import AuthorInfo from "../_post/AuthorInfo";
 
 interface Props { posts: Post[] }
 
-export default function RecommendationListMarquee({ posts }: Props) {
+
+
+const generateLink = (p: Post, i:number ) => {
+  console.log(p.id);
+  
+  return (
+    <Link
+      key={`${p.id}-${i}`}
+      href={handleSpecielChar(p.slug || "")}
+      prefetch={false}
+      className="
+      group flex flex-col w-60 flex-shrink-0
+      rounded-xl overflow-hidden
+      bg-white
+      border border-neutral-200/70
+      shadow-sm hover:shadow-lg
+      transition-all duration-300
+    "
+    >
+      {/* Image */}
+      <div className="relative h-40 w-full overflow-hidden">
+        <Image
+          src={p.featuredImage?.node?.sourceUrl || '/full_logo_with_slogan.png'}
+          alt={p.featuredImage?.node?.altText || ""}
+          fill
+          className="
+          object-contain
+        "
+        />
+
+        <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-black/0 to-black/20" />
+      </div>
+
+      {/* Content */}
+      <div className="px-4 py-4 space-y-2">
+        {/* Title */}
+        <h3
+          className="
+          font-medium text-lg text-neutral-900
+          group-hover:text-neutral-700
+          line-clamp-2
+        "
+        >
+          {p.title}
+        </h3>
+
+        {/* Author + Date */}
+        <div className="flex items-center justify-between text-xs text-neutral-500">
+          <span className="text-sx text-red-500">
+            {p.author?.node?.name && (
+              <AuthorInfo author={p.author} noLink /> 
+            )}
+          </span>
+          <span className="text-xs text-[#6f6a63] ">{formatDateStockholm(p.date)}</span>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+export default function RecommendationRail({ posts }: Props) {
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
 
@@ -46,18 +108,20 @@ export default function RecommendationListMarquee({ posts }: Props) {
   }, []);
 
   // Build two lanes (3 each), and duplicate each lane for seamless 200% width
-  const { row1Items, row2Items } = useMemo(() => {
-    const top = posts.slice(0, 3);
-    const bottom = posts.slice(3, 6);
-    return {
-      row1Items: [...top, ...top],
-      row2Items: [...bottom, ...bottom],
-    };
-  }, [posts]);
+const { row1Items, row2Items } = useMemo(() => {
+  const top = posts.slice(0, 4);       // first 4
+  const bottom = posts.slice(4, 8);    // next 4
+
+  return {
+    row1Items: [...top, ...top],       // duplicated for marquee
+    row2Items: [...bottom, ...bottom], // duplicated for marquee
+  };
+}, [posts]);
+
 
   return (
     <div
-      className="w-full mx-auto px-2"
+      className="w-full mx-auto mb-20"
       onMouseEnter={() => pause(true)}
       onMouseLeave={() => pause(false)}
       onTouchStart={() => pause(true)}
@@ -81,31 +145,8 @@ export default function RecommendationListMarquee({ posts }: Props) {
               animationPlayState: "running",
             }}
           >
-            {row1Items.map((p, i) => (
-              <Link
-                key={`${p.slug ?? p.id}-r1-${i}`}
-                href={p.slug || `/${p.slug}`}
-                prefetch={false}
-                className="inline-flex items-center gap-4 whitespace-nowrap hover:underline"
-              >
-                <span
-                  className="relative block h-24 w-40 overflow-hidden rounded-md shadow-md flex-shrink-0"
-                  aria-hidden="true"
-                >
-                  <Image
-                    src={p.featuredImage?.node?.sourceUrl || "/full_logo_with_slogan.png"}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    sizes="160px"
-                    priority={false}
-                  />
-                </span>
-                <span className="font-semibold text-xl truncate max-w-[40ch]">
-                  {p.title}
-                </span>
-              </Link>
-            ))}
+            {row1Items.map((p,i) => generateLink(p,i))}
+
           </div>
         </div>
 
@@ -122,36 +163,10 @@ export default function RecommendationListMarquee({ posts }: Props) {
               animationPlayState: "running",
             }}
           >
-            {row2Items.map((p, i) => (
-              <Link
-                key={`${p.slug ?? p.id}-r2-${i}`}
-                href={p.uri || `/${p.slug}`}
-                prefetch={false}
-                className="inline-flex items-center gap-4 whitespace-nowrap hover:underline"
-              >
-                <span
-                  className="relative block h-24 w-40 overflow-hidden rounded-md shadow-md flex-shrink-0"
-                  aria-hidden="true"
-                >
-                  <Image
-                    src={p.featuredImage?.node?.sourceUrl || "/full_logo_with_slogan.png"}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    sizes="160px"
-                  />
-                </span>
-                <span className="font-semibold text-xl truncate max-w-[40ch]">
-                  {p.title}
-                </span>
-              </Link>
-            ))}
+            {row2Items.map((p,i) => generateLink(p,i))}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-
-// slug, id, featuredImage, title

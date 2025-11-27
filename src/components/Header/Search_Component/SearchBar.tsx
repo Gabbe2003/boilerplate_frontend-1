@@ -8,11 +8,11 @@ import type { PostTitleSlug } from "@/lib/types";
 import { Search as SearchIcon, X as XIcon } from "lucide-react";
 
 type Props = {
-  posts: PostTitleSlug[];     // up to 100 items fetched on the server
-  action?: string;            // where to go when no suggestions; default "/search"
-  hrefPrefix?: string;        // e.g. "/blog/" if needed; default "/"
+  posts: PostTitleSlug[];  
+  action?: string;         
+  hrefPrefix?: string;      
   placeholder?: string;
-  limitWidth?: string; 
+  limitWidth?: string;
 };
 
 export default function SearchBar({
@@ -25,53 +25,55 @@ export default function SearchBar({
   const router = useRouter();
   const [value, setValue] = useState("");
 
-  // Only compute suggestions when the user typed something; show 2 max
+  // User can now type anything — spaces included
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  // Suggestions based on raw user input (not sanitized yet)
   const suggestions = useMemo(() => {
-    const q = sanitizeQuery(value);
+    const q = value.trim().toLowerCase();
     if (!q) return [];
     return filterByTitle(posts, q).slice(0, 2);
   }, [posts, value]);
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(sanitizeQuery(e.target.value));
-  };
-
-  // Enter behavior:
-  // - if suggestions exist → go to first post
-  // - else → go to /search?q=...
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const q = sanitizeQuery(value);
-    if (!q) return;
-    clear(); 
+
+    // sanitize only here (NOT while typing)
+    const cleaned = sanitizeQuery(value);
+    if (!cleaned) return;
+
+    clear();
+
     if (suggestions.length > 0) {
       router.push(`${hrefPrefix}${suggestions[0].slug}`);
     } else {
-      router.push(`${action}?q=${encodeURIComponent(q)}`);
+      router.push(`${action}?q=${encodeURIComponent(cleaned)}`);
     }
   };
 
   const clear = () => setValue("");
 
-  // Only render dropdown when: user typed AND we actually have posts in memory
-  const showDropdown = value.trim().length > 0 && posts.length > 0;
+  const showDropdown = value.trim() !== "" && posts.length > 0;
 
   return (
-    <div className=" mx-auto relative " style={{ maxWidth: limitWidth }}>
-      {/* input */}
-      <form className="relative" action={action} method="GET" onSubmit={onSubmit}>
+    <div className="relative mx-auto" style={{ maxWidth: limitWidth }}>
+
+      <form className="relative" onSubmit={onSubmit}>
         <input
           type="text"
           name="q"
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="w-full border p-2 pr-16 border-gray-300 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:border-gray-300"
-          inputMode="search"
+          className="w-full border p-2 pr-16 border-gray-300 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"
           autoComplete="off"
-          maxLength={80}
+          inputMode="search"
           aria-label="Sök inlägg"
+          maxLength={80}
         />
+
         {value && (
           <button
             type="button"
@@ -82,24 +84,28 @@ export default function SearchBar({
             <XIcon className="w-5 h-5" />
           </button>
         )}
+
         <div className="absolute inset-y-0 right-3 flex items-center text-gray-500 pointer-events-none">
           <SearchIcon className="w-5 h-5" />
         </div>
       </form>
 
-      {/* dropdown: positioned absolutely, same width as input */}
       {showDropdown && (
         <ul className="absolute left-0 right-0 top-full mt-2 z-50 max-h-72 overflow-auto rounded-xl border bg-white shadow-lg">
           {suggestions.map((p) => (
             <li key={p.slug} className="group p-3 hover:bg-gray-50">
-            <Link href={`${hrefPrefix}${p.slug}`} className="font-medium text-gray-900 hover:underline" onClick={clear}>
+              <Link
+                href={`${hrefPrefix}${p.slug}`}
+                className="font-medium text-gray-900 hover:underline"
+                onClick={clear}
+              >
                 {highlightAll(p.title, value)}
               </Link>
             </li>
           ))}
-          {/* Silent if no matches — no placeholder text */}
         </ul>
       )}
+
     </div>
   );
 }

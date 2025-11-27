@@ -31,7 +31,6 @@ export default async function SinglePost({
   const slugQueue = slugs.slice(R + 1).filter((s) => s && s !== currentSlug);
 
   const title = post.title; 
-  console.log(post);
   
 
   return (

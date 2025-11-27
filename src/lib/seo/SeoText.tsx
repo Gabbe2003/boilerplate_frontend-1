@@ -4,19 +4,19 @@ export default function SeoText() {
     <div className="w-full flex justify-center mb-4">
         <section className="mt-10 base-width-for-all-pages ">
         <h4 className="mb-6 text-3xl font-bold tracking-tight text-black">
-          Finanstidning - Din främsta källa för ekonominyheter, finans och börsanalyser
+          {process.env.NEXT_PUBLIC_HOSTNAME} - Din främsta källa för ekonominyheter, finans och börsanalyser
         </h4>
 
         <div className="space-y-5 leading-relaxed text-gray-900 ">
           <p>
-            Finanstidning är en specialiserad nyhetssajt med fullt fokus på ekonomi, finansnyheter och näringslivsrapportering.
+            {process.env.NEXT_PUBLIC_HOSTNAME} är en specialiserad nyhetssajt med fullt fokus på ekonomi, finansnyheter och näringslivsrapportering.
             Vårt mål är att bli Sveriges mest tillförlitliga och omfattande källa för ekonomiska nyheter, börsnoteringar, aktiemarknaden,
             ränteläge, inflation, konjunktur, valutakurser och andra centrala delar inom makroekonomi och mikroekonomi.
           </p>
 
           <p>
             Vi erbjuder daglig bevakning av finansiella marknader, inklusive Sveriges ekonomi, Europas ekonomi och världsekonomin,
-            samt rapporterar om BNP, statsskulder, räntebesked från centralbanker, och investeringsstrategier. Finanstidning följer
+            samt rapporterar om BNP, statsskulder, räntebesked från centralbanker, och investeringsstrategier. {process.env.NEXT_PUBLIC_HOSTNAME} följer
             även utvecklingen på Stockholmsbörsen, indexrörelser, börsintroduktioner (IPO) och ger dig aktuella aktieanalyser,
             marknadskommentarer och ekonomiska prognoser.
           </p>
@@ -27,45 +27,20 @@ export default function SeoText() {
           </p>
 
           <p>
-            Finanstidning bevakar också trender inom finansiell teknologi (fintech), hållbara investeringar (ESG), grön ekonomi, och digital ekonomi,
+            {process.env.NEXT_PUBLIC_HOSTNAME} bevakar också trender inom finansiell teknologi (fintech), hållbara investeringar (ESG), grön ekonomi, och digital ekonomi,
             samt analyserar hur globala händelser påverkar svenska företag, import/export, och internationell handel.
           </p>
 
           <p>
             Vår redaktion arbetar med hög journalistisk integritet och ett tydligt uppdrag: att göra ekonomisk information tillgänglig, aktuell och begriplig för alla.
-            Genom att kombinera finansiell analys, ekonomisk nyhetsrapportering och djupgående insikter, skapar Finanstidning en helhetsbild av den komplexa ekonomiska världen.
+            Genom att kombinera finansiell analys, ekonomisk nyhetsrapportering och djupgående insikter, skapar {process.env.NEXT_PUBLIC_HOSTNAME} en helhetsbild av den komplexa ekonomiska världen.
           </p>
 
           <p className="font-medium text-gray-900 ">
-            Finanstidning – för dig som vill förstå, påverka och navigera i ekonomins landskap. Håll dig uppdaterad med det senaste inom ekonomi, finans, börsen, pengar, och affärsnyheter – allt på ett och samma ställe.
+            {process.env.NEXT_PUBLIC_HOSTNAME} - för dig som vill förstå, påverka och navigera i ekonomins landskap. Håll dig uppdaterad med det senaste inom ekonomi, finans, börsen, pengar, och affärsnyheter – allt på ett och samma ställe.
           </p>
         </div>
       </section>
     </div>
-  );
+  )
 }
-
-// Check the implementnation here later, it is conflition with the main page, 
-// export function FinanstidningSeoJsonLd({ url, logoUrl }: {url: string; logoUrl?: string; }) {
-//   const jsonLd = {
-//     "@context": "https://schema.org",
-//     "@type": "NewsMediaOrganization",
-//     name: "Finanstidning",
-//     url,
-//     logo: logoUrl ? { "@type": "ImageObject", url: logoUrl } : undefined,
-//     sameAs: [] as string[],
-//     description:
-//       "Finanstidning – Din främsta källa för ekonominyheter, finans och börsanalyser. Daglig bevakning av Sveriges ekonomi, världsekonomin, börsen och privatekonomi.",
-//     areaServed: {
-//       "@type": "Country",
-//       name: "Sweden",
-//     },
-//   };
-
-//   return (
-//     <script
-//       type="application/ld+json"
-//       dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-//     />
-//   );
-// }

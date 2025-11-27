@@ -5,9 +5,10 @@ import Link from "next/link";
 
 export interface AuthorInfoProps {
   author: Post["author"];
+  noLink?: true | false
 }
 
-export default function AuthorInfo({ author }: AuthorInfoProps) {
+export default function AuthorInfo({ author, noLink = false }: AuthorInfoProps) {
   if (!author?.node) return null;
 
   const { name, avatar } = author.node;
@@ -41,7 +42,11 @@ export default function AuthorInfo({ author }: AuthorInfoProps) {
 
       {name && (
         <>
+          {noLink ? (
+            <div className="text-gray-700 text-sm font-medium">{name}</div>
+          ) : 
           <Link href={`author/${normalizeName(name)}`} className="text-gray-700 text-sm font-medium">{name}</Link>
+          }
         </>
       )}
     </div>

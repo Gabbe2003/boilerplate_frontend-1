@@ -14,20 +14,30 @@ export default function CategorySections({
 }: {
   getAllCategories: Category_names[];
 }) {
-  const [activeCategory, setActiveCategory] = useState("NYHETER");
+  const [activeCategory, setActiveCategory] = useState("BÖRSEN");
   const { posts, loading } = useCategoryPosts(activeCategory);
 
   const randomIndex = useMemo(() => Math.floor(Math.random() * 4), [activeCategory]);
 
-  return (
-    <div className="pt-[var(--section-spacing)] pb-[var(--section-spacing)]">
-      <SectionBreaker color="red" />
+ return (
+  <div className="pt-[var(--section-spacing)] pb-[var(--section-spacing)]">
+    <SectionBreaker color="red" />
 
-      <h2 className="text-2xl text-center sm:text-left text-[#1A1A1A]">
-        Våra kategorier
-      </h2>
+    <h2 className="text-2xl text-center sm:text-left text-[#1A1A1A]">
+      Utvalda kategorier
+    </h2>
 
-      <div className="flex flex-wrap gap-3 mt-5 pb-8">
+    <div className="relative mt-5 pb-8">
+      {/* Scrollable buttons */}
+      <div
+        className="
+          flex gap-3
+          overflow-x-auto overflow-y-hidden
+          flex-nowrap
+          md:flex-wrap md:overflow-visible
+          pr-6
+        "
+      >
         {getAllCategories.map((category) => {
           const isActive = activeCategory === category.name;
           const isLoading = loading && isActive;
@@ -39,22 +49,23 @@ export default function CategorySections({
               disabled={isLoading}
               aria-pressed={isActive}
               className={`
-                  flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md
-                  border transition cursor-pointer
-                  ${isActive
+                flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md
+                border transition cursor-pointer
+                flex-shrink-0
+                ${
+                  isActive
                     ? "bg-[#2e2d2d] text-white border-[#1A1A1A] hover:bg-[#3a3939]"
                     : "text-[#333] border-[#d4c9c0] hover:bg-[#f5f1ed]"
-                  }
-                  ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
-                `}
-
+                }
+                ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
+              `}
             >
               {/* Dot Indicator */}
               <span
                 className={`
-            w-2.5 h-2.5 rounded-full 
-            ${isActive ? "bg-white" : "bg-[#d1cdca]"}
-          `}
+                  w-2.5 h-2.5 rounded-full 
+                  ${isActive ? "bg-white" : "bg-[#d1cdca]"}
+                `}
               />
 
               {isLoading ? "Loading..." : category.name}
@@ -62,6 +73,19 @@ export default function CategorySections({
           );
         })}
       </div>
+
+      {/* Right-side gradient hint (mobile only) */}
+      <div
+        className="
+          pointer-events-none
+          absolute inset-y-0 right-0
+          w-10
+          bg-gradient-to-l
+          from-[#faede0] to-transparent
+          md:hidden
+        "
+      />
+    </div>
 
 
       {/* POSTS */}

@@ -1,5 +1,5 @@
 
-export const POST_MAX = "max-w-[90%]";
+export const POST_MAX = "max-w-[100%]";
 
 export function PostShell({
   children,

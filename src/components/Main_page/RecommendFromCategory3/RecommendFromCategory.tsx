@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // No "use client" here — this is now a Server Component.
 
 import Link from "next/link";
@@ -29,12 +30,12 @@ async function getCategoryPosts() {
 export default async function CategoryFourBlock() {
   const data = await getCategoryPosts();
   return (
-    <div className="section3-border-theme w-full flex justify-center pt-[var(--section-spacing)] pb-[var(--section-spacing)] ">
+    <div className="section1-border-theme w-full flex justify-center pt-[var(--section-spacing)] pb-[var(--section-spacing)] ">
       <div className="base-width-for-all-pages">
         <SectionBreaker color="red" />
 
         <h2 className="text-lg sm:text-xl font-semibold mb-6 text-[#2f2a26] tracking-tight">
-          Senaste inom våra kategorier
+          Senaste från varje kategori
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -59,7 +60,7 @@ export default async function CategoryFourBlock() {
                 {/* Featured Post */}
                 <Link href={`/${handleSpecielChar(first.slug)}`} className="block group">
                   {first.featuredImage?.node?.sourceUrl && (
-                    <div className="relative overflow-hidden mb-4">
+                    <div className="relative overflow-hidden mb-6">
                       <div className="w-full aspect-[16/9] relative">
                         <Image
                           src={first.featuredImage.node.sourceUrl}
@@ -77,7 +78,7 @@ export default async function CategoryFourBlock() {
                 </Link>
 
                 {/* Remaining Posts */}
-                <ul className="mt-4 space-y-2 border-t border-[#e7d9c8]  pt-3">
+<                 ul className="mt-4 space-y-6 border-t border-[#e7d9c8] pt-3">
                   {rest.map((post: any) => (
                     <li key={post.id} className="pl-3 relative text-sm">
                       <span className="absolute left-0 top-2 w-1.5 h-1.5 rounded-full bg-red-500"></span>
@@ -87,9 +88,12 @@ export default async function CategoryFourBlock() {
                         className="text-neutral-700 leading-tight hover:text-neutral-900 transition line-clamp-2 text-xs"
                       >
                         {post.title}
+                        
                       </Link>
                     </li>
+                    
                   ))}
+                  
                 </ul>
               </div>
             );

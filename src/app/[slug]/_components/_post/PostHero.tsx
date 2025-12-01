@@ -44,25 +44,25 @@ export default function PostHero({
         </div>
       </div>
 
-      <div className="mb-10">
-        {featured?.node?.sourceUrl && (
-          <figure className="mb-6 w-full flex flex-col items-center">
-            <div className="relative w-full max-w-3xl mx-auto aspect-[16/9] rounded-xs overflow-hidden bg-gray-100">
-              <Image
-                overrideSrc={featured.node?.sourceUrl}
-                src={featured.node?.sourceUrl}
-                alt={featured?.node?.altText || ""}
-                fill
-                className="object-contain md:object-cover"
-                sizes="(max-width: 768px) 100vw,
+<div className="mb-10 ">
+  {featured?.node?.sourceUrl && (
+    <figure className="mb-6 w-full flex flex-col items-center">
+      <div className="relative w-full max-w-none md:max-w-7xl md:mx-auto aspect-video rounded-xs overflow-hidden bg-gray-100">
+        <Image
+          overrideSrc={featured.node?.sourceUrl}
+          src={featured.node?.sourceUrl || "/favicon.ico"}
+          alt={featured?.node?.altText || "Ingen bild hittad"}
+          fill
+          className="object-cover md:object-cover"
+          sizes="(max-width: 768px) 100vw,
                  (max-width: 1200px) 80vw,
                  60vw"
-              />
-            </div>
+        />
+      </div>
 
             {/* Caption */}
             {featured.node?.caption && (
-              <figcaption className="text-[9px] mt-2 text-start text-gray-600 left">
+              <figcaption className="text-[12px] mt-2 text-start text-gray-600 left">
                 {decodeHTML(stripHtml(featured.node?.caption))}
               </figcaption>
             )}

@@ -23,6 +23,29 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
   const direction = useRef(0);
   const lastChangePoint = useRef(0);
 
+  const now = new Date();
+
+  const weekdayRaw = now.toLocaleDateString("sv-SE", {
+    weekday: "long",
+  });
+
+  const weekday =
+    weekdayRaw.charAt(0).toUpperCase() + weekdayRaw.slice(1); 
+
+  const day = now.toLocaleDateString("sv-SE", {
+    day: "2-digit",
+  });
+
+  const month = now.toLocaleDateString("sv-SE", {
+    month: "short",
+  });
+
+  const time = now.toLocaleTimeString("sv-SE", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+
   const pathname = usePathname();
   const isHome = pathname === "/";
 
@@ -91,19 +114,13 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
             </button>
           </div>
 
-          <div className="hidden lg:flex items-center gap-2 text-sm text-[#1A1A1A]/70">
-            {new Date().toLocaleDateString("sv-SE", {
-              weekday: "long",
-              day: "numeric",
-            })}
-            <span className="opacity-50">•</span>
-            {new Date().toLocaleTimeString("sv-SE", {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-          </div>
-        </div>
-
+<div className="hidden lg:flex items-center gap-2 text-sm text-[#1A1A1A]/70">
+  {/* måndag: 01: Okt. */}
+  {weekday}: {day}: {month}
+  <span className="opacity-50">•</span>
+  {time}
+</div>
+</div>
         {mobileOpen && (
           <div
             className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
@@ -114,10 +131,10 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
         {/* MOBILE DRAWER */}
         <div
           className={`
-    fixed top-0 right-0 h-full w-64 bg-[#FCF6F0] shadow-lg z-50
-    transform transition-transform duration-300 lg:hidden
-    ${mobileOpen ? "translate-x-0" : "translate-x-full"}
-  `}
+          fixed top-0 right-0 h-full w-64 bg-[#FCF6F0] shadow-lg z-50
+          transform transition-transform duration-300 lg:hidden
+          ${mobileOpen ? "translate-x-0" : "translate-x-full"}
+        `}
         >
           {/* HEADER */}
           <div className="flex items-center justify-between px-4 py-4 border-b ">
@@ -135,7 +152,7 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
 
 
           {/* NAVIGATION */}
-          <nav className="flex flex-col mt-4 px-4 gap-3 text-sm font-semibold">
+          <nav className="flex flex-col mt-4 px-4 gap-3 text-lg font-semibold">
             {categories_name.map((cat, index) => {
               const slug = handleSpecielChar(cat.name);
               return (

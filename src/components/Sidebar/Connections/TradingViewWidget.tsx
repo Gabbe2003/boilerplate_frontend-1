@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useRef, memo, useCallback } from "react";
@@ -24,7 +23,8 @@ type Props = {
 function TradingViewWidget({
   title = "Kommande händelser",
   theme = "light",
-  transparent = false,
+  // default to transparent background
+  transparent = true,
   locale = "sv_SE",
   country = "se",
   importance = "-1,0,1",
@@ -68,25 +68,28 @@ function TradingViewWidget({
       `;
 
       const script = document.createElement("script");
-      script.src = "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
+      script.src =
+        "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
       script.type = "text/javascript";
       script.async = true;
+
+      // Use TradingView's transparent option
       script.innerHTML = JSON.stringify({
         colorTheme: theme,
-        isTransparent: transparent,
+        isTransparent: true, // force widget transparent
         locale,
         countryFilter: country,
         importanceFilter: importance,
         width: "100%",
         height,
       });
-      container.appendChild(script); 
 
+      container.appendChild(script);
     },
-    [theme, transparent, locale, country, importance]
+    [theme, locale, country, importance]
   );
 
-  useEffect(() => { 
+  useEffect(() => {
     // Helpers scoped to the effect so they aren't deps
     const getBucket = () => {
       const w = window.innerWidth;
@@ -135,16 +138,18 @@ function TradingViewWidget({
 
   return (
     <div className={className}>
-      <h4 className="text-base font-semibold mb-2 text-center pt-3">{title}</h4>
+      <h4 className="text-base font-semibold mb-2 text-center pt-3">
+        {title}
+      </h4>
       <div
         className="tradingview-widget-container w-full"
         ref={containerRef}
         // Avoid layout shift before the script loads
         style={{
-          minHeight:
-            getHeightForBucket(
-              typeof window === "undefined" ? "base" : bucketRef.current
-            ),
+          minHeight: getHeightForBucket(
+            typeof window === "undefined" ? "base" : bucketRef.current
+          ),
+          backgroundColor: "transparent",
         }}
       />
     </div>

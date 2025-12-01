@@ -47,7 +47,7 @@ export default function InfiniteScroll<T>({
   return (
     <div ref={ref} aria-hidden className="w-full flex items-center justify-center py-8">
       {loading ? (
-        <div className="animate-pulse text-sm text-muted-foreground">Loading more…</div>
+        <div className="animate-pulse text-sm text-muted-foreground">Laddar mer...</div>
       ) : null}
     </div>
   );

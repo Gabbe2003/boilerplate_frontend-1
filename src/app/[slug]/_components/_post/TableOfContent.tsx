@@ -24,8 +24,7 @@ export default function TableOfConet({ toc, defaultOpen = true }: Props) {
       onClick={() => setOpen((v) => !v)}
       className="
         flex items-center justify-between w-full
-        px-3 py-2
-        cursor-pointer select-none
+        px-3 cursor-pointer select-none
       "
     >
       <span className="text-[16px] font-semibold">

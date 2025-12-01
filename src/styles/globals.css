@@ -15,6 +15,7 @@
   --color-border: var(--border);
   --color-ring: var(--ring);
   --color-input: var(--input);
+  --color-hover: var(--hover);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -35,6 +36,7 @@
   --input: oklch(0.922 0 0);
   --firstBG: #FFFFFF;
   --secBG: #F8F9FA;
+  --hover: #f87171;
 
 }
  
@@ -63,8 +65,18 @@ h6 {
 }
 
 
-.base-width-for-all-pages{
-  width: 80%; 
+.base-width-for-all-pages {
+  /* mobile: no base width */
+  width: 90%;
+}
+
+@media (min-width: 768px) {
+  .base-width-for-all-pages {
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    /* whatever else you had */
+  }
 }
 
 

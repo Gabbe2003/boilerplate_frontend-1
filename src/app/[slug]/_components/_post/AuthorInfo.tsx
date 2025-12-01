@@ -14,7 +14,6 @@ export default function AuthorInfo({ author, noLink = false, heading }: AuthorIn
 
   const { name, avatar } = author.node;
   const avatarUrl = avatar?.url;
-  console.log(author.node);
 
   return (
     <div className="flex items-center gap-2">

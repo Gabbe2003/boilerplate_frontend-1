@@ -6,7 +6,6 @@ export async function GET(req: NextRequest) {
   const after = searchParams.get("after");
   const firstParam = searchParams.get("first");
   const first = firstParam ? parseInt(firstParam, 10) : POSTS_PER_PAGE;
-  console.log(21);
   
   try {
     const page = await getPostsPage(first, after);

@@ -40,9 +40,14 @@ export const CategoryPostCard = memo(function CategoryPostCard({ post, index, sh
 
         {/* TEXT */}
         <div className={`py-4 flex flex-col justify-between ${index >= 4 ? "lg:flex-1" : ""}`}>
-          <h3 className="font-semibold text-base leading-snug line-clamp-2">{post.title}</h3>
-          <p className="mt-2 text-xs leading-snug line-clamp-3">
-            {limitExcerpt(post.excerpt)}
+          <h3 className="font-semibold text-base leading-snug line-clamp-2">
+            {post.title}
+          </h3>
+
+          <p className="mt-2 text-xs leading-snug line-clamp-6">
+            {index >= 4
+              ? limitExcerpt(post.excerpt, 40) 
+              : limitExcerpt(post.excerpt)}    
           </p>
         </div>
       </Link>

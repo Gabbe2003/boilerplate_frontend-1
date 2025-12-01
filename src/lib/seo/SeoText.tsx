@@ -1,46 +1,62 @@
-
 export default function SeoText() {
+  const HOST = process.env.NEXT_PUBLIC_HOSTNAME;
+
   return (
     <div className="w-full flex justify-center mb-4">
-        <section className="mt-10 base-width-for-all-pages ">
+      <section className="mt-10 base-width-for-all-pages">
         <h1 className="mb-6 text-3xl font-bold tracking-tight text-black">
-          {process.env.NEXT_PUBLIC_HOSTNAME} - Din främsta källa för ekonominyheter, finans och börsanalyser
+          {HOST} – Finansnyheter, börsnyheter och ekonomiska analyser
         </h1>
 
-        <div className="space-y-5 leading-relaxed text-gray-900 ">
+        <div className="space-y-5 leading-relaxed text-gray-900">
+
           <p>
-            {process.env.NEXT_PUBLIC_HOSTNAME} är en specialiserad nyhetssajt med fullt fokus på ekonomi, finansnyheter och näringslivsrapportering.
-            Vårt mål är att bli Sveriges mest tillförlitliga och omfattande källa för ekonomiska nyheter, börsnoteringar, aktiemarknaden,
-            ränteläge, inflation, konjunktur, valutakurser och andra centrala delar inom makroekonomi och mikroekonomi.
+            {HOST} är en specialiserad nyhetssajt med fullt fokus på finansnyheter, börsnyheter
+            och ekonomiska analyser. Här samlar vi de viktigaste nyheterna om finansmarknaden,
+            börsen och näringslivet – med målet att bli Sveriges mest tillförlitliga och
+            omfattande källa för finansnyheter och ekonominyheter.
           </p>
 
           <p>
-            Vi erbjuder daglig bevakning av finansiella marknader, inklusive Sveriges ekonomi, Europas ekonomi och världsekonomin,
-            samt rapporterar om BNP, statsskulder, räntebesked från centralbanker, och investeringsstrategier. {process.env.NEXT_PUBLIC_HOSTNAME} följer
-            även utvecklingen på Stockholmsbörsen, indexrörelser, börsintroduktioner (IPO) och ger dig aktuella aktieanalyser,
-            marknadskommentarer och ekonomiska prognoser.
+            Vi bevakar dagligen de finansiella marknaderna i Sverige, Europa och världen.
+            På {HOST} hittar du uppdaterade nyheter om Stockholmsbörsen, indexrörelser,
+            börsintroduktioner (IPO), aktiekurser, ränteläge, inflation, konjunktur,
+            valutakurser samt andra centrala delar inom makroekonomi och mikroekonomi.
+            Våra aktieanalyser, marknadskommentarer och ekonomiska prognoser hjälper dig
+            att förstå vad som driver börsen och finansmarknaden just nu.
           </p>
 
           <p>
-            För dig som är intresserad av privatekonomi, sparande, pension, bolån, fonder, kapitalförvaltning, eller skattefrågor, erbjuder vi tydliga guider och nyheter som hjälper dig att fatta välgrundade ekonomiska beslut.
-            Vi riktar oss till såväl privatinvesterare som professionella aktörer, ekonomistudenter, företagsledare och analytiker.
+            För dig som är intresserad av privatekonomi och vill följa finansnyheter som
+            påverkar din vardag, erbjuder vi guider och nyheter om sparande, pension, bolån,
+            fonder, kapitalförvaltning och skattefrågor. Innehållet är anpassat både för
+            privatinvesterare och professionella aktörer – från ekonomistudenter och analytiker
+            till företagsledare och finansiella rådgivare.
           </p>
 
           <p>
-            {process.env.NEXT_PUBLIC_HOSTNAME} bevakar också trender inom finansiell teknologi (fintech), hållbara investeringar (ESG), grön ekonomi, och digital ekonomi,
-            samt analyserar hur globala händelser påverkar svenska företag, import/export, och internationell handel.
+            {HOST} bevakar också trender inom finansiell teknologi (fintech), hållbara
+            investeringar (ESG), grön ekonomi och digital ekonomi. Vi analyserar hur globala
+            händelser, räntebesked från centralbanker och förändringar i världsekonomin
+            påverkar svenska företag, börsen, import/export och internationell handel.
           </p>
 
           <p>
-            Vår redaktion arbetar med hög journalistisk integritet och ett tydligt uppdrag: att göra ekonomisk information tillgänglig, aktuell och begriplig för alla.
-            Genom att kombinera finansiell analys, ekonomisk nyhetsrapportering och djupgående insikter, skapar {process.env.NEXT_PUBLIC_HOSTNAME} en helhetsbild av den komplexa ekonomiska världen.
+            Vår redaktion arbetar med hög journalistisk integritet och ett tydligt uppdrag:
+            att göra finansnyheter och ekonomisk information tillgänglig, aktuell och
+            begriplig för alla. Genom att kombinera löpande finansnyhetsrapportering,
+            fördjupande analyser och tydliga genomgångar av komplexa ekonomiska skeenden,
+            skapar {HOST} en helhetsbild av den moderna ekonomin.
           </p>
 
-          <p className="font-medium text-gray-900 ">
-            {process.env.NEXT_PUBLIC_HOSTNAME} - för dig som vill förstå, påverka och navigera i ekonomins landskap. Håll dig uppdaterad med det senaste inom ekonomi, finans, börsen, pengar, och affärsnyheter – allt på ett och samma ställe.
+          <p className="font-medium text-gray-900">
+            {HOST} – för dig som vill följa finansnyheter, förstå börsen och navigera i
+            ekonomins landskap. Håll dig uppdaterad med det senaste inom finans, ekonomi,
+            börsen, pengar och affärsnyheter – allt samlat på ett och samma ställe.
           </p>
+
         </div>
       </section>
     </div>
-  )
+  );
 }

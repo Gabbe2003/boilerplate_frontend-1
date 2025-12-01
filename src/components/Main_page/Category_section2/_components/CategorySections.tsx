@@ -39,14 +39,15 @@ export default function CategorySections({
               disabled={isLoading}
               aria-pressed={isActive}
               className={`
-          flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md
-          border transition
-          ${isActive
-                  ? "bg-[#2e2d2d] text-white border-[#1A1A1A]"
-                  : "text-[#333] border-[#d4c9c0]"
-                }
-          ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
-        `}
+                  flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-md
+                  border transition cursor-pointer
+                  ${isActive
+                    ? "bg-[#2e2d2d] text-white border-[#1A1A1A] hover:bg-[#3a3939]"
+                    : "text-[#333] border-[#d4c9c0] hover:bg-[#f5f1ed]"
+                  }
+                  ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
+                `}
+
             >
               {/* Dot Indicator */}
               <span

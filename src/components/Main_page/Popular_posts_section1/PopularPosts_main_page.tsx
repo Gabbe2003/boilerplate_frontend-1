@@ -2,7 +2,7 @@ import "server-only";
 
 import Image from "next/image";
 import Link from "next/link";
-import { getAllPosts, getTodaysPosts } from "@/lib/graphql_queries/getPost";
+import { getAllPosts, getPostsByPeriod, getTodaysPosts } from "@/lib/graphql_queries/getPost";
 import { Post } from "@/lib/types";
 import ReadPeak from "@/components/Ads/Ads/Readpeak/ReadPeak";
 import {
@@ -17,12 +17,13 @@ const ReadPeakAd = () => <ReadPeak />;
 export default async function Home() {
   const [posts, todays_right] = await Promise.all([
     getAllPosts(6),
-    getTodaysPosts(8),
-  ]);
-
+    getPostsByPeriod("week"),
+  ]) as [Post[], Post[]];
+  
   const left_col: Post[] = posts.slice(0, 3);
   const middle_big: Post = posts[3];
   const middle_rest: Post[] = posts.slice(4);
+  const post_right = todays_right.slice(0,6); 
 
   return (
     <main className="section1-border-theme w-full flex justify-center font-serif pt-5 pb-[var(--section-spacing)]">
@@ -170,7 +171,7 @@ export default async function Home() {
             </h2>
 
             <div className="flex flex-col border-b border-[#e4d8ce]">
-              {todays_right.map((post: any) => (
+              {post_right.map((post: any) => (
                 post && (
                   <Link
                     key={post.id}

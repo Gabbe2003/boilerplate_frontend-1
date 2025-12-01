@@ -8,6 +8,7 @@ import PostFeed from "./InfinityScroll/PostFeed";
 import { randomIntInclusive } from "@/lib/globals/actions";
 import { getPostSlugs } from "@/lib/graphql_queries/getPost";
 import { ITOCItem, Post } from "@/lib/types";
+import { updateViewedPost } from "@/lib/graphql_queries/updated_view";
 
 
 type SinglePostProps = {
@@ -31,11 +32,13 @@ export default async function SinglePost({
   const slugQueue = slugs.slice(R + 1).filter((s) => s && s !== currentSlug);
 
   const title = post.title;
+  const databaseId = post.databaseId; 
+  
+  updateViewedPost(databaseId!);  
 
 
   return (
-    <div className="w-full flex justify-center 
-          !bg-[#F5ECE4]">
+    <div className="w-full flex justify-center !bg-[#F5ECE4]">
       <PostShell>
         <div className="mb-8 w-full flex justify-center">
           <div className="max-w-2xl text-center">

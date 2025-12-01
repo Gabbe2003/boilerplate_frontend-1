@@ -30,13 +30,18 @@ export default async function SinglePost({
   const slugs = await getPostSlugs(R + H, { revalidate: 3000 });
   const slugQueue = slugs.slice(R + 1).filter((s) => s && s !== currentSlug);
 
-  const title = post.title; 
-  
+  const title = post.title;
+
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center 
+          !bg-[#F5ECE4]">
       <PostShell>
-        {breadcrumbs && <BreadCrump breadcrumbs={breadcrumbs} title={title}/>}
+        <div className="mb-8 w-full flex justify-center">
+          <div className="max-w-2xl text-center">
+            {breadcrumbs && <BreadCrump breadcrumbs={breadcrumbs} title={title} />}
+          </div>
+        </div>
 
         <PostHero
           title={title}
@@ -52,7 +57,7 @@ export default async function SinglePost({
           <PostBody post={post} contentHtml={updatedHtml} toc={toc} />
         </main>
 
-        <PostFeed initialPost={post} slugQueue={slugQueue} currentSlug={currentSlug}/>
+        <PostFeed initialPost={post} slugQueue={slugQueue} currentSlug={currentSlug} />
       </PostShell>
     </div>
   );

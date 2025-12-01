@@ -25,7 +25,7 @@ export  function DesktopHeader({ categories_name, allPost }: {
             <Link
               key={slug + index}
               href={`/category/${slug}`}
-              className="text-gray-800 hover:text-black border-r border-gray-400 pr-4 last:border-r-0"
+              className="text-gray-800 hover:text-black border-r pr-4 last:border-r-0"
             >
               {cat.name}
             </Link>

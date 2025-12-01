@@ -1,7 +1,7 @@
 // app/sitemap.ts
 import type { MetadataRoute } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_HOST_URL!;
+const BASE_URL = process.env.SITE_URL!;
 
 type WpNode = { uri: string; modifiedGmt?: string | null };
 type TermNode = { uri: string };

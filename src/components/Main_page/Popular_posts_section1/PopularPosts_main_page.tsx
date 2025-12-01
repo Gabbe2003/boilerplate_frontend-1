@@ -25,7 +25,7 @@ export default async function Home() {
   const middle_rest: Post[] = posts.slice(4);
 
   return (
-    <main className="w-full flex justify-center px-3 sm:px-4 font-serif  bg-[#fcf6f0] pb-[var(--section-spacing)]">
+    <main className="section1-border-theme w-full flex justify-center font-serif pt-5 pb-[var(--section-spacing)]">
       <div className="base-width-for-all-pages grid grid-cols-1 md:grid-cols-12 gap-6">
 
         {/* LEFT COLUMN */}
@@ -35,7 +35,7 @@ export default async function Home() {
             <Link
               key={post.id}
               href={`/${post.slug}`}
-              className="py-4 border-b border-[#e4d8ce] "
+              className="py-4 border-b "
             >
               <h3 className="font-semibold text-base leading-snug ">
                 {post.title}
@@ -108,19 +108,19 @@ export default async function Home() {
           {/* Middle Rest */}
           <div className="flex flex-col w-full">
             {middle_rest.map((post: Post) => (
-             <Link
-  key={post.id}
-  href={`/${post.slug}`}
-  className="
+              <Link
+                key={post.id}
+                href={`/${post.slug}`}
+                className="
     flex flex-col lg:flex-row 
     gap-4 
     py-4 
-    border-t border-[#e4d8ce] 
+    border-t 
     w-full
   "
->
-  {/* Image */}
-  <div className="
+              >
+                {/* Image */}
+                <div className="
     relative 
     w-full lg:w-40 
     aspect-[4/3]
@@ -128,34 +128,33 @@ export default async function Home() {
     overflow-hidden 
     flex items-center justify-center
   ">
-    <Image
-      src={post.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
-      alt={post.featuredImage?.node?.altText || post.title!}
-      fill
-      className="object-contain"
-      sizes="(max-width: 1024px) 100vw, 160px"
-      quality={90}
-    />
-  </div>
+                  <Image
+                    src={post.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+                    alt={post.featuredImage?.node?.altText || post.title!}
+                    fill
+                    className="object-contain"
+                    sizes="(max-width: 1024px) 100vw, 160px"
+                  />
+                </div>
 
-  {/* Text */}
-  <div className="flex flex-col flex-1 min-w-0">
-    <h3 className="font-semibold text-sm sm:text-base leading-snug mb-1 break-words">
-      {post.title}
-    </h3>
+                {/* Text */}
+                <div className="flex flex-col flex-1 min-w-0">
+                  <h3 className="font-semibold text-sm sm:text-base leading-snug mb-1 break-words">
+                    {post.title}
+                  </h3>
 
-    <p className="text-xs leading-relaxed line-clamp-2 mb-2">
-      {limitExcerpt(post.excerpt)}
-    </p>
+                  <p className="text-xs leading-relaxed line-clamp-2 mb-2">
+                    {limitExcerpt(post.excerpt)}
+                  </p>
 
-    <div className="flex justify-between items-center text-xs text-[#6f6a63]">
-      <span className="text-red-500">
-        {capitalizeFirstLetter(post.author?.node?.name) ?? ""}
-      </span>
-      <span>{formatDateStockholm(post.date!)}</span>
-    </div>
-  </div>
-</Link>
+                  <div className="flex justify-between items-center text-xs text-[#6f6a63]">
+                    <span className="text-red-500">
+                      {capitalizeFirstLetter(post.author?.node?.name) ?? ""}
+                    </span>
+                    <span>{formatDateStockholm(post.date!)}</span>
+                  </div>
+                </div>
+              </Link>
 
             ))}
           </div>
@@ -176,7 +175,7 @@ export default async function Home() {
                   <Link
                     key={post.id}
                     href={`/${post.slug}`}
-                    className="py-4 border-b border-[#e4d8ce] "
+                    className="py-4 border-b "
                   >
                     <h3 className="font-semibold text-sm leading-snug">
                       {post.title}

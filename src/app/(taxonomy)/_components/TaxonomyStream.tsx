@@ -9,6 +9,7 @@ import InfiniteScroll from "@/app/[slug]/_components/InfinityScroll/InfiniteScro
 import type { Post } from "@/lib/types";
 import { capitalizeFirstLetter } from "@/lib/globals/actions";
 import ReadPeak from "@/components/Ads/Ads/Readpeak/ReadPeak";
+import AuthorInfo from "@/app/[slug]/_components/_post/AuthorInfo";
 
 type StreamKind = "author" | "category";
 
@@ -84,101 +85,114 @@ export default function TaxonomyStream({
   }
 
   const author_name = capitalizeFirstLetter(initial.name);
+ 
+
+  let authorData;
+
+  if(kind === "author"){
+    authorData = {
+      node: initial
+    }
+  }
 
   return (
-      <main className="base-width-for-all-pages mt-3">
-        <div className="w-[100%] lg:w-[75%]">
+    <main className="base-width-for-all-pages mt-3">
+      <div className="w-[100%] lg:w-[75%]">
 
-          {/* Breadcrumb */}
-          <Breadcrumb type={kind} name={author_name} />
+        {/* Breadcrumb */}
+        <Breadcrumb type={kind} name={author_name}  />
 
-          {/* Header */}
-          <header className="space-y-6 mt-6 mb-10">
+        {/* Header */}
+        <header className="space-y-6 mt-6 mb-10">
+          {kind === "category" && (
             <h1 className="text-3xl font-bold tracking-tight">{author_name}</h1>
-
-            {initial.description && (
-              <p className="text-[17px] leading-relaxed text-gray-600 max-w-3xl">
-                {initial.description}
-              </p>
-            )}
-          </header>
-
-          {/* FEATURED */}
-          {featured && (
-            <article className="space-y-4 mb-12">
-              <Link href={`/${featured.slug}`} className="block space-y-4">
-                {featured.featuredImage?.node?.sourceUrl && (
-                  <div className="relative aspect-[16/9] overflow-hidden">
-                    <Image
-                      src={featured.featuredImage.node.sourceUrl}
-                      alt={featured.featuredImage.node.altText ?? featured.title ?? ""}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width:768px) 100vw, 66vw"
-                      priority
-                    />
-                  </div>
-                )}
-
-                <h2 className="text-2xl font-bold leading-tight">
-                  {featured.title}
-                </h2>
-              </Link>
-            </article>
           )}
 
-          {/* POSTS + RANDOM AD */}
-          {/* POSTS WITH AD EVERY 8 ITEMS */}
+          {authorData && <AuthorInfo author={authorData} noLink heading={true} />}
 
-          {/* POSTS + RANDOM AD */}
-          <div className="w-full">
-            {chunk(rest, 8).map((group, groupIndex) => (
-              <div
-                key={groupIndex}
-                className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full"
-              >
-                {group.map((p) => (
-                  <article key={p.id ?? p.slug} className="space-y-3">
-                    <Link href={`/${p.slug}`} className="block space-y-3">
-                      {p.featuredImage?.node?.sourceUrl && (
-                        <div className="relative aspect-[16/9] min-h-[160px] overflow-hidden w-full">
-                          <Image
-                            src={p.featuredImage.node.sourceUrl}
-                            alt={p.featuredImage.node.altText ?? p.title ?? ""}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width:768px) 100vw, 50vw"
-                          />
-                        </div>
-                      )}
+          {initial.description && (
+            <p className="text-[15px] leading-relaxed text-gray-600 max-w-3xl">
+              {initial.description}
+            </p>
+          )}
+        </header>
 
-                      <h3 className="text-[17px] font-semibold leading-snug text-gray-900 hover:underline">
-                        {p.title}
-                      </h3>
-                    </Link>
-                  </article>
-                ))}
+        {kind  === "author" && (
+          <h2 className="text-2xl mb-8">Senaste från {author_name}</h2>
+        )}
 
-                {/* AD after 8 posts */}
-                <div className="sm:col-span-2 col-span-1 my-8">
-                  <ReadPeak numberOfAds={1} />
+        {/* FEATURED */}
+        {featured && (
+          <article className="space-y-4 mb-12">
+            <Link href={`/${featured.slug}`} className="block space-y-4">
+              {featured.featuredImage?.node?.sourceUrl && (
+                <div className="relative aspect-[16/9] overflow-hidden">
+                  <Image
+                    src={featured.featuredImage.node.sourceUrl}
+                    alt={featured.featuredImage.node.altText ?? featured.title ?? ""}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width:768px) 100vw, 66vw"
+                    priority
+                  />
                 </div>
+              )}
+
+              <h2 className="text-2xl font-bold leading-tight">
+                {featured.title}
+              </h2>
+            </Link>
+          </article>
+        )}
+
+        <div className="w-full">
+          {chunk(rest, 8).map((group, groupIndex) => (
+            <div
+              key={groupIndex}
+              className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full"
+            >
+              {group.map((p) => (
+                <article key={p.id ?? p.slug} className="space-y-3">
+                  <Link href={`/${p.slug}`} className="block space-y-3">
+                    {p.featuredImage?.node?.sourceUrl && (
+                      <div className="relative aspect-[16/9] min-h-[160px] overflow-hidden w-full">
+                        <Image
+                          src={p.featuredImage.node.sourceUrl}
+                          alt={p.featuredImage.node.altText ?? p.title ?? ""}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width:768px) 100vw, 50vw"
+                        />
+                      </div>
+                    )}
+
+                    <h3 className="text-[17px] font-semibold leading-snug text-gray-900 hover:underline">
+                      {p.title}
+                    </h3>
+                  </Link>
+                </article>
+              ))}
+
+              {/* AD after 8 posts */}
+              <div className="sm:col-span-2 col-span-1 my-8">
+                <ReadPeak numberOfAds={1} />
               </div>
-            ))}
+            </div>
+          ))}
 
-            <InfiniteScroll<PagePayload>
-              loadMore={loadMore}
-              onData={() => { }}
-              disabled={!hasNext}
-              rootMargin="0px 0px 40% 0px"
-            />
-          </div>
-
-
-
-
+          <InfiniteScroll<PagePayload>
+            loadMore={loadMore}
+            onData={() => { }}
+            disabled={!hasNext}
+            rootMargin="0px 0px 40% 0px"
+          />
         </div>
-      </main>
+
+
+
+
+      </div>
+    </main>
   );
 
 }

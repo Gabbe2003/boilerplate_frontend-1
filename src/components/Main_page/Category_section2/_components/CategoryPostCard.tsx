@@ -34,7 +34,6 @@ export const CategoryPostCard = memo(function CategoryPostCard({ post, index, sh
             fill
             className="object-cover object-center"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
-            quality={95}
             priority={index === 0}
           />
         </div>

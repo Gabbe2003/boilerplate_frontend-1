@@ -1,0 +1,117 @@
+/* styles/post-card.css (or module) */
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: #fff;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 35px rgba(15, 23, 42, 0.12);
+}
+
+.post-card__imageWrapper {
+  display: block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 60%; /* 5:3 ratio */
+  overflow: hidden;
+}
+
+.post-card__imageInner {
+  position: absolute;
+  inset: 0;
+}
+
+.post-card__image {
+  object-fit: cover;
+}
+
+.post-card__content {
+  padding: 1rem 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.post-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.post-card__category {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.post-card__date {
+  color: #64748b;
+}
+
+.post-card__title {
+  font-size: 1.1rem;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.post-card__titleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-card__titleLink:hover .post-card__title {
+  text-decoration: underline;
+}
+
+.post-card__excerpt {
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-height: 5.4em; /* ~3 lines */
+  overflow: hidden;
+}
+
+.post-card__footer {
+  margin-top: 0.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.post-card__author {
+  font-weight: 500;
+}
+
+/* Grid layout (2 columns on md+) */
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .archive-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.readpeak-wrapper {
+  grid-column: 1 / -1;
+  margin-block: 1.75rem;
+}

@@ -67,7 +67,7 @@ export default function SearchBar({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="w-full border p-2 pr-16 border-gray-300 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"
+          className="w-full border p-2 pr-16 rounded-lg text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"
           autoComplete="off"
           inputMode="search"
           aria-label="Sök inlägg"

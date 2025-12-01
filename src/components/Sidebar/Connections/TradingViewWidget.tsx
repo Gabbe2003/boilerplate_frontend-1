@@ -135,8 +135,7 @@ function TradingViewWidget({
 
   return (
     <div className={className}>
-      <h4 className="text-base font-semibold mb-2 text-center">{title}</h4>
-      {/* Let width be fluid via CSS; widget config uses width: "100%" */}
+      <h4 className="text-base font-semibold mb-2 text-center pt-3">{title}</h4>
       <div
         className="tradingview-widget-container w-full"
         ref={containerRef}

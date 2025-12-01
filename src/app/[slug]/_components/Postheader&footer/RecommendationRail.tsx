@@ -12,7 +12,6 @@ interface Props { posts: Post[] }
 
 
 const generateLink = (p: Post, i: number) => {
-  console.log(p.id);
 
   return (
     <Link
@@ -22,7 +21,6 @@ const generateLink = (p: Post, i: number) => {
       className="
       group flex flex-col w-60 flex-shrink-0
       rounded-xl overflow-hidden
-      bg-white
       border border-neutral-200/70
       shadow-sm hover:shadow-lg
       transition-all duration-300

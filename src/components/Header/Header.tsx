@@ -23,7 +23,7 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
   const direction = useRef(0);
   const lastChangePoint = useRef(0);
 
-  const pathname = usePathname(); 
+  const pathname = usePathname();
   const isHome = pathname === "/";
 
   useEffect(() => {
@@ -57,14 +57,14 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
 
 
   return (
-    <header className="w-full flex justify-center sticky top-0 z-50 bg-background py-4 lg:py-3">
+    <header className="header-border-theme w-full flex justify-center sticky top-0 z-50 bg-background py-4 lg:py-3">
       <div className="base-width-for-all-pages">
 
         {/* TOP ROW */}
         <div className="relative flex items-center justify-between py-4 lg:py-3 ">
 
           <div className="hidden lg:flex gap-4 text-sm ">
-            <Link href="/about" className="border-r border-gray-400 pr-4 hover:opacity-70">
+            <Link href="/about" className="border-r  pr-4 hover:opacity-70">
               Om oss
             </Link>
             <Link href="/contact" className="hover:opacity-70">
@@ -91,22 +91,19 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
             </button>
           </div>
 
-          <div className="hidden lg:flex text-sm">
-            {isHome ? (
-        <h1 className="block lg:hidden text-sm text-center mr-10">
-          Dina dagliga nyheter inom finans, aktier & börsen
-        </h1>
-      ) : (
-        <h2 className="block lg:hidden text-sm text-center mr-10">
-          Dina dagliga nyheter inom finans, aktier & börsen
-        </h2>
-      )}
+          <div className="hidden lg:flex items-center gap-2 text-sm text-[#1A1A1A]/70">
+            {new Date().toLocaleDateString("sv-SE", {
+              weekday: "long",
+              day: "numeric",
+            })}
+            <span className="opacity-50">•</span>
+            {new Date().toLocaleTimeString("sv-SE", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </div>
-
         </div>
 
-        {/* MOBILE DROPDOWN */}
-        {/* Overlay (click-to-close) */}
         {mobileOpen && (
           <div
             className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
@@ -123,16 +120,8 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
   `}
         >
           {/* HEADER */}
-          <div className="flex items-center justify-between px-4 py-4 border-b border-[#e5d8c9]">
-           {isHome ? (
-        <h1 className="block lg:hidden text-sm text-center mr-10">
-          Dina dagliga nyheter inom finans, aktier & börsen
-        </h1>
-      ) : (
-        <h2 className="block lg:hidden text-sm text-center mr-10">
-          Dina dagliga nyheter inom finans, aktier & börsen
-        </h2>
-      )}
+          <div className="flex items-center justify-between px-4 py-4 border-b ">
+
 
             {/* Close BTN (X) */}
             <button
@@ -149,16 +138,16 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
           <nav className="flex flex-col mt-4 px-4 gap-3 text-sm font-semibold">
             {categories_name.map((cat, index) => {
               const slug = handleSpecielChar(cat.name);
-             return(
-               <Link
-                key={cat.name + index}
-                href={`/category/${slug}`}
-                className="text-[#1A1A1A] hover:text-red-600 transition"
-                onClick={() => setMobileOpen(false)}
-              >
-                {cat.name}
-              </Link>
-             )
+              return (
+                <Link
+                  key={cat.name + index}
+                  href={`/category/${slug}`}
+                  className="text-[#1A1A1A] hover:text-red-600 transition"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {cat.name}
+                </Link>
+              )
             })}
           </nav>
         </div>

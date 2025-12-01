@@ -24,7 +24,7 @@ export default async function Home() {
   const { jsonLd } = await getSeoCached("/");
 
   return (
-    <div className="w-full mt-10">
+    <div className="w-full mt-5">
       <PopularPosts_main_page />
     
       <Suspense fallback={<div>Laddar Kategorier</div>}>

@@ -10,7 +10,7 @@ export default function PostBodyShell({
   featured?: FeaturedNode | null;
 }) {
   return (
-    <article className="w-full">
+    <article className="w-full flex justify-center">
       <div
         className="
           prose prose-neutral dark:prose-invert

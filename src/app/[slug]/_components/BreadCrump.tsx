@@ -4,7 +4,6 @@ import Link from "next/link";
 export type Crumb = { text: string; url: string };
 
 type BreadCrumpProps = {
-  /** Can be a single crumb, an array, or null/undefined */
   breadcrumbs?: Crumb |  null;
   title?: string | null
 };
@@ -29,11 +28,11 @@ export default function BreadCrump({ breadcrumbs, title }: BreadCrumpProps) {
             <li key={`${crumb.url}-${i}`} className="flex items-center gap-2">
               {i > 0 && <span aria-hidden> / </span>}
               {isLast ? (
-                <span className="text-gray-900" aria-current="page">
+                <span className="text-gray-900 text-xs sm:text-base" aria-current="page">
                   {title || crumb.text}
                 </span>
               ) : (
-                <Link href={`category/${handleSpecielChar(crumb.text)}`} prefetch={false} className="hover:underline">
+                <Link href={`category/${handleSpecielChar(crumb.text)}`} prefetch={false} className="hover:underline text-xs sm:text-base">
                   {crumb.text}
                 </Link>
               )}

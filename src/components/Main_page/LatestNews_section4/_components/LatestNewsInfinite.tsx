@@ -74,15 +74,11 @@ export default function LatestNewsInfinite() {
           <Link
             key={`post-${post.id}-${index}`}
             href={`/${post.slug}`}
-            className="block py-8 border-t border-gray-800"
+            className="block py-8 border-t section4-border-theme-infinity"
           >
-            {/* 
-              MOBILE  → flex-col (image first)
-              DESKTOP → flex-row (image right)
-            */}
+           
             <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6">
 
-              {/* IMAGE FIRST ON MOBILE */}
               {post.featuredImage?.node?.sourceUrl && (
                 <div className="
                   w-full h-52 relative overflow-hidden sm:w-40 sm:h-38 

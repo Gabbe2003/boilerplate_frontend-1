@@ -197,6 +197,12 @@ export interface Post {
   uri?: string;
 }
 
+export interface PostsPage {
+  posts: Post[];
+  endCursor: string | null;
+  hasNextPage: boolean;
+}
+
 export type SeoBreadcrumb = {
   text: string;
   url?: string | null;

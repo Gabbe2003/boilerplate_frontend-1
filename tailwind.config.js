@@ -19,7 +19,7 @@ module.exports = {
         foreground: 'var(--color-foreground)',
         primary: 'var(--color-primary)',
         'primary-foreground': 'var(--color-primary-foreground)',
-        border: 'var(--color-border)',
+        border: 'var(--border)',
         ring: 'var(--color-ring)',
         input: 'var(--color-input)',
       },

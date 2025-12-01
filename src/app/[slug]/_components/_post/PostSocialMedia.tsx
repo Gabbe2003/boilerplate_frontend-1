@@ -31,7 +31,7 @@ export default function PostSocialMedia({
   postExcerpt: string;
 }) {
   return (
-    <div className="flex items-center justify-start gap-1 py-2 border-neutral-100 rounded-xs">
+    <div className="flex items-center justify-start gap-1 py-2  rounded-xs  ">
       {/* Native share/copy */}
       <button
         className="h-9 flex items-center p-0 sm:p-2 justify-center text-neutral-700 font-medium rounded-xs cursor-pointer transition-colors duration-150 border border-transparent hover:bg-neutral-100"

@@ -26,25 +26,27 @@ export default function PostHero({
   boolInfinite = false
 }: PostHeroProps) {
 
+
+  
   return (
     <header className="w-full mb-6 md:mb-8 ">
-      <div className="mb-8">
-        {!boolInfinite ? (
-          <h1 className="text-pretty text-2xl md:text-4xl mt-5 font-bold leading-tight">
+      <div className="mb-8 w-full flex justify-center">
+        <div className="max-w-3xl text-center">
+            {!boolInfinite ? (
+          <h1 className="text-pretty text-1xl md:text-3xl mt-5 font-bold leading-tight text-center">
             {title}
           </h1>
         ) :
-          <h2 className="text-pretty text-2xl md:text-5xl font-bold leading-tight mt-30">
+          <h2 className="text-pretty text-1xl md:text-3xl font-bold leading-tight mt-30">
             {title}
           </h2>
         }
+        </div>
       </div>
 
       <div className="mb-10">
         {featured?.node?.sourceUrl && (
           <figure className="mb-6 w-full flex flex-col items-center">
-
-            {/* Responsive wrapper */}
             <div className="relative w-full max-w-3xl mx-auto aspect-[16/9] rounded-xs overflow-hidden bg-gray-100">
               <Image
                 overrideSrc={featured.node?.sourceUrl}
@@ -60,7 +62,7 @@ export default function PostHero({
 
             {/* Caption */}
             {featured.node?.caption && (
-              <figcaption className="text-xs mt-2 text-center text-gray-600 max-w-2xl">
+              <figcaption className="text-[9px] mt-2 text-start text-gray-600 left">
                 {decodeHTML(stripHtml(featured.node?.caption))}
               </figcaption>
             )}
@@ -69,7 +71,7 @@ export default function PostHero({
         )}
       </div>
 
-      <div className="mt-4 grid w-full gap-3">
+      <div className="mt-4 grid w-full max-w-3xl mx-auto gap-3 ">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
             {author && <AuthorInfo author={author} />}
@@ -84,7 +86,7 @@ export default function PostHero({
               )}
             </div>
             <div>
-              Modifierad:{" "}
+              Uppdaterad:{" "}
               {modified && (
                 <time dateTime={modified}>
                   {formatDateStockholm(date)}
@@ -95,7 +97,7 @@ export default function PostHero({
           </div>
         </div>
 
-        <div className="text-base border-t border-gray-400">
+        <div className="text-base border-t post-border-theme">
           <PostSocialMedia
             postUrl={uri || ""}
             postTitle={title || ""}

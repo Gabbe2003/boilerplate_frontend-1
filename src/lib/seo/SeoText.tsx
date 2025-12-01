@@ -3,9 +3,9 @@ export default function SeoText() {
   return (
     <div className="w-full flex justify-center mb-4">
         <section className="mt-10 base-width-for-all-pages ">
-        <h4 className="mb-6 text-3xl font-bold tracking-tight text-black">
+        <h1 className="mb-6 text-3xl font-bold tracking-tight text-black">
           {process.env.NEXT_PUBLIC_HOSTNAME} - Din främsta källa för ekonominyheter, finans och börsanalyser
-        </h4>
+        </h1>
 
         <div className="space-y-5 leading-relaxed text-gray-900 ">
           <p>

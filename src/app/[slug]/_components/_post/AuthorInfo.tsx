@@ -5,14 +5,16 @@ import Link from "next/link";
 
 export interface AuthorInfoProps {
   author: Post["author"];
-  noLink?: true | false
+  noLink?: true | false;
+  heading?: true | false;
 }
 
-export default function AuthorInfo({ author, noLink = false }: AuthorInfoProps) {
+export default function AuthorInfo({ author, noLink = false, heading }: AuthorInfoProps) {
   if (!author?.node) return null;
 
   const { name, avatar } = author.node;
   const avatarUrl = avatar?.url;
+  console.log(author.node);
 
   return (
     <div className="flex items-center gap-2">
@@ -38,17 +40,27 @@ export default function AuthorInfo({ author, noLink = false }: AuthorInfoProps) 
           {name ? name[0].toUpperCase() : "A"}
         </span>
       )}
-      
+
 
       {name && (
         <>
           {noLink ? (
-            <div className="text-gray-700 text-sm font-medium">{name}</div>
-          ) : 
-          <Link href={`author/${normalizeName(name)}`} className="text-gray-700 text-sm font-medium">{name}</Link>
-          }
+            heading ? (
+              <h1 className="text-gray-700 text-3xl font-medium">{name}</h1>
+            ) : (
+              <div className="text-gray-700 text-sm font-medium">{name}</div>
+            )
+          ) : (
+            <Link
+              href={`author/${normalizeName(name)}`}
+              className="text-gray-700 text-sm font-medium"
+            >
+              {name}
+            </Link>
+          )}
         </>
       )}
+
     </div>
   );
 }

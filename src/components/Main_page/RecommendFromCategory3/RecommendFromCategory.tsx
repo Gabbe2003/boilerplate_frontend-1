@@ -29,7 +29,7 @@ async function getCategoryPosts() {
 export default async function CategoryFourBlock() {
   const data = await getCategoryPosts();
   return (
-    <div className="w-full flex justify-center pt-[var(--section-spacing)] pb-[var(--section-spacing)] bg-[#FCEDDC]">
+    <div className="section3-border-theme w-full flex justify-center pt-[var(--section-spacing)] pb-[var(--section-spacing)] ">
       <div className="base-width-for-all-pages">
         <SectionBreaker color="red" />
 
@@ -48,8 +48,7 @@ export default async function CategoryFourBlock() {
             return (
               <div
                 key={slug}
-                className="rounded-xl border border-[#e7d9c8] bg-[#f8efe5] p-4  
-  "
+                className="p-4"
               >
 
                 {/* Category Title */}
@@ -66,9 +65,7 @@ export default async function CategoryFourBlock() {
                           src={first.featuredImage.node.sourceUrl}
                           alt={first.featuredImage.node.altText || first.title}
                           fill
-                          className="
-                          object-cover 
-                        "
+                          className="object-cover"
                         />
                       </div>
                     </div>

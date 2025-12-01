@@ -26,7 +26,7 @@ const TradingViewWidget = dynamic(
 
 export default async function LatestNews_main_page() {
   return (
-  <section className="w-full pt-[var(--section-spacing)] flex flex-col items-center bg-snow-white ">
+  <section className="w-full pt-[var(--section-spacing)] flex flex-col items-center  ">
     <div className="base-width-for-all-pages flex flex-col   ">
     <SectionBreaker />
        <h2 className="text-xl font-semibold mb-4 text-start">Senaste nyheterna</h2>

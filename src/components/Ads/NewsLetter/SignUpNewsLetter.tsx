@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail } from "lucide-react";
+import { ArrowBigRight, Mail } from "lucide-react";
 import { memo, useState } from "react";
 
 type Props = {
@@ -60,6 +60,7 @@ function SignUpNewsLetter({ variant = "default" }: Props) {
         </div>
 
         {/* Input */}
+        {/* Input */}
         <div className="flex items-center gap-3 w-full">
           <input
             id="rule_email"
@@ -71,6 +72,27 @@ function SignUpNewsLetter({ variant = "default" }: Props) {
             className="w-full flex-1 border-b border-gray-400 bg-transparent focus:outline-none py-2 text-sm"
           />
         </div>
+
+        {/* Mobile / tablet button */}
+        <button
+          type="submit"
+          className="
+            cursor-pointer 
+            mt-4 
+            w-full 
+            py-3 
+            text-xs 
+            font-semibold 
+            tracking-wide 
+            bg-[#222] 
+            text-white 
+            rounded-md 
+            lg:hidden
+          "
+        >
+          Prenumerera
+        </button>
+
       </form>
     );
   }

@@ -39,7 +39,7 @@ export default async function Home() {
         <LatestNews_main_page />
       </Suspense>
 
-      <Suspense fallback={<div>Laddar SEO-text…</div>}>
+      <Suspense fallback={<div>Laddar text…</div>}>
         <SeoText />
       </Suspense>
 

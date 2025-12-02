@@ -17,7 +17,6 @@ export default function RootLayout({ children }: Readonly<{
   return (
     <html lang="sv">
       <head>
-       
       </head>
       <body>
         <div className="w-full flex flex-col items-center">

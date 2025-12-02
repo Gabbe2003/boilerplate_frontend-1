@@ -5,12 +5,11 @@ import HeaderWrapper from "@/components/Header/HeaderWrapper";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import Script from "next/script";
 
-
 <Script
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4868110039996635"
-      strategy="afterInteractive"
-      crossOrigin="anonymous"
-    />
+  src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
+  strategy="afterInteractive"
+  crossOrigin="anonymous"
+/>
 
 export default function RootLayout({ children }: Readonly<{
   children: React.ReactNode;

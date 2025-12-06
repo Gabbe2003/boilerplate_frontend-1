@@ -7,6 +7,7 @@ import HeaderWrapper from "@/components/Header/HeaderWrapper";
 import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
 
 import "../styles/globals.css";
+import AdSenseBanner from "@/components/Ads/adsenseBanner";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
@@ -14,30 +15,30 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="sv">
       <head>
-        {/* AdSense (only render if env var exists) */}
- {adsenseClient ? (
-    <script
-      id="adsense-script"
-      async
-      crossOrigin="anonymous"
-      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(
-        adsenseClient
-      )}`}
-    ></script>
-  ) : null}
-</head>
+        {adsenseClient ? (
+          <Script
+            id="adsense-script"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+          />
+        ) : null}
+      </head>
 
       <body>
         <div className="w-full flex flex-col items-center">
           <ReadPeakProvider />
           <HeaderWrapper />
 
-          {children}
+          {/* Place your ad where you want it */}
+          <div className="w-full max-w-[1100px] px-4 my-4">
+            <AdSenseBanner />
+          </div>
 
+          {children}
           <Footer />
         </div>
 
-        {/* GA generally fine anywhere; keeping it near end is common */}
         <GoogleAnalytics gaId="G-F4PXY0E4LD" />
       </body>
     </html>

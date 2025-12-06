@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import Script from "next/script";
 
 import Footer from "@/components/Footer/Footer";
 import HeaderWrapper from "@/components/Header/HeaderWrapper";
@@ -12,15 +11,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="sv">
       <body>
-        {adsenseClient ? (
-          <Script
-            id="adsense-script"
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
-            strategy="afterInteractive"
-            crossOrigin="anonymous"
-          />
-        ) : null}
+         <>
+      {adsenseClient ? (
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+          crossOrigin="anonymous"
+        />
+      ) : null}
+    </>
 
         <div className="w-full flex flex-col items-center">
           <HeaderWrapper />

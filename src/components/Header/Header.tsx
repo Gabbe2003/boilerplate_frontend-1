@@ -15,16 +15,6 @@ type HeaderProps = {
 };
 
 export default function Header({ categories_name, allPost }: HeaderProps) {
-  const adsenseClient = process.env.ADSENSE_CLIENT;
-    <>
-      {adsenseClient ? (
-        <script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
-          crossOrigin="anonymous"
-        />
-      ) : null}
-    </>
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showNav, setShowNav] = useState(true);

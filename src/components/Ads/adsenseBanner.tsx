@@ -12,7 +12,16 @@ declare global {
 
 export default function AdsenseRouteRefresh() {
   const pathname = usePathname();
-
+  const adsenseClient = process.env.ADSENSE_CLIENT;
+    <>
+      {adsenseClient ? (
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+          crossOrigin="anonymous"
+        />
+      ) : null}
+    </>
   useEffect(() => {
     // Kick AdSense after route changes (helps auto ads in SPAs)
     try {

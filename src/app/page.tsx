@@ -9,7 +9,6 @@ import RecommendFromCategory from "@/components/Main_page/RecommendFromCategory3
 
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
-import AdSenseBanner from "@/components/Ads/adsenseBanner";
 
 const getSeoCached = cache(async (uri: string) => {
   return getWpSeo(uri, true);
@@ -27,33 +26,23 @@ export default async function Home() {
   return (
     <div className="w-full mt-5">
       <PopularPosts_main_page />
-          <div className="w-full max-w-[1100px] px-4 my-4">
-            <AdSenseBanner />
-          </div>
+         
       <Suspense fallback={<div>Laddar Kategorier</div>}>
         <CategorySection_main_page />
       </Suspense>
-          <div className="w-full max-w-[1100px] px-4 my-4">
-            <AdSenseBanner />
-          </div>
+         
       <Suspense fallback={<div>Laddar rekommendationer…</div>}>
         <RecommendFromCategory />
       </Suspense>
-        <div className="w-full max-w-[1100px] px-4 my-4">
-            <AdSenseBanner />
-          </div>
+        
       <Suspense fallback={<div>Laddar senaste nyheterna…</div>}>
         <LatestNews_main_page />
       </Suspense>
-        <div className="w-full max-w-[1100px] px-4 my-4">
-            <AdSenseBanner />
-          </div>
+   
       <Suspense fallback={<div>Laddar text…</div>}>
         <SeoText />
       </Suspense>
-    <div className="w-full max-w-[1100px] px-4 my-4">
-            <AdSenseBanner />
-          </div>
+ 
       <SeoJsonLd data={jsonLd} />
     </div>
   );

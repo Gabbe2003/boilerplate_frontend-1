@@ -7,6 +7,7 @@ import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
 
 import "../styles/globals.css";
 import AdSenseBanner from "@/components/Ads/adsenseBanner";
+import Script from "next/script";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
@@ -15,9 +16,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="sv">
       <head>
         {adsenseClient ? (
-          <script
+          <Script
             async
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+            strategy="afterInteractive"
             crossOrigin="anonymous"
           />
         ) : null}
@@ -29,7 +31,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <ReadPeakProvider />
           <HeaderWrapper />
           <div className="w-full max-w-[1100px] px-4 my-4">
-            <AdSenseBanner />
+            {/* <AdSenseBanner /> */}
           </div>
           {/* Place your ad where you want it */}
           

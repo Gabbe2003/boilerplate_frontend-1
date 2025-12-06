@@ -1,52 +1,38 @@
+// components/AdSlot.tsx
 "use client";
 
 import { useEffect } from "react";
 
-declare global {
-  interface Window {
-    adsbygoogle: unknown[];
-  }
-}
-
 type Props = {
-  slot?: string;
-  format?: "auto" | "horizontal" | "vertical" | "rectangle";
-  style?: React.CSSProperties;
-  className?: string;
+  adSlot: string;              // the slot id from AdSense
+  adFormat?: "auto" | "fluid";
+  fullWidthResponsive?: boolean;
+  style?: React.CSSProperties; // optional size overrides
 };
 
-export default function AdSenseBanner({
-  slot = process.env.NEXT_PUBLIC_ADSENSE_CLIENT,
-  format = "auto",
+export default function AdSlot({
+  adSlot,
+  adFormat = "auto",
+  fullWidthResponsive = true,
   style,
-  className,
 }: Props) {
-  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
-
   useEffect(() => {
-    if (!client || !slot) return;
-
     try {
-      window.adsbygoogle = window.adsbygoogle || [];
-      window.adsbygoogle.push({});
-    } catch {
-      // Ad blockers + hydration quirks can cause push to fail; safe to ignore.
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      // avoid crashing on navigation / ad blockers
+      console.warn("AdSense push failed", e);
     }
-  }, [client, slot]);
-
-  if (!client || !slot) return null;
+  }, []);
 
   return (
     <ins
-      className={`adsbygoogle ${className ?? ""}`}
-      style={{
-        display: "block",
-        ...style,
-      }}
-      data-ad-client={client}
-      data-ad-slot={slot}
-      data-ad-format={format}
-      data-full-width-responsive="true"
+      className="adsbygoogle"
+      style={{ display: "block", ...style }}
+      data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT}
+      data-ad-slot={adSlot}
+      data-ad-format={adFormat}
+      data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
     />
   );
 }

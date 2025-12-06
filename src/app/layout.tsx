@@ -6,7 +6,7 @@ import HeaderWrapper from "@/components/Header/HeaderWrapper";
 import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
 
 import "../styles/globals.css";
-import AdSenseBanner from "@/components/Ads/adsenseBanner";
+// import AdSenseBanner from "@/components/Ads/adsenseBanner";
 import Script from "next/script";
 
 export default function RootLayout({ children }: { children: ReactNode }) {

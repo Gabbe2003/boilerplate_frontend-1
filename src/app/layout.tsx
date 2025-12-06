@@ -7,7 +7,6 @@ import HeaderWrapper from "@/components/Header/HeaderWrapper";
 import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
 
 import "../styles/globals.css";
-import AdSenseBanner from "@/components/Ads/adsenseBanner";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
@@ -31,9 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <HeaderWrapper />
 
           {/* Place your ad where you want it */}
-          <div className="w-full max-w-[1100px] px-4 my-4">
-            <AdSenseBanner />
-          </div>
+          
 
           {children}
           <Footer />

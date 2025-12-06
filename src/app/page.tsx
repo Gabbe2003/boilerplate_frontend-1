@@ -9,6 +9,7 @@ import RecommendFromCategory from "@/components/Main_page/RecommendFromCategory3
 
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
+import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
 
 const getSeoCached = cache(async (uri: string) => {
   return getWpSeo(uri, true);
@@ -25,6 +26,7 @@ export default async function Home() {
 
   return (
     <div className="w-full mt-5">
+    <ReadPeakProvider />
       <PopularPosts_main_page />
          
       <Suspense fallback={<div>Laddar Kategorier</div>}>

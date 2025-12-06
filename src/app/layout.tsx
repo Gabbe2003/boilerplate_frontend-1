@@ -1,32 +1,42 @@
-import Footer from "@/components/Footer/Footer";
-import "../styles/globals.css";
-import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
-import HeaderWrapper from "@/components/Header/HeaderWrapper";
-import { GoogleAnalytics } from '@next/third-parties/google'
+import type { ReactNode } from "react";
 import Script from "next/script";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
-<Script
-  src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
-  strategy="afterInteractive"
-  crossOrigin="anonymous"
-/>
+import Footer from "@/components/Footer/Footer";
+import HeaderWrapper from "@/components/Header/HeaderWrapper";
+import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
 
-export default function RootLayout({ children }: Readonly<{
-  children: React.ReactNode;
-}>) {
+import "../styles/globals.css";
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+
   return (
     <html lang="sv">
       <head>
+        {/* AdSense (only render if env var exists) */}
+        {adsenseClient ? (
+          <Script
+            id="adsense-script"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+          />
+        ) : null}
       </head>
+
       <body>
         <div className="w-full flex flex-col items-center">
           <ReadPeakProvider />
           <HeaderWrapper />
-            {children}
-            <GoogleAnalytics gaId="G-F4PXY0E4LD" />
+
+          {children}
 
           <Footer />
         </div>
+
+        {/* GA generally fine anywhere; keeping it near end is common */}
+        <GoogleAnalytics gaId="G-F4PXY0E4LD" />
       </body>
     </html>
   );

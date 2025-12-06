@@ -8,9 +8,9 @@ import { extractHeadings } from "./helpers/helper";
 
 export async function getPostsByPeriod(period: 'week' | 'month') {
   const url = `${process.env.HOST_URL}/wp-json/hpv/v1/top-posts?period=${period}`;
+  console.log(url)
   return wpRestCached(url, { revalidate: 3600, tags: ['views'] });
 }
-
 export async function getTodaysPosts(limit: number = 5): Promise<TodayPost[]> {
   if (process.env.NEXT_PUBLIC_HOSTNAME?.includes("boilerplate.local")) {
     return [];

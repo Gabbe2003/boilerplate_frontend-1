@@ -24,7 +24,7 @@ export default async function Home() {
   const left_col: Post[] = posts.slice(0,5);
   const middle_big: Post = posts[3];
   const middle_rest: Post[] = posts.slice(4);
-  const post_right = todays_right.slice(0,); 
+  const post_right = todays_right?.slice(0,6) ?? [];
 
   return (
     <main className="section1-border-theme w-full flex justify-center font-serif pt-5  pb-(--section-spacing)">
@@ -185,11 +185,44 @@ export default async function Home() {
                   <Link
                     key={post.id}
                     href={`/${post.slug}`}
-                    className="group py-4 border-b"
+                    className="
+                      group 
+                      flex flex-col sm:flex-row 
+                      gap-3 
+                      py-4 
+                      border-b
+                    "
                   >
-                    <h3 className="font-semibold text-sm leading-snug group-hover:underline group-hover:decoration-2 group-hover:decoration-offset-2">
-                      {post.title}
-                    </h3>
+                    <div
+                      className="
+                        relative 
+                        w-full sm:w-28 
+                        aspect-[4/3] 
+                        overflow-hidden 
+                        bg-[#f7f1ea]
+                      "
+                    >
+                      <Image
+                        src={post.featuredImage?.node?.sourceUrl || "/favicon.icon"}
+                        alt={post.featuredImage?.node?.altText || post.title!}
+                        fill
+                        className="object-cover transition-transform duration-200 group-hover:scale-[1.13]"
+                        sizes="(max-width: 640px) 100vw, 112px"
+                      />
+                    </div>
+
+                    <div className="flex-1 flex flex-col min-w-0">
+                      <h3 className="font-semibold text-sm leading-snug mb-1 break-words group-hover:underline group-hover:decoration-2 group-hover:decoration-offset-2">
+                        {post.title}
+                      </h3>
+
+                      <div className="flex justify-between items-center text-xs text-[#6f6a63] mt-1">
+                        <span className="text-red-500">
+                          {capitalizeFirstLetter(post.author?.node?.name) ?? ""}
+                        </span>
+                        <span>{formatDateStockholm(post.date!)}</span>
+                      </div>
+                    </div>
                   </Link>
                 )
               ))}

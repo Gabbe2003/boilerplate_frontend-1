@@ -1,34 +1,37 @@
 import type { ReactNode } from "react";
-import Script from "next/script";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 import Footer from "@/components/Footer/Footer";
 import HeaderWrapper from "@/components/Header/HeaderWrapper";
+import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
+
 import "../styles/globals.css";
-import AdSlot from "@/components/Ads/adsenseBanner";
+import AdSenseBanner from "@/components/Ads/adsenseBanner";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
 
   return (
     <html lang="sv">
-      <body>
+      <head>
         {adsenseClient ? (
-          <Script
-            id="adsense-loader"
+          <script
             async
-            strategy="afterInteractive"
             src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
             crossOrigin="anonymous"
           />
         ) : null}
+      </head>
 
+
+      <body>
         <div className="w-full flex flex-col items-center">
+          <ReadPeakProvider />
           <HeaderWrapper />
           <div className="w-full max-w-[1100px] px-4 my-4">
-            {/* <AdSenseBanner /> */}
           </div>
-          {adsenseClient ? <AdSlot adSlot="12" /> : null}
+          {/* Place your ad where you want it */}
+          
 
           {children}
           <Footer />

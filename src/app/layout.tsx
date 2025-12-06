@@ -4,7 +4,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import Footer from "@/components/Footer/Footer";
 import HeaderWrapper from "@/components/Header/HeaderWrapper";
 import "../styles/globals.css";
-import AdsenseRouteRefresh from "@/components/Ads/adsenseBanner";
+import AdSlot from "@/components/Ads/adsenseBanner";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const adsenseClient = process.env.ADSENSE_CLIENT;
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <div className="w-full max-w-[1100px] px-4 my-4">
             {/* <AdSenseBanner /> */}
           </div>
-        <AdsenseRouteRefresh />
+        <AdSlot adSlot="12"/>
 
           {children}
           <Footer />

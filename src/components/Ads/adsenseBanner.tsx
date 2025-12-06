@@ -1,27 +1,38 @@
+// components/AdSlot.tsx
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    adsbygoogle?: any[];
-  }
-}
+type Props = {
+  adSlot: string;              // the slot id from AdSense
+  adFormat?: "auto" | "fluid";
+  fullWidthResponsive?: boolean;
+  style?: React.CSSProperties; // optional size overrides
+};
 
-export default function AdsenseRouteRefresh() {
-  const pathname = usePathname();
-
+export default function AdSlot({
+  adSlot,
+  adFormat = "auto",
+  fullWidthResponsive = true,
+  style,
+}: Props) {
   useEffect(() => {
-    // Kick AdSense after route changes (helps auto ads in SPAs)
     try {
-      window.adsbygoogle = window.adsbygoogle || [];
-      window.adsbygoogle.push({});
-    } catch {
-      // ignore
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      // avoid crashing on navigation / ad blockers
+      console.warn("AdSense push failed", e);
     }
-  }, [pathname]);
+  }, []);
 
-  return null;
+  return (
+    <ins
+      className="adsbygoogle"
+      style={{ display: "block", ...style }}
+      data-ad-client={process.env.NEXT_PUBLIC_ADSENSE_CLIENT}
+      data-ad-slot={adSlot}
+      data-ad-format={adFormat}
+      data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
+    />
+  );
 }

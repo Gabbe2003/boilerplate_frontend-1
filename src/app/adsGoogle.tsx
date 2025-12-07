@@ -1,44 +1,40 @@
 "use client";
 
-import { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 type Props = {
-  client: string; // ca-pub-...
-  slot: string;   // data-ad-slot
-  format?: string;
-  layout?: string;
-  layoutKey?: string;
+  client: string;
+  slot: string;
   style?: React.CSSProperties;
 };
 
-export default function AdsenseBlock({
-  client,
-  slot,
-  format = "fluid",
-  layout = "in-article",
-  layoutKey,
-  style = { display: "block" },
-}: Props) {
+export default function AdsenseInFeed({ client, slot, style }: Props) {
+  const insRef = useRef<HTMLModElement | null>(null);
+
   useEffect(() => {
-    // Trigger ad render after the <ins> is in the DOM
+    const el = insRef.current;
+    if (!el) return;
+
+    // avoid double init (StrictMode/HMR)
+    if (el.getAttribute("data-ad-status")) return;
+
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-      console.log("ads has been loaded")
-    } catch {
-     console.log("error during render")
-        // Ignore (AdBlock, double-render in dev, etc.)
+    } catch (e) {
+      console.warn("AdSense push failed", e);
     }
   }, []);
 
   return (
     <ins
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ref={insRef as any}
       className="adsbygoogle"
-      style={style}
+      style={style ?? { display: "block" }}
       data-ad-client={client}
       data-ad-slot={slot}
-      data-ad-format={format}
-      data-ad-layout={layout}
-      {...(layoutKey ? { "data-ad-layout-key": layoutKey } : {})}
+      data-ad-format="fluid"
+      data-ad-layout="in-feed"
     />
   );
 }

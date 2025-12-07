@@ -10,6 +10,7 @@ import RecommendFromCategory from "@/components/Main_page/RecommendFromCategory3
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
 import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
+import AdsenseInFeed from "./adsGoogle";
 
 const getSeoCached = cache(async (uri: string) => {
   return getWpSeo(uri, true);
@@ -28,7 +29,8 @@ export default async function Home() {
     <div className="w-full mt-5">
     <ReadPeakProvider />
       <PopularPosts_main_page />
-         
+         <AdsenseInFeed  client="ca-pub-4868110039996635" slot="7924586422" />
+
       <Suspense fallback={<div>Laddar Kategorier</div>}>
         <CategorySection_main_page />
       </Suspense>

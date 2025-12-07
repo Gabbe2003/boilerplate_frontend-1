@@ -47,11 +47,7 @@ export default async function SinglePost({
           </div>
         </div>
 
-          <AdsenseAd
-            client="ca-pub-4868110039996635"
-            slot="4681978434"
-            format="auto"
-        />
+       
         <PostHero
           title={title}
           author={post.author}
@@ -61,7 +57,12 @@ export default async function SinglePost({
           featured={post.featuredImage}
           modified={post.modified}
         />
-
+       <AdsenseAd
+            client="ca-pub-4868110039996635"
+            slot="4681978434"
+            format="auto"
+        />
+        
         <main>
           <PostBody post={post} contentHtml={updatedHtml} toc={toc} />
         </main>

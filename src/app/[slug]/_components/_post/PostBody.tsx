@@ -3,6 +3,7 @@ import RecommendationRail from "../Postheader&footer/RecommendationRail";
 import PostBodyShell from "../PostBodyShell";
 import TableOfConet from "./TableOfContent";
 import { ITOCItem, Post } from "@/lib/types";
+import AdsenseAd from "@/app/adsGoogle";
 
 
 export default async function PostBody({
@@ -24,6 +25,11 @@ export default async function PostBody({
 
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
 
+       <AdsenseAd
+            client="ca-pub-4868110039996635"
+            slot="2219466628"
+            format="auto"
+        />
     </PostBodyShell>
       <div className="mt-10">
         <RecommendationRail posts={posts} />

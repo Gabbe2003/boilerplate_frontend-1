@@ -9,6 +9,7 @@ import { randomIntInclusive } from "@/lib/globals/actions";
 import { getPostSlugs } from "@/lib/graphql_queries/getPost";
 import { ITOCItem, Post } from "@/lib/types";
 import { updateViewedPost } from "@/lib/graphql_queries/updated_view";
+import AdsenseAd from "@/app/adsGoogle";
 
 
 type SinglePostProps = {
@@ -45,6 +46,12 @@ export default async function SinglePost({
             {breadcrumbs && <BreadCrump breadcrumbs={breadcrumbs} title={title} />}
           </div>
         </div>
+
+          <AdsenseAd
+            client="ca-pub-4868110039996635"
+            slot="4681978434"
+            format="auto"
+        />
 
         <PostHero
           title={title}

@@ -25,12 +25,6 @@ export default async function PostBody({
 
       <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
 
-       <AdsenseAd
-            client="ca-pub-4868110039996635"
-            slot="2219466628"
-            format="auto"
-        />
-        
     </PostBodyShell>
       <div className="mt-10">
         <RecommendationRail posts={posts} />

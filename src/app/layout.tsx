@@ -6,6 +6,7 @@ import HeaderWrapper from "@/components/Header/HeaderWrapper";
 import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
 
 import "../styles/globals.css";
+import Script from "next/script";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
@@ -14,9 +15,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="sv">
       <head>
         {adsenseClient ? (
-          <script
+          <Script
+            id="adsense-auto"
+            strategy="afterInteractive"
             async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(
+              adsenseClient
+            )}`}
             crossOrigin="anonymous"
           />
         ) : null}

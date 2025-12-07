@@ -95,7 +95,7 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
             </Link>
           </div>
 
-          <h2
+          <span
             className="
               font-serif text-[#1A1A1A]
               text-2xl xs:text-3xl sm:text-4xl
@@ -105,7 +105,7 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
             "
           >
             <Link href="/" prefetch={false}>{process.env.NEXT_PUBLIC_HOSTNAME}</Link>
-          </h2>
+          </span>
 
           {/* RIGHT — MENU ON MOBILE, EMAIL ON DESKTOP */}
           <div className="lg:hidden">

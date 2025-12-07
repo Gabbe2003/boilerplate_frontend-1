@@ -6,7 +6,6 @@ import HeaderWrapper from "@/components/Header/HeaderWrapper";
 import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
 
 import "../styles/globals.css";
-import AdSenseBanner from "@/components/Ads/adsenseBanner";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;

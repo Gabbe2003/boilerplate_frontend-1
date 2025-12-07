@@ -43,7 +43,7 @@ export default function PopupModal({ isOpen, onClose, onSubmit }: PopupModalProp
 
     const id = window.setTimeout(() => {
       if (!window.__popupOpen) setInternalOpen(true);
-    }, 10_000);
+    }, 30_000);
 
     return () => {
       clearTimeout(id);

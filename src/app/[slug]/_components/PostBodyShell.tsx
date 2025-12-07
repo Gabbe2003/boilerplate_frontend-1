@@ -16,7 +16,7 @@ const INSERT_AFTER_H2: [number, number] = [1, 2];
 
 function splitByH2Sections(html: string): string[] {
   // [introBeforeFirstH2, (h2 + content until next h2), (h2 + content), ...]
-  const re = /<h2\b[^>]*>/gi;
+  const re = /<h3\b[^>]*>/gi;
   const starts: number[] = [];
 
   let match: RegExpExecArray | null;

@@ -10,7 +10,8 @@ import RecommendFromCategory from "@/components/Main_page/RecommendFromCategory3
 import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
 import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
-import AdsenseInFeed from "./adsGoogle";
+import AdsenseControlled from "./adsGoogle";
+import AdsenseAd from "./adsGoogle";
 
 const getSeoCached = cache(async (uri: string) => {
   return getWpSeo(uri, true);
@@ -30,29 +31,43 @@ export default async function Home() {
     <ReadPeakProvider />
       <PopularPosts_main_page />
 
-     {/* <div
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    padding: "10px 0",
-    margin: "20px 0",
-  }}
->
-  <div style={{ width: "80%", maxWidth: 1100, margin: "0 auto" }}>
-    <AdsenseInFeed client="ca-pub-4868110039996635" slot="7924586422" />
-  </div>
-</div> */}
+
+<AdsenseAd
+  client="ca-pub-4868110039996635"
+  slot="1165582861"
+  format="auto"
+/>
+
       <Suspense fallback={<div>Laddar Kategorier</div>}>
         <CategorySection_main_page />
       </Suspense>
          
+<AdsenseAd
+  client="ca-pub-4868110039996635"
+  slot="2090091228"
+  format="auto"
+/>
+
+
       <Suspense fallback={<div>Laddar rekommendationer…</div>}>
         <RecommendFromCategory />
       </Suspense>
+           
+<AdsenseAd
+  client="ca-pub-4868110039996635"
+  slot="2749949665"
+  format="auto"
+/>
         
       <Suspense fallback={<div>Laddar senaste nyheterna…</div>}>
         <LatestNews_main_page />
       </Suspense>
+
+  <AdsenseAd
+    client="ca-pub-4868110039996635"
+    slot="3871637252"
+    format="auto"
+/>
    
       <Suspense fallback={<div>Laddar text…</div>}>
         <SeoText />

@@ -3,8 +3,8 @@
 import React, { useEffect, useRef } from "react";
 
 type Props = {
-  client: string;
-  slot: string;
+  client: string; // ca-pub-...
+  slot: string;   // data-ad-slot
   style?: React.CSSProperties;
 };
 
@@ -15,7 +15,7 @@ export default function AdsenseInFeed({ client, slot, style }: Props) {
     const el = insRef.current;
     if (!el) return;
 
-    // avoid double init (StrictMode/HMR)
+    // prevent double init (StrictMode/HMR)
     if (el.getAttribute("data-ad-status")) return;
 
     try {
@@ -31,10 +31,9 @@ export default function AdsenseInFeed({ client, slot, style }: Props) {
       ref={insRef as any}
       className="adsbygoogle"
       style={style ?? { display: "block" }}
+      data-ad-format="fluid"
       data-ad-client={client}
       data-ad-slot={slot}
-      data-ad-format="fluid"
-      data-ad-layout="in-feed"
     />
   );
 }

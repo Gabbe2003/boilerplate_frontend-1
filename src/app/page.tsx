@@ -30,7 +30,7 @@ export default async function Home() {
     <ReadPeakProvider />
       <PopularPosts_main_page />
 
-     <div
+     {/* <div
   style={{
     display: "flex",
     justifyContent: "center",
@@ -41,7 +41,7 @@ export default async function Home() {
   <div style={{ width: "80%", maxWidth: 1100, margin: "0 auto" }}>
     <AdsenseInFeed client="ca-pub-4868110039996635" slot="7924586422" />
   </div>
-</div>
+</div> */}
       <Suspense fallback={<div>Laddar Kategorier</div>}>
         <CategorySection_main_page />
       </Suspense>

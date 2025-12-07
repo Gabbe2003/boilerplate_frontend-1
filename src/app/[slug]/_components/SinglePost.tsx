@@ -52,7 +52,6 @@ export default async function SinglePost({
             slot="4681978434"
             format="auto"
         />
-
         <PostHero
           title={title}
           author={post.author}

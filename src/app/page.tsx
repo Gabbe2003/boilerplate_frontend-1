@@ -29,8 +29,10 @@ export default async function Home() {
     <div className="w-full mt-5">
     <ReadPeakProvider />
       <PopularPosts_main_page />
-         <AdsenseInFeed  client="ca-pub-4868110039996635" slot="7924586422" />
 
+      <div style={{ display: "flex", justifyContent: "center" }}>
+         <AdsenseInFeed  client="ca-pub-4868110039996635" slot="7924586422" />
+      </div>
       <Suspense fallback={<div>Laddar Kategorier</div>}>
         <CategorySection_main_page />
       </Suspense>

@@ -66,6 +66,7 @@ export default async function SinglePost({
         <main>
           <PostBody post={post} contentHtml={updatedHtml} toc={toc} />
         </main>
+     
 
         <PostFeed initialPost={post} slugQueue={slugQueue} currentSlug={currentSlug} />
       </PostShell>

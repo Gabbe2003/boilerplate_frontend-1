@@ -30,6 +30,7 @@ export default async function PostBody({
             slot="2219466628"
             format="auto"
         />
+        
     </PostBodyShell>
       <div className="mt-10">
         <RecommendationRail posts={posts} />

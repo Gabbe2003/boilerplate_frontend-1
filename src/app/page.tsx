@@ -30,9 +30,12 @@ export default async function Home() {
     <ReadPeakProvider />
       <PopularPosts_main_page />
 
-      <div style={{ display: "flex", justifyContent: "center" }}>
-         <AdsenseInFeed  client="ca-pub-4868110039996635" slot="7924586422" />
-      </div>
+      <div className="my-5 bg-[#f4f4f4] py-2.5 flex justify-center">
+  <div className="w-[70%] max-w-[900px] mx-auto">
+    <AdsenseInFeed client="ca-pub-4868110039996635" slot="7924586422" />
+  </div>
+</div>
+
       <Suspense fallback={<div>Laddar Kategorier</div>}>
         <CategorySection_main_page />
       </Suspense>

@@ -23,6 +23,7 @@ export default function AdsenseBlock({
     // Trigger ad render after the <ins> is in the DOM
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
+      console.log("ads has been loaded")
     } catch {
      console.log("error during render")
         // Ignore (AdBlock, double-render in dev, etc.)

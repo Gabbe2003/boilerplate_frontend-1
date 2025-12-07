@@ -5,6 +5,7 @@ import { getWpSeo } from "@/lib/seo/graphqlSeo";
 import { Metadata } from "next";
 import { SeoJsonLd } from "@/lib/seo/SeoJsonLd";
 import { cache } from "react";
+import AdsenseBlock from "../adsGoogle";
 
 
 const getPostCached = cache(async (slug: string) => {
@@ -45,6 +46,13 @@ export default async function Page({ params }: { params: { slug: string } }) {
         currentSlug={slug}
         updatedHtml={updatedHtml}
         toc={toc}
+      />
+       <AdsenseBlock
+        client="ca-pub-4868110039996635"
+        slot="7924586422"
+        format="fluid"
+        layoutKey="-6t+ed+2i-1n-4w"
+        style={{ display: "block" }}
       />
       <SeoJsonLd data={jsonLd} />
     </>

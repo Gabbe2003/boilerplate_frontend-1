@@ -34,7 +34,7 @@ export default async function Home() {
 
 <AdsenseAd
   client="ca-pub-4868110039996635"
-  slot="1165582861"
+  slot="7109535494"
   format="auto"
 />
 
@@ -44,7 +44,7 @@ export default async function Home() {
          
 <AdsenseAd
   client="ca-pub-4868110039996635"
-  slot="2090091228"
+  slot="3052253873"
   format="auto"
 />
 
@@ -55,7 +55,7 @@ export default async function Home() {
            
 <AdsenseAd
   client="ca-pub-4868110039996635"
-  slot="2749949665"
+  slot="5333311594"
   format="auto"
 />
         
@@ -65,7 +65,7 @@ export default async function Home() {
 
   <AdsenseAd
     client="ca-pub-4868110039996635"
-    slot="3871637252"
+    slot="2268164552"
     format="auto"
 />
    

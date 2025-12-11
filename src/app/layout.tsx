@@ -5,11 +5,7 @@ import HeaderWrapper from "@/components/Header/HeaderWrapper";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import Script from "next/script";
 
-<Script
-  src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
-  strategy="afterInteractive"
-  crossOrigin="anonymous"
-/>
+
 
 export default function RootLayout({ children }: Readonly<{
   children: React.ReactNode;
@@ -17,6 +13,11 @@ export default function RootLayout({ children }: Readonly<{
   return (
     <html lang="sv">
       <head>
+        <Script
+  src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
+  strategy="afterInteractive"
+  crossOrigin="anonymous"
+/>
       </head>
       <body>
         <div className="w-full flex flex-col items-center">

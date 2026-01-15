@@ -20,6 +20,10 @@ export interface ReadPeakSlotProps {
   tags?: string[];
   className?: string;
   style?: React.CSSProperties;
+  /** Hide ad description text if present */
+  hideDescription?: boolean;
+  /** Additional selectors to target description nodes */
+  descriptionSelectors?: string[];
 }
 
 /**
@@ -35,6 +39,8 @@ export const ReadPeakSlot: React.FC<ReadPeakSlotProps> = ({
   tags = [],
   className,
   style,
+  hideDescription = false,
+  descriptionSelectors,
 }) => {
   const hostRef = useRef<HTMLDivElement>(null);
 
@@ -75,6 +81,46 @@ export const ReadPeakSlot: React.FC<ReadPeakSlotProps> = ({
 
     container.appendChild(script);
   }, [id, numberOfAds, gdprConsent, catsKey, tagsKey]);
+
+  useEffect(() => {
+    const container = hostRef.current;
+    if (!container) return;
+
+    const selectors = [
+      '.rpplc-desc',
+      '.rpplc-description',
+      '.rpplc-item-desc',
+      '.rpplc-item-description',
+      '.rpplc-text',
+      '.readpeak-desc',
+      '.readpeak-description',
+      ...(descriptionSelectors ?? []),
+    ].filter(Boolean);
+
+    if (selectors.length === 0) return;
+
+    const updateVisibility = () => {
+      container.querySelectorAll(selectors.join(',')).forEach((element) => {
+        const node = element as HTMLElement;
+        if (hideDescription) {
+          node.style.display = 'none';
+          node.setAttribute('data-readpeak-hidden-desc', 'true');
+        } else if (node.getAttribute('data-readpeak-hidden-desc') === 'true') {
+          node.style.removeProperty('display');
+          node.removeAttribute('data-readpeak-hidden-desc');
+        }
+      });
+    };
+
+    updateVisibility();
+
+    if (!hideDescription) return;
+
+    // ReadPeak injects content asynchronously; watch for changes to hide descriptions.
+    const observer = new MutationObserver(updateVisibility);
+    observer.observe(container, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [hideDescription, descriptionSelectors]);
   
   return (
     <div

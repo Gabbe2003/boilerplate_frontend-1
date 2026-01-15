@@ -10,6 +10,7 @@ import { getPostSlugs } from "@/lib/graphql_queries/getPost";
 import { ITOCItem, Post } from "@/lib/types";
 import { updateViewedPost } from "@/lib/graphql_queries/updated_view";
 import AdsenseAd from "@/app/adsGoogle";
+import ReadPeak from "@/components/Ads/Ads/Readpeak/ReadPeak";
 
 
 type SinglePostProps = {

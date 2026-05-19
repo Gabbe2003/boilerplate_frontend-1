@@ -20,12 +20,14 @@ type PopupModalProps = {
 
 const MODAL_SUBMIT_KEY = 'modalFormSubmittedAt';
 const MODAL_DISMISS_KEY = 'modalDismissedAt';
-const ONE_DAY = 24 * 60 * 60 * 1000;
+const DAY = 24 * 60 * 60 * 1000;
+const SUBMIT_COOLDOWN = DAY;
+const DISMISS_COOLDOWN = 7 * DAY;
 
-function recently(key: string) {
+function within(key: string, windowMs: number) {
   if (typeof window === 'undefined') return false;
   const ts = localStorage.getItem(key);
-  return ts ? Date.now() - new Date(ts).getTime() < ONE_DAY : false;
+  return ts ? Date.now() - new Date(ts).getTime() < windowMs : false;
 }
 
 export default function PopupModal({
@@ -40,13 +42,17 @@ export default function PopupModal({
 
   const shouldOpen = isOpen || internalOpen;
 
-  // ONLY used for exit animation
   const [rendered, setRendered] = useState(true);
 
   /* Auto-open after 30s */
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (isOpen || recently(MODAL_SUBMIT_KEY) || recently(MODAL_DISMISS_KEY)) return;
+    if (
+      isOpen ||
+      within(MODAL_SUBMIT_KEY, SUBMIT_COOLDOWN) ||
+      within(MODAL_DISMISS_KEY, DISMISS_COOLDOWN)
+    )
+      return;
     if (window.__popupTimerStarted) return;
 
     window.__popupTimerStarted = true;
@@ -58,10 +64,12 @@ export default function PopupModal({
     return () => clearTimeout(id);
   }, [isOpen]);
 
-  /* Exit animation ONLY */
+  /* Exit animation gating */
   useEffect(() => {
-    if (shouldOpen) return;
-
+    if (shouldOpen) {
+      setRendered(true);
+      return;
+    }
     const t = setTimeout(() => setRendered(false), 300);
     return () => clearTimeout(t);
   }, [shouldOpen]);
@@ -104,39 +112,47 @@ export default function PopupModal({
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
       tabIndex={-1}
-      className={`fixed inset-x-0 bottom-0 z-50 flex justify-center transition-opacity duration-300 ${
-        shouldOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
+      role="dialog"
+      aria-modal="true"
+      aria-label="Prenumerera på nyhetsbrevet"
+      className={`fixed inset-0 z-50 flex items-end justify-center bg-black/40 backdrop-blur-sm md:items-center md:p-6 ${
+        shouldOpen ? 'popup-backdrop-enter' : 'popup-backdrop-exit pointer-events-none'
       }`}
     >
       <div
         ref={modalRef}
-        className={`relative flex w-full flex-col bg-white shadow-lg transition-all duration-300 md:flex-row ${
-          shouldOpen ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+        className={`relative flex w-full max-w-3xl flex-col overflow-hidden bg-white shadow-2xl ring-1 ring-black/5 md:flex-row md:rounded-2xl ${
+          shouldOpen ? 'popup-card-enter' : 'popup-card-exit'
         }`}
       >
         <button
           onClick={closeModal}
-          className="absolute right-4 top-4 z-20 rounded-full p-1"
+          className="absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full bg-white/80 text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur transition hover:scale-105 hover:bg-white hover:text-black cursor-pointer"
           aria-label="Stäng"
         >
-          <X className="h-5 w-5 hover:cursor-pointer" />
+          <X className="h-4 w-4" />
         </button>
 
-        <div className="hidden w-1/2 items-center justify-center bg-[#EDE5DF] p-6 md:flex">
+        <div className="relative hidden w-1/2 items-center justify-center overflow-hidden bg-linear-to-br from-[#f3ebe2] via-[#ede3d7] to-[#e2d3c3] p-8 md:flex">
+          <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-white/40 blur-2xl" />
+          <div className="pointer-events-none absolute -right-12 bottom-0 h-48 w-48 rounded-full bg-[#FFA94D]/20 blur-3xl" />
           <Image
             src="/Finanstidning_with_slogan.png"
             alt="Finanstidning.se logotyp"
             width={400}
             height={200}
-            className="h-auto w-full max-w-[360px] object-contain"
+            className="relative h-auto w-full max-w-[320px] object-contain"
             priority
           />
         </div>
 
-        <div className="flex w-full flex-col justify-center p-6 md:w-2/3">
+        <div className="flex w-full flex-col justify-center bg-white p-6 sm:p-8 md:w-1/2">
           {isSubmitted ? (
             <div className="text-center">
-              <h2 className="mb-2 text-xl font-semibold">
+              <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-emerald-100 text-emerald-700">
+                ✓
+              </div>
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">
                 Tack för din prenumeration!
               </h2>
               <p className="text-sm text-gray-600">

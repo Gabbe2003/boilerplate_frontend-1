@@ -44,7 +44,9 @@ export default function PopupModal({
 
   const [rendered, setRendered] = useState(false);
 
-  /* Teaser flash on load, then full open after 30s */
+  const openTimerRef = useRef<number | null>(null);
+
+  /* Auto-open after 30s */
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (
@@ -57,14 +59,21 @@ export default function PopupModal({
 
     window.__popupTimerStarted = true;
 
-    const teaserShow = window.setTimeout(() => setInternalOpen(true), 1_000);
-    const teaserHide = window.setTimeout(() => setInternalOpen(false), 3_500);
-    const reopen = window.setTimeout(() => setInternalOpen(true), 8_000);
+    openTimerRef.current = window.setTimeout(() => {
+      // Re-check cooldowns at fire time in case the user interacted during the wait
+      if (
+        within(MODAL_SUBMIT_KEY, SUBMIT_COOLDOWN) ||
+        within(MODAL_DISMISS_KEY, DISMISS_COOLDOWN)
+      )
+        return;
+      setInternalOpen(true);
+    }, 30_000);
 
     return () => {
-      clearTimeout(teaserShow);
-      clearTimeout(teaserHide);
-      clearTimeout(reopen);
+      if (openTimerRef.current !== null) {
+        clearTimeout(openTimerRef.current);
+        openTimerRef.current = null;
+      }
     };
   }, [isOpen]);
 
@@ -96,6 +105,10 @@ export default function PopupModal({
   const closeModal = () => {
     onClose();
     setInternalOpen(false);
+    if (openTimerRef.current !== null) {
+      clearTimeout(openTimerRef.current);
+      openTimerRef.current = null;
+    }
     localStorage.setItem(MODAL_DISMISS_KEY, new Date().toISOString());
   };
 
@@ -150,7 +163,7 @@ export default function PopupModal({
           />
         </div>
 
-        <div className="flex w-full flex-col justify-center bg-white p-6 sm:p-8 md:w-1/2">
+        <div className="flex w-full flex-col justify-center bg-white p-6 pr-14 sm:p-8 sm:pr-16 md:w-1/2">
           {isSubmitted ? (
             <div className="text-center">
               <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-full bg-emerald-100 text-emerald-700">

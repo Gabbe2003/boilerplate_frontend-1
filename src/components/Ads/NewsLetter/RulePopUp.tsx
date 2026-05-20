@@ -42,9 +42,9 @@ export default function PopupModal({
 
   const shouldOpen = isOpen || internalOpen;
 
-  const [rendered, setRendered] = useState(true);
+  const [rendered, setRendered] = useState(false);
 
-  /* Auto-open after 30s */
+  /* Teaser flash on load, then full open after 30s */
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (
@@ -57,11 +57,15 @@ export default function PopupModal({
 
     window.__popupTimerStarted = true;
 
-    const id = window.setTimeout(() => {
-      setInternalOpen(true);
-    }, 30_000);
+    const teaserShow = window.setTimeout(() => setInternalOpen(true), 1_000);
+    const teaserHide = window.setTimeout(() => setInternalOpen(false), 3_500);
+    const reopen = window.setTimeout(() => setInternalOpen(true), 8_000);
 
-    return () => clearTimeout(id);
+    return () => {
+      clearTimeout(teaserShow);
+      clearTimeout(teaserHide);
+      clearTimeout(reopen);
+    };
   }, [isOpen]);
 
   /* Exit animation gating */

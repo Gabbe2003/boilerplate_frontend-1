@@ -1,11 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import type { Post, PostBySlugResult } from "@/lib/types";
+import type { Ad } from "@/lib/ads/types";
 import PostHero from "../_post/PostHero";
 import PostBodyClient from "../_post/PostBodyClient";
 import InfiniteScroll from "./InfiniteScroll";
 import RecommendationRail from "../Postheader&footer/RecommendationRail";
+import ScrollAd from "@/components/Ads/Scroll/ScrollAd";
 
 type FeedItem = PostBySlugResult & { recs: Post[] };
 
@@ -38,10 +40,12 @@ export default function PostFeed({
   initialPost,
   slugQueue,
   currentSlug,
+  scrollAds = [],
 }: {
   initialPost: Post;
   slugQueue: string[];
   currentSlug: string;
+  scrollAds?: Ad[];
 }) {
   const [items, setItems] = useState<FeedItem[]>([]);
   const indexRef = useRef(0);
@@ -159,37 +163,47 @@ export default function PostFeed({
   // -----------------------------
   return (
     <div className="w-full space-y-10">
-      {items.map(({ post, updatedHtml, toc, recs }, index) => (
-        <article
-          key={post?.databaseId ?? post?.slug ?? index}
-          ref={(el) => {
-            if (el) {
-              articleRefs.current[index] = el;
-            }
-          }}
-          data-slug={post?.slug}
-          data-title={post?.title}
-          className="w-full"
-        >
-          <PostHero
-            title={post.title}
-            author={post.author}
-            date={post.date}
-            excerpt={post.excerpt}
-            uri={post.uri}
-            featured={post.featuredImage}
-            modified={post.modified}
-          />
-          <main>
-            <PostBodyClient post={post} contentHtml={updatedHtml} toc={toc} />
-            {recs?.length ? (
-              <div className="mt-10">
-                <RecommendationRail posts={recs} />
-              </div>
-            ) : null}
-          </main>
-        </article>
-      ))}
+      {items.map(({ post, updatedHtml, toc, recs }, index) => {
+        // Continue the cycle from the initial-post ad (scrollAds[0] in SinglePost).
+        const scrollAd = scrollAds.length
+          ? scrollAds[(index + 1) % scrollAds.length]
+          : null;
+
+        return (
+          <Fragment key={post?.databaseId ?? post?.slug ?? index}>
+            <article
+              ref={(el) => {
+                if (el) {
+                  articleRefs.current[index] = el;
+                }
+              }}
+              data-slug={post?.slug}
+              data-title={post?.title}
+              className="w-full"
+            >
+              <PostHero
+                title={post.title}
+                author={post.author}
+                date={post.date}
+                excerpt={post.excerpt}
+                uri={post.uri}
+                featured={post.featuredImage}
+                modified={post.modified}
+              />
+              <main>
+                <PostBodyClient post={post} contentHtml={updatedHtml} toc={toc} />
+                {recs?.length ? (
+                  <div className="mt-10">
+                    <RecommendationRail posts={recs} />
+                  </div>
+                ) : null}
+              </main>
+            </article>
+
+            {scrollAd ? <ScrollAd ad={scrollAd} /> : null}
+          </Fragment>
+        );
+      })}
 
       <InfiniteScroll<FeedItem>
         rootMargin="0px 0px 50% 0px"

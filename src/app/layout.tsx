@@ -4,12 +4,16 @@ import ReadPeakProvider from "@/components/Ads/Ads/Readpeak/ReadProvider";
 import HeaderWrapper from "@/components/Header/HeaderWrapper";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import Script from "next/script";
+import PopupAd from "@/components/Ads/Popup/PopupAd";
+import { getNextSectionAd } from "@/lib/ads/getAds";
 
 
 
-export default function RootLayout({ children }: Readonly<{
+export default async function RootLayout({ children }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const popupAd = await getNextSectionAd("popup");
+
   return (
     <html lang="sv">
       <head>
@@ -26,6 +30,7 @@ export default function RootLayout({ children }: Readonly<{
             {children}
             <GoogleAnalytics gaId="G-F4PXY0E4LD" />
 
+          <PopupAd ad={popupAd} />
           <Footer />
         </div>
       </body>

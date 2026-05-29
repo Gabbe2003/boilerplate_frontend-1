@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import SignUpNewsLetter from './SignUpNewsLetter';
+import { isPopupActive, setPopupActive } from '@/lib/ads/popupBus';
 
 declare global {
   interface Window {
@@ -66,6 +67,8 @@ export default function PopupModal({
         within(MODAL_DISMISS_KEY, DISMISS_COOLDOWN)
       )
         return;
+      // Never show two popups at once (e.g. an ad popup is open).
+      if (isPopupActive()) return;
       setInternalOpen(true);
     }, 30_000);
 
@@ -77,12 +80,14 @@ export default function PopupModal({
     };
   }, [isOpen]);
 
-  /* Exit animation gating */
+  /* Exit animation gating + shared popup flag */
   useEffect(() => {
     if (shouldOpen) {
       setRendered(true);
+      setPopupActive(true);
       return;
     }
+    setPopupActive(false);
     const t = setTimeout(() => setRendered(false), 300);
     return () => clearTimeout(t);
   }, [shouldOpen]);

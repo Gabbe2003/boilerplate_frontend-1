@@ -11,6 +11,8 @@ import { ITOCItem, Post } from "@/lib/types";
 import { updateViewedPost } from "@/lib/graphql_queries/updated_view";
 import AdsenseAd from "@/app/adsGoogle";
 import ReadPeak from "@/components/Ads/Ads/Readpeak/ReadPeak";
+import { getSectionAds } from "@/lib/ads/getAds";
+import ScrollAd from "@/components/Ads/Scroll/ScrollAd";
 
 
 type SinglePostProps = {
@@ -34,9 +36,11 @@ export default async function SinglePost({
   const slugQueue = slugs.slice(R + 1).filter((s) => s && s !== currentSlug);
 
   const title = post.title;
-  const databaseId = post.databaseId; 
-  
-  updateViewedPost(databaseId!);  
+  const databaseId = post.databaseId;
+
+  updateViewedPost(databaseId!);
+
+  const scrollAds = (await getSectionAds("scroll"))?.ads ?? [];
 
 
   return (
@@ -67,9 +71,19 @@ export default async function SinglePost({
         <main>
           <PostBody post={post} contentHtml={updatedHtml} toc={toc} />
         </main>
-     
 
-        <PostFeed initialPost={post} slugQueue={slugQueue} currentSlug={currentSlug} />
+        {scrollAds.length ? (
+          <div className="my-10">
+            <ScrollAd ad={scrollAds[0]} />
+          </div>
+        ) : null}
+
+        <PostFeed
+          initialPost={post}
+          slugQueue={slugQueue}
+          currentSlug={currentSlug}
+          scrollAds={scrollAds}
+        />
       </PostShell>
     </div>
   );

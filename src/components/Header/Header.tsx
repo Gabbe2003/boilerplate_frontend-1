@@ -8,13 +8,16 @@ import SearchBar from "./Search_Component/SearchBar";
 import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { handleSpecielChar } from "@/lib/globals/actions";
+import HeaderAd from "@/components/Ads/Sidhuvud/HeaderAd";
+import type { Ad } from "@/lib/ads/types";
 
 type HeaderProps = {
   categories_name: CategoryName[];
   allPost: PostTitleSlug[];
+  headerAd?: Ad | null;
 };
 
-export default function Header({ categories_name, allPost }: HeaderProps) {
+export default function Header({ categories_name, allPost, headerAd = null }: HeaderProps) {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [showNav, setShowNav] = useState(true);
@@ -181,6 +184,9 @@ export default function Header({ categories_name, allPost }: HeaderProps) {
             <DesktopHeader categories_name={categories_name} allPost={allPost} />
           </div>
         )}
+
+        {/* SIDHUVUD AD — inside the sticky header so it stays visible on scroll */}
+        <HeaderAd ad={headerAd} />
 
       </div>
     </header>

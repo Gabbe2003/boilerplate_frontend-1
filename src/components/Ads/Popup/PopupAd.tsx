@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Ad } from "@/lib/ads/types";
 import { trackClick, trackImpression } from "@/lib/ads/track";
 import { isPopupActive, setPopupActive } from "@/lib/ads/popupBus";
@@ -11,7 +11,6 @@ const OPEN_DELAY = 5_000;
 export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
   const [open, setOpen] = useState(false);
   const [rendered, setRendered] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
 
   // Schedule a single open ~5s after load (independent of session).
   useEffect(() => {
@@ -42,18 +41,18 @@ export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
     setPopupActive(false);
   };
 
+  // Esc to close while open.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
   const handleCtaClick = () => {
     if (ad) trackClick("popup", ad.id);
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-      close();
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Escape") close();
   };
 
   if (!ad || (!open && !rendered)) return null;
@@ -67,76 +66,67 @@ export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
 
   return (
     <div
-      onClick={handleBackdropClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={-1}
       role="dialog"
-      aria-modal="true"
       aria-label={title || "Annons"}
-      className={`fixed inset-0 z-50 flex justify-center bg-black/40 backdrop-blur-sm md:items-center md:p-6 ${
-        open ? "popup-backdrop-enter" : "popup-backdrop-exit pointer-events-none"
+      style={{ backgroundColor: ad.bg_color || "#ffffff" }}
+      className={`fixed bottom-4 right-4 z-50 flex w-[460px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl shadow-2xl ring-1 ring-black/10 sm:flex-row sm:bottom-6 sm:right-6 ${
+        open ? "side-card-enter" : "side-card-exit pointer-events-none"
       }`}
     >
-      <div
-        ref={modalRef}
-        style={{ backgroundColor: ad.bg_color || "#ffffff" }}
-        className={`relative flex h-full w-full flex-col justify-center overflow-y-auto shadow-2xl ring-1 ring-black/5 md:h-auto md:justify-start md:max-w-lg md:overflow-hidden md:rounded-2xl ${
-          open ? "popup-card-enter" : "popup-card-exit"
-        }`}
+      <button
+        onClick={close}
+        className="absolute right-2 top-2 z-20 grid h-8 w-8 place-items-center rounded-full bg-white/85 text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur transition hover:scale-105 hover:bg-white hover:text-black cursor-pointer"
+        aria-label="Stäng"
       >
-        <button
-          onClick={close}
-          className="absolute right-3 top-3 z-20 grid h-9 w-9 place-items-center rounded-full bg-white/80 text-gray-700 shadow-sm ring-1 ring-black/5 backdrop-blur transition hover:scale-105 hover:bg-white hover:text-black cursor-pointer"
-          aria-label="Stäng"
-        >
-          <X className="h-4 w-4" />
-        </button>
+        <X className="h-4 w-4" />
+      </button>
 
-        {image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image}
-            alt={title}
-            className="h-48 w-full object-cover"
-          />
+      {image ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={image}
+          alt={title}
+          className="h-36 w-full shrink-0 object-cover sm:h-auto sm:w-44"
+        />
+      ) : null}
+
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5 p-4 pr-10 sm:gap-2 sm:p-5 sm:pr-12">
+        {ad.annons && (
+          <span className="text-[10px] uppercase tracking-wider text-black/40">
+            Annons
+          </span>
+        )}
+
+        {title ? (
+          <h2 className="font-serif text-lg font-semibold leading-tight text-[#1A1A1A] line-clamp-2">
+            {title}
+          </h2>
         ) : null}
 
-        <div className="flex flex-col gap-3 p-6 pr-14 sm:p-8 sm:pr-16">
-          {ad.annons && (
-            <span className="text-[10px] uppercase tracking-wide text-black/40">
-              Annons
-            </span>
-          )}
+        {body ? (
+          <p className="text-sm text-[#1A1A1A]/75 line-clamp-3">{body}</p>
+        ) : null}
 
-          {title ? (
-            <h2 className="font-serif text-2xl font-semibold leading-tight text-[#1A1A1A]">
-              {title}
-            </h2>
-          ) : null}
+        {ad.cta && ad.cta !== buttonLabel ? (
+          <p className="text-xs font-medium text-[#1A1A1A]/80">{ad.cta}</p>
+        ) : null}
 
-          {body ? <p className="text-sm text-[#1A1A1A]/80">{body}</p> : null}
-
-          {ad.cta && ad.cta !== buttonLabel ? (
-            <p className="text-sm font-medium text-[#1A1A1A]">{ad.cta}</p>
-          ) : null}
-
-          {href ? (
-            <a
-              href={href}
-              target={ad.target_blank ? "_blank" : undefined}
-              rel={
-                ad.target_blank
-                  ? "sponsored noopener noreferrer"
-                  : "sponsored"
-              }
-              onClick={handleCtaClick}
-              style={{ backgroundColor: ad.button_bg_color || "#FFA94D" }}
-              className="mt-2 inline-block rounded px-5 py-2.5 text-center text-sm font-semibold text-white transition hover:opacity-90"
-            >
-              {buttonLabel}
-            </a>
-          ) : null}
-        </div>
+        {href ? (
+          <a
+            href={href}
+            target={ad.target_blank ? "_blank" : undefined}
+            rel={
+              ad.target_blank
+                ? "sponsored noopener noreferrer"
+                : "sponsored"
+            }
+            onClick={handleCtaClick}
+            style={{ backgroundColor: ad.button_bg_color || "#FFA94D" }}
+            className="mt-1 inline-block self-start rounded px-4 py-1.5 text-xs font-semibold text-white transition hover:opacity-90"
+          >
+            {buttonLabel}
+          </a>
+        ) : null}
       </div>
     </div>
   );

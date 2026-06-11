@@ -158,3 +158,17 @@ h6 {
     animation: popup-card-in 240ms ease-in reverse both;
   }
 }
+
+/* Side-card slide-in (used by the popup ad in the bottom-right) */
+@keyframes side-card-in {
+  from { opacity: 0; transform: translateX(calc(100% + 2rem)); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.side-card-enter {
+  animation: side-card-in 360ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.side-card-exit {
+  animation: side-card-in 260ms ease-in reverse both;
+}

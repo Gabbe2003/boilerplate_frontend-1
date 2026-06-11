@@ -77,18 +77,18 @@ export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
         rel={ad.target_blank ? "sponsored noopener noreferrer" : "sponsored"}
         onClick={handleCardClick}
         style={{ backgroundColor: ad.bg_color || "#ffffff" }}
-        className="group flex flex-col overflow-hidden rounded-t-2xl shadow-2xl ring-1 ring-black/10 lg:flex-row lg:rounded-2xl"
+        className="group flex flex-row overflow-hidden rounded-t-2xl shadow-2xl ring-1 ring-black/10 lg:rounded-2xl"
       >
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={image}
             alt={title}
-            className="h-44 w-full shrink-0 object-cover lg:h-auto lg:w-56 xl:w-64"
+            className="w-28 shrink-0 self-stretch object-contain sm:w-40 lg:max-h-44 lg:w-72 lg:object-cover xl:max-h-52 xl:w-96"
           />
         ) : null}
 
-        <div className="flex min-w-0 flex-1 flex-col gap-2 p-5 pb-16 sm:p-6 sm:pb-16 lg:p-7 lg:pb-7 lg:pr-20">
+        <div className="flex min-w-0 flex-1 flex-col gap-2 p-5 pr-16 sm:p-6 sm:pr-16 lg:p-5 lg:pr-16">
           {ad.annons && (
             <span className="text-xs uppercase tracking-wider text-black/40">
               Annons
@@ -96,13 +96,13 @@ export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
           )}
 
           {title ? (
-            <h2 className="font-serif text-xl font-semibold leading-tight text-[#1A1A1A] line-clamp-2 lg:text-2xl">
+            <h2 className="font-serif text-xl font-semibold leading-tight text-[#1A1A1A] line-clamp-2">
               {title}
             </h2>
           ) : null}
 
           {body ? (
-            <p className="text-base text-[#1A1A1A]/75 line-clamp-3 lg:text-lg">
+            <p className="text-base text-[#1A1A1A]/75 line-clamp-3 lg:line-clamp-2">
               {body}
             </p>
           ) : null}
@@ -114,7 +114,7 @@ export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
           {href ? (
             <span
               style={{ backgroundColor: ad.button_bg_color || "#FFA94D" }}
-              className="mt-2 inline-block self-start rounded px-5 py-2 text-sm font-semibold text-white transition group-hover:opacity-90 lg:text-base"
+              className="mt-2 inline-block self-end rounded px-5 py-2 text-sm font-semibold text-white transition group-hover:opacity-90"
             >
               {buttonLabel}
             </span>
@@ -125,7 +125,7 @@ export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
       <button
         type="button"
         onClick={close}
-        className="absolute bottom-3 right-3 z-20 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-gray-700 shadow-md ring-1 ring-black/10 backdrop-blur transition hover:scale-105 hover:bg-white hover:text-black cursor-pointer"
+        className="absolute top-3 right-3 z-20 grid h-10 w-10 place-items-center rounded-full bg-white/90 text-gray-700 shadow-md ring-1 ring-black/10 backdrop-blur transition hover:scale-105 hover:bg-white hover:text-black cursor-pointer"
         aria-label="Stäng"
       >
         <X className="h-5 w-5" />

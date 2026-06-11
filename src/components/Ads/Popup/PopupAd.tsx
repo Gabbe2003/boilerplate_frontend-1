@@ -69,7 +69,7 @@ export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
       role="dialog"
       aria-label={title || "Annons"}
       style={{ backgroundColor: ad.bg_color || "#ffffff" }}
-      className={`fixed bottom-4 right-4 z-50 flex w-[460px] max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl shadow-2xl ring-1 ring-black/10 sm:flex-row sm:bottom-6 sm:right-6 ${
+      className={`fixed bottom-4 left-4 right-4 z-50 flex flex-col overflow-hidden rounded-2xl shadow-2xl ring-1 ring-black/10 sm:left-auto sm:bottom-6 sm:right-6 sm:w-[520px] sm:flex-row lg:w-[680px] xl:w-[860px] ${
         open ? "side-card-enter" : "side-card-exit pointer-events-none"
       }`}
     >
@@ -86,7 +86,7 @@ export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
         <img
           src={image}
           alt={title}
-          className="h-36 w-full shrink-0 object-cover sm:h-auto sm:w-44"
+          className="h-36 w-full shrink-0 object-cover sm:h-auto sm:w-44 lg:w-56 xl:w-64"
         />
       ) : null}
 

@@ -84,7 +84,7 @@ export default function PopupAd({ ad = null }: { ad?: Ad | null }) {
           <img
             src={image}
             alt={title}
-            className="w-28 shrink-0 self-stretch object-contain sm:w-40 lg:max-h-44 lg:w-72 lg:object-cover xl:max-h-52 xl:w-96"
+            className="w-28 shrink-0 self-stretch object-contain sm:w-40 lg:max-h-44 lg:w-72 xl:max-h-52 xl:w-96"
           />
         ) : null}
 
